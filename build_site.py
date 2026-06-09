@@ -6,18 +6,18 @@ import json, html, re, os
 ch1_raw = json.load(open("/tmp/ch1_extract.json", encoding="utf-8"))
 
 def ch1_sections():
-    secs = []
+    # Chapter 1은 '설치 + 피코·쉴드 + LED 깜빡이기' 범위까지만.
+    # (Wi-Fi·RSSI·웹서버 등은 Chapter 2부터 다룹니다)
+    keep = {"코드 1-01", "코드 1-02", "코드 1-03", "코드 1-04"}
+    blocks = {}
     for u in ch1_raw:
-        # "Unit 1-1. 피코와 첫 만남" → 제목 정리
-        t = u["title"].replace("🔥", "").replace("🎯", "").strip()
-        items = []
-        for p in u["prompts"]:
-            items.append({"type": "prompt", "label": f"샘플 프롬프트 {p['id']}", "text": p["text"]})
         for b in u["blocks"]:
-            items.append({"type": "code", "label": b["label"], "lang": b["lang"], "code": b["code"]})
-        if items:
-            secs.append({"title": t, "items": items})
-    return secs
+            if b["label"] in keep:
+                blocks[b["label"]] = b
+    order = ["코드 1-01", "코드 1-02", "코드 1-03", "코드 1-04"]
+    items = [{"type": "code", "label": blocks[k]["label"], "lang": blocks[k]["lang"], "code": blocks[k]["code"]}
+             for k in order if k in blocks]
+    return [{"title": "첫 코드 · print 와 보드 LED 깜빡이기", "items": items}]
 
 # ---------- Chapter 2 ----------
 CH2 = [
@@ -245,7 +245,7 @@ def tup(sec_list):
     return [{"title":t, "items":items} for (t, items) in sec_list]
 
 CHAPTERS = [
-  {"id":"ch1","num":"01","title":"피코와 첫 걸음","subtitle":"피코·MicroPython·Thonny 첫 만남부터 Wi-Fi 감도 웹 대시보드까지 — 손 코딩으로 기초를 다지고 바이브 코딩으로 도약합니다.","accent":"#5B6CF0","sections":ch1_sections()},
+  {"id":"ch1","num":"01","title":"피코, 처음 시작하기","subtitle":"피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.","accent":"#5B6CF0","sections":ch1_sections()},
   {"id":"ch2","num":"02","title":"우리 집 와이파이 탐험대","subtitle":"와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.","accent":"#E0568A","sections":tup(CH2)},
   {"id":"ch3","num":"03","title":"우리 교실 공기 지킴이","subtitle":"가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.","accent":"#1F9D63","sections":tup(CH3)},
 ]
