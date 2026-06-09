@@ -244,8 +244,33 @@ while True:
 def tup(sec_list):
     return [{"title":t, "items":items} for (t, items) in sec_list]
 
+# ---------- Chapter 1 상단: 펌웨어 다운로드 카드 ----------
+FW_VER = "v1.28.0"
+FW_FILE = "firmware/RPI_PICO2_W-v1.28.0.uf2"
+FW_SIZE = "1.64 MB"
+FW_CARD = f'''<div class="fw-card">
+  <div class="fw-top">
+    <div class="fw-info">
+      <span class="fw-badge">🔌 처음 한 번만 — 펌웨어 설치</span>
+      <h3 class="fw-title">MicroPython 펌웨어 다운로드</h3>
+      <p class="fw-meta">Raspberry Pi Pico 2&nbsp;W&nbsp;/&nbsp;WH 전용 · MicroPython <b>{FW_VER}</b> · UF2 {FW_SIZE}</p>
+    </div>
+    <a class="dl-btn" href="{FW_FILE}" download>⬇&nbsp;&nbsp;펌웨어 내려받기 (.uf2)</a>
+  </div>
+  <div class="fw-steps-wrap">
+    <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
+    <ol class="fw-steps">
+      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요!)</span></li>
+      <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
+      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
+      <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
+    </ol>
+  </div>
+  <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
+</div>'''
+
 CHAPTERS = [
-  {"id":"ch1","num":"01","title":"피코, 처음 시작하기","subtitle":"피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.","accent":"#5B6CF0","sections":ch1_sections()},
+  {"id":"ch1","num":"01","title":"피코, 처음 시작하기","subtitle":"피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.","accent":"#5B6CF0","extra":FW_CARD,"sections":ch1_sections()},
   {"id":"ch2","num":"02","title":"우리 집 와이파이 탐험대","subtitle":"와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.","accent":"#E0568A","sections":tup(CH2)},
   {"id":"ch3","num":"03","title":"우리 교실 공기 지킴이","subtitle":"가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.","accent":"#1F9D63","sections":tup(CH3)},
 ]
@@ -285,6 +310,7 @@ def render():
 <div class="ch-head"><span class="ch-num" style="color:{c["accent"]}">CHAPTER {c["num"]}</span>
 <h2 class="ch-title"><span class="ch-bar" style="background:{c["accent"]}"></span>{esc(c["title"])}</h2>
 <p class="ch-sub">{esc(c["subtitle"])}</p></div>
+{c.get("extra","")}
 {"".join(sec_html)}</div>''')
 
     return TEMPLATE.format(nav="".join(nav), main="".join(main),
@@ -363,6 +389,29 @@ a{{color:inherit;text-decoration:none;}}
 .prompt-body{{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
   white-space:pre-wrap;word-break:break-word;padding:15px 18px;
   background:color-mix(in srgb,var(--accent) 4%,#fff);}}
+/* 펌웨어 다운로드 카드 */
+.fw-card{{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
+  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);
+  padding:22px 24px;margin:6px 0 26px;}}
+.fw-top{{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}}
+.fw-badge{{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
+  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}}
+.fw-title{{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}}
+.fw-meta{{margin:0;color:var(--muted);font-size:13px;}}
+.fw-meta b{{color:var(--fg);}}
+.dl-btn{{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+  font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
+  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}}
+.dl-btn:hover{{background:#4a5ae0;transform:translateY(-1px);}}
+.fw-steps-wrap{{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}}
+.fw-steps-title{{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}}
+.fw-steps{{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}}
+.fw-steps li{{padding-left:3px;}}
+.fw-dim{{color:var(--muted);}}
+.fw-steps code,.fw-note code{{font-family:var(--mono);font-size:12px;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}}
+.fw-note{{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}}
+.fw-note a{{color:#3B47C2;text-decoration:underline;}}
 footer{{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}}
 /* 모바일 토글 */
 .menu-btn{{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);

@@ -71,6 +71,29 @@ a{color:inherit;text-decoration:none;}
 .prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
   white-space:pre-wrap;word-break:break-word;padding:15px 18px;
   background:color-mix(in srgb,var(--accent) 4%,#fff);}
+/* 펌웨어 다운로드 카드 */
+.fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
+  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);
+  padding:22px 24px;margin:6px 0 26px;}
+.fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
+  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.fw-meta{margin:0;color:var(--muted);font-size:13px;}
+.fw-meta b{color:var(--fg);}
+.dl-btn{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+  font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
+  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}
+.dl-btn:hover{background:#4a5ae0;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}
+.fw-steps li{padding-left:3px;}
+.fw-dim{color:var(--muted);}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}
+.fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+.fw-note a{color:#3B47C2;text-decoration:underline;}
 footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
 /* 모바일 토글 */
 .menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
@@ -109,6 +132,26 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 <div class="ch-head"><span class="ch-num" style="color:#5B6CF0">CHAPTER 01</span>
 <h2 class="ch-title"><span class="ch-bar" style="background:#5B6CF0"></span>피코, 처음 시작하기</h2>
 <p class="ch-sub">피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.</p></div>
+<div class="fw-card">
+  <div class="fw-top">
+    <div class="fw-info">
+      <span class="fw-badge">🔌 처음 한 번만 — 펌웨어 설치</span>
+      <h3 class="fw-title">MicroPython 펌웨어 다운로드</h3>
+      <p class="fw-meta">Raspberry Pi Pico 2&nbsp;W&nbsp;/&nbsp;WH 전용 · MicroPython <b>v1.28.0</b> · UF2 1.64 MB</p>
+    </div>
+    <a class="dl-btn" href="firmware/RPI_PICO2_W-v1.28.0.uf2" download>⬇&nbsp;&nbsp;펌웨어 내려받기 (.uf2)</a>
+  </div>
+  <div class="fw-steps-wrap">
+    <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
+    <ol class="fw-steps">
+      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요!)</span></li>
+      <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
+      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
+      <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
+    </ol>
+  </div>
+  <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
+</div>
 <section class="sec" id="ch1-0"><h3 class="sec-title">첫 코드 · print 와 보드 LED 깜빡이기</h3><div class="block code-block">
 <div class="block-head"><span class="block-label">코드 1-01</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
 <pre><code class="language-python">&gt;&gt;&gt; print(&quot;안녕, 피코!&quot;)</code></pre></div><div class="block code-block">
@@ -147,6 +190,7 @@ while True:
 <div class="ch-head"><span class="ch-num" style="color:#E0568A">CHAPTER 02</span>
 <h2 class="ch-title"><span class="ch-bar" style="background:#E0568A"></span>우리 집 와이파이 탐험대</h2>
 <p class="ch-sub">와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.</p></div>
+
 <section class="sec" id="ch2-0"><h3 class="sec-title">활동 1 · 주변 와이파이 확인</h3><div class="block code-block">
 <div class="block-head"><span class="block-label">와이파이 스캔 (셸에서 한 줄씩)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
 <pre><code class="language-python">import network
@@ -237,6 +281,7 @@ while True:
 <div class="ch-head"><span class="ch-num" style="color:#1F9D63">CHAPTER 03</span>
 <h2 class="ch-title"><span class="ch-bar" style="background:#1F9D63"></span>우리 교실 공기 지킴이</h2>
 <p class="ch-sub">가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.</p></div>
+
 <section class="sec" id="ch3-0"><h3 class="sec-title">3.2 LED 다루기 · 빛으로 표현하기</h3><div class="block code-block">
 <div class="block-head"><span class="block-label">코드 1 · LED 한 칸 켜기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
 <pre><code class="language-python">from machine import Pin
