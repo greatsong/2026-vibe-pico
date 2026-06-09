@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>피코 바이브 코딩 · 코드 & 프롬프트 모음</title>
+<meta name="description" content="라즈베리파이 피코로 배우는 피지컬 컴퓨팅 — Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트 모음.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+<style>
+:root{
+  --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
+  --sidebar:#fbfbfa; --code-bg:#f7f6f3; --radius:10px;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,'D2Coding',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.layout{display:flex;max-width:1180px;margin:0 auto;}
+/* 사이드바 */
+.sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
+  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
+.brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.nav-ch{margin-top:10px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}
+.nav-ch-link:hover{background:#efefee;}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}
+.nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
+.nav-sec:hover{color:var(--fg);}
+.nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
+/* 본문 */
+.main{flex:1;min-width:0;padding:0 56px 120px;}
+.hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+.hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
+.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:640px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
+.stat b{font-size:15px;color:var(--fg);font-weight:800;}
+.chapter{padding-top:30px;}
+.ch-head{margin:40px 0 8px;}
+.ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
+.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:660px;}
+.sec{padding-top:14px;}
+.sec-title{font-size:16.5px;font-weight:700;margin:26px 0 12px;letter-spacing:-.01em;}
+/* 블록 공통 */
+.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;}
+.block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
+.block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
+.copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}
+/* 프롬프트 콜아웃 */
+.prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
+.prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
+  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
+.prompt-block .block-label{color:color-mix(in srgb,var(--accent) 55%,#37352f);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;
+  background:color-mix(in srgb,var(--accent) 4%,#fff);}
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
+/* 모바일 토글 */
+.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
+  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.scrim{display:none;}
+@media(max-width:920px){
+  .main{padding:0 22px 100px;}
+  .hero{padding-top:74px;}
+  .hero h1{font-size:30px;}
+  .menu-btn{display:block;}
+  .sidebar{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}
+  .sidebar.open{transform:none;}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}
+}
+</style>
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+<div class="scrim" id="scrim"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">🔌 피코 바이브 코딩<small>코드 &amp; 프롬프트 모음 · Ch 1·2·3</small></div>
+    <div class="nav-ch"><a href="#ch1" class="nav-ch-link" data-target="ch1"><span class="nav-dot" style="background:#5B6CF0"></span>피코와 첫 걸음</a><div class="nav-secs"><a href="#ch1-0" class="nav-sec" data-target="ch1-0">Unit 1-1. 피코와 첫 만남</a><a href="#ch1-1" class="nav-sec" data-target="ch1-1">Unit 1-2. MicroPython 기초 다지기</a><a href="#ch1-2" class="nav-sec" data-target="ch1-2">Unit 1-3. Wi-Fi 연결하기</a><a href="#ch1-3" class="nav-sec" data-target="ch1-3">Unit 1-4. RSSI 한 번 측정하기</a><a href="#ch1-4" class="nav-sec" data-target="ch1-4">Unit 1-5.  모드 전환 — Thonny Plotter로 실시간 RSSI 그래프 보기</a><a href="#ch1-5" class="nav-sec" data-target="ch1-5">Unit 1-6. CSV로 데이터 기록하기</a><a href="#ch1-6" class="nav-sec" data-target="ch1-6">Unit 1-7. 첫 웹 서버 만들기</a><a href="#ch1-7" class="nav-sec" data-target="ch1-7">Unit 1-8.  Wi-Fi 감도 웹 대시보드</a></div></div><div class="nav-ch"><a href="#ch2" class="nav-ch-link" data-target="ch2"><span class="nav-dot" style="background:#E0568A"></span>우리 집 와이파이 탐험대</a><div class="nav-secs"><a href="#ch2-0" class="nav-sec" data-target="ch2-0">활동 1 · 주변 와이파이 확인</a><a href="#ch2-1" class="nav-sec" data-target="ch2-1">1·2단계 · 손 코딩으로 측정 확인</a><a href="#ch2-2" class="nav-sec" data-target="ch2-2">3단계 · 바이브 코딩으로 웹앱 만들기</a><a href="#ch2-3" class="nav-sec" data-target="ch2-3">6단계 · 살아 움직이는 대시보드로 업그레이드</a></div></div><div class="nav-ch"><a href="#ch3" class="nav-ch-link" data-target="ch3"><span class="nav-dot" style="background:#1F9D63"></span>우리 교실 공기 지킴이</a><div class="nav-secs"><a href="#ch3-0" class="nav-sec" data-target="ch3-0">3.2 LED 다루기 · 빛으로 표현하기</a><a href="#ch3-1" class="nav-sec" data-target="ch3-1">3.3 가스 센서 · 공기를 숫자로</a><a href="#ch3-2" class="nav-sec" data-target="ch3-2">3.4 둘을 잇기 · LED 게이지</a><a href="#ch3-3" class="nav-sec" data-target="ch3-3">3.5 웹 대시보드까지 (바이브 코딩)</a></div></div>
+  </aside>
+  <main class="main">
+    <header class="hero">
+      <h1>피코 바이브 코딩<br>코드 &amp; 프롬프트 모음</h1>
+      <p>라즈베리파이 피코로 배우는 피지컬 컴퓨팅. Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트를 한곳에 모았습니다. 각 블록의 <b>복사</b> 버튼으로 바로 가져다 쓰세요.</p>
+      <div class="stats">
+        <div class="stat"><b>3</b>개 챕터</div>
+        <div class="stat"><b>37</b>개 코드 블록</div>
+        <div class="stat"><b>9</b>개 샘플 프롬프트</div>
+      </div>
+    </header>
+    <div class="chapter" id="ch1">
+<div class="ch-head"><span class="ch-num" style="color:#5B6CF0">CHAPTER 01</span>
+<h2 class="ch-title"><span class="ch-bar" style="background:#5B6CF0"></span>피코와 첫 걸음</h2>
+<p class="ch-sub">피코·MicroPython·Thonny 첫 만남부터 Wi-Fi 감도 웹 대시보드까지 — 손 코딩으로 기초를 다지고 바이브 코딩으로 도약합니다.</p></div>
+<section class="sec" id="ch1-0"><h3 class="sec-title">Unit 1-1. 피코와 첫 만남</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-01</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">&gt;&gt;&gt; print(&quot;안녕, 피코!&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-02</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import Pin   # 핀(Pin) 제어 도구를 가져옵니다.
+import time               # 시간(time) 제어 도구를 가져옵니다.
+
+led = Pin(&quot;LED&quot;, Pin.OUT) # 온보드 LED를 출력(OUT) 모드로 설정합니다.
+
+led.value(1)              # LED를 켭니다. (1: 켜짐)
+time.sleep(1)             # 1초 동안 대기합니다.
+led.value(0)              # LED를 끕니다. (0: 꺼짐)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-03</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import Pin
+import time
+
+led = Pin(&quot;LED&quot;, Pin.OUT)
+
+while True:               # 아래 줄들을 계속 반복합니다.
+    led.value(1)          # LED 켜기
+    time.sleep(0.5)       # 0.5초 대기
+    led.value(0)          # LED 끄기
+    time.sleep(0.5)       # 0.5초 대기</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-04</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import Pin
+import time
+
+led = Pin(&quot;LED&quot;, Pin.OUT)
+delay = 0.5               # 깜빡임 간격(초)을 변수로 관리
+
+while True:
+    led.value(1)
+    time.sleep(delay)
+    led.value(0)
+    time.sleep(delay)</code></pre></div></section><section class="sec" id="ch1-1"><h3 class="sec-title">Unit 1-2. MicroPython 기초 다지기</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-05</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">print(&quot;Hello, Pico!&quot;)
+print(&quot;측정한 값:&quot;, 42)
+print(&quot;센서값:&quot;, 100, &quot;단위: ppm&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-06</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">ssid = &quot;MyWiFi&quot;          # 문자열(str) — 따옴표로 감쌉니다.
+rssi = -67               # 정수(int)   — Wi-Fi 신호 감도(dBm)
+threshold = -70.5        # 실수(float) — 임계값
+is_strong = True         # 논리값(bool) — True 또는 False
+
+print(ssid, rssi, threshold, is_strong)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-07</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">ssid = &quot;MyWiFi&quot;
+rssi = -67
+
+print(f&quot;네트워크: {ssid}, 신호: {rssi} dBm&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-08</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">for i in range(5):           # 0, 1, 2, 3, 4
+    print(f&quot;{i}번째 측정&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-09</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import random
+import time
+
+for i in range(5):
+    fake_rssi = random.randint(-90, -40)   # -90 ~ -40 사이 정수 하나
+    print(f&quot;{i}초: RSSI = {fake_rssi} dBm&quot;)
+    time.sleep(1)                          # 1초 대기</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-10</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import random
+
+for i in range(5):
+    rssi = random.randint(-90, -40)
+
+    if rssi &gt;= -50:
+        status = &quot;매우 좋음&quot;
+    elif rssi &gt;= -70:
+        status = &quot;양호&quot;
+    else:
+        status = &quot;약함&quot;
+
+    print(f&quot;RSSI = {rssi} dBm → {status}&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-11</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import random
+
+readings = []                      # 빈 리스트 만들기
+
+for i in range(5):
+    rssi = random.randint(-90, -40)
+    readings.append(rssi)          # 리스트 끝에 추가
+
+print(&quot;전체 측정값:&quot;, readings)
+print(&quot;평균:&quot;, sum(readings) / len(readings))</code></pre></div></section><section class="sec" id="ch1-2"><h3 class="sec-title">Unit 1-3. Wi-Fi 연결하기</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-12</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+
+wlan = network.WLAN(network.STA_IF)   # 클라이언트(STA) 모드의 Wi-Fi 인터페이스
+wlan.active(True)                     # 무선 칩 켜기
+
+print(&quot;활성 상태:&quot;, wlan.active())
+print(&quot;연결됨?:&quot;, wlan.isconnected())</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-13</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+import time
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)          # 접속 시도
+
+print(&quot;접속 중...&quot;, end=&quot;&quot;)
+while not wlan.isconnected():
+    print(&quot;.&quot;, end=&quot;&quot;)
+    time.sleep(0.5)
+
+print(&quot;\n접속 완료!&quot;)
+print(&quot;IP 주소:&quot;, wlan.ifconfig()[0])</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-14</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+import time
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+
+timeout = 10                          # 10초 안에 접속 못 하면 포기
+start = time.time()
+
+while not wlan.isconnected():
+    if time.time() - start &gt; timeout:
+        print(&quot;\n접속 실패: 타임아웃&quot;)
+        break
+    print(&quot;.&quot;, end=&quot;&quot;)
+    time.sleep(0.5)
+else:
+    print(&quot;\n접속 완료! IP:&quot;, wlan.ifconfig()[0])</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-15</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+import time
+
+def connect_wifi(ssid, password, timeout=10):
+    &quot;&quot;&quot;SSID와 비밀번호로 Wi-Fi에 접속하고, 성공 시 IP를 반환합니다.&quot;&quot;&quot;
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+
+    if wlan.isconnected():
+        return wlan.ifconfig()[0]
+
+    wlan.connect(ssid, password)
+    start = time.time()
+    while not wlan.isconnected():
+        if time.time() - start &gt; timeout:
+            raise RuntimeError(&quot;Wi-Fi 접속 실패&quot;)
+        time.sleep(0.5)
+
+    return wlan.ifconfig()[0]
+
+
+# 사용 예
+ip = connect_wifi(&quot;여기에_SSID_입력&quot;, &quot;여기에_비밀번호_입력&quot;)
+print(&quot;IP:&quot;, ip)</code></pre></div></section><section class="sec" id="ch1-3"><h3 class="sec-title">Unit 1-4. RSSI 한 번 측정하기</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-16</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+wlan = network.WLAN(network.STA_IF)
+rssi = wlan.status(&#x27;rssi&#x27;)
+print(rssi, &quot;dBm&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-17</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network
+
+ip = connect_wifi(&quot;여기에_SSID_입력&quot;, &quot;여기에_비밀번호_입력&quot;)
+wlan = network.WLAN(network.STA_IF)
+print(f&quot;IP: {ip}, RSSI: {wlan.status(&#x27;rssi&#x27;)} dBm&quot;)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-18</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network, time
+wlan = network.WLAN(network.STA_IF)
+for _ in range(5):
+    print(wlan.status(&#x27;rssi&#x27;), &quot;dBm&quot;)
+    time.sleep(1)</code></pre></div></section><section class="sec" id="ch1-4"><h3 class="sec-title">Unit 1-5.  모드 전환 — Thonny Plotter로 실시간 RSSI 그래프 보기</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-19</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi   # Unit 1-3에서 만든 함수 재사용
+import network, time
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+ip = connect_wifi(SSID, PASSWORD)      # Wi-Fi 접속
+print(&quot;# IP:&quot;, ip)                     # 주석 줄(#로 시작) — Plotter는 무시함
+
+wlan = network.WLAN(network.STA_IF)    # 같은 인터페이스 핸들 가져오기
+
+try:
+    while True:                        # 정지 버튼이 눌릴 때까지 반복
+        rssi = wlan.status(&#x27;rssi&#x27;)     # 현재 RSSI 한 번 측정
+        print(rssi)                    # 숫자 하나만 한 줄에 출력
+        time.sleep(1)                  # 1초 대기
+except KeyboardInterrupt:              # 정지 버튼이 눌리면
+    print(&quot;# 측정 종료&quot;)               # 종료 메시지 출력</code></pre></div></section><section class="sec" id="ch1-5"><h3 class="sec-title">Unit 1-6. CSV로 데이터 기록하기</h3><div class="block prompt-block" style="--accent:#5B6CF0">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">샘플 프롬프트 1-6-A</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">Raspberry Pi Pico 2 W에서 MicroPython으로 동작하는 코드를 만들어 주세요. 별도 모듈에 정의된 `from wifi_helper import connect_wifi` 함수를 그대로 사용해 Wi-Fi에 접속한 뒤, **1초마다 현재 연결된 Wi-Fi의 RSSI를 측정**하고, 보드 루트의 `rssi.csv` 파일에 한 줄씩 **누적**(append) 기록해 주세요. 파일이 처음 만들어질 때만 `t_ms,ssid,rssi` 헤더를 한 줄 적습니다. `time.ticks_ms()`로 시작 시점을 0으로 잡고 경과 시간을 밀리초로 기록합니다. SSID는 `wlan.config(&#x27;essid&#x27;)`로 가져옵니다. **60회** 측정한 뒤 파일을 닫고 종료합니다. 외부 라이브러리는 `network`, `time`만 사용하고, 중간에 정지 버튼이 눌려도 파일이 닫히도록 `try / finally`로 감싸 주세요. 코드 블록 하나로, 한국어 주석을 한 줄씩 달아 주세요.</div></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-20</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network, time, os
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+FILE = &quot;rssi.csv&quot;
+N = 60                                      # 측정 횟수
+
+ip = connect_wifi(SSID, PASSWORD)           # Wi-Fi 접속
+wlan = network.WLAN(network.STA_IF)
+essid = wlan.config(&#x27;essid&#x27;)                # 접속된 AP 이름
+
+# 파일이 처음이면 헤더 한 줄, 아니면 append로 이어쓰기
+need_header = FILE not in os.listdir()
+f = open(FILE, &quot;a&quot;)
+try:
+    if need_header:
+        f.write(&quot;t_ms,ssid,rssi\n&quot;)
+    start = time.ticks_ms()
+    for i in range(N):
+        t = time.ticks_diff(time.ticks_ms(), start)
+        rssi = wlan.status(&#x27;rssi&#x27;)
+        line = f&quot;{t},{essid},{rssi}\n&quot;
+        f.write(line)
+        f.flush()                           # 매 줄마다 디스크 쓰기 보장
+        print(line.strip())                 # 셸에서 진행 상황 확인
+        time.sleep(1)
+finally:
+    f.close()                               # 정지 버튼이 눌려도 닫힘 보장
+    print(f&quot;# 저장 완료: {FILE}&quot;)</code></pre></div></section><section class="sec" id="ch1-6"><h3 class="sec-title">Unit 1-7. 첫 웹 서버 만들기</h3><div class="block prompt-block" style="--accent:#5B6CF0">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">샘플 프롬프트 1-7-A</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">Raspberry Pi Pico 2 W에서 MicroPython으로 동작하는 **가장 단순한 HTTP 웹 서버 코드**를 만들어 주세요. 별도 모듈의 `from wifi_helper import connect_wifi`로 Wi-Fi에 접속한 뒤, **80번 포트**에서 들어오는 연결을 기다립니다. 누가 접속하면 `&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello, Pico!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;` 한 페이지를 응답으로 돌려보냅니다. 응답에는 `HTTP/1.1 200 OK`와 `Content-Type: text/html` 헤더를 반드시 포함해 주세요. 외부 라이브러리는 `socket`, `network`, `time`만 사용하고, 매 연결을 처리한 뒤에는 그 클라이언트 소켓을 `close()` 합니다. `try / finally`로 서버 소켓도 닫히게 해 주세요. 코드는 무한 루프이며 ⏹ 정지 버튼으로 깔끔히 종료되어야 합니다. 한국어 주석을 한 줄씩 달아 주세요.</div></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-21</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network, socket
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+ip = connect_wifi(SSID, PASSWORD)            # Wi-Fi 접속
+print(&quot;서버 주소: http://&quot; + ip)             # 휴대폰 브라우저에 칠 주소
+
+HTML = &quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello, Pico!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&quot;
+
+# 80번 포트로 들어오는 연결을 기다릴 소켓 준비
+addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(addr)                            # 주소 점유
+server.listen(1)                             # 한 명씩 받기
+
+try:
+    while True:
+        client, who = server.accept()        # 누가 접속할 때까지 대기
+        try:
+            request = client.recv(1024)      # 요청 1KB 받기 (본문은 안 씀)
+            response = (
+                &quot;HTTP/1.1 200 OK\r\n&quot;
+                &quot;Content-Type: text/html\r\n&quot;
+                &quot;Connection: close\r\n\r\n&quot;
+                + HTML
+            )
+            client.send(response.encode())   # 응답 전송
+        finally:
+            client.close()                   # 그 클라이언트와의 통신 종료
+except KeyboardInterrupt:
+    print(&quot;\n서버 종료&quot;)
+finally:
+    server.close()                           # 서버 소켓도 반드시 닫기</code></pre></div></section><section class="sec" id="ch1-7"><h3 class="sec-title">Unit 1-8.  Wi-Fi 감도 웹 대시보드</h3><div class="block prompt-block" style="--accent:#5B6CF0">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">샘플 프롬프트 1-8-A</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">Raspberry Pi Pico 2 W (MicroPython) 위에서 동작하는 단순 HTTP 웹 서버 코드를 만들어 주세요. `from wifi_helper import connect_wifi`로 Wi-Fi에 접속한 뒤, 80번 포트에서 들어오는 요청에 대해 **매번 새로 측정한 현재 RSSI**를 `&lt;html&gt;&lt;body&gt;&lt;p&gt;현재 RSSI: -58 dBm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;` 형태의 HTML 한 페이지로 응답합니다. 외부 라이브러리는 `socket`, `network`, `time`만 사용하고, `Content-Type: text/html`, `Connection: close` 헤더를 포함합니다. `try / finally`로 서버 소켓을 닫고, ⏹ 정지 버튼으로 깔끔히 종료되도록 합니다. 한국어 주석을 한 줄씩 달아 주세요.</div></div><div class="block prompt-block" style="--accent:#5B6CF0">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">샘플 프롬프트 1-8-B</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">이전 단계의 Pico 2 W MicroPython 웹 서버를 확장해 주세요. 매 요청마다 `wlan = network.WLAN(network.STA_IF)`의 **`wlan.scan()`**으로 주변 AP 목록을 받아, **RSSI가 강한 상위 5개**를 골라 다음과 같은 표 형식의 HTML로 응답합니다.
+```
+SSID            RSSI       막대
+MyWiFi          -58 dBm    ████████████████████
+NeighborAP      -71 dBm    █████████████
+```
+막대는 `█` 블록 문자로 만들고, **-90 dBm을 0칸**, **-30 dBm을 30칸**으로 선형 환산합니다. 한 칸당 2 dBm 간격입니다. SSID가 비어 있는 AP는 `&lt;hidden&gt;`으로 표기합니다. `&lt;pre&gt;` 태그로 감싸 폭이 일정한 글꼴로 보이게 합니다. 외부 라이브러리는 `socket`, `network`, `time`만 사용하고, 다른 부분은 이전 코드와 동일하게 유지합니다.</div></div><div class="block prompt-block" style="--accent:#5B6CF0">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">샘플 프롬프트 1-8-C</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">이전 단계의 코드에서 **응답 HTML에 자동 새로 고침**을 추가해 주세요. `&lt;head&gt;` 안에 `&lt;meta http-equiv=&quot;refresh&quot; content=&quot;{REFRESH}&quot;&gt;`를 넣고, `REFRESH = 2`라는 변수로 간격(초)을 관리합니다. 다른 동작은 그대로 유지합니다. 같은 휴대폰 브라우저로 접속하면 사람이 새로 고침을 누르지 않아도 2초마다 화면이 자동으로 갱신되어야 합니다.</div></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-22</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network, socket
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+ip = connect_wifi(SSID, PASSWORD)
+print(&quot;대시보드 주소: http://&quot; + ip)
+
+wlan = network.WLAN(network.STA_IF)
+
+def make_page():
+    &quot;&quot;&quot;매번 호출되어 현재 RSSI가 박힌 HTML을 돌려준다.&quot;&quot;&quot;
+    rssi = wlan.status(&#x27;rssi&#x27;)
+    return f&quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;현재 RSSI: {rssi} dBm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
+
+addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(addr)
+server.listen(1)
+
+try:
+    while True:
+        client, _ = server.accept()
+        try:
+            client.recv(1024)                            # 요청 무시
+            body = make_page()                           # 그때그때 새 본문
+            resp = (&quot;HTTP/1.1 200 OK\r\n&quot;
+                    &quot;Content-Type: text/html\r\n&quot;
+                    &quot;Connection: close\r\n\r\n&quot; + body)
+            client.send(resp.encode())
+        finally:
+            client.close()
+except KeyboardInterrupt:
+    print(&quot;\n서버 종료&quot;)
+finally:
+    server.close()</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-23</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network, socket
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+
+ip = connect_wifi(SSID, PASSWORD)
+print(&quot;대시보드 주소: http://&quot; + ip)
+
+wlan = network.WLAN(network.STA_IF)
+
+def bar(rssi, width=30, lo=-90, hi=-30):
+    &quot;&quot;&quot;-90 dBm = 0칸, -30 dBm = width칸으로 선형 환산&quot;&quot;&quot;
+    if rssi &lt;= lo: return &quot;&quot;
+    if rssi &gt;= hi: return &quot;█&quot; * width
+    n = int((rssi - lo) / (hi - lo) * width)
+    return &quot;█&quot; * n
+
+def make_page():
+    rows = []
+    for ap in wlan.scan():                                    # (ssid, bssid, channel, rssi, ...)
+        ssid = ap[0].decode() if ap[0] else &quot;&lt;hidden&gt;&quot;
+        rssi = ap[3]
+        rows.append((ssid, rssi))
+    rows.sort(key=lambda r: r[1], reverse=True)               # RSSI 큰(=강한) 순
+    top = rows[:5]
+
+    lines = [f&quot;{&#x27;SSID&#x27;:&lt;16}{&#x27;RSSI&#x27;:&lt;10}막대&quot;]
+    for ssid, rssi in top:
+        lines.append(f&quot;{ssid[:16]:&lt;16}{rssi:&gt;4} dBm   {bar(rssi)}&quot;)
+    body = &quot;&lt;pre&gt;&quot; + &quot;\n&quot;.join(lines) + &quot;&lt;/pre&gt;&quot;
+    return &quot;&lt;html&gt;&lt;body&gt;&quot; + body + &quot;&lt;/body&gt;&lt;/html&gt;&quot;
+
+addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(addr); server.listen(1)
+
+try:
+    while True:
+        client, _ = server.accept()
+        try:
+            client.recv(1024)
+            body = make_page()
+            resp = (&quot;HTTP/1.1 200 OK\r\n&quot;
+                    &quot;Content-Type: text/html\r\n&quot;
+                    &quot;Connection: close\r\n\r\n&quot; + body)
+            client.send(resp.encode())
+        finally:
+            client.close()
+except KeyboardInterrupt:
+    print(&quot;\n서버 종료&quot;)
+finally:
+    server.close()</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1-24</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from wifi_helper import connect_wifi
+import network, socket
+
+SSID = &quot;여기에_SSID_입력&quot;
+PASSWORD = &quot;여기에_비밀번호_입력&quot;
+REFRESH = 2                                                   # 새로 고침 간격(초)
+
+ip = connect_wifi(SSID, PASSWORD)
+print(&quot;대시보드 주소: http://&quot; + ip)
+
+wlan = network.WLAN(network.STA_IF)
+
+def bar(rssi, width=30, lo=-90, hi=-30):
+    if rssi &lt;= lo: return &quot;&quot;
+    if rssi &gt;= hi: return &quot;█&quot; * width
+    return &quot;█&quot; * int((rssi - lo) / (hi - lo) * width)
+
+def make_page():
+    rows = []
+    for ap in wlan.scan():
+        ssid = ap[0].decode() if ap[0] else &quot;&lt;hidden&gt;&quot;
+        rows.append((ssid, ap[3]))
+    rows.sort(key=lambda r: r[1], reverse=True)
+    top = rows[:5]
+
+    lines = [f&quot;{&#x27;SSID&#x27;:&lt;16}{&#x27;RSSI&#x27;:&lt;10}막대&quot;]
+    for ssid, rssi in top:
+        lines.append(f&quot;{ssid[:16]:&lt;16}{rssi:&gt;4} dBm   {bar(rssi)}&quot;)
+
+    head = (f&#x27;&lt;head&gt;&lt;meta http-equiv=&quot;refresh&quot; content=&quot;{REFRESH}&quot;&gt;&#x27;
+            f&#x27;&lt;title&gt;Pico Wi-Fi Dashboard&lt;/title&gt;&lt;/head&gt;&#x27;)
+    body = &quot;&lt;body&gt;&lt;h2&gt;Wi-Fi 감도 대시보드&lt;/h2&gt;&lt;pre&gt;&quot; + &quot;\n&quot;.join(lines) + &quot;&lt;/pre&gt;&lt;/body&gt;&quot;
+    return &quot;&lt;html&gt;&quot; + head + body + &quot;&lt;/html&gt;&quot;
+
+addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(addr); server.listen(1)
+
+try:
+    while True:
+        client, _ = server.accept()
+        try:
+            client.recv(1024)
+            body = make_page()
+            resp = (&quot;HTTP/1.1 200 OK\r\n&quot;
+                    &quot;Content-Type: text/html\r\n&quot;
+                    &quot;Connection: close\r\n\r\n&quot; + body)
+            client.send(resp.encode())
+        finally:
+            client.close()
+except KeyboardInterrupt:
+    print(&quot;\n서버 종료&quot;)
+finally:
+    server.close()</code></pre></div></section></div><div class="chapter" id="ch2">
+<div class="ch-head"><span class="ch-num" style="color:#E0568A">CHAPTER 02</span>
+<h2 class="ch-title"><span class="ch-bar" style="background:#E0568A"></span>우리 집 와이파이 탐험대</h2>
+<p class="ch-sub">와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.</p></div>
+<section class="sec" id="ch2-0"><h3 class="sec-title">활동 1 · 주변 와이파이 확인</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">와이파이 스캔 (셸에서 한 줄씩)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True); print(wlan.scan())</code></pre></div></section><section class="sec" id="ch2-1"><h3 class="sec-title">1·2단계 · 손 코딩으로 측정 확인</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 블록 1 · 와이파이 연결하고 신호 세기 읽기 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network, time
+SSID = &quot;your_wifi&quot;          # 연결할 와이파이 이름 (2.4GHz)
+PASSWORD = &quot;your_password&quot;  # 와이파이 비밀번호
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+while not wlan.isconnected():
+    time.sleep(1)
+print(&quot;연결됨! IP:&quot;, wlan.ifconfig()[0])
+while True:
+    rssi = wlan.status(&#x27;rssi&#x27;)
+    print(&quot;신호 세기:&quot;, rssi)
+    time.sleep(1)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 블록 2 · 설정 파일 분리하기 (wifi_config.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python"># 1) 새 파일 wifi_config.py 를 만들어 이렇게만 적습니다
+SSID = &quot;your_wifi&quot;
+PASSWORD = &quot;your_password&quot;
+
+# 2) main.py 의 맨 위에서 불러옵니다
+from wifi_config import SSID, PASSWORD</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">3단계 · 바이브 코딩으로 웹앱 만들기</h3><div class="block prompt-block" style="--accent:#E0568A">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">지금 피코가 wifi_config.py로 와이파이에 연결하고 wlan.status(&#x27;rssi&#x27;)로 신호 세기를 읽고 있어.
+이 신호 세기를, 같은 와이파이에 연결된 스마트폰 브라우저에서 볼 수 있는 웹 화면으로 만들어 줘.
+피코가 직접 웹서버가 되는 방식(소켓 기반)으로, 외부 라이브러리 없이 만들어 줘.</div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">6단계 · 살아 움직이는 대시보드로 업그레이드</h3><div class="block prompt-block" style="--accent:#E0568A">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">지금 만든 피코 웹앱을 업그레이드해 줘.
+1) 새로고침을 누르지 않아도 5초마다 화면이 저절로 갱신되게 해 줘.
+2) 최근 20개의 신호 세기 값을 막대그래프로 보여 줘.
+3) 다만 피코가 버거워하지 않도록, 주변 와이파이를 전부 훑는 작업은 30초에 한 번만 하게 해 줘.</div></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 블록 3 · 피코 웹서버 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">import network, socket, time
+from wifi_config import SSID, PASSWORD
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+while not wlan.isconnected():
+    time.sleep(1)
+ip = wlan.ifconfig()[0]
+print(&quot;브라우저에서 접속:&quot;, &quot;http://&quot; + ip)
+history = []
+def make_page(rssi, hist):
+    bars = &quot;&quot;
+    for v in hist:
+        h = max(8, min(100, (v + 90) * 2))
+        bars += &quot;&lt;div class=&#x27;bar&#x27; style=&#x27;height:%dpx&#x27;&gt;&lt;/div&gt;&quot; % h
+    return PAGE % (rssi, bars)
+s = socket.socket()
+s.bind((&quot;0.0.0.0&quot;, 80))
+s.listen(1)
+while True:
+    cl, addr = s.accept()
+    cl.recv(1024)
+    rssi = wlan.status(&quot;rssi&quot;)
+    history.append(rssi)
+    if len(history) &gt; 20:
+        history.pop(0)
+    cl.send(&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n&quot;)
+    cl.send(make_page(rssi, history))
+    cl.close()</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 블록 4 · 브라우저에 보여 줄 화면 (PAGE 템플릿)</span><span class="lang-tag">HTML</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta http-equiv=&quot;refresh&quot; content=&quot;5&quot;&gt;
+  &lt;title&gt;우리 집 와이파이 탐험대&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; background:#FFF6F9; text-align:center; }
+    .rssi { font-size:48px; color:#D4537E; font-weight:bold; }
+    .chart { display:flex; align-items:flex-end; height:110px;
+             gap:3px; justify-content:center; }
+    .bar { width:12px; background:#F4C0D1; border-radius:4px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;지금 신호 세기&lt;/h2&gt;
+  &lt;p class=&quot;rssi&quot;&gt;%d dBm&lt;/p&gt;
+  &lt;div class=&quot;chart&quot;&gt;%s&lt;/div&gt;
+  &lt;p&gt;5초마다 저절로 새로고침돼요&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div></section></div><div class="chapter" id="ch3">
+<div class="ch-head"><span class="ch-num" style="color:#1F9D63">CHAPTER 03</span>
+<h2 class="ch-title"><span class="ch-bar" style="background:#1F9D63"></span>우리 교실 공기 지킴이</h2>
+<p class="ch-sub">가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.</p></div>
+<section class="sec" id="ch3-0"><h3 class="sec-title">3.2 LED 다루기 · 빛으로 표현하기</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 1 · LED 한 칸 켜기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import Pin
+from neopixel import NeoPixel
+np = NeoPixel(Pin(16), 10)   # GP16, LED 10개
+np[0] = (50, 0, 0)           # 첫 번째 칸 빨강
+np.write()</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 2 · 전체를 한 색으로 (fill 함수)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import Pin
+from neopixel import NeoPixel
+import time
+NUM = 10
+np = NeoPixel(Pin(16), NUM)
+def fill(color):
+    for i in range(NUM):
+        np[i] = color
+    np.write()
+fill((0, 40, 0))   # 전체 초록
+time.sleep(1)
+fill((0, 0, 0))    # 전체 끄기</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 3 · 게이지처럼 칸 수 조절하기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">def gauge(level):
+    # level: 0~10, 켤 칸 수
+    for i in range(NUM):
+        if i &lt; level:
+            np[i] = (0, 40, 0)   # 켜진 칸: 초록
+        else:
+            np[i] = (0, 0, 0)    # 꺼진 칸
+    np.write()
+for n in range(0, 11):
+    gauge(n)
+    time.sleep(0.2)</code></pre></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">3.3 가스 센서 · 공기를 숫자로</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 4 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import ADC, Pin
+gas = ADC(Pin(26))        # GP26 = ADC0
+value = gas.read_u16()    # 0 ~ 65535
+print(value)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 5 · 반복해서 읽기 (플로터로 보기)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import ADC, Pin
+import time
+gas = ADC(Pin(26))
+while True:
+    value = gas.read_u16()
+    print(value)          # Thonny 플로터로 그래프 보기
+    time.sleep(0.5)</code></pre></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 6 · 이동 평균으로 안정시키기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">def read_average(sensor, count=10):
+    total = 0
+    for _ in range(count):
+        total += sensor.read_u16()
+        time.sleep_ms(10)
+    return total // count
+while True:
+    avg = read_average(gas, 10)
+    print(avg)
+    time.sleep(0.5)</code></pre></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">3.4 둘을 잇기 · LED 게이지</h3><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 7 · 가스 값 → LED 게이지 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python">from machine import ADC, Pin
+from neopixel import NeoPixel
+import time
+gas = ADC(Pin(26))
+np = NeoPixel(Pin(16), 10)
+SAFE = 15000      # 이 아래는 안전
+DANGER = 30000    # 이 위는 위험
+def read_average(s, count=10):
+    total = 0
+    for _ in range(count):
+        total += s.read_u16(); time.sleep_ms(10)
+    return total // count
+def show_gauge(value):
+    # 값을 0~10칸으로 바꾸기
+    level = int((value - SAFE) / (DANGER - SAFE) * 10)
+    level = max(0, min(10, level))
+    for i in range(10):
+        if i &gt;= level:        np[i] = (0, 0, 0)
+        elif i &lt; 6:           np[i] = (0, 40, 0)   # 초록
+        elif i &lt; 8:           np[i] = (40, 30, 0)  # 노랑
+        else:                 np[i] = (40, 0, 0)   # 빨강
+    np.write()
+while True:
+    value = read_average(gas, 10)
+    print(value)
+    if value &gt;= DANGER:
+        for _ in range(3):                 # 위험! 전체 빨강 깜빡
+            for i in range(10): np[i] = (60, 0, 0)
+            np.write(); time.sleep(0.2)
+            for i in range(10): np[i] = (0, 0, 0)
+            np.write(); time.sleep(0.2)
+    else:
+        show_gauge(value)
+    time.sleep(0.5)</code></pre></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">3.5 웹 대시보드까지 (바이브 코딩)</h3><div class="block prompt-block" style="--accent:#1F9D63">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">지금 피코가 MQ2 값을 read_average로 읽고, show_gauge로 LED 게이지를 켜고 있어.
+여기에 Chapter 2처럼 웹 대시보드를 더해 줘. 같은 와이파이의 스마트폰에서 접속하면,
+지금 가스 값, 안전/주의/위험 상태, 그리고 최근 20개 값의 막대그래프가 보이게 해 줘.
+LED 게이지와 웹 화면이 같은 값으로 동시에 갱신되고, 5초마다 저절로 새로고침되게 해 줘.</div></div><div class="block prompt-block" style="--accent:#1F9D63">
+<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 다듬어 달라고 해보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<div class="prompt-body">&quot;게이지가 한 칸씩 바뀔 때 부드럽게 채워지게 해 줘&quot;
+&quot;위험할 때 깜빡이는 속도를 더 빠르게 해 줘&quot;
+— 동작을 우리말로 부탁하면 AI가 코드를 고쳐 줍니다. 받은 코드가 내 기준값과 맞는지 꼭 확인하세요.</div></div><div class="block code-block">
+<div class="block-head"><span class="block-label">코드 8 · LED와 웹을 함께 갱신하는 핵심 부분</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
+<pre><code class="language-python"># (와이파이 연결은 Chapter 2의 wifi_config.py 방식 그대로)
+while True:
+    cl, addr = s.accept()
+    cl.recv(1024)
+    value = read_average(gas, 10)
+    history.append(value)
+    if len(history) &gt; 20:
+        history.pop(0)
+    show_gauge(value)              # LED도 함께 갱신
+    cl.send(&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n&quot;)
+    cl.send(make_page(value, history))
+    cl.close()</code></pre></div></section></div>
+    <footer>
+      라즈베리파이 피코 · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
+      이 페이지의 코드와 프롬프트는 수업 자료로 자유롭게 활용할 수 있습니다.
+    </footer>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+hljs.configure({cssSelector:'pre code'});
+document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));
+// 복사 버튼
+document.querySelectorAll('.block').forEach(block=>{
+  const btn=block.querySelector('.copy-btn'); if(!btn) return;
+  btn.addEventListener('click',()=>{
+    const code=block.querySelector('code');
+    const body=block.querySelector('.prompt-body');
+    const text=code?code.innerText:(body?body.innerText:'');
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent='복사됨'; btn.classList.add('done');
+      setTimeout(()=>{btn.textContent='복사'; btn.classList.remove('done');},1400);
+    });
+  });
+});
+// 모바일 메뉴
+const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
+function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
+mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
+scrim.addEventListener('click',()=>toggle(false));
+sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
+// 스크롤스파이
+const secs=[...document.querySelectorAll('.sec, .chapter')];
+const links=new Map();
+document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.nav-sec.active').forEach(x=>x.classList.remove('active'));
+    const l=links.get(e.target.id); if(l&&l.classList.contains('nav-sec'))l.classList.add('active');
+  }});
+},{rootMargin:'-10% 0px -80% 0px',threshold:0});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
