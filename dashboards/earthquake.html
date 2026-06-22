@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="lab.css">
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -33,33 +34,41 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>기간·규모</label><select id="feed"><option value="2.5_day">최근 하루 · M2.5+</option><option value="4.5_day">최근 하루 · M4.5+</option><option value="significant_week">최근 일주일 · 큰 지진</option><option value="all_hour">최근 1시간 · 전체</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">발생 건수</div><div class="val" id="cnt">--</div></div><div class="stat"><div class="lab">최대 규모</div><div class="val" id="mx">--</div><div class="unit">M</div></div></div><ul class="list" id="list"></ul>
+    <div class="controls"><label>기간·규모</label><select id="feed"><option value="2.5_day">최근 하루 · M2.5+</option><option value="4.5_day">최근 하루 · M4.5+</option><option value="significant_week">최근 일주일 · 큰 지진</option><option value="all_day">최근 하루 · 전체</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">발생 건수</div><div class="val" id="cnt">--</div></div><div class="stat"><div class="lab">최대 규모</div><div class="val" id="mx">--</div><div class="unit">M</div></div></div><div id="map" class="map"></div><div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">원의 크기·색 = 지진 규모 · 점을 누르면 상세 (규모가 큰 지진이 어디에 몰려 있나요?)</div><ul class="list" id="list"></ul><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>큰 지진은 주로 어떤 선(라인)을 따라 모여 있나요? 지도의 그 띠를 무엇이라 부를까요?</li><li>우리나라 주변에는 지진이 많나요, 적나요? 왜 그럴까요?</li><li>규모가 1 커지면 에너지는 약 32배! 규모 5와 6의 차이를 이야기해 보세요.</li></ul></div>
   </section>
 
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
-    <li>가장 큰 규모를 <b>LED 게이지</b>로</li>
+    <li>지진 위치를 <b>세계 지도</b>에 찍어 <b>판 경계(불의 고리)</b>와 비교</li>
     <li>규모별로 지진 <b>개수 세기</b>(통계 탐구)</li>
-    <li>위·경도로 <b>세계 지도에 표시</b>(판 경계와 비교)</li>
+    <li>가장 큰 규모를 <b>LED 게이지</b>로 표현</li>
   </ul>
   </section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
 <script>
+let map, layer;
 function mcolor(m){ return m<3?'#22c55e':m<5?'#f59e0b':'#ef4444'; }
 function ago(t){ const s=(Date.now()-t)/1000; if(s<3600)return Math.round(s/60)+'분 전'; if(s<86400)return Math.round(s/3600)+'시간 전'; return Math.round(s/86400)+'일 전'; }
 async function run(){
   const feed=document.getElementById('feed').value;
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  if(!map){ map=L.map('map',{worldCopyJump:true}).setView([20,140],1);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:8}).addTo(map); }
   try{
     const j=await (await fetch(`https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${feed}.geojson`)).json();
     const q=j.features.filter(f=>f.properties.mag!=null).sort((a,b)=>b.properties.mag-a.properties.mag);
     document.getElementById('cnt').textContent=j.metadata.count;
     document.getElementById('mx').textContent=q.length?q[0].properties.mag.toFixed(1):'--';
     s.textContent='✓ '+j.metadata.title;
-    document.getElementById('list').innerHTML=q.slice(0,12).map(f=>{
+    if(layer) layer.remove();
+    layer=L.layerGroup().addTo(map);
+    q.forEach(f=>{ const p=f.properties, c=f.geometry.coordinates;
+      L.circleMarker([c[1],c[0]],{radius:Math.max(4,p.mag*2.2),color:mcolor(p.mag),weight:1,fillColor:mcolor(p.mag),fillOpacity:.55})
+        .bindPopup(`<b>M${p.mag.toFixed(1)}</b> · ${p.place||'-'}<br>깊이 ${c[2]}km · ${ago(p.time)}`).addTo(layer); });
+    document.getElementById('list').innerHTML=q.slice(0,10).map(f=>{
       const p=f.properties, c=mcolor(p.mag);
       return `<li><span class="badge" style="background:${c}">M${p.mag.toFixed(1)}</span>
         <span>${p.place||'-'}<br><span class="meta">${ago(p.time)} · 깊이 ${f.geometry.coordinates[2]}km</span></span></li>`;

@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="lab.css">
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -33,32 +34,44 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:170px"><button onclick="run()">검색</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div></div><ul class="list" id="list"></ul>
+    <div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button><span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div><div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div><div id="map" class="map"></div><div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">최근 좌표가 있는 관찰 지점을 지도에 표시 · 점을 누르면 관찰 날짜·장소</div><ul class="list" id="list"></ul><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>이 생물은 도시 근처에 많나요, 산·강 근처에 많나요? 왜 그럴까요?</li><li>관찰이 특정 계절에 몰려 있나요? 철새·곤충이라면 무엇을 뜻할까요?</li><li>다른 종으로 바꿔 검색해 분포를 비교해 보세요(흔한 종 vs 보기 드문 종).</li></ul></div>
   </section>
 
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
+    <li>관찰 <b>위치를 지도</b>에 찍어 종의 <b>분포</b> 살피기(도시 vs 산지)</li>
     <li>관찰 기록 수를 <b>자릿수 LED</b>로(흔한 종 vs 희귀종)</li>
-    <li>관찰 <b>위치를 지도</b>에 → 분포 탐구</li>
-    <li>계절별 관찰 <b>시기 비교</b>(철새 등)</li>
+    <li>계절별 관찰 <b>시기 비교</b>(철새는 언제 많이 보일까?)</li>
   </ul>
   </section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
 <script>
+let map, layer;
 async function run(){
   const sp=document.getElementById('sp').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  if(!map){ map=L.map('map').setView([36.4,127.8],6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:14}).addTo(map); }
   try{
-    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&limit=10`;
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&limit=120`;
     const j=await (await fetch(u)).json();
     document.getElementById('cnt').textContent=j.count.toLocaleString();
+    const pts=(j.results||[]).filter(r=>r.decimalLatitude!=null);
+    document.getElementById('mcnt').textContent=pts.length;
     s.textContent='✓ 한국 내 '+sp+' 관찰';
-    document.getElementById('list').innerHTML=(j.results||[]).map(r=>
+    if(layer) layer.remove();
+    layer=L.layerGroup().addTo(map);
+    const ll=[];
+    pts.forEach(r=>{ const a=[r.decimalLatitude,r.decimalLongitude]; ll.push(a);
+      L.circleMarker(a,{radius:5,color:'#1f9d63',weight:1,fillColor:'#22c55e',fillOpacity:.6})
+        .bindPopup(`<b>${r.scientificName||sp}</b><br>${r.locality||r.stateProvince||'위치 미상'}<br>${(r.eventDate||'').slice(0,10)||'날짜 미상'}`).addTo(layer); });
+    if(ll.length) map.fitBounds(ll,{padding:[30,30],maxZoom:11});
+    document.getElementById('list').innerHTML=pts.slice(0,8).map(r=>
       `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
-    ).join('') || '<li class="meta">관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
+    ).join('') || '<li class="meta">좌표가 있는 관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 run();

@@ -11,9 +11,11 @@ OUT = os.path.join(BASE, "dashboards")
 os.makedirs(OUT, exist_ok=True)
 
 CHART = '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>'
+LEAFLET = ('<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">'
+           '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>')
 
 def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False, lead="",
-         src_name="", src_url="", refs=()):
+         src_name="", src_url="", refs=(), maps=False):
     src = (f'<a class="srclink" href="{src_url}" target="_blank" rel="noopener">🔗 원 데이터 출처: {src_name} ↗</a>'
            if src_url else "")
     refhtml = ""
@@ -30,6 +32,7 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="lab.css">
 {CHART if chart else ""}
+{LEAFLET if maps else ""}
 </head>
 <body>
 <div class="wrap">
@@ -138,6 +141,13 @@ a{text-decoration:none;color:inherit;}
 .status{font-size:13px;color:var(--muted);padding:8px 0;}
 .status.err{color:#d94a5a;}
 .chartbox{margin-top:14px;}
+.map{height:360px;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:6px;}
+.leaflet-popup-content{font-family:var(--font);font-size:13px;}
+.qbox{background:linear-gradient(180deg,#fff8fb,#fff);border:1px solid #f6d3e3;border-radius:12px;
+  padding:12px 16px;margin-top:14px;}
+.qbox-t{font-weight:800;font-size:13px;color:#b83d72;margin-bottom:6px;}
+.qbox ul{margin:0;padding-left:18px;}
+.qbox li{font-size:13.5px;margin:5px 0;}
 .list{list-style:none;padding:0;margin:8px 0 0;}
 .list li{display:flex;gap:12px;align-items:baseline;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13.5px;}
 .badge{flex:0 0 auto;font-weight:800;font-size:13px;border-radius:8px;padding:3px 9px;color:#fff;}
@@ -151,8 +161,18 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
   box-shadow:0 4px 18px rgba(40,50,90,.04);}
 .gcard:hover{transform:translateY(-2px);border-color:#cdd3f3;}
 .gcard .ge{font-size:30px;}
+.gcard .ge{display:flex;align-items:center;justify-content:space-between;}
 .gcard .gt{font-weight:800;font-size:15px;margin:8px 0 4px;}
 .gcard .gs{font-size:12.5px;color:var(--muted);}
+.gcard .ghook{font-size:12px;color:#3b47c2;margin-top:10px;padding-top:9px;border-top:1px dashed #e6e8f5;line-height:1.5;}
+.gmap{font-size:10.5px;font-weight:700;color:#1f7a63;background:#e6f7f0;border:1px solid #c4ebdd;border-radius:999px;padding:2px 8px;}
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:4px 0 18px;}
+.s3{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;
+  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+.s3 .s3n{width:24px;height:24px;border-radius:50%;background:linear-gradient(120deg,var(--pico1),var(--pico2));
+  color:#fff;font-weight:800;font-size:13px;text-align:center;line-height:24px;margin-bottom:7px;}
+.s3 b{font-size:14px;}
+.s3 span{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
 '''
 with open(os.path.join(OUT, "lab.css"), "w", encoding="utf-8") as f:
@@ -265,32 +285,48 @@ page("earthquake", "🌍", "전 세계 지진", "지구과학", "🌎 해외 위
     <tr><td class="k">국내</td><td>한반도 지진은 드물게 잡힘 → <b>국내는 기상청 권장</b></td></tr>
   </table>''',
   apply_html='''<ul>
-    <li>가장 큰 규모를 <b>LED 게이지</b>로</li>
+    <li>지진 위치를 <b>세계 지도</b>에 찍어 <b>판 경계(불의 고리)</b>와 비교</li>
     <li>규모별로 지진 <b>개수 세기</b>(통계 탐구)</li>
-    <li>위·경도로 <b>세계 지도에 표시</b>(판 경계와 비교)</li>
+    <li>가장 큰 규모를 <b>LED 게이지</b>로 표현</li>
   </ul>''',
+  maps=True,
   body='<div class="controls"><label>기간·규모</label><select id="feed">'
        '<option value="2.5_day">최근 하루 · M2.5+</option>'
        '<option value="4.5_day">최근 하루 · M4.5+</option>'
        '<option value="significant_week">최근 일주일 · 큰 지진</option>'
-       '<option value="all_hour">최근 1시간 · 전체</option>'
+       '<option value="all_day">최근 하루 · 전체</option>'
        '</select><button onclick="run()">불러오기</button></div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<div class="grid"><div class="stat"><div class="lab">발생 건수</div><div class="val" id="cnt">--</div></div>'
        '<div class="stat"><div class="lab">최대 규모</div><div class="val" id="mx">--</div><div class="unit">M</div></div></div>'
-       '<ul class="list" id="list"></ul>',
-  js='''function mcolor(m){ return m<3?'#22c55e':m<5?'#f59e0b':'#ef4444'; }
+       '<div id="map" class="map"></div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">원의 크기·색 = 지진 규모 · 점을 누르면 상세 (규모가 큰 지진이 어디에 몰려 있나요?)</div>'
+       '<ul class="list" id="list"></ul>'
+       '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
+       '<li>큰 지진은 주로 어떤 선(라인)을 따라 모여 있나요? 지도의 그 띠를 무엇이라 부를까요?</li>'
+       '<li>우리나라 주변에는 지진이 많나요, 적나요? 왜 그럴까요?</li>'
+       '<li>규모가 1 커지면 에너지는 약 32배! 규모 5와 6의 차이를 이야기해 보세요.</li>'
+       '</ul></div>',
+  js='''let map, layer;
+function mcolor(m){ return m<3?'#22c55e':m<5?'#f59e0b':'#ef4444'; }
 function ago(t){ const s=(Date.now()-t)/1000; if(s<3600)return Math.round(s/60)+'분 전'; if(s<86400)return Math.round(s/3600)+'시간 전'; return Math.round(s/86400)+'일 전'; }
 async function run(){
   const feed=document.getElementById('feed').value;
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  if(!map){ map=L.map('map',{worldCopyJump:true}).setView([20,140],1);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:8}).addTo(map); }
   try{
     const j=await (await fetch(`https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${feed}.geojson`)).json();
     const q=j.features.filter(f=>f.properties.mag!=null).sort((a,b)=>b.properties.mag-a.properties.mag);
     document.getElementById('cnt').textContent=j.metadata.count;
     document.getElementById('mx').textContent=q.length?q[0].properties.mag.toFixed(1):'--';
     s.textContent='✓ '+j.metadata.title;
-    document.getElementById('list').innerHTML=q.slice(0,12).map(f=>{
+    if(layer) layer.remove();
+    layer=L.layerGroup().addTo(map);
+    q.forEach(f=>{ const p=f.properties, c=f.geometry.coordinates;
+      L.circleMarker([c[1],c[0]],{radius:Math.max(4,p.mag*2.2),color:mcolor(p.mag),weight:1,fillColor:mcolor(p.mag),fillOpacity:.55})
+        .bindPopup(`<b>M${p.mag.toFixed(1)}</b> · ${p.place||'-'}<br>깊이 ${c[2]}km · ${ago(p.time)}`).addTo(layer); });
+    document.getElementById('list').innerHTML=q.slice(0,10).map(f=>{
       const p=f.properties, c=mcolor(p.mag);
       return `<li><span class="badge" style="background:${c}">M${p.mag.toFixed(1)}</span>
         <span>${p.place||'-'}<br><span class="meta">${ago(p.time)} · 깊이 ${f.geometry.coordinates[2]}km</span></span></li>`;
@@ -311,29 +347,48 @@ page("iss", "🛰️", "국제우주정거장 ISS", "천문·물리", "🌍 전 
     <tr><td class="k">갱신</td><td>이 페이지는 <b>5초마다 자동 갱신</b>됩니다</td></tr>
   </table>''',
   apply_html='''<ul>
+    <li>실시간 위치를 <b>세계 지도</b>에 표시하고 <b>궤도 경로</b> 그리기</li>
     <li>내 위치와의 <b>거리</b>로 ‘머리 위 통과’ 알림 LED</li>
     <li>속도(약 27,000km/h)로 <b>궤도 운동</b> 체감</li>
-    <li>위치를 모아 <b>지나간 경로</b> 그리기</li>
   </ul>''',
+  maps=True,
   body='<div class="controls"><label>내 위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"></div>'
        '<div id="status" class="status">불러오는 중…</div>'
+       '<div id="map" class="map"></div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">🛰️ = 현재 ISS · 노란 선 = 방금 지나온 경로 · 📍 = 내 위치 · 5초마다 자동 갱신</div>'
        '<div class="grid"><div class="stat"><div class="lab">ISS 위도</div><div class="val" id="ilat" style="font-size:24px">--</div></div>'
        '<div class="stat"><div class="lab">ISS 경도</div><div class="val" id="ilon" style="font-size:24px">--</div></div>'
        '<div class="stat"><div class="lab">고도</div><div class="val" id="alt" style="font-size:24px">--</div><div class="unit">km</div></div>'
        '<div class="stat"><div class="lab">속도</div><div class="val" id="vel" style="font-size:20px">--</div><div class="unit">km/h</div></div></div>'
-       '<div class="stat" id="distbox" style="margin-top:12px"><div class="lab">내 위치에서 거리</div><div class="val" id="dist">--</div><div class="unit" id="overhead">km</div></div>',
-  js='''function dkm(la1,lo1,la2,lo2){const R=6371,r=Math.PI/180;
+       '<div class="stat" id="distbox" style="margin-top:12px"><div class="lab">내 위치에서 거리</div><div class="val" id="dist">--</div><div class="unit" id="overhead">km</div></div>'
+       '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
+       '<li>ISS 경로가 <b>위아래로 물결치며</b> 동쪽으로 가요. 왜 직선이 아닐까요?(궤도 경사각)</li>'
+       '<li>약 90분에 지구 한 바퀴! 하루에 몇 번 돌까요? 직접 계산해 보세요.</li>'
+       '<li>고도 약 420km는 서울~부산(약 325km)보다 조금 멀어요. ‘우주’는 생각보다 가깝죠?</li>'
+       '</ul></div>',
+  js='''let map, iss, ring, me, path=[];
+function dkm(la1,lo1,la2,lo2){const R=6371,r=Math.PI/180;
   const a=Math.sin((la2-la1)*r/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin((lo2-lo1)*r/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));}
+const issIcon=L.divIcon({html:'<div style="font-size:26px;line-height:1">🛰️</div>',className:'',iconSize:[26,26],iconAnchor:[13,13]});
+const meIcon=L.divIcon({html:'<div style="font-size:22px;line-height:1">📍</div>',className:'',iconSize:[22,22],iconAnchor:[11,22]});
 async function tick(){
   const s=document.getElementById('status');
+  if(!map){ map=L.map('map',{worldCopyJump:true}).setView([20,0],1);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:8}).addTo(map);
+    ring=L.polyline([],{color:'#f5c542',weight:2,opacity:.7}).addTo(map); }
   try{
     const j=await (await fetch('https://api.wheretheiss.at/v1/satellites/25544')).json();
     document.getElementById('ilat').textContent=j.latitude.toFixed(2);
     document.getElementById('ilon').textContent=j.longitude.toFixed(2);
     document.getElementById('alt').textContent=Math.round(j.altitude);
     document.getElementById('vel').textContent=Math.round(j.velocity).toLocaleString();
+    const pos=[j.latitude,j.longitude];
+    if(!iss){ iss=L.marker(pos,{icon:issIcon}).addTo(map); map.setView(pos,3); }
+    else iss.setLatLng(pos);
+    path.push(pos); if(path.length>60) path.shift(); ring.setLatLngs(path);
     const la=parseFloat(document.getElementById('lat').value), lo=parseFloat(document.getElementById('lon').value);
+    if(!me){ me=L.marker([la,lo],{icon:meIcon}).addTo(map).bindPopup('내 위치'); } else me.setLatLng([la,lo]);
     const d=dkm(la,lo,j.latitude,j.longitude);
     document.getElementById('dist').textContent=Math.round(d).toLocaleString();
     const over=d<2200; document.getElementById('overhead').textContent=over?'km · 🛰️ 머리 위 하늘권!':'km';
@@ -466,25 +521,47 @@ page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK
     <tr><td class="k">국내</td><td>한국 관찰기록 약 <b>880만 건</b> — 풍부</td></tr>
   </table>''',
   apply_html='''<ul>
+    <li>관찰 <b>위치를 지도</b>에 찍어 종의 <b>분포</b> 살피기(도시 vs 산지)</li>
     <li>관찰 기록 수를 <b>자릿수 LED</b>로(흔한 종 vs 희귀종)</li>
-    <li>관찰 <b>위치를 지도</b>에 → 분포 탐구</li>
-    <li>계절별 관찰 <b>시기 비교</b>(철새 등)</li>
+    <li>계절별 관찰 <b>시기 비교</b>(철새는 언제 많이 보일까?)</li>
   </ul>''',
-  body='<div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:170px"><button onclick="run()">검색</button></div>'
+  maps=True,
+  body='<div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button>'
+       '<span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div>'
        '<div id="status" class="status">불러오는 중…</div>'
-       '<div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div></div>'
-       '<ul class="list" id="list"></ul>',
-  js='''async function run(){
+       '<div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div>'
+       '<div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div>'
+       '<div id="map" class="map"></div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">최근 좌표가 있는 관찰 지점을 지도에 표시 · 점을 누르면 관찰 날짜·장소</div>'
+       '<ul class="list" id="list"></ul>'
+       '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
+       '<li>이 생물은 도시 근처에 많나요, 산·강 근처에 많나요? 왜 그럴까요?</li>'
+       '<li>관찰이 특정 계절에 몰려 있나요? 철새·곤충이라면 무엇을 뜻할까요?</li>'
+       '<li>다른 종으로 바꿔 검색해 분포를 비교해 보세요(흔한 종 vs 보기 드문 종).</li>'
+       '</ul></div>',
+  js='''let map, layer;
+async function run(){
   const sp=document.getElementById('sp').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  if(!map){ map=L.map('map').setView([36.4,127.8],6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:14}).addTo(map); }
   try{
-    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&limit=10`;
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&limit=120`;
     const j=await (await fetch(u)).json();
     document.getElementById('cnt').textContent=j.count.toLocaleString();
+    const pts=(j.results||[]).filter(r=>r.decimalLatitude!=null);
+    document.getElementById('mcnt').textContent=pts.length;
     s.textContent='✓ 한국 내 '+sp+' 관찰';
-    document.getElementById('list').innerHTML=(j.results||[]).map(r=>
+    if(layer) layer.remove();
+    layer=L.layerGroup().addTo(map);
+    const ll=[];
+    pts.forEach(r=>{ const a=[r.decimalLatitude,r.decimalLongitude]; ll.push(a);
+      L.circleMarker(a,{radius:5,color:'#1f9d63',weight:1,fillColor:'#22c55e',fillOpacity:.6})
+        .bindPopup(`<b>${r.scientificName||sp}</b><br>${r.locality||r.stateProvince||'위치 미상'}<br>${(r.eventDate||'').slice(0,10)||'날짜 미상'}`).addTo(layer); });
+    if(ll.length) map.fitBounds(ll,{padding:[30,30],maxZoom:11});
+    document.getElementById('list').innerHTML=pts.slice(0,8).map(r=>
       `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
-    ).join('') || '<li class="meta">관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
+    ).join('') || '<li class="meta">좌표가 있는 관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 run();''')
@@ -590,19 +667,23 @@ run();''')
 # ===================================================================
 # 갤러리 index
 GAL = [
- ("weather","🌤️","오늘의 날씨","지구과학·환경"),
- ("airquality","🌫️","미세먼지","환경"),
- ("earthquake","🌍","전 세계 지진","지구과학"),
- ("iss","🛰️","ISS 위치","천문·물리"),
- ("sunrise","🌅","일출·일몰","천문·지구"),
- ("spaceweather","🌞","우주날씨 Kp","천문·지구"),
- ("pubchem","⚗️","물질 정보","화학"),
- ("gbif","🐦","생물 관찰","생물"),
- ("nasa","🔭","NASA 우주 데이터","천문"),
+ ("weather","🌤️","오늘의 날씨","지구과학·환경","오늘 하루 기온은 어떻게 변할까? 일교차가 큰 날은 언제?"),
+ ("airquality","🌫️","미세먼지","환경","지금 우리 동네 공기는 안전할까? 언제 가장 나쁠까?"),
+ ("earthquake","🌍","전 세계 지진","지구과학","지진은 왜 특정 띠(불의 고리)에 몰릴까?","map"),
+ ("iss","🛰️","ISS 위치","천문·물리","우주정거장은 지금 어디를? 경로는 왜 물결칠까?","map"),
+ ("sunrise","🌅","일출·일몰","천문·지구","계절마다 낮 길이는 왜 달라질까? 극지방은?"),
+ ("spaceweather","🌞","우주날씨 Kp","천문·지구","태양 폭풍이 세지면 오로라가 보일까?"),
+ ("pubchem","⚗️","물질 정보","화학","물·카페인·포도당… 분자량은 얼마나 다를까?"),
+ ("gbif","🐦","생물 관찰","생물","이 생물은 어디에 사나? 도시 vs 산?","map"),
+ ("nasa","🔭","NASA 우주 데이터","천문","오늘의 우주 사진은? 지구 곁 소행성은 몇 개?"),
 ]
-cards = "".join(
- f'<a class="gcard" href="{s}.html"><div class="ge">{e}</div>'
- f'<div class="gt">{t}</div><div class="gs">{sub}</div></a>' for s,e,t,sub in GAL)
+def gcard(item):
+    s, e, t, sub, hook = item[0], item[1], item[2], item[3], item[4]
+    badge = '<span class="gmap">🗺️ 지도</span>' if (len(item) > 5 and item[5] == "map") else ''
+    return (f'<a class="gcard" href="{s}.html"><div class="ge">{e}{badge}</div>'
+            f'<div class="gt">{t}</div><div class="gs">{sub}</div>'
+            f'<div class="ghook">🔎 {hook}</div></a>')
+cards = "".join(gcard(it) for it in GAL)
 index_html = f'''<!DOCTYPE html>
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -615,13 +696,27 @@ index_html = f'''<!DOCTYPE html>
   <a class="back" href="../index.html">← 교재로 돌아가기</a>
   <header class="phead">
     <div class="bigemoji">🛰️🌤️⚗️</div>
-    <h1>오픈 API <span class="pico-accent">라이브 대시보드</span></h1>
-    <p style="color:#7a7f95;font-size:14px;max-width:560px;margin:6px auto 0">
-      브라우저에서 직접 공개 데이터를 받아와 그려 봅니다. 어떤 데이터를, 어떻게 쓸 수 있는지
-      ‘느낌’을 잡는 샘플 프로젝트예요. 카드를 눌러 살아 있는 데이터를 만나 보세요.</p>
+    <h1>오픈 API <span class="pico-accent">데이터 탐구실</span></h1>
+    <p style="color:#7a7f95;font-size:14px;max-width:600px;margin:6px auto 0">
+      세상의 <b>공개 데이터(Open API)</b>를 브라우저에서 직접 받아와 그려 보는 탐구실이에요.
+      카드를 눌러 <b>살아 있는 데이터</b>를 만나고, 아래 3단계로 탐구해 보세요.</p>
   </header>
+
+  <div class="steps3">
+    <div class="s3"><div class="s3n">1</div><b>관찰</b><span>지금 데이터가 어떤 모습인지 살펴보기</span></div>
+    <div class="s3"><div class="s3n">2</div><b>질문</b><span>각 페이지의 ‘🔎 탐구 질문’에 답해 보기</span></div>
+    <div class="s3"><div class="s3n">3</div><b>연결</b><span>이 데이터를 피코·LED로 만들면? (교재 부록)</span></div>
+  </div>
+
   <div class="gallery">{cards}</div>
-  <footer>모두 키 없이(또는 무료 키로) 브라우저에서 바로 호출 · 데이터는 각 제공처의 것입니다.</footer>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="font-size:14px;font-weight:800;margin-bottom:8px">💡 API가 뭐예요? — 한 줄 요약</h2>
+    <p style="font-size:13.5px;color:#44464f;line-height:1.8">관공서에서 <b>등본</b>을 떼듯, ‘데이터를 가진 기관에 정해진 양식으로 신청(요청)하면 정해진 형식으로 발급(응답)해 주는 창구’가 <b>API</b>예요.
+    여기 9곳은 모두 <b>무료</b>이고, NASA만 키가 필요합니다(페이지에 포함). 더 자세한 설명은 교재 3장과 부록에 있어요.</p>
+  </div>
+
+  <footer>모두 공개 데이터 · 브라우저에서 바로 호출(CORS 허용 확인) · 데이터는 각 제공처의 것입니다.</footer>
 </div>
 </body></html>'''
 with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:

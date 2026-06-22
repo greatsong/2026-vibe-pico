@@ -67,6 +67,13 @@ a{text-decoration:none;color:inherit;}
 .status{font-size:13px;color:var(--muted);padding:8px 0;}
 .status.err{color:#d94a5a;}
 .chartbox{margin-top:14px;}
+.map{height:360px;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:6px;}
+.leaflet-popup-content{font-family:var(--font);font-size:13px;}
+.qbox{background:linear-gradient(180deg,#fff8fb,#fff);border:1px solid #f6d3e3;border-radius:12px;
+  padding:12px 16px;margin-top:14px;}
+.qbox-t{font-weight:800;font-size:13px;color:#b83d72;margin-bottom:6px;}
+.qbox ul{margin:0;padding-left:18px;}
+.qbox li{font-size:13.5px;margin:5px 0;}
 .list{list-style:none;padding:0;margin:8px 0 0;}
 .list li{display:flex;gap:12px;align-items:baseline;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13.5px;}
 .badge{flex:0 0 auto;font-weight:800;font-size:13px;border-radius:8px;padding:3px 9px;color:#fff;}
@@ -80,6 +87,16 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
   box-shadow:0 4px 18px rgba(40,50,90,.04);}
 .gcard:hover{transform:translateY(-2px);border-color:#cdd3f3;}
 .gcard .ge{font-size:30px;}
+.gcard .ge{display:flex;align-items:center;justify-content:space-between;}
 .gcard .gt{font-weight:800;font-size:15px;margin:8px 0 4px;}
 .gcard .gs{font-size:12.5px;color:var(--muted);}
+.gcard .ghook{font-size:12px;color:#3b47c2;margin-top:10px;padding-top:9px;border-top:1px dashed #e6e8f5;line-height:1.5;}
+.gmap{font-size:10.5px;font-weight:700;color:#1f7a63;background:#e6f7f0;border:1px solid #c4ebdd;border-radius:999px;padding:2px 8px;}
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:4px 0 18px;}
+.s3{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;
+  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+.s3 .s3n{width:24px;height:24px;border-radius:50%;background:linear-gradient(120deg,var(--pico1),var(--pico2));
+  color:#fff;font-weight:800;font-size:13px;text-align:center;line-height:24px;margin-bottom:7px;}
+.s3 b{font-size:14px;}
+.s3 span{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
