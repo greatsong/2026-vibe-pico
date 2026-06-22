@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나라별 CO₂·에너지 · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🌱</div>
+    <h1>나라별 CO₂·에너지</h1>
+    <div class="tags"><span class="tag subj">사회·환경·에너지</span><span class="tag region">🌍 전 세계(국내 포함)</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 어떤 데이터인가요?</h2>
+    <p class="lead"><b>세계은행(World Bank)</b>이 모은 나라별 통계예요. 1인당 CO₂ 배출량, 재생에너지 비중 같은 지표로 <b>우리나라와 다른 나라를 데이터로 비교</b>해 볼 수 있어요.</p>
+    <table>
+    <tr><td class="k">무엇</td><td>200여 개국 개발·환경·에너지 지표 (World Bank)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.worldbank.org/v2/country/KR;JP;US/indicator/<i>지표코드</i>?format=json</code></td></tr>
+    <tr><td class="k">예시 지표</td><td>1인당 CO₂ <code>EN.GHG.CO2.PC.CE.AR5</code> · 재생에너지 비중 <code>EG.FEC.RNEW.ZS</code></td></tr>
+  </table>
+    <a class="srclink" href="https://data.worldbank.org" target="_blank" rel="noopener">🔗 원 데이터 출처: World Bank Open Data ↗</a>
+    
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>지표</label><select id="ind" onchange="run()"><option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)">1인당 CO₂ 배출량 (톤)</option><option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)">재생에너지 비중 (%)</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="chartbox"><canvas id="ch" height="150"></canvas></div><ul class="list" id="list"></ul><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>1인당 CO₂ 배출이 큰 나라들은 어떤 공통점이 있을까요?</li><li>우리나라의 재생에너지 비중은 다른 나라와 비교해 높은 편인가요?</li><li>두 지표(CO₂ vs 재생에너지)는 서로 어떤 관계가 있을까요?</li></ul></div>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>한국 vs 주요국 <b>1인당 CO₂ 배출 비교</b></li>
+    <li>나라별 <b>재생에너지 비중</b> 비교 → 우리나라의 위치는?</li>
+    <li>지표를 바꿔 인구·GDP 등 다른 데이터로 확장</li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+let chart;
+const CO=[['KR','한국'],['JP','일본'],['US','미국'],['DE','독일'],['FR','프랑스'],['CN','중국'],['IN','인도'],['BR','브라질']];
+async function run(){
+  const [code,label]=document.getElementById('ind').value.split('|');
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const ids=CO.map(c=>c[0]).join(';');
+    const u=`https://api.worldbank.org/v2/country/${ids}/indicator/${code}?format=json&date=2015:2023&per_page=600`;
+    const arr=(await (await fetch(u)).json())[1]||[];
+    const by={};
+    arr.forEach(r=>{ if(r.value==null) return; const id=r.country.id; if(!(id in by)||r.date>by[id].y) by[id]={v:r.value,y:r.date}; });
+    const rows=CO.map(([id,ko])=>({ko,...(by[id]||{v:null})})).filter(r=>r.v!=null).sort((a,b)=>b.v-a.v);
+    s.textContent='✓ '+label+' · 최근값';
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:rows.map(r=>r.ko),
+      datasets:[{label,data:rows.map(r=>r.v),backgroundColor:rows.map(r=>r.ko==='한국'?'#E0568A':'#5B6CF0')}]},
+      options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}}}});
+    document.getElementById('list').innerHTML=rows.map(r=>
+      `<li><span class="badge" style="background:${r.ko==='한국'?'#E0568A':'#5B6CF0'}">${r.v.toFixed(1)}</span>
+       <span>${r.ko}<span class="meta"> · ${r.y}년</span></span></li>`).join('');
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();
+</script>
+</body>
+</html>

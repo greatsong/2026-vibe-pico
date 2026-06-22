@@ -223,6 +223,11 @@ CHAPTERS = [
       {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 아래는 <b>복사해서 main.py로 저장하면 바로 도는</b> 완결형 대시보드예요. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요."},
       {"type": "code", "label": "전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py", "fold": True},
+      {"type": "step_head", "html": "<b>Step 5.</b> 여기서 <b>바이브코딩으로 마무리</b>해 봐요. 숫자만 보여 주는 대신, 신호 세기에 따라 <b>재미있게 반응</b>하도록 AI에게 부탁합니다. 아래 프롬프트를 그대로 복사해 AI 도구에 붙여넣으세요."},
+      {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요 (그대로 복사)", "text":
+"내 라즈베리파이 피코 2 W가 지금 와이파이 신호 세기(RSSI)를 측정해서 소켓 기반 웹서버로 보여주고 있어. RSSI는 dBm 단위의 음수이고 0에 가까울수록 강해(예: -50은 강함, -85는 약함). 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n신호 세기에 따라 화면이 재미있게 반응하도록 바꿔 줘:\n- 강할 때(약 -60dBm 이상): 초록색 + ‘신호 최고예요! 😄’ 같은 축하 느낌(살짝 반짝).\n- 보통(-60 ~ -78dBm): 노란색 + ‘쓸 만해요’.\n- 약할 때(약 -78dBm 이하): 빨간색 + ‘⚠️ 신호 약함 — 끊길 수 있어요’ 경고를 크게 띄우고 화면이 살짝 흔들리는 애니메이션.\n그리고 WS2813 LED 10개(GP16, NeoPixel을 timing=(280,515,515,745)로 생성)가 연결돼 있다면, 같은 상태를 LED 색으로도 보여 줘(강함=초록, 보통=노랑, 약함=빨강 깜빡).\n복사해서 바로 도는 완결형 main.py로 주고, 핀·timing 설정은 그대로 유지해 줘."},
+      {"type": "callout", "kind": "tip", "title": "바이브코딩 팁",
+       "html": "받은 코드를 올리기 전에 ① 신호 기준값(-60·-78 등)이 우리 환경에 맞는지 ② LED를 쓴다면 <code>timing</code> 인자가 들어 있는지 확인하세요. 기준값은 직접 돌아다니며 ‘강한 곳/약한 곳’ RSSI를 보고 조정하면 더 정확해요."},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [

@@ -527,7 +527,13 @@ page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무�
        '<button id="b3d" onclick="setView(\'3d\')">입체 3D 🧊</button></div>'
        '<div id="view2d"><img id="img" class="molimg" alt="구조" src=""></div>'
        '<div id="view3d" style="display:none"><div id="v3d" class="mol3d"></div>'
-       '<div style="font-size:11px;color:#7a7f95;text-align:center;margin-top:6px">드래그로 회전 · 휠로 확대 (3D 모양이 없는 단순 물질도 있어요)</div></div>',
+       '<div class="cpk"><b>색 = 원소</b>'
+       '<span><i style="background:#909090"></i>탄소 C</span>'
+       '<span><i style="background:#ffffff"></i>수소 H</span>'
+       '<span><i style="background:#ff0d0d"></i>산소 O</span>'
+       '<span><i style="background:#3050f8"></i>질소 N</span>'
+       '<span><i style="background:#ffe000"></i>황 S</span></div>'
+       '<div style="font-size:11px;color:#7a7f95;text-align:center;margin-top:6px">3D 분자는 글씨 대신 <b>색으로 원소를 구분</b>해요 · 드래그로 회전 · 휠로 확대 (3D 모양이 없는 단순 물질도 있어요)</div></div>',
   js='''let CID=null, viewer=null, mode='2d';
 function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('name').value=v; run(); } }
 function setView(m){
@@ -746,6 +752,107 @@ function drawAstro(arr){
 function run(){ const key=document.getElementById('key').value.trim()||'DEMO_KEY'; loadApod(key); loadNeo(key); }
 run();''')
 
+# 10) 태양·바람 에너지 (NASA POWER)
+page("energy", "⚡", "태양·바람 에너지", "에너지·물리·지구", "🇰🇷 국내 OK · 🌍 전 세계",
+  lead="<b>NASA POWER</b>는 위성 관측으로 전 세계 어디든 <b>태양 복사량·풍속</b>을 알려줘요. 태양광·풍력 발전소를 어디에 세우면 좋을지 가늠하는, 진짜 <b>신재생에너지 설계용</b> 데이터랍니다.",
+  src_name="NASA POWER", src_url="https://power.larc.nasa.gov",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>위치별 월평균 태양복사량·풍속 등 (NASA POWER, 위성 기반)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&amp;...</code></td></tr>
+    <tr><td class="k">단위</td><td>태양복사 kWh/m²/일 · 풍속 m/s (30년 기후 평년값)</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>우리 지역 <b>태양광 발전 잠재력</b> 가늠(일사량이 높은 달은?)</li>
+    <li>태양광 LED 게이지: 일사량을 10칸으로(여름↑ 겨울↓)</li>
+    <li>여러 지역 비교 — <b>태양광 vs 풍력</b> 어디가 유리할까?</li>
+  </ul>''',
+  chart=True,
+  body=SEOUL + '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">연평균 일사량</div><div class="val" id="sun">--</div><div class="unit">kWh/m²/일</div></div>'
+       '<div class="stat"><div class="lab">연평균 풍속</div><div class="val" id="wind">--</div><div class="unit">m/s (10m 높이)</div></div></div>'
+       '<div class="chartbox"><canvas id="ch" height="120"></canvas></div>'
+       '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
+       '<li>일사량이 가장 높은 달은 언제인가요? 장마철(6~7월)에는 왜 낮아질까요?</li>'
+       '<li>우리 지역은 태양광과 풍력 중 무엇이 더 유리할까요? (일사량 vs 풍속)</li>'
+       '<li>위도를 적도/극지방으로 바꾸면 일사량은 어떻게 달라지나요?</li>'
+       '</ul></div>',
+  js='''let chart;
+const M=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const K=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=${lon}&latitude=${lat}&format=JSON`;
+    const p=(await (await fetch(u)).json()).properties.parameter;
+    const sun=K.map(k=>p.ALLSKY_SFC_SW_DWN[k]), wind=K.map(k=>p.WS10M[k]);
+    document.getElementById('sun').textContent=p.ALLSKY_SFC_SW_DWN.ANN.toFixed(2);
+    document.getElementById('wind').textContent=p.WS10M.ANN.toFixed(1);
+    s.textContent='✓ 30년 기후 평년값 기준';
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{data:{labels:M,datasets:[
+      {type:'bar',label:'태양 일사량(kWh/m²/일)',data:sun,backgroundColor:'rgba(245,158,11,.6)',yAxisID:'y'},
+      {type:'line',label:'풍속(m/s)',data:wind,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',tension:.3,pointRadius:0,yAxisID:'y1'}]},
+      options:{responsive:true,interaction:{intersect:false,mode:'index'},
+        scales:{y:{position:'left',title:{display:true,text:'kWh/m²/일'}},
+                y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'m/s'}}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 12) 나라별 CO2·에너지 (World Bank)
+page("worldbank", "🌱", "나라별 CO₂·에너지", "사회·환경·에너지", "🌍 전 세계(국내 포함)",
+  lead="<b>세계은행(World Bank)</b>이 모은 나라별 통계예요. 1인당 CO₂ 배출량, 재생에너지 비중 같은 지표로 <b>우리나라와 다른 나라를 데이터로 비교</b>해 볼 수 있어요.",
+  src_name="World Bank Open Data", src_url="https://data.worldbank.org",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>200여 개국 개발·환경·에너지 지표 (World Bank)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.worldbank.org/v2/country/KR;JP;US/indicator/<i>지표코드</i>?format=json</code></td></tr>
+    <tr><td class="k">예시 지표</td><td>1인당 CO₂ <code>EN.GHG.CO2.PC.CE.AR5</code> · 재생에너지 비중 <code>EG.FEC.RNEW.ZS</code></td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>한국 vs 주요국 <b>1인당 CO₂ 배출 비교</b></li>
+    <li>나라별 <b>재생에너지 비중</b> 비교 → 우리나라의 위치는?</li>
+    <li>지표를 바꿔 인구·GDP 등 다른 데이터로 확장</li>
+  </ul>''',
+  chart=True,
+  body='<div class="controls"><label>지표</label><select id="ind" onchange="run()">'
+       '<option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)">1인당 CO₂ 배출량 (톤)</option>'
+       '<option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)">재생에너지 비중 (%)</option>'
+       '</select><button onclick="run()">불러오기</button></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="chartbox"><canvas id="ch" height="150"></canvas></div>'
+       '<ul class="list" id="list"></ul>'
+       '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
+       '<li>1인당 CO₂ 배출이 큰 나라들은 어떤 공통점이 있을까요?</li>'
+       '<li>우리나라의 재생에너지 비중은 다른 나라와 비교해 높은 편인가요?</li>'
+       '<li>두 지표(CO₂ vs 재생에너지)는 서로 어떤 관계가 있을까요?</li>'
+       '</ul></div>',
+  js='''let chart;
+const CO=[['KR','한국'],['JP','일본'],['US','미국'],['DE','독일'],['FR','프랑스'],['CN','중국'],['IN','인도'],['BR','브라질']];
+async function run(){
+  const [code,label]=document.getElementById('ind').value.split('|');
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const ids=CO.map(c=>c[0]).join(';');
+    const u=`https://api.worldbank.org/v2/country/${ids}/indicator/${code}?format=json&date=2015:2023&per_page=600`;
+    const arr=(await (await fetch(u)).json())[1]||[];
+    const by={};
+    arr.forEach(r=>{ if(r.value==null) return; const id=r.country.id; if(!(id in by)||r.date>by[id].y) by[id]={v:r.value,y:r.date}; });
+    const rows=CO.map(([id,ko])=>({ko,...(by[id]||{v:null})})).filter(r=>r.v!=null).sort((a,b)=>b.v-a.v);
+    s.textContent='✓ '+label+' · 최근값';
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:rows.map(r=>r.ko),
+      datasets:[{label,data:rows.map(r=>r.v),backgroundColor:rows.map(r=>r.ko==='한국'?'#E0568A':'#5B6CF0')}]},
+      options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}}}});
+    document.getElementById('list').innerHTML=rows.map(r=>
+      `<li><span class="badge" style="background:${r.ko==='한국'?'#E0568A':'#5B6CF0'}">${r.v.toFixed(1)}</span>
+       <span>${r.ko}<span class="meta"> · ${r.y}년</span></span></li>`).join('');
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
 # ===================================================================
 # 갤러리 index
 GAL = [
@@ -758,6 +865,8 @@ GAL = [
  ("pubchem","⚗️","물질 정보","화학","물·카페인·포도당… 분자량은 얼마나 다를까?"),
  ("gbif","🐦","생물 관찰","생물","이 생물은 어디에 사나? 도시 vs 산?","map"),
  ("nasa","🔭","NASA 우주 데이터","천문","오늘의 우주 사진은? 지구 곁 소행성은 몇 개?"),
+ ("energy","⚡","태양·바람 에너지","에너지·물리","우리 지역은 태양광·풍력 중 뭐가 유리?"),
+ ("worldbank","🌱","나라별 CO₂·에너지","사회·환경","우리나라 1인당 CO₂는 다른 나라보다?"),
 ]
 def gcard(item):
     s, e, t, sub, hook = item[0], item[1], item[2], item[3], item[4]
@@ -766,22 +875,6 @@ def gcard(item):
             f'<div class="gt">{t}</div><div class="gs">{sub}</div>'
             f'<div class="ghook">🔎 {hook}</div></a>')
 cards = "".join(gcard(it) for it in GAL)
-REC = [
- ("🦖","PokéAPI","게임·생물","키 없음 · 🟢브라우저","포켓몬 도감 — 타입·능력치·진화","https://pokeapi.co"),
- ("🐶","Dog / Cat API","재미·생물","키 없음 · 🟢브라우저","랜덤 강아지·고양이 사진","https://dog.ceo/dog-api/"),
- ("📖","위키백과 API","전 과목","키 없음 · 🟢브라우저","문서 요약·검색(한국어 지원)","https://ko.wikipedia.org/api/rest_v1/"),
- ("🌍","REST Countries","사회·지리","키 없음","나라별 인구·면적·수도·국기","https://restcountries.com"),
- ("💱","Frankfurter","경제·수학","키 없음","환율(유럽중앙은행 기준)","https://frankfurter.dev"),
- ("🗓️","Nager.Date","사회","키 없음","나라별 공휴일 목록","https://date.nager.at"),
- ("🎮","Open Trivia DB","퀴즈·전과목","키 없음","다지선다 퀴즈 문제 은행","https://opentdb.com"),
- ("📚","Open Library","국어·사회","키 없음","책 정보·표지 이미지","https://openlibrary.org/developers/api"),
- ("🦠","disease.sh","보건·통계","키 없음","감염병 통계 데이터","https://disease.sh"),
- ("🇰🇷","공공데이터포털","전 과목(국내)","키 필요","버스도착·대기·기상 등 국내 공식","https://www.data.go.kr"),
-]
-recs = "".join(
- f'<a class="reccard" href="{u}" target="_blank" rel="noopener"><div class="re">{e}</div>'
- f'<div class="rt">{n}</div><div class="rf">{f} · {k}</div><div class="rd">{w}</div></a>'
- for e,n,f,k,w,u in REC)
 index_html = f'''<!DOCTYPE html>
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -809,15 +902,10 @@ index_html = f'''<!DOCTYPE html>
   <div class="gallery">{cards}</div>
 
   <div class="card" style="margin-top:18px">
-    <h2 style="font-size:14px;font-weight:800;margin-bottom:4px">🧭 더 탐험할 오픈 API <span style="font-weight:500;color:#7a7f95;font-size:12px">— 과학이 아니어도 좋아요</span></h2>
-    <p style="font-size:12.5px;color:#7a7f95;margin-bottom:12px">대부분 무료이고, <b>🟢브라우저</b> 표시는 위 대시보드처럼 바로 fetch해 만들 수 있어요(CORS 허용 확인).</p>
-    <div class="recgrid">{recs}</div>
-  </div>
-
-  <div class="card" style="margin-top:14px">
     <h2 style="font-size:14px;font-weight:800;margin-bottom:8px">💡 API가 뭐예요? — 한 줄 요약</h2>
     <p style="font-size:13.5px;color:#44464f;line-height:1.8">관공서에서 <b>등본</b>을 떼듯, ‘데이터를 가진 기관에 정해진 양식으로 신청(요청)하면 정해진 형식으로 발급(응답)해 주는 창구’가 <b>API</b>예요.
-    여기 9곳은 모두 <b>무료</b>이고, NASA만 키가 필요합니다(페이지에 포함). 더 자세한 설명은 교재 3장과 부록에 있어요.</p>
+    위 대시보드는 모두 <b>무료</b>로 브라우저에서 바로 호출해요(NASA만 키 필요, 페이지에 포함). 더 자세한 설명은 교재 3장과 부록에 있어요.</p>
+    <p style="font-size:12.5px;color:#7a7f95;line-height:1.7;margin-top:10px">🇰🇷 <b>국내 공식 데이터</b>가 필요하면 <a href="https://www.data.go.kr" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">공공데이터포털 ↗</a>에서 무료 키를 받아 쓰세요 — 기상청(날씨·지진), 에어코리아(미세먼지), 전력거래소(전력수급) 등 국내 정확도가 높습니다.</p>
   </div>
 
   <footer>모두 공개 데이터 · 브라우저에서 바로 호출(CORS 허용 확인) · 데이터는 각 제공처의 것입니다.</footer>
