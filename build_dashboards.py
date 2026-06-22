@@ -233,7 +233,7 @@ run();''')
 
 # 2) 대기질
 page("airquality", "🌫️", "미세먼지 (대기질)", "환경", "🌍 전 지구(국내 포함)",
-  lead="같은 Open-Meteo가 유럽 <b>CAMS 대기질 모델</b>로 전 지구의 미세먼지(PM2.5·PM10)·오존을 시간별로 알려줘요. 멀리 중국발 황사가 우리 동네로 오는 흐름까지 숫자로 볼 수 있죠.",
+  lead="같은 Open-Meteo가 유럽 <b>CAMS 대기질 모델</b>로 전 지구의 미세먼지(PM2.5·PM10)·오존을 시간별로 알려줘요. 위·경도만 바꾸면 여러 지역의 공기질을 숫자로 비교해 볼 수 있습니다.",
   src_name="Open-Meteo Air Quality", src_url="https://open-meteo.com/en/docs/air-quality-api",
   refs=[("에어코리아(국내 공식)", "https://www.airkorea.or.kr")],
   info='''<table>
@@ -475,6 +475,16 @@ async function run(){
 run();''')
 
 # 7) PubChem 화학
+CMP = [
+ ("물","water"),("산소","oxygen"),("이산화탄소","carbon dioxide"),("질소","nitrogen"),
+ ("포도당","glucose"),("설탕(수크로스)","sucrose"),("소금(염화나트륨)","sodium chloride"),
+ ("에탄올(알코올)","ethanol"),("아세트산(식초)","acetic acid"),("암모니아","ammonia"),
+ ("메테인","methane"),("과산화수소","hydrogen peroxide"),("베이킹소다","sodium bicarbonate"),
+ ("카페인","caffeine"),("비타민C","ascorbic acid"),("아스피린","aspirin"),
+ ("아세트아미노펜(타이레놀)","acetaminophen"),("니코틴","nicotine"),
+]
+PRESET = '<option value="">— 인기 물질 고르기 —</option>' + ''.join(f'<option value="{e}">{k}</option>' for k, e in CMP)
+DLIST = ''.join(f'<option value="{e}">{k}</option>' for k, e in CMP)
 page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무관",
   lead="미국 국립보건원(NIH)이 운영하는 세계 최대 화학 백과 <b>PubChem</b>. <b>1억 종</b>이 넘는 물질의 이름만 넣으면 분자식·분자량은 물론 <b>구조 그림</b>까지 그려 줍니다.",
   src_name="PubChem (미국 국립보건원 NIH)", src_url="https://pubchem.ncbi.nlm.nih.gov",
@@ -489,12 +499,17 @@ page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무�
     <li>분자량 크기를 <b>LED 막대</b>로</li>
     <li>화학식만 보여 주고 <b>물질 맞히기 퀴즈</b></li>
   </ul>''',
-  body='<div class="controls"><label>물질(영문)</label><input id="name" value="caffeine" style="width:160px"><button onclick="run()">검색</button></div>'
+  body=f'<div class="controls"><label>인기 물질</label><select id="preset" onchange="pick()">{PRESET}</select>'
+       f'<label>또는 직접</label><input id="name" list="cmplist" value="caffeine" style="width:160px" placeholder="영문 이름">'
+       f'<datalist id="cmplist">{DLIST}</datalist><button onclick="run()">검색</button></div>'
+       '<div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">영문 이름으로 검색돼요(예: water, glucose). 목록에 없는 물질은 '
+       '<a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">PubChem에서 직접 검색 ↗</a> 후 영문명을 넣어 보세요.</div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<div class="molwrap"><img id="img" alt="구조" src=""><div>'
        '<div class="grid" style="grid-template-columns:1fr"><div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div>'
        '<div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div></div></div>',
-  js='''async function run(){
+  js='''function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('name').value=v; run(); } }
+async function run(){
   const name=document.getElementById('name').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
