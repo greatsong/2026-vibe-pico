@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>피코 바이브 코딩 · 코드 & 프롬프트 모음</title>
-<meta name="description" content="라즈베리파이 피코로 배우는 피지컬 컴퓨팅 — Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트 모음.">
+<title>피코 바이브 코딩 연수 · 코드 & 가이드</title>
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
@@ -17,10 +17,9 @@
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;}
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
 a{color:inherit;text-decoration:none;}
 .layout{display:flex;max-width:1180px;margin:0 auto;}
-/* 사이드바 */
 .sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
   background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
 .brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
@@ -33,11 +32,10 @@ a{color:inherit;text-decoration:none;}
 .nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
 .nav-sec:hover{color:var(--fg);}
 .nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
-/* 본문 */
 .main{flex:1;min-width:0;padding:0 56px 120px;}
 .hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
 .hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
-.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:640px;}
+.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:660px;}
 .stats{display:flex;gap:10px;flex-wrap:wrap;}
 .stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
   border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
@@ -47,11 +45,72 @@ a{color:inherit;text-decoration:none;}
 .ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
 .ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
 .ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
-.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:660px;}
+.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:680px;}
 .sec{padding-top:14px;}
-.sec-title{font-size:16.5px;font-weight:700;margin:26px 0 12px;letter-spacing:-.01em;}
-/* 블록 공통 */
-.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;}
+.sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code{
+  font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:4px;padding:1px 6px;}
+.step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
+/* 챕터 인트로 */
+.goals{background:#f8f9ff;border:1px solid #e6e8fb;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fffdf5;border:1px solid #f1e9cf;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;}
+.why p{margin:0;font-size:14px;}
+/* 콜아웃 */
+.callout{border-radius:10px;padding:14px 18px;margin:14px 0;max-width:720px;border:1px solid var(--line);border-left-width:4px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{background:#f0faf4;border-left-color:#22c55e;}
+.callout.warn{background:#fff6f0;border-left-color:#f97316;}
+.callout.info{background:#f0f7ff;border-left-color:#3b82f6;}
+.callout.key{background:#f7f0ff;border-left-color:#8b5cf6;}
+/* 링크 버튼 */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6d5d2;
+  border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;margin:8px 8px 8px 0;transition:.15s;}
+.linkbtn:hover{border-color:#9b9b97;background:var(--code-bg);}
+/* 체크리스트(준비물) */
+.check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);}
+.check-list li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:16px;color:var(--muted);}
+/* 핵심 개념 그리드 */
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:#55524c;}
+/* 스텝 */
+.steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
+  background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
+.steps li b{display:block;margin-bottom:2px;}
+.steps li span{color:#55524c;font-size:13.5px;}
+/* 자주 하는 실수 */
+.mistakes{margin:12px 0;max-width:720px;}
+.mistake{border:1px solid #f0d9d9;border-radius:10px;padding:12px 15px;margin:10px 0;background:#fffafa;}
+.m-sym{font-weight:700;font-size:13.5px;color:#c0392b;margin-bottom:7px;}
+.m-row{font-size:13px;margin:4px 0;padding-left:2px;}
+.m-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#bbb;border-radius:5px;
+  padding:1px 7px;margin-right:7px;}
+.m-tag.fix{background:#22a06b;}
+/* 스스로 점검 */
+.checks{margin:12px 0;max-width:720px;}
+.qa{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:600;list-style:none;}
+.qa summary:before{content:"❓ ";}
+.qa[open] summary{border-bottom:1px solid var(--line);}
+.qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
+.qa-a:before{content:"✅ ";}
+/* 하드웨어 다이어그램 */
+.figure{margin:14px 0;max-width:760px;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
+/* 코드/프롬프트 블록 */
+.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
 .block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
 .block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
 .lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
@@ -62,7 +121,6 @@ a{color:inherit;text-decoration:none;}
 .copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
 .code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}
 .code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}
-/* 프롬프트 콜아웃 */
 .prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
 .prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
   border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
@@ -71,10 +129,9 @@ a{color:inherit;text-decoration:none;}
 .prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
   white-space:pre-wrap;word-break:break-word;padding:15px 18px;
   background:color-mix(in srgb,var(--accent) 4%,#fff);}
-/* 펌웨어 다운로드 카드 */
+/* 펌웨어 카드 */
 .fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
-  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);
-  padding:22px 24px;margin:6px 0 26px;}
+  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);padding:22px 24px;margin:12px 0 18px;max-width:840px;}
 .fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
 .fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
   background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
@@ -95,7 +152,6 @@ a{color:inherit;text-decoration:none;}
 .fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
 .fw-note a{color:#3B47C2;text-decoration:underline;}
 footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
-/* 모바일 토글 */
 .menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
   border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
 .scrim{display:none;}
@@ -115,24 +171,33 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 <div class="scrim" id="scrim"></div>
 <div class="layout">
   <aside class="sidebar" id="sidebar">
-    <div class="brand">🔌 피코 바이브 코딩<small>코드 &amp; 프롬프트 모음 · Ch 1·2·3</small></div>
-    <div class="nav-ch"><a href="#ch1" class="nav-ch-link" data-target="ch1"><span class="nav-dot" style="background:#5B6CF0"></span>피코, 처음 시작하기</a><div class="nav-secs"><a href="#ch1-0" class="nav-sec" data-target="ch1-0">첫 코드 · print 와 보드 LED 깜빡이기</a></div></div><div class="nav-ch"><a href="#ch2" class="nav-ch-link" data-target="ch2"><span class="nav-dot" style="background:#E0568A"></span>우리 집 와이파이 탐험대</a><div class="nav-secs"><a href="#ch2-0" class="nav-sec" data-target="ch2-0">활동 1 · 주변 와이파이 확인</a><a href="#ch2-1" class="nav-sec" data-target="ch2-1">1·2단계 · 손 코딩으로 측정 확인</a><a href="#ch2-2" class="nav-sec" data-target="ch2-2">3단계 · 바이브 코딩으로 웹앱 만들기</a><a href="#ch2-3" class="nav-sec" data-target="ch2-3">6단계 · 살아 움직이는 대시보드로 업그레이드</a></div></div><div class="nav-ch"><a href="#ch3" class="nav-ch-link" data-target="ch3"><span class="nav-dot" style="background:#1F9D63"></span>우리 교실 공기 지킴이</a><div class="nav-secs"><a href="#ch3-0" class="nav-sec" data-target="ch3-0">3.2 LED 다루기 · 빛으로 표현하기</a><a href="#ch3-1" class="nav-sec" data-target="ch3-1">3.3 가스 센서 · 공기를 숫자로</a><a href="#ch3-2" class="nav-sec" data-target="ch3-2">3.4 둘을 잇기 · LED 게이지</a><a href="#ch3-3" class="nav-sec" data-target="ch3-3">3.5 웹 대시보드까지 (바이브 코딩)</a></div></div>
+    <div class="brand">🔌 피코 바이브 코딩 연수<small>설치 · 와이파이 · LED · 날씨 · 가스센서</small></div>
+    <div class="nav-ch"><a href="#ch0" class="nav-ch-link" data-target="ch0"><span class="nav-dot" style="background:#5B6CF0"></span>00. 준비하기</a><div class="nav-secs"><a href="#ch0-0" class="nav-sec" data-target="ch0-0">0.1 · 준비물 확인</a><a href="#ch0-1" class="nav-sec" data-target="ch0-1">0.2 · Thonny 설치 (코드 편집기)</a><a href="#ch0-2" class="nav-sec" data-target="ch0-2">0.3 · 하드웨어 조립</a><a href="#ch0-3" class="nav-sec" data-target="ch0-3">0.4 · MicroPython 펌웨어 설치</a><a href="#ch0-4" class="nav-sec" data-target="ch0-4">0.5 · Thonny와 피코 연결 + 첫 코드</a></div></div><div class="nav-ch"><a href="#ch1" class="nav-ch-link" data-target="ch1"><span class="nav-dot" style="background:#E0568A"></span>01. 와이파이 센서 대시보드</a><div class="nav-secs"><a href="#ch1-0" class="nav-sec" data-target="ch1-0">핵심 개념</a><a href="#ch1-1" class="nav-sec" data-target="ch1-1">따라하기</a><a href="#ch1-2" class="nav-sec" data-target="ch1-2">자주 하는 실수</a><a href="#ch1-3" class="nav-sec" data-target="ch1-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="#ch2" class="nav-ch-link" data-target="ch2"><span class="nav-dot" style="background:#1F9D63"></span>02. LED 10개 다루기</a><div class="nav-secs"><a href="#ch2-0" class="nav-sec" data-target="ch2-0">핵심 개념 — timing이 진짜 중요해요</a><a href="#ch2-1" class="nav-sec" data-target="ch2-1">따라하기</a><a href="#ch2-2" class="nav-sec" data-target="ch2-2">자주 하는 실수</a><a href="#ch2-3" class="nav-sec" data-target="ch2-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="#ch3" class="nav-ch-link" data-target="ch3"><span class="nav-dot" style="background:#3B82F6"></span>03. 날씨 비 예보 대시보드</a><div class="nav-secs"><a href="#ch3-0" class="nav-sec" data-target="ch3-0">핵심 개념</a><a href="#ch3-1" class="nav-sec" data-target="ch3-1">따라하기</a><a href="#ch3-2" class="nav-sec" data-target="ch3-2">자주 하는 실수</a><a href="#ch3-3" class="nav-sec" data-target="ch3-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="#ch4" class="nav-ch-link" data-target="ch4"><span class="nav-dot" style="background:#F59E0B"></span>04. MQ-2 가스센서 대시보드</a><div class="nav-secs"><a href="#ch4-0" class="nav-sec" data-target="ch4-0">핵심 개념</a><a href="#ch4-1" class="nav-sec" data-target="ch4-1">따라하기</a><a href="#ch4-2" class="nav-sec" data-target="ch4-2">자주 하는 실수</a><a href="#ch4-3" class="nav-sec" data-target="ch4-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="#ch5" class="nav-ch-link" data-target="ch5"><span class="nav-dot" style="background:#8B5CF6"></span>05. 자유 프로젝트</a><div class="nav-secs"><a href="#ch5-0" class="nav-sec" data-target="ch5-0">아이디어 모음</a><a href="#ch5-1" class="nav-sec" data-target="ch5-1">AI에게 잘 부탁하는 틀</a><a href="#ch5-2" class="nav-sec" data-target="ch5-2">마무리</a></div></div>
   </aside>
   <main class="main">
     <header class="hero">
-      <h1>피코 바이브 코딩<br>코드 &amp; 프롬프트 모음</h1>
-      <p>라즈베리파이 피코로 배우는 피지컬 컴퓨팅. Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트를 한곳에 모았습니다. 각 블록의 <b>복사</b> 버튼으로 바로 가져다 쓰세요.</p>
+      <h1>피코 바이브 코딩 연수<br>코드 & 가이드</h1>
+      <p>라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 모든 코드를 <b>복사해 바로 실행</b>할 수 있게 모았습니다. 각 블록의 <b>복사</b> 버튼을 쓰세요.</p>
       <div class="stats">
-        <div class="stat"><b>3</b>개 챕터</div>
-        <div class="stat"><b>17</b>개 코드 블록</div>
-        <div class="stat"><b>4</b>개 샘플 프롬프트</div>
+        <div class="stat"><b>6</b>개 챕터</div>
+        <div class="stat"><b>16</b>개 코드 블록</div>
+        <div class="stat"><b>2</b>개 AI 프롬프트</div>
       </div>
     </header>
-    <div class="chapter" id="ch1">
-<div class="ch-head"><span class="ch-num" style="color:#5B6CF0">CHAPTER 01</span>
-<h2 class="ch-title"><span class="ch-bar" style="background:#5B6CF0"></span>피코, 처음 시작하기</h2>
-<p class="ch-sub">피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.</p></div>
-<div class="fw-card">
+    <div class="chapter" id="ch0"><div class="ch-head"><span class="ch-num" style="color:#5B6CF0">CHAPTER 00</span><h2 class="ch-title"><span class="ch-bar" style="background:#5B6CF0"></span>준비하기</h2><p class="ch-sub">Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Thonny(코드 편집기)를 설치하고 실행할 수 있다</li><li>피코 2 WH에 그로브 쉴드와 센서를 바르게 연결할 수 있다</li><li>MicroPython 펌웨어를 설치하고 Thonny와 피코를 연결할 수 있다</li><li>보드 위 LED를 깜빡이는 첫 코드를 실행할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>피코는 손바닥만 한 작은 컴퓨터예요. 다만 처음 한 번은 <b>① 코드를 쓸 도구(Thonny) 설치 → ② 하드웨어 조립 → ③ 피코에 ‘운영체제’ 격인 펌웨어 설치 → ④ 도구와 피코 연결</b> 순서를 거쳐야 합니다. 이 4단계만 통과하면, 다음 장부터는 코드를 복사해 붙여넣고 ▶ 버튼만 누르면 돼요.</p></div><section class="sec" id="ch0-0"><h3 class="sec-title">0.1 · 준비물 확인</h3><p class="prose">책상 위에 아래 물건이 모두 있는지 먼저 확인하세요.</p><ul class="check-list"><li>Raspberry Pi <b>Pico 2 WH</b> (핀 헤더가 납땜된 버전)</li><li>그로브(Grove) <b>베이스 쉴드</b></li><li><b>WS2813 LED 바</b> (10개짜리) + 그로브 케이블</li><li><b>MQ-2 가스센서</b> 모듈 + 그로브 케이블</li><li>데이터 전송이 되는 <b>USB 케이블</b> (충전 전용 케이블 ✗)</li><li>Windows 또는 macOS 컴퓨터</li></ul><div class="callout warn"><div class="callout-head">⚠️ USB 케이블 주의</div><div class="callout-body">세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 연수 현장에서 제일 흔한 막힘 지점입니다.</div></div></section><section class="sec" id="ch0-1"><h3 class="sec-title">0.2 · Thonny 설치 (코드 편집기)</h3><p class="prose"><b>Thonny</b>는 우리가 쓴 코드를 피코에게 전달하고, 피코가 보내는 메시지를 받아 보여 주는 <b>창구</b>예요. 파이썬 입문용으로 가장 쉽고, 피코를 기본 지원합니다.</p><a class="linkbtn" href="https://thonny.org" target="_blank" rel="noopener">🔗 thonny.org — Thonny 내려받기</a><ol class="steps"><li><b>thonny.org 접속</b><span>위 버튼을 눌러 공식 사이트로 갑니다.</span></li><li><b>내 운영체제용 설치파일 받기</b><span>오른쪽 위에서 <b>Windows</b> 또는 <b>macOS</b>에 맞는 파일을 내려받습니다.</span></li><li><b>설치 실행</b><span>받은 파일을 더블클릭해 안내대로 설치합니다. (옵션은 기본값 그대로 두면 됩니다)</span></li><li><b>Thonny 실행</b><span>설치가 끝나면 Thonny를 엽니다. 위에 코드 쓰는 칸, 아래에 <b>Shell</b>(셸) 칸이 보이면 성공이에요.</span></li></ol><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 설치 파일이 백신/보안 경고로 막힘</div><div class="m-row"><span class="m-tag">원인</span>다운로드 직후 일부 백신이 과민 반응합니다.</div><div class="m-row"><span class="m-tag fix">해결</span>공식 사이트(thonny.org)에서 받았다면 안전합니다. ‘허용’ 또는 ‘추가 정보 → 실행’을 선택하세요.</div></div></div></section><section class="sec" id="ch0-2"><h3 class="sec-title">0.3 · 하드웨어 조립</h3><p class="prose">그로브 베이스 쉴드는 피코 위에 ‘덮어 끼우는’ 확장 보드예요. 센서를 납땜 없이 케이블로 톡 꽂을 수 있게 해 줍니다. 아래 그림처럼 연결합니다.</p><div class="figure"><pre class="diagram">
+        USB 케이블                  그로브 케이블
+  ┌──────────┐                ┌─────────────────┐
+  │   PC /   │                │   D16 포트  ●────┼──▶  🟦 WS2813 LED 바 (10개)
+  │  노트북  │◀── USB ──▶┌──┴──────┐          │
+  └──────────┘           │  피코    │  그로브   │
+                         │ 2 WH +   │   베이스  │
+                         │ 그로브   │   쉴드    │
+                         │ 쉴드     │           │
+                         └──┬───────┘   A0 포트 ●────┼──▶  🟫 MQ-2 가스센서
+                            └─────────────────┘
+   LED  → 그로브 <b>D16</b> 포트 (= GP16, 디지털)
+   MQ-2 → 그로브 <b>A0</b>  포트 (= GP26, 아날로그 ADC0)
+</pre></div><ol class="steps"><li><b>피코를 그로브 쉴드에 꽂기</b><span>핀 방향을 맞춰 피코를 쉴드에 끝까지 눌러 끼웁니다. <b>USB 단자가 쉴드 바깥쪽을 향하도록</b> 방향을 확인하세요. 한 줄이라도 핀이 어긋나면 안 됩니다.</span></li><li><b>LED 바 → D16 포트</b><span>WS2813 LED 바의 그로브 케이블을 쉴드의 <b>D16</b> 포트에 꽂습니다. (코드에서는 GP16)</span></li><li><b>MQ-2 센서 → A0 포트</b><span>MQ-2 가스센서의 그로브 케이블을 쉴드의 <b>A0</b> 포트에 꽂습니다. (코드에서는 GP26 / ADC0)</span></li><li><b>USB로 컴퓨터에 연결</b><span>USB 케이블로 피코와 컴퓨터를 연결합니다. (펌웨어를 처음 설치할 때는 0.4의 BOOTSEL 순서를 따르세요)</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 꽂는 위치를 헷갈리지 마세요</div><div class="callout-body">D16(디지털)과 A0(아날로그)는 쓰임이 다릅니다. LED는 <b>D16</b>, 가스센서는 <b>A0</b>. 반대로 꽂으면 값이 이상하거나 LED가 안 켜져요.</div></div></section><section class="sec" id="ch0-3"><h3 class="sec-title">0.4 · MicroPython 펌웨어 설치</h3><p class="prose">갓 산 피코에는 아직 파이썬을 실행할 ‘속살’이 없어요. <b>MicroPython 펌웨어</b>를 한 번 설치하면, 그때부터 피코가 파이썬 코드를 알아듣습니다. (처음 한 번만 하면 됩니다)</p><div class="fw-card">
   <div class="fw-top">
     <div class="fw-info">
       <span class="fw-badge">🔌 처음 한 번만 — 펌웨어 설치</span>
@@ -144,260 +209,671 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
   <div class="fw-steps-wrap">
     <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
     <ol class="fw-steps">
-      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요!)</span></li>
+      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요! 버튼 먼저 누르고 꽂기)</span></li>
       <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
       <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
       <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
     </ol>
   </div>
   <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
-</div>
-<section class="sec" id="ch1-0"><h3 class="sec-title">첫 코드 · print 와 보드 LED 깜빡이기</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 1-01</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">&gt;&gt;&gt; print(&quot;안녕, 피코!&quot;)</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 1-02</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import Pin   # 핀(Pin) 제어 도구를 가져옵니다.
-import time               # 시간(time) 제어 도구를 가져옵니다.
+</div><div class="mistakes"><div class="mistake"><div class="m-sym">❌ RPI-RP2 드라이브가 안 나타남</div><div class="m-row"><span class="m-tag">원인</span>BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.</div><div class="m-row"><span class="m-tag fix">해결</span>케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다.</div></div></div></section><section class="sec" id="ch0-4"><h3 class="sec-title">0.5 · Thonny와 피코 연결 + 첫 코드</h3><ol class="steps"><li><b>인터프리터 선택</b><span>Thonny 오른쪽 <b>아래 구석</b>을 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. 포트는 보통 자동으로 잡혀요.</span></li><li><b>셸에서 인사해 보기</b><span>아래 Shell 칸에 다음을 한 줄 입력하고 Enter.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">셸에 직접 입력</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 셸(아래쪽 Shell 창)에 한 줄씩 입력해 보세요
+print(&quot;안녕, 피코!&quot;)</code></pre></div><p class="prose"><code>안녕, 피코!</code>가 셸에 찍히면, 컴퓨터와 피코가 <b>대화에 성공</b>한 거예요. 🎉 이제 보드 위 작은 LED를 깜빡여 봅시다.</p><div class="block code-block"><div class="block-head"><span class="block-label">보드 LED 깜빡이기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">from machine import Pin    # 핀 제어 도구
+import time               # 시간(대기) 도구
 
-led = Pin(&quot;LED&quot;, Pin.OUT) # 온보드 LED를 출력(OUT) 모드로 설정합니다.
+led = Pin(&quot;LED&quot;, Pin.OUT)  # 피코 보드 위의 작은 LED
 
-led.value(1)              # LED를 켭니다. (1: 켜짐)
-time.sleep(1)             # 1초 동안 대기합니다.
-led.value(0)              # LED를 끕니다. (0: 꺼짐)</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 1-03</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import Pin
-import time
-
-led = Pin(&quot;LED&quot;, Pin.OUT)
-
-while True:               # 아래 줄들을 계속 반복합니다.
-    led.value(1)          # LED 켜기
+while True:               # 아래를 계속 반복
+    led.value(1)          # 켜기
     time.sleep(0.5)       # 0.5초 대기
-    led.value(0)          # LED 끄기
-    time.sleep(0.5)       # 0.5초 대기</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 1-04</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import Pin
+    led.value(0)          # 끄기
+    time.sleep(0.5)</code></pre></div><div class="callout tip"><div class="callout-head">💡 main.py로 저장하면 자동 실행</div><div class="callout-body">이 코드를 피코에 <b>main.py</b>라는 이름으로 저장하면(파일 → 저장 → Raspberry Pi Pico), 다음부터 전원만 넣어도 코드가 저절로 돌아갑니다. 멈추려면 Thonny에서 ⏹(정지) 또는 Ctrl+C.</div></div><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 포트/장치가 목록에 안 보임</div><div class="m-row"><span class="m-tag">원인</span>펌웨어 미설치, 또는 케이블 문제.</div><div class="m-row"><span class="m-tag fix">해결</span>0.4를 다시 확인하고, 케이블을 데이터용으로 바꾸세요. Thonny를 재시작하면 잡히기도 합니다.</div></div><div class="mistake"><div class="m-sym">❌ 코드를 멈출 수 없음 (무한 반복)</div><div class="m-row"><span class="m-tag">원인</span><code>while True</code>는 일부러 무한 반복합니다.</div><div class="m-row"><span class="m-tag fix">해결</span>Thonny의 ⏹ 정지 버튼을 누르거나 셸에서 Ctrl+C.</div></div></div><div class="checks"><details class="qa"><summary>Thonny에서 셸(Shell) 칸은 무슨 역할을 하나요?</summary><div class="qa-a">코드를 한 줄씩 바로 실행해 보고, 피코가 print로 보낸 메시지를 보여 주는 ‘대화창’입니다.</div></details><details class="qa"><summary>펌웨어는 매번 설치해야 하나요?</summary><div class="qa-a">아니요. 처음 한 번만 설치하면 계속 유지됩니다.</div></details><details class="qa"><summary>보드 LED를 코드에서 어떻게 가리켰나요?</summary><div class="qa-a"><code>Pin("LED", Pin.OUT)</code> — 피코 보드에 내장된 LED를 출력 모드로 잡았습니다.</div></details></div></section></div><div class="chapter" id="ch1"><div class="ch-head"><span class="ch-num" style="color:#E0568A">CHAPTER 01</span><h2 class="ch-title"><span class="ch-bar" style="background:#E0568A"></span>와이파이 센서 대시보드</h2><p class="ch-sub">피코를 와이파이에 연결하고, 신호 세기(RSSI)를 스마트폰 브라우저에서 실시간 그래프로 봅니다. 첫 IoT 작품이에요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>피코를 와이파이(STA 모드)에 연결할 수 있다</li><li>신호 세기(RSSI)가 무엇이고 어떻게 읽는지 안다</li><li>피코를 작은 웹서버로 만들어 브라우저에서 데이터를 본다</li><li>‘피코는 /data로 값만 주고, 그래프는 브라우저가 그린다’는 구조를 이해한다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>센서 값을 셸에서만 보면 나만 볼 수 있죠. 하지만 피코가 <b>웹서버</b>가 되면, 같은 와이파이에 있는 누구나 스마트폰으로 실시간 값을 볼 수 있어요. 이 장에서 익히는 <b>‘피코=서버, 브라우저=화면’</b> 구조는 3·4장(날씨·가스 대시보드)에서 똑같이 재사용됩니다.</p></div><section class="sec" id="ch1-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">STA 모드</div><div class="concept-d">피코가 집/학교 와이파이에 <b>접속하는</b> 모드. <code>network.WLAN(network.STA_IF)</code></div></div><div class="concept"><div class="concept-t">RSSI</div><div class="concept-d">신호 세기. 단위는 dBm이고 <b>음수</b>예요. -50처럼 0에 가까울수록 강하고, -80처럼 작을수록 약합니다.</div></div><div class="concept"><div class="concept-t">소켓 웹서버</div><div class="concept-d">포트 80에서 브라우저의 접속을 기다리다가, 요청이 오면 HTML이나 데이터를 돌려주는 작은 서버.</div></div><div class="concept"><div class="concept-t">/data 폴링</div><div class="concept-d">브라우저가 1초마다 <code>/data</code>를 불러 최신 값을 받고, Chart.js로 그래프를 갱신하는 방식.</div></div></div></section><section class="sec" id="ch1-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 와이파이 스캔</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 주변에 어떤 와이파이가 있는지 스캔해 봅니다
+import network
+
+wlan = network.WLAN(network.STA_IF)   # STA = 와이파이에 &#x27;접속하는&#x27; 모드
+wlan.active(True)
+
+for net in wlan.scan():
+    ssid = net[0].decode()            # 와이파이 이름
+    rssi = net[3]                     # 신호 세기 (dBm, 0에 가까울수록 강함)
+    print(&quot;%-22s  %d dBm&quot; % (ssid, rssi))</code></pre></div><p class="step-head"><b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b>라는 별도 파일로 저장합니다. (피코에 새 파일로 저장!) 이 파일은 1·3·4장에서 모두 함께 씁니다.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · wifi_config.py (따로 저장)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># wifi_config.py  ── 와이파이 정보만 따로 담아두는 파일
+# (이 파일을 main.py와 같은 위치에 저장하면, 모든 코드가 같이 씁니다)
+
+WIFI_SSID = &quot;여기에_와이파이_이름&quot;      # 2.4GHz 와이파이 이름 (대소문자 정확히!)
+WIFI_PASSWORD = &quot;여기에_와이파이_비밀번호&quot;</code></pre></div><p class="step-head"><b>Step 3.</b> 와이파이에 연결하고 신호 세기를 1초마다 출력합니다. (손코딩으로 원리 확인)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · RSSI 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 와이파이에 연결하고, 신호 세기(RSSI)를 계속 읽어 봅니다
+import network, time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+
+print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+while not wlan.isconnected():
+    print(&quot;.&quot;, end=&quot;&quot;)
+    time.sleep(0.5)
+print(&quot;\n연결 완료! IP =&quot;, wlan.ifconfig()[0])
+
+while True:
+    rssi = wlan.status(&quot;rssi&quot;)        # 현재 신호 세기 (예: -55 dBm)
+    print(&quot;신호 세기:&quot;, rssi, &quot;dBm&quot;)
+    time.sleep(1)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 아래는 <b>복사해서 main.py로 저장하면 바로 도는</b> 완결형 대시보드예요. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요.</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · RSSI 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 와이파이 신호 세기(RSSI) 실시간 대시보드 ===
+# 피코가 작은 웹서버가 되어, 같은 와이파이의 스마트폰/PC 브라우저에서
+# 신호 세기를 실시간 그래프로 볼 수 있게 합니다.
+import network
+import socket
+import json
 import time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
 
-led = Pin(&quot;LED&quot;, Pin.OUT)
-delay = 0.5               # 깜빡임 간격(초)을 변수로 관리
-
-while True:
-    led.value(1)
-    time.sleep(delay)
-    led.value(0)
-    time.sleep(delay)</code></pre></div></section></div><div class="chapter" id="ch2">
-<div class="ch-head"><span class="ch-num" style="color:#E0568A">CHAPTER 02</span>
-<h2 class="ch-title"><span class="ch-bar" style="background:#E0568A"></span>우리 집 와이파이 탐험대</h2>
-<p class="ch-sub">와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.</p></div>
-
-<section class="sec" id="ch2-0"><h3 class="sec-title">활동 1 · 주변 와이파이 확인</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">와이파이 스캔 (셸에서 한 줄씩)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">import network
 wlan = network.WLAN(network.STA_IF)
-wlan.active(True); print(wlan.scan())</code></pre></div></section><section class="sec" id="ch2-1"><h3 class="sec-title">1·2단계 · 손 코딩으로 측정 확인</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 블록 1 · 와이파이 연결하고 신호 세기 읽기 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">import network, time
-SSID = &quot;your_wifi&quot;          # 연결할 와이파이 이름 (2.4GHz)
-PASSWORD = &quot;your_password&quot;  # 와이파이 비밀번호
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.connect(SSID, PASSWORD)
-while not wlan.isconnected():
-    time.sleep(1)
-print(&quot;연결됨! IP:&quot;, wlan.ifconfig()[0])
-while True:
-    rssi = wlan.status(&#x27;rssi&#x27;)
-    print(&quot;신호 세기:&quot;, rssi)
-    time.sleep(1)</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 블록 2 · 설정 파일 분리하기 (wifi_config.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python"># 1) 새 파일 wifi_config.py 를 만들어 이렇게만 적습니다
-SSID = &quot;your_wifi&quot;
-PASSWORD = &quot;your_password&quot;
 
-# 2) main.py 의 맨 위에서 불러옵니다
-from wifi_config import SSID, PASSWORD</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">3단계 · 바이브 코딩으로 웹앱 만들기</h3><div class="block prompt-block" style="--accent:#E0568A">
-<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<div class="prompt-body">지금 피코가 wifi_config.py로 와이파이에 연결하고 wlan.status(&#x27;rssi&#x27;)로 신호 세기를 읽고 있어.
-이 신호 세기를, 같은 와이파이에 연결된 스마트폰 브라우저에서 볼 수 있는 웹 화면으로 만들어 줘.
-피코가 직접 웹서버가 되는 방식(소켓 기반)으로, 외부 라이브러리 없이 만들어 줘.</div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">6단계 · 살아 움직이는 대시보드로 업그레이드</h3><div class="block prompt-block" style="--accent:#E0568A">
-<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<div class="prompt-body">지금 만든 피코 웹앱을 업그레이드해 줘.
-1) 새로고침을 누르지 않아도 5초마다 화면이 저절로 갱신되게 해 줘.
-2) 최근 20개의 신호 세기 값을 막대그래프로 보여 줘.
-3) 다만 피코가 버거워하지 않도록, 주변 와이파이를 전부 훑는 작업은 30초에 한 번만 하게 해 줘.</div></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 블록 3 · 피코 웹서버 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">import network, socket, time
-from wifi_config import SSID, PASSWORD
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.connect(SSID, PASSWORD)
-while not wlan.isconnected():
-    time.sleep(1)
-ip = wlan.ifconfig()[0]
-print(&quot;브라우저에서 접속:&quot;, &quot;http://&quot; + ip)
-history = []
-def make_page(rssi, hist):
-    bars = &quot;&quot;
-    for v in hist:
-        h = max(8, min(100, (v + 90) * 2))
-        bars += &quot;&lt;div class=&#x27;bar&#x27; style=&#x27;height:%dpx&#x27;&gt;&lt;/div&gt;&quot; % h
-    return PAGE % (rssi, bars)
-s = socket.socket()
-s.bind((&quot;0.0.0.0&quot;, 80))
-s.listen(1)
-while True:
-    cl, addr = s.accept()
-    cl.recv(1024)
-    rssi = wlan.status(&quot;rssi&quot;)
-    history.append(rssi)
-    if len(history) &gt; 20:
-        history.pop(0)
-    cl.send(&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n&quot;)
-    cl.send(make_page(rssi, history))
-    cl.close()</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 블록 4 · 브라우저에 보여 줄 화면 (PAGE 템플릿)</span><span class="lang-tag">HTML</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
+
+def connect_wifi():
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;)
+        time.sleep(0.5)
+        timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  →  http://%s&quot; % ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
 &lt;head&gt;
-  &lt;meta charset=&quot;utf-8&quot;&gt;
-  &lt;meta http-equiv=&quot;refresh&quot; content=&quot;5&quot;&gt;
-  &lt;title&gt;우리 집 와이파이 탐험대&lt;/title&gt;
-  &lt;style&gt;
-    body { font-family: sans-serif; background:#FFF6F9; text-align:center; }
-    .rssi { font-size:48px; color:#D4537E; font-weight:bold; }
-    .chart { display:flex; align-items:flex-end; height:110px;
-             gap:3px; justify-content:center; }
-    .bar { width:12px; background:#F4C0D1; border-radius:4px; }
-  &lt;/style&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Wi-Fi 신호 세기 모니터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;
+  body { font-family: &#x27;Noto Sans KR&#x27;, sans-serif; max-width: 860px;
+         margin: 24px auto; padding: 0 16px; background: #f5f7fb; color: #222; }
+  h1 { text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 14px; margin: 20px 0; }
+  .card { background: #fff; border-radius: 14px; padding: 18px; text-align: center;
+          box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .label { font-size: 12px; color: #888; letter-spacing: 1px; margin-bottom: 8px; }
+  .big { font-size: 38px; font-weight: 800; color: #3b82f6; }
+  .unit { font-size: 11px; color: #aaa; margin-top: 4px; }
+  .chart-wrap { background: #fff; border-radius: 14px; padding: 18px;
+                box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+&lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;h2&gt;지금 신호 세기&lt;/h2&gt;
-  &lt;p class=&quot;rssi&quot;&gt;%d dBm&lt;/p&gt;
-  &lt;div class=&quot;chart&quot;&gt;%s&lt;/div&gt;
-  &lt;p&gt;5초마다 저절로 새로고침돼요&lt;/p&gt;
+  &lt;h1&gt;📶 Wi-Fi 신호 세기 모니터&lt;/h1&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;label&quot;&gt;RSSI&lt;/div&gt;
+      &lt;div class=&quot;big&quot; id=&quot;rssiVal&quot;&gt;---&lt;/div&gt;
+      &lt;div class=&quot;unit&quot;&gt;dBm (0에 가까울수록 강함)&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;label&quot;&gt;상태&lt;/div&gt;
+      &lt;div class=&quot;big&quot; id=&quot;statusVal&quot; style=&quot;font-size:24px&quot;&gt;측정중&lt;/div&gt;
+      &lt;div class=&quot;unit&quot;&gt;신호 품질&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;chart-wrap&quot;&gt;
+    &lt;canvas id=&quot;chart&quot; height=&quot;110&quot;&gt;&lt;/canvas&gt;
+  &lt;/div&gt;
+&lt;script&gt;
+const labels = [], data = [];
+const MAX = 40;
+function quality(r) {
+  if (r &gt;= -55) return { t: &#x27;아주 강함&#x27;, c: &#x27;#22c55e&#x27; };
+  if (r &gt;= -67) return { t: &#x27;강함&#x27;,     c: &#x27;#84cc16&#x27; };
+  if (r &gt;= -75) return { t: &#x27;보통&#x27;,     c: &#x27;#f59e0b&#x27; };
+  return                { t: &#x27;약함&#x27;,     c: &#x27;#ef4444&#x27; };
+}
+const chart = new Chart(document.getElementById(&#x27;chart&#x27;), {
+  type: &#x27;line&#x27;,
+  data: { labels, datasets: [{ label: &#x27;RSSI&#x27;, data,
+    borderColor: &#x27;#3b82f6&#x27;, backgroundColor: &#x27;rgba(59,130,246,.1)&#x27;,
+    fill: true, tension: .3, pointRadius: 0 }] },
+  options: { animation: false,
+    scales: { y: { suggestedMin: -90, suggestedMax: -30 } },
+    plugins: { legend: { display: false } } }
+});
+async function update() {
+  try {
+    const res = await fetch(&#x27;/data&#x27;);
+    const j = await res.json();
+    const r = j.value;
+    const q = quality(r);
+    document.getElementById(&#x27;rssiVal&#x27;).textContent = r;
+    document.getElementById(&#x27;rssiVal&#x27;).style.color = q.c;
+    document.getElementById(&#x27;statusVal&#x27;).textContent = q.t;
+    document.getElementById(&#x27;statusVal&#x27;).style.color = q.c;
+    labels.push(new Date().toLocaleTimeString());
+    data.push(r);
+    if (labels.length &gt; MAX) { labels.shift(); data.shift(); }
+    chart.update(&#x27;none&#x27;);
+  } catch (e) { console.warn(&#x27;응답 없음&#x27;, e); }
+}
+setInterval(update, 1000);
+update();
+&lt;/script&gt;
 &lt;/body&gt;
-&lt;/html&gt;</code></pre></div></section></div><div class="chapter" id="ch3">
-<div class="ch-head"><span class="ch-num" style="color:#1F9D63">CHAPTER 03</span>
-<h2 class="ch-title"><span class="ch-bar" style="background:#1F9D63"></span>우리 교실 공기 지킴이</h2>
-<p class="ch-sub">가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.</p></div>
+&lt;/html&gt;&quot;&quot;&quot;
 
-<section class="sec" id="ch3-0"><h3 class="sec-title">3.2 LED 다루기 · 빛으로 표현하기</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 1 · LED 한 칸 켜기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import Pin
-from neopixel import NeoPixel
-np = NeoPixel(Pin(16), 10)   # GP16, LED 10개
-np[0] = (50, 0, 0)           # 첫 번째 칸 빨강
-np.write()</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 2 · 전체를 한 색으로 (fill 함수)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import Pin
+
+def send_response(conn, content_type, body):
+    header = (
+        &quot;HTTP/1.1 200 OK\r\n&quot;
+        &quot;Content-Type: %s\r\n&quot;
+        &quot;Content-Length: %d\r\n&quot;
+        &quot;Connection: close\r\n&quot;
+        &quot;\r\n&quot;
+    ) % (content_type, len(body))
+    conn.sendall(header.encode() + body)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    print(&quot;서버 대기 중... (브라우저로 위 주소에 접속하세요)&quot;)
+    while True:
+        conn, _ = srv.accept()
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                value = wlan.status(&quot;rssi&quot;)
+                body = json.dumps({&quot;value&quot;: value}).encode()
+                send_response(conn, &quot;application/json&quot;, body)
+            else:
+                send_response(conn, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            print(&quot;요청 처리 오류:&quot;, e)
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    run_server()</code></pre></div></section><section class="sec" id="ch1-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 계속 연결 중... 에서 멈춤</div><div class="m-row"><span class="m-tag">원인</span>5GHz 와이파이이거나 비밀번호 오타.</div><div class="m-row"><span class="m-tag fix">해결</span>피코는 <b>2.4GHz</b> 와이파이만 됩니다. 5GHz 전용이면 안 돼요. SSID/비번 대소문자도 정확히 확인하세요.</div></div><div class="mistake"><div class="m-sym">❌ 브라우저에서 주소가 안 열림</div><div class="m-row"><span class="m-tag">원인</span>스마트폰이 피코와 <b>다른 와이파이</b>에 있음.</div><div class="m-row"><span class="m-tag fix">해결</span>스마트폰을 피코와 <b>같은 와이파이</b>에 연결하세요. 학교망은 기기 간 통신이 막힌 경우도 있어, 휴대폰 핫스팟이 가장 확실합니다.</div></div><div class="mistake"><div class="m-sym">❌ RSSI가 0 또는 이상한 값</div><div class="m-row"><span class="m-tag">원인</span>연결 전에 status를 읽음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>wlan.isconnected()</code>가 참이 된 뒤에 읽어야 합니다. (위 코드는 이미 연결 후 읽습니다)</div></div></div></section><section class="sec" id="ch1-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>RSSI가 -50과 -80 중 어느 쪽이 더 좋은 신호인가요?</summary><div class="qa-a">-50입니다. 0에 가까울수록 강한 신호예요.</div></details><details class="qa"><summary>그래프는 피코가 그리나요, 브라우저가 그리나요?</summary><div class="qa-a">브라우저가 그립니다. 피코는 <code>/data</code>로 숫자만 보내고, Chart.js가 화면에 그려요. 그래서 피코의 부담이 적습니다.</div></details><details class="qa"><summary>wifi_config.py를 따로 두는 이유는?</summary><div class="qa-a">비밀번호를 코드 본문과 분리해 관리하기 쉽고, 여러 코드가 같은 설정을 재사용할 수 있어서요.</div></details></div></section></div><div class="chapter" id="ch2"><div class="ch-head"><span class="ch-num" style="color:#1F9D63">CHAPTER 02</span><h2 class="ch-title"><span class="ch-bar" style="background:#1F9D63"></span>LED 10개 다루기</h2><p class="ch-sub">WS2813 LED 바(10개)를 색과 밝기로 자유롭게 제어합니다. 다음 장 ‘날씨 시계’의 준비 운동이에요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>NeoPixel로 LED 한 칸·전체를 원하는 색으로 켤 수 있다</li><li>WS2813에 꼭 필요한 timing 인자를 이해한다</li><li>10칸에 무지개·게이지를 표현할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>LED는 ‘숫자를 빛으로 바꾸는’ 가장 직관적인 출력 장치예요. 강수확률·가스 농도 같은 데이터를 색으로 보여 주면 한눈에 들어오죠. 이 장에서 10칸을 다루는 법을 익히면, 3장에서 ‘오늘의 비 예보’를 10칸 LED 시계로 만들 수 있어요.</p></div><section class="sec" id="ch2-0"><h3 class="sec-title">핵심 개념 — timing이 진짜 중요해요</h3><div class="callout key"><div class="callout-head">🔑 WS2813은 timing 인자가 필수</div><div class="callout-body">우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이번 연수의 모든 LED 코드 첫 줄에 들어갑니다.</div></div><div class="callout info"><div class="callout-head">ℹ️ LED가 60개짜리로 왔다면?</div><div class="callout-body">걱정 마세요. 바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·날씨 시계 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요.</div></div><div class="concept-grid"><div class="concept"><div class="concept-t">NeoPixel</div><div class="concept-d">여러 개의 색 LED를 한 줄로 제어하는 도구. <code>np[i] = (r, g, b)</code>로 i번 칸 색을 정합니다.</div></div><div class="concept"><div class="concept-t">write()</div><div class="concept-d">색을 정한 뒤 <code>np.write()</code>를 호출해야 실제 LED에 반영됩니다. 깜빡 잊기 쉬워요.</div></div><div class="concept"><div class="concept-t">칸 번호 0~9</div><div class="concept-d">10개니까 <code>np[0]</code>부터 <code>np[9]</code>까지. 0부터 시작!</div></div><div class="concept"><div class="concept-t">밝기는 낮게</div><div class="concept-d">(255,255,255)는 너무 밝고 전류도 많이 써요. (30,30,30) 정도면 충분히 보입니다.</div></div></div></section><section class="sec" id="ch2-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 한 칸만 켜 보기.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 칸 켜기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># WS2813 LED 10개 — 한 칸 켜기
+from machine import Pin
 from neopixel import NeoPixel
 import time
+
+TIMING = (280, 515, 515, 745)        # ★ WS2813 전용 타이밍 (없으면 색이 깨집니다!)
 NUM = 10
-np = NeoPixel(Pin(16), NUM)
+np = NeoPixel(Pin(16), NUM, timing=TIMING)   # 그로브 D16 = GP16
+
+np[0] = (40, 0, 0)                   # 0번 칸 빨강 (밝기는 낮게)
+np.write()                           # write()를 해야 실제로 켜집니다
+time.sleep(2)
+
+np[0] = (0, 0, 0)                    # 끄기
+np.write()</code></pre></div><p class="step-head"><b>Step 2.</b> 전체를 한 색으로 — 반복문으로 모든 칸을 칠하는 <code>fill</code> 함수.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 전체 한 색 (fill)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 전체를 한 색으로 — fill 함수 만들기
+from machine import Pin
+from neopixel import NeoPixel
+import time
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+
 def fill(color):
     for i in range(NUM):
         np[i] = color
     np.write()
-fill((0, 40, 0))   # 전체 초록
+
+fill((0, 30, 0))     # 전체 초록
 time.sleep(1)
-fill((0, 0, 0))    # 전체 끄기</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 3 · 게이지처럼 칸 수 조절하기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">def gauge(level):
+fill((0, 0, 30))     # 전체 파랑
+time.sleep(1)
+fill((0, 0, 0))      # 전체 끄기</code></pre></div><p class="step-head"><b>Step 3.</b> 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴).</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · 무지개 10칸</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴)
+from machine import Pin
+from neopixel import NeoPixel
+import time
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+BRIGHT = 0.3                          # 밝기 0~1 (낮게 권장)
+
+def hsv_to_rgb(h, s, v):
+    c = v * s
+    x = c * (1 - abs((h / 60) % 2 - 1))
+    m = v - c
+    if   h &lt; 60:  r, g, b = c, x, 0
+    elif h &lt; 120: r, g, b = x, c, 0
+    elif h &lt; 180: r, g, b = 0, c, x
+    elif h &lt; 240: r, g, b = 0, x, c
+    elif h &lt; 300: r, g, b = x, 0, c
+    else:         r, g, b = c, 0, x
+    return (int((r + m) * 255), int((g + m) * 255), int((b + m) * 255))
+
+for i in range(NUM):
+    hue = i / NUM * 360               # 칸마다 색상 조금씩 다르게
+    np[i] = hsv_to_rgb(hue, 1, BRIGHT)
+np.write()</code></pre></div><p class="step-head"><b>Step 4.</b> 켜진 칸 수로 양을 나타내는 <b>게이지</b> — 다음 장의 핵심 기법이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 게이지 차오르기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 게이지처럼 켜진 칸 수 조절하기 (다음 장 날씨 대시보드의 기초!)
+from machine import Pin
+from neopixel import NeoPixel
+import time
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+
+def gauge(level, on_color=(0, 30, 0)):
     # level: 0~10, 켤 칸 수
     for i in range(NUM):
-        if i &lt; level:
-            np[i] = (0, 40, 0)   # 켜진 칸: 초록
-        else:
-            np[i] = (0, 0, 0)    # 꺼진 칸
+        np[i] = on_color if i &lt; level else (0, 0, 0)
     np.write()
-for n in range(0, 11):
+
+for n in range(0, NUM + 1):           # 0칸 → 10칸 차오르기
     gauge(n)
-    time.sleep(0.2)</code></pre></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">3.3 가스 센서 · 공기를 숫자로</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 4 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import ADC, Pin
-gas = ADC(Pin(26))        # GP26 = ADC0
-value = gas.read_u16()    # 0 ~ 65535
-print(value)</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 5 · 반복해서 읽기 (플로터로 보기)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import ADC, Pin
+    time.sleep(0.2)
+time.sleep(1)
+gauge(0)                              # 모두 끄기</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 색이 깨지거나 엉뚱한 칸이 켜짐</div><div class="m-row"><span class="m-tag">원인</span><b>timing 인자 누락.</b></div><div class="m-row"><span class="m-tag fix">해결</span><code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다.</div></div><div class="mistake"><div class="m-sym">❌ 색을 정했는데 안 켜짐</div><div class="m-row"><span class="m-tag">원인</span><code>np.write()</code>를 빠뜨림.</div><div class="m-row"><span class="m-tag fix">해결</span>색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요.</div></div><div class="mistake"><div class="m-sym">❌ 10번째 칸에서 에러</div><div class="m-row"><span class="m-tag">원인</span><code>np[10]</code>을 씀 (칸은 0~9).</div><div class="m-row"><span class="m-tag fix">해결</span>10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>.</div></div><div class="mistake"><div class="m-sym">❌ 눈이 부시고 피코가 뜨거움</div><div class="m-row"><span class="m-tag">원인</span>밝기를 너무 높게 줌.</div><div class="m-row"><span class="m-tag fix">해결</span>(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다.</div></div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>WS2813 LED를 만들 때 꼭 넣어야 하는 인자는?</summary><div class="qa-a"><code>timing=(280, 515, 515, 745)</code>. 없으면 색이 깨집니다.</div></details><details class="qa"><summary>색을 바꾼 뒤 화면(LED)에 반영하려면?</summary><div class="qa-a"><code>np.write()</code>를 호출합니다.</div></details><details class="qa"><summary>10칸 중 다섯 칸만 켜서 ‘50%’를 표현하려면?</summary><div class="qa-a">0~4번 칸을 색으로, 5~9번 칸을 (0,0,0)으로 두고 write. (게이지 방식)</div></details></div></section></div><div class="chapter" id="ch3"><div class="ch-head"><span class="ch-num" style="color:#3B82F6">CHAPTER 03</span><h2 class="ch-title"><span class="ch-bar" style="background:#3B82F6"></span>날씨 비 예보 대시보드</h2><p class="ch-sub">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만듭니다. 웹 화면은 바이브코딩으로 덧붙여요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Open-Meteo에서 강수확률 데이터를 받아올 수 있다</li><li>받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다</li><li>6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다</li><li>AI에게 부탁해 웹 대시보드까지 덧붙일 수 있다(바이브코딩)</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>여기서부터 진짜 ‘세상의 데이터’를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, 거실의 LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 됩니다. 출근 전 LED만 보고 우산을 챙길 수 있죠.</p></div><section class="sec" id="ch3-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">Open-Meteo</div><div class="concept-d">무료·<b>API 키 불필요</b>한 날씨 서비스. 위도·경도만 넣으면 시간대별 강수확률을 줍니다.</div></div><div class="concept"><div class="concept-t">강수확률(precipitation_probability)</div><div class="concept-d">그 시각에 비가 올 가능성(%). 0시~23시까지 24개가 옵니다.</div></div><div class="concept"><div class="concept-t">HTTP 요청 (requests)</div><div class="concept-d">피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code></div></div><div class="concept"><div class="concept-t">6~23 → 10칸 매핑</div><div class="concept-d">오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다.</div></div></div><a class="linkbtn" href="https://open-meteo.com" target="_blank" rel="noopener">🔗 open-meteo.com — 무료 날씨 API (키 불필요)</a><div class="callout info"><div class="callout-head">ℹ️ requests(urequests)는 한 번만 설치</div><div class="callout-body">인터넷에서 데이터를 받으려면 <b>requests</b> 모듈이 필요해요. Thonny에서 <b>도구(Tools) → 패키지 관리(Manage packages)</b> → 검색창에 <code>requests</code> 입력 → 설치. (피코가 와이파이에 연결된 상태에서) 한 번만 하면 됩니다. 아래 코드는 <code>requests</code>가 없으면 <code>urequests</code>로 자동 대체합니다.</div></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)</p><p class="step-head"><b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 강수확률 받아오기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 1단계: 인터넷에서 오늘의 강수확률 가져오기 (손코딩) ===
+# Open-Meteo는 무료이고 API 키가 필요 없습니다. 위도/경도만 넣으면 됩니다.
+import network, time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+# urequests(=requests)는 한 번만 설치하면 됩니다 (아래 설명 참고)
+try:
+    import requests
+except ImportError:
+    import urequests as requests
+
+LAT = 37.5665     # 위도  (서울시청 기준 — 우리 지역 좌표로 바꾸세요)
+LON = 126.9780    # 경도
+
+# 1) 와이파이 연결
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+while not wlan.isconnected():
+    print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5)
+print(&quot;\n연결 완료!&quot;)
+
+# 2) 강수확률 요청
+url = (&quot;https://api.open-meteo.com/v1/forecast&quot;
+       &quot;?latitude=%s&amp;longitude=%s&quot;
+       &quot;&amp;hourly=precipitation_probability&quot;
+       &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+
+res = requests.get(url)
+data = res.json()
+res.close()
+
+# 3) 0시~23시 강수확률 24개 중, 6시~23시만 출력
+probs = data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]
+for hour in range(6, 24):
+    print(&quot;%2d시 강수확률: %s%%&quot; % (hour, probs[hour]))</code></pre></div><p class="step-head"><b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (10분마다 새 예보로 갱신)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 시계 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보를 10개 LED에 담는 &#x27;날씨 시계&#x27; ===
+# 6시~23시를 10칸으로 나눠, 각 칸의 색으로 강수확률을 보여 줍니다.
+#   맑음(연초록) → 흐림(노랑) → 비 가능(파랑) → 비 확실(보라)
+import network, time
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+try:
+    import requests
+except ImportError:
+    import urequests as requests
+
+LAT = 37.5665      # 우리 지역 위도
+LON = 126.9780     # 우리 지역 경도
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+
+# 6시~23시를 LED 칸 수만큼 고르게 나눈 대표 시각 (NUM만 바꾸면 자동 적용)
+HOURS = [round(6 + i * (23 - 6) / (NUM - 1)) for i in range(NUM)]
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    t = 20
+    while not wlan.isconnected() and t &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); t -= 1
+    if wlan.isconnected():
+        print(&quot;\n연결 완료:&quot;, wlan.ifconfig()[0]); return True
+    print(&quot;\n연결 실패&quot;); return False
+
+
+def get_rain_probs():
+    url = (&quot;https://api.open-meteo.com/v1/forecast&quot;
+           &quot;?latitude=%s&amp;longitude=%s&quot;
+           &quot;&amp;hourly=precipitation_probability&quot;
+           &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    res = requests.get(url)
+    data = res.json()
+    res.close()
+    return data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+
+
+def prob_to_color(p):
+    if p is None:  return (0, 0, 0)
+    if p &lt; 20:     return (0, 30, 5)     # 맑음 - 연초록
+    if p &lt; 50:     return (30, 25, 0)    # 흐림 - 노랑
+    if p &lt; 80:     return (0, 10, 40)    # 비 가능 - 파랑
+    return (15, 0, 40)                   # 비 확실 - 보라
+
+
+def show(probs):
+    for i, hour in enumerate(HOURS):
+        p = probs[hour]
+        np[i] = prob_to_color(p)
+        print(&quot;LED %d = %2d시 → %s%%&quot; % (i, hour, p))
+    np.write()
+
+
+# 10분마다 새 예보를 받아 LED를 갱신
+if connect_wifi():
+    while True:
+        try:
+            show(get_rain_probs())
+        except Exception as e:
+            print(&quot;오류:&quot;, e)
+        time.sleep(600)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 LED만으로 부족하면, AI에게 부탁해 <b>웹 화면</b>까지 덧붙입니다. 1장에서 익힌 ‘피코=서버, 브라우저=화면’ 구조를 그대로 써 달라고 하면 돼요.</p><div class="block prompt-block" style="--accent:#3B82F6"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">지금 피코가 Open-Meteo에서 오늘 강수확률을 받아 10개 WS2813 LED(Pin 16, timing=(280,515,515,745))에 6시~23시 색으로 표시하고 있어.
+여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.
+- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.
+- LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).
+받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ImportError: no module named &#x27;requests&#x27;</div><div class="m-row"><span class="m-tag">원인</span>requests/urequests 미설치.</div><div class="m-row"><span class="m-tag fix">해결</span>위 ‘패키지 관리’ 안내대로 설치하세요. 와이파이 연결 후 설치해야 합니다.</div></div><div class="mistake"><div class="m-sym">❌ 위도·경도를 바꿨는데 엉뚱한 지역</div><div class="m-row"><span class="m-tag">원인</span>위도(LAT)와 경도(LON)를 바꿔 넣음.</div><div class="m-row"><span class="m-tag fix">해결</span>한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다.</div></div><div class="mistake"><div class="m-sym">❌ 메모리 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>HTTPS 응답이 큰데 자주 부름.</div><div class="m-row"><span class="m-tag fix">해결</span>필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다.</div></div></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>Open-Meteo는 API 키가 필요한가요?</summary><div class="qa-a">아니요. 무료이고 키 없이 위도·경도만으로 씁니다.</div></details><details class="qa"><summary>강수확률 24개 중 6시 값은 어떻게 꺼내나요?</summary><div class="qa-a"><code>probs[6]</code>. 리스트 인덱스가 곧 시각(0~23시)입니다.</div></details><details class="qa"><summary>왜 10분마다만 새로 받아오나요?</summary><div class="qa-a">날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다.</div></details></div></section></div><div class="chapter" id="ch4"><div class="ch-head"><span class="ch-num" style="color:#F59E0B">CHAPTER 04</span><h2 class="ch-title"><span class="ch-bar" style="background:#F59E0B"></span>MQ-2 가스센서 대시보드</h2><p class="ch-sub">공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 다크 테마 대시보드를 만듭니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>ADC로 가스센서 값을 읽고 전압·비율로 바꿀 수 있다</li><li>이동 평균으로 값을 안정시킬 수 있다</li><li>임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 1장의 웹서버 구조에 ‘판단(임계값)’과 ‘예쁜 화면’이 더해진, 가장 완성도 높은 대시보드입니다.</p></div><section class="sec" id="ch4-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">ADC (아날로그)</div><div class="concept-d">가스 농도 같은 ‘연속된 값’을 숫자로 바꿔 읽는 기능. 그로브 <b>A0 = GP26</b>. <code>ADC(Pin(26))</code></div></div><div class="concept"><div class="concept-t">read_u16()</div><div class="concept-d">0~65535 사이 값으로 읽습니다. 가스가 짙을수록 값이 커져요.</div></div><div class="concept"><div class="concept-t">이동 평균</div><div class="concept-d">여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code></div></div><div class="concept"><div class="concept-t">임계값</div><div class="concept-d">SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 센서는 예열이 필요해요</div><div class="callout-body">MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요.</div></div></section><section class="sec" id="ch4-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MQ-2 가스센서 값 한 번 읽기 (그로브 A0 = GP26 = ADC0)
+from machine import ADC, Pin
+
+gas_sensor = ADC(Pin(26))
+print(gas_sensor.read_u16())     # 0 ~ 65535</code></pre></div><p class="step-head"><b>Step 2.</b> 반복해서 읽고, Thonny <b>플로터</b>로 그래프 보기. (셸 옆 ‘Plotter’ 켜기)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 반복 읽기 (플로터)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 반복해서 읽기 — Thonny의 &#x27;플로터&#x27;로 그래프를 볼 수 있어요
+from machine import ADC, Pin
 import time
-gas = ADC(Pin(26))
+
+gas_sensor = ADC(Pin(26))
 while True:
-    value = gas.read_u16()
-    print(value)          # Thonny 플로터로 그래프 보기
-    time.sleep(0.5)</code></pre></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 6 · 이동 평균으로 안정시키기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">def read_average(sensor, count=10):
+    print(gas_sensor.read_u16())
+    time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 3.</b> 원시값을 전압·비율로 바꿔 의미를 부여합니다.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · 전압·비율 변환</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 원시값을 전압과 비율로 바꿔 보기
+from machine import ADC, Pin
+import time
+
+gas_sensor = ADC(Pin(26))
+while True:
+    value = gas_sensor.read_u16()
+    voltage = value / 65535 * 3.3
+    percent = value / 65535 * 100
+    print(&quot;ADC: %5d  |  %.2fV  |  %.1f%%&quot; % (value, voltage, percent))
+    time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 4.</b> 완성형 대시보드. <b>복사해서 main.py로 저장</b>하면, 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · MQ-2 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">import network
+import socket
+import json
+from machine import ADC, Pin
+import time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+gas_sensor = ADC(Pin(26))
+
+
+def read_average(sensor, count=10):
     total = 0
     for _ in range(count):
         total += sensor.read_u16()
         time.sleep_ms(10)
     return total // count
-while True:
-    avg = read_average(gas, 10)
-    print(avg)
-    time.sleep(0.5)</code></pre></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">3.4 둘을 잇기 · LED 게이지</h3><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 7 · 가스 값 → LED 게이지 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python">from machine import ADC, Pin
-from neopixel import NeoPixel
-import time
-gas = ADC(Pin(26))
-np = NeoPixel(Pin(16), 10)
-SAFE = 15000      # 이 아래는 안전
-DANGER = 30000    # 이 위는 위험
-def read_average(s, count=10):
-    total = 0
-    for _ in range(count):
-        total += s.read_u16(); time.sleep_ms(10)
-    return total // count
-def show_gauge(value):
-    # 값을 0~10칸으로 바꾸기
-    level = int((value - SAFE) / (DANGER - SAFE) * 10)
-    level = max(0, min(10, level))
-    for i in range(10):
-        if i &gt;= level:        np[i] = (0, 0, 0)
-        elif i &lt; 6:           np[i] = (0, 40, 0)   # 초록
-        elif i &lt; 8:           np[i] = (40, 30, 0)  # 노랑
-        else:                 np[i] = (40, 0, 0)   # 빨강
-    np.write()
-while True:
-    value = read_average(gas, 10)
-    print(value)
-    if value &gt;= DANGER:
-        for _ in range(3):                 # 위험! 전체 빨강 깜빡
-            for i in range(10): np[i] = (60, 0, 0)
-            np.write(); time.sleep(0.2)
-            for i in range(10): np[i] = (0, 0, 0)
-            np.write(); time.sleep(0.2)
-    else:
-        show_gauge(value)
-    time.sleep(0.5)</code></pre></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">3.5 웹 대시보드까지 (바이브 코딩)</h3><div class="block prompt-block" style="--accent:#1F9D63">
-<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 부탁해 보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<div class="prompt-body">지금 피코가 MQ2 값을 read_average로 읽고, show_gauge로 LED 게이지를 켜고 있어.
-여기에 Chapter 2처럼 웹 대시보드를 더해 줘. 같은 와이파이의 스마트폰에서 접속하면,
-지금 가스 값, 안전/주의/위험 상태, 그리고 최근 20개 값의 막대그래프가 보이게 해 줘.
-LED 게이지와 웹 화면이 같은 값으로 동시에 갱신되고, 5초마다 저절로 새로고침되게 해 줘.</div></div><div class="block prompt-block" style="--accent:#1F9D63">
-<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI 도구에게 이렇게 다듬어 달라고 해보세요</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<div class="prompt-body">&quot;게이지가 한 칸씩 바뀔 때 부드럽게 채워지게 해 줘&quot;
-&quot;위험할 때 깜빡이는 속도를 더 빠르게 해 줘&quot;
-— 동작을 우리말로 부탁하면 AI가 코드를 고쳐 줍니다. 받은 코드가 내 기준값과 맞는지 꼭 확인하세요.</div></div><div class="block code-block">
-<div class="block-head"><span class="block-label">코드 8 · LED와 웹을 함께 갱신하는 핵심 부분</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-python"># (와이파이 연결은 Chapter 2의 wifi_config.py 방식 그대로)
-while True:
-    cl, addr = s.accept()
-    cl.recv(1024)
-    value = read_average(gas, 10)
-    history.append(value)
-    if len(history) &gt; 20:
-        history.pop(0)
-    show_gauge(value)              # LED도 함께 갱신
-    cl.send(&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n&quot;)
-    cl.send(make_page(value, history))
-    cl.close()</code></pre></div></section></div>
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;)
+        time.sleep(0.5)
+        timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(f&quot;\n✅ 연결 완료!  →  http://{ip}&quot;)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;MQ-2 가스 센서 모니터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;
+  @import url(&#x27;https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=Noto+Sans+KR:wght@300;400;700&amp;display=swap&#x27;);
+
+  :root {
+    --bg:      #0b0f1a;
+    --panel:   #111827;
+    --border:  #1f2d45;
+    --safe:    #22d3a6;
+    --warn:    #f59e0b;
+    --danger:  #ef4444;
+    --accent:  #3b82f6;
+    --text:    #e2e8f0;
+    --muted:   #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text);
+         font-family: &#x27;Noto Sans KR&#x27;, sans-serif;
+         min-height: 100vh; padding: 24px 16px; }
+
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 {
+    font-family: &#x27;Orbitron&#x27;, monospace;
+    font-size: clamp(18px, 4vw, 28px);
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(59,130,246,0.5);
+  }
+  header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .grid { display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 14px; max-width: 860px; margin: 0 auto 24px; }
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 14px; padding: 18px 14px; text-align: center;
+          transition: border-color .3s; }
+  .card .label { font-size: 11px; letter-spacing: 2px;
+                 text-transform: uppercase; color: var(--muted);
+                 margin-bottom: 10px; }
+  .card .big { font-family: &#x27;Orbitron&#x27;, monospace;
+               font-size: clamp(28px, 6vw, 40px); font-weight: 900;
+               transition: color .3s; }
+  .card .unit { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  #statusCard { border-color: var(--safe);
+                box-shadow: 0 0 20px rgba(34,211,166,.12); }
+  #statusText { font-family: &#x27;Orbitron&#x27;, monospace;
+                font-size: clamp(14px, 3vw, 20px);
+                font-weight: 700; letter-spacing: 3px; }
+
+  .chart-wrap { max-width: 860px; margin: 0 auto;
+                background: var(--panel); border: 1px solid var(--border);
+                border-radius: 14px; padding: 20px; }
+  .chart-wrap h2 { font-family: &#x27;Orbitron&#x27;, monospace;
+                   font-size: 12px; letter-spacing: 3px;
+                   color: var(--muted); margin-bottom: 16px; }
+
+  #dot { display: inline-block; width: 8px; height: 8px;
+         border-radius: 50%; background: var(--safe);
+         margin-right: 6px; animation: pulse 1.4s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .4; transform: scale(1.4); }
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header&gt;
+  &lt;h1&gt;MQ-2 GAS SENSOR MONITOR&lt;/h1&gt;
+  &lt;p&gt;&lt;span id=&quot;dot&quot;&gt;&lt;/span&gt;Raspberry Pi Pico 2 WH &amp;mdash; 실시간 측정&lt;/p&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;grid&quot;&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;ADC RAW&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;rawVal&quot;&gt;---&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;0 ~ 65535&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;전압&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;voltVal&quot;&gt;-.-&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;Volt (3.3 V ref)&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;농도 비율&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;pctVal&quot;&gt;--%&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;풀스케일 대비&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot; id=&quot;statusCard&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;상태&lt;/div&gt;
+    &lt;div id=&quot;statusText&quot; style=&quot;color:var(--safe)&quot;&gt;SAFE&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;chart-wrap&quot;&gt;
+  &lt;h2&gt;REALTIME WAVEFORM &amp;nbsp;(최근 60초)&lt;/h2&gt;
+  &lt;canvas id=&quot;chart&quot; height=&quot;120&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+const MAX = 60;
+const times = [], vals = [];
+
+const ctx = document.getElementById(&#x27;chart&#x27;).getContext(&#x27;2d&#x27;);
+const chart = new Chart(ctx, {
+  type: &#x27;line&#x27;,
+  data: { labels: times,
+    datasets: [{ label: &#x27;ADC (이동평균)&#x27;, data: vals,
+      borderColor: &#x27;#3b82f6&#x27;,
+      backgroundColor: &#x27;rgba(59,130,246,0.08)&#x27;,
+      borderWidth: 2, fill: true, tension: 0.4,
+      pointRadius: 0, pointHitRadius: 8 }] },
+  options: { animation: false, responsive: true,
+    scales: {
+      y: { suggestedMin: 0, suggestedMax: 65535,
+           grid: { color: &#x27;rgba(255,255,255,.06)&#x27; },
+           ticks: { color: &#x27;#64748b&#x27;,
+                    font: { family: &#x27;monospace&#x27;, size: 10 },
+                    callback: v =&gt; v.toLocaleString() } },
+      x: { grid: { color: &#x27;rgba(255,255,255,.06)&#x27; },
+           ticks: { color: &#x27;#64748b&#x27;,
+                    font: { family: &#x27;monospace&#x27;, size: 10 },
+                    maxTicksLimit: 8 } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+function levelOf(v) {
+  if (v &lt; 20000) return { label: &#x27;SAFE&#x27;,    color: &#x27;#22d3a6&#x27; };
+  if (v &lt; 45000) return { label: &#x27;WARNING&#x27;, color: &#x27;#f59e0b&#x27; };
+  return               { label: &#x27;DANGER&#x27;,   color: &#x27;#ef4444&#x27; };
+}
+
+async function poll() {
+  try {
+    const res  = await fetch(&#x27;/data&#x27;);
+    const json = await res.json();
+    const v    = json.value;
+    const now  = new Date().toLocaleTimeString(&#x27;ko-KR&#x27;, { hour12: false });
+    const lv   = levelOf(v);
+
+    document.getElementById(&#x27;rawVal&#x27;).textContent  = v.toLocaleString();
+    document.getElementById(&#x27;rawVal&#x27;).style.color  = lv.color;
+    document.getElementById(&#x27;voltVal&#x27;).textContent = (v / 65535 * 3.3).toFixed(3);
+    document.getElementById(&#x27;pctVal&#x27;).textContent  = (v / 65535 * 100).toFixed(1) + &#x27;%&#x27;;
+    document.getElementById(&#x27;statusText&#x27;).textContent  = lv.label;
+    document.getElementById(&#x27;statusText&#x27;).style.color  = lv.color;
+    document.getElementById(&#x27;statusCard&#x27;).style.borderColor  = lv.color;
+    document.getElementById(&#x27;statusCard&#x27;).style.boxShadow    =
+      `0 0 20px ${lv.color}30`;
+
+    times.push(now); vals.push(v);
+    if (times.length &gt; MAX) { times.shift(); vals.shift(); }
+
+    const margin = 2000;
+    const yMin = Math.max(0,     Math.min(...vals) - margin);
+    const yMax = Math.min(65535, Math.max(...vals) + margin);
+    chart.options.scales.y.min = yMin;
+    chart.options.scales.y.max = yMax;
+
+    chart.data.datasets[0].borderColor     = lv.color;
+    chart.data.datasets[0].backgroundColor = lv.color + &#x27;18&#x27;;
+    chart.update(&#x27;none&#x27;);
+  } catch (e) {
+    console.warn(&#x27;센서 응답 없음&#x27;, e);
+  }
+}
+
+setInterval(poll, 500);
+poll();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;&quot;&quot;&quot;
+
+
+def send_response(conn, status, content_type, body_bytes):
+    header = (
+        f&quot;HTTP/1.1 {status}\r\n&quot;
+        f&quot;Content-Type: {content_type}\r\n&quot;
+        f&quot;Content-Length: {len(body_bytes)}\r\n&quot;
+        &quot;Access-Control-Allow-Origin: *\r\n&quot;
+        &quot;Connection: close\r\n&quot;
+        &quot;\r\n&quot;
+    ).encode()
+    conn.sendall(header + body_bytes)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv  = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    print(&quot;서버 대기 중... (Ctrl+C로 종료)&quot;)
+
+    while True:
+        conn, _ = srv.accept()
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                value = read_average(gas_sensor, 10)
+                body  = json.dumps({&quot;value&quot;: value}).encode()
+                send_response(conn, &quot;200 OK&quot;, &quot;application/json&quot;, body)
+            else:
+                send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            print(&quot;요청 처리 오류:&quot;, e)
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    run_server()</code></pre></div></section><section class="sec" id="ch4-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 값이 늘 0이거나 65535에 붙어 있음</div><div class="m-row"><span class="m-tag">원인</span>센서를 A0가 아닌 다른 포트에 꽂음.</div><div class="m-row"><span class="m-tag fix">해결</span>그로브 <b>A0(=GP26)</b>에 꽂았는지 확인하세요. D포트에 꽂으면 아날로그 값을 못 읽습니다.</div></div><div class="mistake"><div class="m-sym">❌ 켜자마자 ‘위험’으로 뜸</div><div class="m-row"><span class="m-tag">원인</span>예열 전이라 값이 큼.</div><div class="m-row"><span class="m-tag fix">해결</span>1~2분 기다리세요. 그래도 항상 위험이면 임계값(SAFE/WARNING/DANGER 숫자)을 우리 환경에 맞게 올리세요.</div></div><div class="mistake"><div class="m-sym">❌ ImportError: wifi_config</div><div class="m-row"><span class="m-tag">원인</span>wifi_config.py가 피코에 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>1장 Step 2의 wifi_config.py를 피코에 저장하세요. 이 코드는 <code>WIFI_SSID/WIFI_PASSWORD</code> 이름을 씁니다.</div></div></div></section><section class="sec" id="ch4-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>MQ-2는 그로브의 어느 포트에 꽂나요?</summary><div class="qa-a">A0 (= GP26 = ADC0). 아날로그 포트입니다.</div></details><details class="qa"><summary>값을 안정시키는 read_average는 무엇을 하나요?</summary><div class="qa-a">여러 번(기본 10번) 읽어 평균을 냅니다. 출렁임이 줄어요.</div></details><details class="qa"><summary>임계값은 어디서나 같은 숫자를 쓰면 되나요?</summary><div class="qa-a">아니요. 센서·환경마다 기준이 달라, 우리 교실에서 직접 보고 보정해야 합니다.</div></details></div></section></div><div class="chapter" id="ch5"><div class="ch-head"><span class="ch-num" style="color:#8B5CF6">CHAPTER 05</span><h2 class="ch-title"><span class="ch-bar" style="background:#8B5CF6"></span>자유 프로젝트</h2><p class="ch-sub">지금까지 배운 LED·센서·웹·날씨 API를 조합해, 나만의 작품을 바이브코딩으로 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>여러 기능을 조합해 새 작품을 기획할 수 있다</li><li>AI에게 명확하게 부탁하고, 받은 코드를 점검할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>도구는 다 익혔어요. 이제 <b>‘무엇을 만들까’</b>가 남았습니다. 작은 아이디어 하나면 충분해요. 아래 아이디어와 프롬프트 틀을 출발점으로 삼아, 우리 교실·우리 집에 쓸모 있는 작품을 만들어 보세요.</p></div><section class="sec" id="ch5-0"><h3 class="sec-title">아이디어 모음</h3><div class="idea-grid"><div class="idea"><div class="idea-t">🌧️ 우산 알리미</div><div class="idea-d">날씨 시계(3장)에서 오늘 강수확률이 60% 넘는 시간대가 있으면, 현관 LED를 파랑으로 깜빡여 ‘우산 챙겨!’</div></div><div class="idea"><div class="idea-t">🌬️ 스마트 환기등</div><div class="idea-d">가스센서(4장) 값이 WARNING을 넘으면 LED를 노랑→빨강으로, 웹에 ‘환기하세요’ 알림.</div></div><div class="idea"><div class="idea-t">📶 와이파이 약한 자리 찾기</div><div class="idea-d">RSSI 대시보드(1장)를 들고 다니며 집에서 신호가 약한 곳을 LED 게이지로 탐색.</div></div><div class="idea"><div class="idea-t">🌡️ 오늘 날씨 무드등</div><div class="idea-d">강수확률 대신 기온을 받아(Open-Meteo) 더우면 빨강, 추우면 파랑으로 방 전체 분위기 표현.</div></div></div></section><section class="sec" id="ch5-1"><h3 class="sec-title">AI에게 잘 부탁하는 틀</h3><p class="prose">막연히 ‘만들어 줘’보다, <b>① 지금 상태 → ② 추가할 동작 → ③ 제약(핀·timing·갱신주기)</b>을 함께 주면 훨씬 정확한 코드를 받습니다.</p><div class="block prompt-block" style="--accent:#8B5CF6"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">프롬프트 틀 (복사해서 채우세요)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[지금 상태] 내 피코는 지금 ____ 를 하고 있어. (예: Open-Meteo 강수확률을 10개 LED에 표시)
+[하드웨어] WS2813 LED 10개는 Pin 16, timing=(280,515,515,745) / MQ-2는 ADC Pin 26 / 와이파이는 wifi_config.py 사용.
+[추가할 동작] 여기에 ____ 기능을 더해 줘. (예: 강수확률 60% 넘으면 LED 깜빡)
+[제약] 외부 라이브러리는 최소로, 갱신은 ____초마다, 복사해서 바로 도는 완결형 코드로 줘.
+받은 코드에서 핀 번호와 timing 설정이 내 것과 같은지 확인할게.</div></div><div class="callout tip"><div class="callout-head">💡 점검 체크리스트</div><div class="callout-body">받은 코드를 올리기 전에: ① <code>timing=(280,515,515,745)</code> 있는지 ② 핀 번호(16 / 26)와 포트(D16 / A0) 맞는지 ③ 무한 반복 속 <code>sleep</code>으로 쉬어 주는지 ④ 와이파이/네트워크 요청이 과하지 않은지.</div></div></section><section class="sec" id="ch5-2"><h3 class="sec-title">마무리</h3><p class="prose">여기까지 왔다면, 여러분은 <b>센서로 데이터를 모으고 · 인터넷의 데이터를 가져오고 · LED와 웹으로 표현하는</b> IoT의 한 사이클을 전부 경험한 거예요. 도구는 거들 뿐, 진짜 중요한 건 ‘무엇을, 왜 만드는가’입니다. 멋진 작품을 만들어 보세요! 🎉</p></section></div>
     <footer>
-      라즈베리파이 피코 · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
-      이 페이지의 코드와 프롬프트는 수업 자료로 자유롭게 활용할 수 있습니다.
+      라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
     </footer>
   </main>
 </div>
@@ -405,7 +881,6 @@ while True:
 <script>
 hljs.configure({cssSelector:'pre code'});
 document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));
-// 복사 버튼
 document.querySelectorAll('.block').forEach(block=>{
   const btn=block.querySelector('.copy-btn'); if(!btn) return;
   btn.addEventListener('click',()=>{
@@ -418,13 +893,11 @@ document.querySelectorAll('.block').forEach(block=>{
     });
   });
 });
-// 모바일 메뉴
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
 function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
 mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>toggle(false));
 sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
-// 스크롤스파이
 const secs=[...document.querySelectorAll('.sec, .chapter')];
 const links=new Map();
 document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));

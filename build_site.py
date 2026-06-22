@@ -1,250 +1,26 @@
 # -*- coding: utf-8 -*-
-"""노션 스타일 코드·프롬프트 페이지 생성기 (Ch1·2·3)"""
-import json, html, re, os
+"""피코 바이브 코딩 연수 자료 사이트 생성기 (Ch0~5)
 
-# ---------- Chapter 1: astro 원고에서 추출 ----------
-ch1_raw = json.load(open("/tmp/ch1_extract.json", encoding="utf-8"))
+- 연수생 배포용 정적 HTML. 모든 코드는 snippets/ 의 검증된 .py 파일에서 읽어
+  '복사하면 그대로 실행되는' 완결형으로 싣는다.
+- 독학용 교재 스타일: 왜 배우나요 → 핵심개념 → 따라하기 → 전체코드
+  → 자주 하는 실수 → 스스로 점검 블록을 지원한다.
+"""
+import html, os, re
 
-def ch1_sections():
-    # Chapter 1은 '설치 + 피코·쉴드 + LED 깜빡이기' 범위까지만.
-    # (Wi-Fi·RSSI·웹서버 등은 Chapter 2부터 다룹니다)
-    keep = {"코드 1-01", "코드 1-02", "코드 1-03", "코드 1-04"}
-    blocks = {}
-    for u in ch1_raw:
-        for b in u["blocks"]:
-            if b["label"] in keep:
-                blocks[b["label"]] = b
-    order = ["코드 1-01", "코드 1-02", "코드 1-03", "코드 1-04"]
-    items = [{"type": "code", "label": blocks[k]["label"], "lang": blocks[k]["lang"], "code": blocks[k]["code"]}
-             for k in order if k in blocks]
-    return [{"title": "첫 코드 · print 와 보드 LED 깜빡이기", "items": items}]
+BASE = os.path.dirname(os.path.abspath(__file__))
 
-# ---------- Chapter 2 ----------
-CH2 = [
- ("활동 1 · 주변 와이파이 확인", [
-   {"type":"code","label":"와이파이 스캔 (셸에서 한 줄씩)","lang":"python","code":
-"""import network
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True); print(wlan.scan())"""},
- ]),
- ("1·2단계 · 손 코딩으로 측정 확인", [
-   {"type":"code","label":"코드 블록 1 · 와이파이 연결하고 신호 세기 읽기 (main.py)","lang":"python","code":
-"""import network, time
-SSID = "your_wifi"          # 연결할 와이파이 이름 (2.4GHz)
-PASSWORD = "your_password"  # 와이파이 비밀번호
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.connect(SSID, PASSWORD)
-while not wlan.isconnected():
-    time.sleep(1)
-print("연결됨! IP:", wlan.ifconfig()[0])
-while True:
-    rssi = wlan.status('rssi')
-    print("신호 세기:", rssi)
-    time.sleep(1)"""},
-   {"type":"code","label":"코드 블록 2 · 설정 파일 분리하기 (wifi_config.py)","lang":"python","code":
-"""# 1) 새 파일 wifi_config.py 를 만들어 이렇게만 적습니다
-SSID = "your_wifi"
-PASSWORD = "your_password"
+def load(rel):
+    """snippets 등 파일 내용을 그대로 읽어온다."""
+    with open(os.path.join(BASE, rel), encoding="utf-8") as f:
+        return f.read()
 
-# 2) main.py 의 맨 위에서 불러옵니다
-from wifi_config import SSID, PASSWORD"""},
- ]),
- ("3단계 · 바이브 코딩으로 웹앱 만들기", [
-   {"type":"prompt","label":"AI 도구에게 이렇게 부탁해 보세요","text":
-"""지금 피코가 wifi_config.py로 와이파이에 연결하고 wlan.status('rssi')로 신호 세기를 읽고 있어.
-이 신호 세기를, 같은 와이파이에 연결된 스마트폰 브라우저에서 볼 수 있는 웹 화면으로 만들어 줘.
-피코가 직접 웹서버가 되는 방식(소켓 기반)으로, 외부 라이브러리 없이 만들어 줘."""},
- ]),
- ("6단계 · 살아 움직이는 대시보드로 업그레이드", [
-   {"type":"prompt","label":"AI 도구에게 이렇게 부탁해 보세요","text":
-"""지금 만든 피코 웹앱을 업그레이드해 줘.
-1) 새로고침을 누르지 않아도 5초마다 화면이 저절로 갱신되게 해 줘.
-2) 최근 20개의 신호 세기 값을 막대그래프로 보여 줘.
-3) 다만 피코가 버거워하지 않도록, 주변 와이파이를 전부 훑는 작업은 30초에 한 번만 하게 해 줘."""},
-   {"type":"code","label":"코드 블록 3 · 피코 웹서버 (main.py)","lang":"python","code":
-"""import network, socket, time
-from wifi_config import SSID, PASSWORD
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.connect(SSID, PASSWORD)
-while not wlan.isconnected():
-    time.sleep(1)
-ip = wlan.ifconfig()[0]
-print("브라우저에서 접속:", "http://" + ip)
-history = []
-def make_page(rssi, hist):
-    bars = ""
-    for v in hist:
-        h = max(8, min(100, (v + 90) * 2))
-        bars += "<div class='bar' style='height:%dpx'></div>" % h
-    return PAGE % (rssi, bars)
-s = socket.socket()
-s.bind(("0.0.0.0", 80))
-s.listen(1)
-while True:
-    cl, addr = s.accept()
-    cl.recv(1024)
-    rssi = wlan.status("rssi")
-    history.append(rssi)
-    if len(history) > 20:
-        history.pop(0)
-    cl.send("HTTP/1.1 200 OK\\r\\nContent-Type: text/html\\r\\n\\r\\n")
-    cl.send(make_page(rssi, history))
-    cl.close()"""},
-   {"type":"code","label":"코드 블록 4 · 브라우저에 보여 줄 화면 (PAGE 템플릿)","lang":"html","code":
-"""<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="5">
-  <title>우리 집 와이파이 탐험대</title>
-  <style>
-    body { font-family: sans-serif; background:#FFF6F9; text-align:center; }
-    .rssi { font-size:48px; color:#D4537E; font-weight:bold; }
-    .chart { display:flex; align-items:flex-end; height:110px;
-             gap:3px; justify-content:center; }
-    .bar { width:12px; background:#F4C0D1; border-radius:4px; }
-  </style>
-</head>
-<body>
-  <h2>지금 신호 세기</h2>
-  <p class="rssi">%d dBm</p>
-  <div class="chart">%s</div>
-  <p>5초마다 저절로 새로고침돼요</p>
-</body>
-</html>"""},
- ]),
-]
+def esc(s):
+    return html.escape(s, quote=True)
 
-# ---------- Chapter 3 ----------
-CH3 = [
- ("3.2 LED 다루기 · 빛으로 표현하기", [
-   {"type":"code","label":"코드 1 · LED 한 칸 켜기","lang":"python","code":
-"""from machine import Pin
-from neopixel import NeoPixel
-np = NeoPixel(Pin(16), 10)   # GP16, LED 10개
-np[0] = (50, 0, 0)           # 첫 번째 칸 빨강
-np.write()"""},
-   {"type":"code","label":"코드 2 · 전체를 한 색으로 (fill 함수)","lang":"python","code":
-"""from machine import Pin
-from neopixel import NeoPixel
-import time
-NUM = 10
-np = NeoPixel(Pin(16), NUM)
-def fill(color):
-    for i in range(NUM):
-        np[i] = color
-    np.write()
-fill((0, 40, 0))   # 전체 초록
-time.sleep(1)
-fill((0, 0, 0))    # 전체 끄기"""},
-   {"type":"code","label":"코드 3 · 게이지처럼 칸 수 조절하기","lang":"python","code":
-"""def gauge(level):
-    # level: 0~10, 켤 칸 수
-    for i in range(NUM):
-        if i < level:
-            np[i] = (0, 40, 0)   # 켜진 칸: 초록
-        else:
-            np[i] = (0, 0, 0)    # 꺼진 칸
-    np.write()
-for n in range(0, 11):
-    gauge(n)
-    time.sleep(0.2)"""},
- ]),
- ("3.3 가스 센서 · 공기를 숫자로", [
-   {"type":"code","label":"코드 4 · 한 번 읽기","lang":"python","code":
-"""from machine import ADC, Pin
-gas = ADC(Pin(26))        # GP26 = ADC0
-value = gas.read_u16()    # 0 ~ 65535
-print(value)"""},
-   {"type":"code","label":"코드 5 · 반복해서 읽기 (플로터로 보기)","lang":"python","code":
-"""from machine import ADC, Pin
-import time
-gas = ADC(Pin(26))
-while True:
-    value = gas.read_u16()
-    print(value)          # Thonny 플로터로 그래프 보기
-    time.sleep(0.5)"""},
-   {"type":"code","label":"코드 6 · 이동 평균으로 안정시키기","lang":"python","code":
-"""def read_average(sensor, count=10):
-    total = 0
-    for _ in range(count):
-        total += sensor.read_u16()
-        time.sleep_ms(10)
-    return total // count
-while True:
-    avg = read_average(gas, 10)
-    print(avg)
-    time.sleep(0.5)"""},
- ]),
- ("3.4 둘을 잇기 · LED 게이지", [
-   {"type":"code","label":"코드 7 · 가스 값 → LED 게이지 (main.py)","lang":"python","code":
-"""from machine import ADC, Pin
-from neopixel import NeoPixel
-import time
-gas = ADC(Pin(26))
-np = NeoPixel(Pin(16), 10)
-SAFE = 15000      # 이 아래는 안전
-DANGER = 30000    # 이 위는 위험
-def read_average(s, count=10):
-    total = 0
-    for _ in range(count):
-        total += s.read_u16(); time.sleep_ms(10)
-    return total // count
-def show_gauge(value):
-    # 값을 0~10칸으로 바꾸기
-    level = int((value - SAFE) / (DANGER - SAFE) * 10)
-    level = max(0, min(10, level))
-    for i in range(10):
-        if i >= level:        np[i] = (0, 0, 0)
-        elif i < 6:           np[i] = (0, 40, 0)   # 초록
-        elif i < 8:           np[i] = (40, 30, 0)  # 노랑
-        else:                 np[i] = (40, 0, 0)   # 빨강
-    np.write()
-while True:
-    value = read_average(gas, 10)
-    print(value)
-    if value >= DANGER:
-        for _ in range(3):                 # 위험! 전체 빨강 깜빡
-            for i in range(10): np[i] = (60, 0, 0)
-            np.write(); time.sleep(0.2)
-            for i in range(10): np[i] = (0, 0, 0)
-            np.write(); time.sleep(0.2)
-    else:
-        show_gauge(value)
-    time.sleep(0.5)"""},
- ]),
- ("3.5 웹 대시보드까지 (바이브 코딩)", [
-   {"type":"prompt","label":"AI 도구에게 이렇게 부탁해 보세요","text":
-"""지금 피코가 MQ2 값을 read_average로 읽고, show_gauge로 LED 게이지를 켜고 있어.
-여기에 Chapter 2처럼 웹 대시보드를 더해 줘. 같은 와이파이의 스마트폰에서 접속하면,
-지금 가스 값, 안전/주의/위험 상태, 그리고 최근 20개 값의 막대그래프가 보이게 해 줘.
-LED 게이지와 웹 화면이 같은 값으로 동시에 갱신되고, 5초마다 저절로 새로고침되게 해 줘."""},
-   {"type":"prompt","label":"AI 도구에게 이렇게 다듬어 달라고 해보세요","text":
-"""\"게이지가 한 칸씩 바뀔 때 부드럽게 채워지게 해 줘\"
-\"위험할 때 깜빡이는 속도를 더 빠르게 해 줘\"
-— 동작을 우리말로 부탁하면 AI가 코드를 고쳐 줍니다. 받은 코드가 내 기준값과 맞는지 꼭 확인하세요."""},
-   {"type":"code","label":"코드 8 · LED와 웹을 함께 갱신하는 핵심 부분","lang":"python","code":
-"""# (와이파이 연결은 Chapter 2의 wifi_config.py 방식 그대로)
-while True:
-    cl, addr = s.accept()
-    cl.recv(1024)
-    value = read_average(gas, 10)
-    history.append(value)
-    if len(history) > 20:
-        history.pop(0)
-    show_gauge(value)              # LED도 함께 갱신
-    cl.send("HTTP/1.1 200 OK\\r\\nContent-Type: text/html\\r\\n\\r\\n")
-    cl.send(make_page(value, history))
-    cl.close()"""},
- ]),
-]
-
-def tup(sec_list):
-    return [{"title":t, "items":items} for (t, items) in sec_list]
-
-# ---------- Chapter 1 상단: 펌웨어 다운로드 카드 ----------
+# ===================================================================
+#  펌웨어 다운로드 카드 (Ch0)
+# ===================================================================
 FW_VER = "v1.28.0"
 FW_FILE = "firmware/RPI_PICO2_W-v1.28.0.uf2"
 FW_SIZE = "1.64 MB"
@@ -260,7 +36,7 @@ FW_CARD = f'''<div class="fw-card">
   <div class="fw-steps-wrap">
     <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
     <ol class="fw-steps">
-      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요!)</span></li>
+      <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요! 버튼 먼저 누르고 꽂기)</span></li>
       <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
       <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
       <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
@@ -269,163 +45,615 @@ FW_CARD = f'''<div class="fw-card">
   <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
 </div>'''
 
+# 하드웨어 연결 다이어그램
+HW_FIGURE = '''<div class="figure"><pre class="diagram">
+        USB 케이블                  그로브 케이블
+  ┌──────────┐                ┌─────────────────┐
+  │   PC /   │                │   D16 포트  ●────┼──▶  🟦 WS2813 LED 바 (10개)
+  │  노트북  │◀── USB ──▶┌──┴──────┐          │
+  └──────────┘           │  피코    │  그로브   │
+                         │ 2 WH +   │   베이스  │
+                         │ 그로브   │   쉴드    │
+                         │ 쉴드     │           │
+                         └──┬───────┘   A0 포트 ●────┼──▶  🟫 MQ-2 가스센서
+                            └─────────────────┘
+   LED  → 그로브 <b>D16</b> 포트 (= GP16, 디지털)
+   MQ-2 → 그로브 <b>A0</b>  포트 (= GP26, 아날로그 ADC0)
+</pre></div>'''
+
+# ===================================================================
+#  콘텐츠 정의
+# ===================================================================
 CHAPTERS = [
-  {"id":"ch1","num":"01","title":"피코, 처음 시작하기","subtitle":"피코·MicroPython·Thonny 설치와 그로브 쉴드 이해, 그리고 보드 위 LED 깜빡이기 — 가장 처음 만나는 코드입니다.","accent":"#5B6CF0","extra":FW_CARD,"sections":ch1_sections()},
-  {"id":"ch2","num":"02","title":"우리 집 와이파이 탐험대","subtitle":"와이파이 신호 세기(RSSI)를 측정해 실시간 대시보드로 만듭니다.","accent":"#E0568A","sections":tup(CH2)},
-  {"id":"ch3","num":"03","title":"우리 교실 공기 지킴이","subtitle":"가스 센서와 LED 게이지를 잇고, 웹 대시보드로 공기 상태를 보여 줍니다.","accent":"#1F9D63","sections":tup(CH3)},
+# ----------------------------------------------------------------- CH0
+{
+  "id": "ch0", "num": "00", "title": "준비하기", "accent": "#5B6CF0",
+  "subtitle": "Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.",
+  "goals": [
+    "Thonny(코드 편집기)를 설치하고 실행할 수 있다",
+    "피코 2 WH에 그로브 쉴드와 센서를 바르게 연결할 수 있다",
+    "MicroPython 펌웨어를 설치하고 Thonny와 피코를 연결할 수 있다",
+    "보드 위 LED를 깜빡이는 첫 코드를 실행할 수 있다",
+  ],
+  "why": "피코는 손바닥만 한 작은 컴퓨터예요. 다만 처음 한 번은 <b>① 코드를 쓸 도구(Thonny) 설치 → ② 하드웨어 조립 → ③ 피코에 ‘운영체제’ 격인 펌웨어 설치 → ④ 도구와 피코 연결</b> 순서를 거쳐야 합니다. 이 4단계만 통과하면, 다음 장부터는 코드를 복사해 붙여넣고 ▶ 버튼만 누르면 돼요.",
+  "extra": "",
+  "sections": [
+    {"title": "0.1 · 준비물 확인", "items": [
+      {"type": "text", "html": "책상 위에 아래 물건이 모두 있는지 먼저 확인하세요."},
+      {"type": "check_list", "items": [
+        "Raspberry Pi <b>Pico 2 WH</b> (핀 헤더가 납땜된 버전)",
+        "그로브(Grove) <b>베이스 쉴드</b>",
+        "<b>WS2813 LED 바</b> (10개짜리) + 그로브 케이블",
+        "<b>MQ-2 가스센서</b> 모듈 + 그로브 케이블",
+        "데이터 전송이 되는 <b>USB 케이블</b> (충전 전용 케이블 ✗)",
+        "Windows 또는 macOS 컴퓨터",
+      ]},
+      {"type": "callout", "kind": "warn", "title": "USB 케이블 주의",
+       "html": "세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 연수 현장에서 제일 흔한 막힘 지점입니다."},
+    ]},
+    {"title": "0.2 · Thonny 설치 (코드 편집기)", "items": [
+      {"type": "text", "html": "<b>Thonny</b>는 우리가 쓴 코드를 피코에게 전달하고, 피코가 보내는 메시지를 받아 보여 주는 <b>창구</b>예요. 파이썬 입문용으로 가장 쉽고, 피코를 기본 지원합니다."},
+      {"type": "linkbtn", "href": "https://thonny.org", "label": "thonny.org — Thonny 내려받기"},
+      {"type": "steps", "items": [
+        {"t": "thonny.org 접속", "d": "위 버튼을 눌러 공식 사이트로 갑니다."},
+        {"t": "내 운영체제용 설치파일 받기", "d": "오른쪽 위에서 <b>Windows</b> 또는 <b>macOS</b>에 맞는 파일을 내려받습니다."},
+        {"t": "설치 실행", "d": "받은 파일을 더블클릭해 안내대로 설치합니다. (옵션은 기본값 그대로 두면 됩니다)"},
+        {"t": "Thonny 실행", "d": "설치가 끝나면 Thonny를 엽니다. 위에 코드 쓰는 칸, 아래에 <b>Shell</b>(셸) 칸이 보이면 성공이에요."},
+      ]},
+      {"type": "mistakes", "items": [
+        {"sym": "설치 파일이 백신/보안 경고로 막힘", "cause": "다운로드 직후 일부 백신이 과민 반응합니다.", "fix": "공식 사이트(thonny.org)에서 받았다면 안전합니다. ‘허용’ 또는 ‘추가 정보 → 실행’을 선택하세요."},
+      ]},
+    ]},
+    {"title": "0.3 · 하드웨어 조립", "items": [
+      {"type": "text", "html": "그로브 베이스 쉴드는 피코 위에 ‘덮어 끼우는’ 확장 보드예요. 센서를 납땜 없이 케이블로 톡 꽂을 수 있게 해 줍니다. 아래 그림처럼 연결합니다."},
+      {"type": "figure_hw"},
+      {"type": "steps", "items": [
+        {"t": "피코를 그로브 쉴드에 꽂기", "d": "핀 방향을 맞춰 피코를 쉴드에 끝까지 눌러 끼웁니다. <b>USB 단자가 쉴드 바깥쪽을 향하도록</b> 방향을 확인하세요. 한 줄이라도 핀이 어긋나면 안 됩니다."},
+        {"t": "LED 바 → D16 포트", "d": "WS2813 LED 바의 그로브 케이블을 쉴드의 <b>D16</b> 포트에 꽂습니다. (코드에서는 GP16)"},
+        {"t": "MQ-2 센서 → A0 포트", "d": "MQ-2 가스센서의 그로브 케이블을 쉴드의 <b>A0</b> 포트에 꽂습니다. (코드에서는 GP26 / ADC0)"},
+        {"t": "USB로 컴퓨터에 연결", "d": "USB 케이블로 피코와 컴퓨터를 연결합니다. (펌웨어를 처음 설치할 때는 0.4의 BOOTSEL 순서를 따르세요)"},
+      ]},
+      {"type": "callout", "kind": "warn", "title": "꽂는 위치를 헷갈리지 마세요",
+       "html": "D16(디지털)과 A0(아날로그)는 쓰임이 다릅니다. LED는 <b>D16</b>, 가스센서는 <b>A0</b>. 반대로 꽂으면 값이 이상하거나 LED가 안 켜져요."},
+    ]},
+    {"title": "0.4 · MicroPython 펌웨어 설치", "items": [
+      {"type": "text", "html": "갓 산 피코에는 아직 파이썬을 실행할 ‘속살’이 없어요. <b>MicroPython 펌웨어</b>를 한 번 설치하면, 그때부터 피코가 파이썬 코드를 알아듣습니다. (처음 한 번만 하면 됩니다)"},
+      {"type": "raw", "html": FW_CARD},
+      {"type": "mistakes", "items": [
+        {"sym": "RPI-RP2 드라이브가 안 나타남", "cause": "BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.", "fix": "케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다."},
+      ]},
+    ]},
+    {"title": "0.5 · Thonny와 피코 연결 + 첫 코드", "items": [
+      {"type": "steps", "items": [
+        {"t": "인터프리터 선택", "d": "Thonny 오른쪽 <b>아래 구석</b>을 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. 포트는 보통 자동으로 잡혀요."},
+        {"t": "셸에서 인사해 보기", "d": "아래 Shell 칸에 다음을 한 줄 입력하고 Enter."},
+      ]},
+      {"type": "code", "label": "셸에 직접 입력", "lang": "python", "file": "snippets/ch0_hello.py"},
+      {"type": "text", "html": "<code>안녕, 피코!</code>가 셸에 찍히면, 컴퓨터와 피코가 <b>대화에 성공</b>한 거예요. 🎉 이제 보드 위 작은 LED를 깜빡여 봅시다."},
+      {"type": "code", "label": "보드 LED 깜빡이기", "lang": "python", "file": "snippets/ch0_blink.py"},
+      {"type": "callout", "kind": "tip", "title": "main.py로 저장하면 자동 실행",
+       "html": "이 코드를 피코에 <b>main.py</b>라는 이름으로 저장하면(파일 → 저장 → Raspberry Pi Pico), 다음부터 전원만 넣어도 코드가 저절로 돌아갑니다. 멈추려면 Thonny에서 ⏹(정지) 또는 Ctrl+C."},
+      {"type": "mistakes", "items": [
+        {"sym": "포트/장치가 목록에 안 보임", "cause": "펌웨어 미설치, 또는 케이블 문제.", "fix": "0.4를 다시 확인하고, 케이블을 데이터용으로 바꾸세요. Thonny를 재시작하면 잡히기도 합니다."},
+        {"sym": "코드를 멈출 수 없음 (무한 반복)", "cause": "<code>while True</code>는 일부러 무한 반복합니다.", "fix": "Thonny의 ⏹ 정지 버튼을 누르거나 셸에서 Ctrl+C."},
+      ]},
+      {"type": "check", "items": [
+        {"q": "Thonny에서 셸(Shell) 칸은 무슨 역할을 하나요?", "a": "코드를 한 줄씩 바로 실행해 보고, 피코가 print로 보낸 메시지를 보여 주는 ‘대화창’입니다."},
+        {"q": "펌웨어는 매번 설치해야 하나요?", "a": "아니요. 처음 한 번만 설치하면 계속 유지됩니다."},
+        {"q": "보드 LED를 코드에서 어떻게 가리켰나요?", "a": "<code>Pin(\"LED\", Pin.OUT)</code> — 피코 보드에 내장된 LED를 출력 모드로 잡았습니다."},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- CH1
+{
+  "id": "ch1", "num": "01", "title": "와이파이 센서 대시보드", "accent": "#E0568A",
+  "subtitle": "피코를 와이파이에 연결하고, 신호 세기(RSSI)를 스마트폰 브라우저에서 실시간 그래프로 봅니다. 첫 IoT 작품이에요.",
+  "goals": [
+    "피코를 와이파이(STA 모드)에 연결할 수 있다",
+    "신호 세기(RSSI)가 무엇이고 어떻게 읽는지 안다",
+    "피코를 작은 웹서버로 만들어 브라우저에서 데이터를 본다",
+    "‘피코는 /data로 값만 주고, 그래프는 브라우저가 그린다’는 구조를 이해한다",
+  ],
+  "why": "센서 값을 셸에서만 보면 나만 볼 수 있죠. 하지만 피코가 <b>웹서버</b>가 되면, 같은 와이파이에 있는 누구나 스마트폰으로 실시간 값을 볼 수 있어요. 이 장에서 익히는 <b>‘피코=서버, 브라우저=화면’</b> 구조는 3·4장(날씨·가스 대시보드)에서 똑같이 재사용됩니다.",
+  "sections": [
+    {"title": "핵심 개념", "items": [
+      {"type": "concept", "items": [
+        {"t": "STA 모드", "d": "피코가 집/학교 와이파이에 <b>접속하는</b> 모드. <code>network.WLAN(network.STA_IF)</code>"},
+        {"t": "RSSI", "d": "신호 세기. 단위는 dBm이고 <b>음수</b>예요. -50처럼 0에 가까울수록 강하고, -80처럼 작을수록 약합니다."},
+        {"t": "소켓 웹서버", "d": "포트 80에서 브라우저의 접속을 기다리다가, 요청이 오면 HTML이나 데이터를 돌려주는 작은 서버."},
+        {"t": "/data 폴링", "d": "브라우저가 1초마다 <code>/data</code>를 불러 최신 값을 받고, Chart.js로 그래프를 갱신하는 방식."},
+      ]},
+    ]},
+    {"title": "따라하기", "items": [
+      {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
+      {"type": "code", "label": "Step 1 · 와이파이 스캔", "lang": "python", "file": "snippets/ch1_scan.py"},
+      {"type": "step_head", "html": "<b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b>라는 별도 파일로 저장합니다. (피코에 새 파일로 저장!) 이 파일은 1·3·4장에서 모두 함께 씁니다."},
+      {"type": "code", "label": "Step 2 · wifi_config.py (따로 저장)", "lang": "python", "file": "snippets/wifi_config.py"},
+      {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결하고 신호 세기를 1초마다 출력합니다. (손코딩으로 원리 확인)"},
+      {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
+      {"type": "step_head", "html": "<b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 아래는 <b>복사해서 main.py로 저장하면 바로 도는</b> 완결형 대시보드예요. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요."},
+      {"type": "code", "label": "전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py"},
+    ]},
+    {"title": "자주 하는 실수", "items": [
+      {"type": "mistakes", "items": [
+        {"sym": "계속 연결 중... 에서 멈춤", "cause": "5GHz 와이파이이거나 비밀번호 오타.", "fix": "피코는 <b>2.4GHz</b> 와이파이만 됩니다. 5GHz 전용이면 안 돼요. SSID/비번 대소문자도 정확히 확인하세요."},
+        {"sym": "브라우저에서 주소가 안 열림", "cause": "스마트폰이 피코와 <b>다른 와이파이</b>에 있음.", "fix": "스마트폰을 피코와 <b>같은 와이파이</b>에 연결하세요. 학교망은 기기 간 통신이 막힌 경우도 있어, 휴대폰 핫스팟이 가장 확실합니다."},
+        {"sym": "RSSI가 0 또는 이상한 값", "cause": "연결 전에 status를 읽음.", "fix": "<code>wlan.isconnected()</code>가 참이 된 뒤에 읽어야 합니다. (위 코드는 이미 연결 후 읽습니다)"},
+      ]},
+    ]},
+    {"title": "스스로 점검하기", "items": [
+      {"type": "check", "items": [
+        {"q": "RSSI가 -50과 -80 중 어느 쪽이 더 좋은 신호인가요?", "a": "-50입니다. 0에 가까울수록 강한 신호예요."},
+        {"q": "그래프는 피코가 그리나요, 브라우저가 그리나요?", "a": "브라우저가 그립니다. 피코는 <code>/data</code>로 숫자만 보내고, Chart.js가 화면에 그려요. 그래서 피코의 부담이 적습니다."},
+        {"q": "wifi_config.py를 따로 두는 이유는?", "a": "비밀번호를 코드 본문과 분리해 관리하기 쉽고, 여러 코드가 같은 설정을 재사용할 수 있어서요."},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- CH2
+{
+  "id": "ch2", "num": "02", "title": "LED 10개 다루기", "accent": "#1F9D63",
+  "subtitle": "WS2813 LED 바(10개)를 색과 밝기로 자유롭게 제어합니다. 다음 장 ‘날씨 시계’의 준비 운동이에요.",
+  "goals": [
+    "NeoPixel로 LED 한 칸·전체를 원하는 색으로 켤 수 있다",
+    "WS2813에 꼭 필요한 timing 인자를 이해한다",
+    "10칸에 무지개·게이지를 표현할 수 있다",
+  ],
+  "why": "LED는 ‘숫자를 빛으로 바꾸는’ 가장 직관적인 출력 장치예요. 강수확률·가스 농도 같은 데이터를 색으로 보여 주면 한눈에 들어오죠. 이 장에서 10칸을 다루는 법을 익히면, 3장에서 ‘오늘의 비 예보’를 10칸 LED 시계로 만들 수 있어요.",
+  "sections": [
+    {"title": "핵심 개념 — timing이 진짜 중요해요", "items": [
+      {"type": "callout", "kind": "key", "title": "WS2813은 timing 인자가 필수",
+       "html": "우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이번 연수의 모든 LED 코드 첫 줄에 들어갑니다."},
+      {"type": "callout", "kind": "info", "title": "LED가 60개짜리로 왔다면?",
+       "html": "걱정 마세요. 바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·날씨 시계 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요."},
+      {"type": "concept", "items": [
+        {"t": "NeoPixel", "d": "여러 개의 색 LED를 한 줄로 제어하는 도구. <code>np[i] = (r, g, b)</code>로 i번 칸 색을 정합니다."},
+        {"t": "write()", "d": "색을 정한 뒤 <code>np.write()</code>를 호출해야 실제 LED에 반영됩니다. 깜빡 잊기 쉬워요."},
+        {"t": "칸 번호 0~9", "d": "10개니까 <code>np[0]</code>부터 <code>np[9]</code>까지. 0부터 시작!"},
+        {"t": "밝기는 낮게", "d": "(255,255,255)는 너무 밝고 전류도 많이 써요. (30,30,30) 정도면 충분히 보입니다."},
+      ]},
+    ]},
+    {"title": "따라하기", "items": [
+      {"type": "step_head", "html": "<b>Step 1.</b> 한 칸만 켜 보기."},
+      {"type": "code", "label": "Step 1 · 한 칸 켜기", "lang": "python", "file": "snippets/ch2_basic.py"},
+      {"type": "step_head", "html": "<b>Step 2.</b> 전체를 한 색으로 — 반복문으로 모든 칸을 칠하는 <code>fill</code> 함수."},
+      {"type": "code", "label": "Step 2 · 전체 한 색 (fill)", "lang": "python", "file": "snippets/ch2_fill.py"},
+      {"type": "step_head", "html": "<b>Step 3.</b> 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴)."},
+      {"type": "code", "label": "Step 3 · 무지개 10칸", "lang": "python", "file": "snippets/ch2_rainbow.py"},
+      {"type": "step_head", "html": "<b>Step 4.</b> 켜진 칸 수로 양을 나타내는 <b>게이지</b> — 다음 장의 핵심 기법이에요."},
+      {"type": "code", "label": "전체 코드 · 게이지 차오르기", "lang": "python", "file": "snippets/ch2_gauge.py"},
+    ]},
+    {"title": "자주 하는 실수", "items": [
+      {"type": "mistakes", "items": [
+        {"sym": "색이 깨지거나 엉뚱한 칸이 켜짐", "cause": "<b>timing 인자 누락.</b>", "fix": "<code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다."},
+        {"sym": "색을 정했는데 안 켜짐", "cause": "<code>np.write()</code>를 빠뜨림.", "fix": "색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요."},
+        {"sym": "10번째 칸에서 에러", "cause": "<code>np[10]</code>을 씀 (칸은 0~9).", "fix": "10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>."},
+        {"sym": "눈이 부시고 피코가 뜨거움", "cause": "밝기를 너무 높게 줌.", "fix": "(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다."},
+      ]},
+    ]},
+    {"title": "스스로 점검하기", "items": [
+      {"type": "check", "items": [
+        {"q": "WS2813 LED를 만들 때 꼭 넣어야 하는 인자는?", "a": "<code>timing=(280, 515, 515, 745)</code>. 없으면 색이 깨집니다."},
+        {"q": "색을 바꾼 뒤 화면(LED)에 반영하려면?", "a": "<code>np.write()</code>를 호출합니다."},
+        {"q": "10칸 중 다섯 칸만 켜서 ‘50%’를 표현하려면?", "a": "0~4번 칸을 색으로, 5~9번 칸을 (0,0,0)으로 두고 write. (게이지 방식)"},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- CH3
+{
+  "id": "ch3", "num": "03", "title": "날씨 비 예보 대시보드", "accent": "#3B82F6",
+  "subtitle": "인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만듭니다. 웹 화면은 바이브코딩으로 덧붙여요.",
+  "goals": [
+    "Open-Meteo에서 강수확률 데이터를 받아올 수 있다",
+    "받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다",
+    "6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다",
+    "AI에게 부탁해 웹 대시보드까지 덧붙일 수 있다(바이브코딩)",
+  ],
+  "why": "여기서부터 진짜 ‘세상의 데이터’를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, 거실의 LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 됩니다. 출근 전 LED만 보고 우산을 챙길 수 있죠.",
+  "sections": [
+    {"title": "핵심 개념", "items": [
+      {"type": "concept", "items": [
+        {"t": "Open-Meteo", "d": "무료·<b>API 키 불필요</b>한 날씨 서비스. 위도·경도만 넣으면 시간대별 강수확률을 줍니다."},
+        {"t": "강수확률(precipitation_probability)", "d": "그 시각에 비가 올 가능성(%). 0시~23시까지 24개가 옵니다."},
+        {"t": "HTTP 요청 (requests)", "d": "피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code>"},
+        {"t": "6~23 → 10칸 매핑", "d": "오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다."},
+      ]},
+      {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
+      {"type": "callout", "kind": "info", "title": "requests(urequests)는 한 번만 설치",
+       "html": "인터넷에서 데이터를 받으려면 <b>requests</b> 모듈이 필요해요. Thonny에서 <b>도구(Tools) → 패키지 관리(Manage packages)</b> → 검색창에 <code>requests</code> 입력 → 설치. (피코가 와이파이에 연결된 상태에서) 한 번만 하면 됩니다. 아래 코드는 <code>requests</code>가 없으면 <code>urequests</code>로 자동 대체합니다."},
+    ]},
+    {"title": "따라하기", "items": [
+      {"type": "step_head", "html": "<b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)"},
+      {"type": "step_head", "html": "<b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)"},
+      {"type": "code", "label": "Step 2 · 강수확률 받아오기", "lang": "python", "file": "snippets/ch3_fetch.py"},
+      {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (10분마다 새 예보로 갱신)"},
+      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py)", "lang": "python", "file": "snippets/ch3_full.py"},
+      {"type": "step_head", "html": "<b>Step 4.</b> 이제 LED만으로 부족하면, AI에게 부탁해 <b>웹 화면</b>까지 덧붙입니다. 1장에서 익힌 ‘피코=서버, 브라우저=화면’ 구조를 그대로 써 달라고 하면 돼요."},
+      {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요", "text":
+"지금 피코가 Open-Meteo에서 오늘 강수확률을 받아 10개 WS2813 LED(Pin 16, timing=(280,515,515,745))에 6시~23시 색으로 표시하고 있어.\n여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.\n- LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).\n받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게."},
+      {"type": "callout", "kind": "tip", "title": "바이브코딩의 핵심",
+       "html": "AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다."},
+    ]},
+    {"title": "자주 하는 실수", "items": [
+      {"type": "mistakes", "items": [
+        {"sym": "ImportError: no module named 'requests'", "cause": "requests/urequests 미설치.", "fix": "위 ‘패키지 관리’ 안내대로 설치하세요. 와이파이 연결 후 설치해야 합니다."},
+        {"sym": "위도·경도를 바꿨는데 엉뚱한 지역", "cause": "위도(LAT)와 경도(LON)를 바꿔 넣음.", "fix": "한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다."},
+        {"sym": "메모리 오류로 멈춤", "cause": "HTTPS 응답이 큰데 자주 부름.", "fix": "필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다."},
+      ]},
+    ]},
+    {"title": "스스로 점검하기", "items": [
+      {"type": "check", "items": [
+        {"q": "Open-Meteo는 API 키가 필요한가요?", "a": "아니요. 무료이고 키 없이 위도·경도만으로 씁니다."},
+        {"q": "강수확률 24개 중 6시 값은 어떻게 꺼내나요?", "a": "<code>probs[6]</code>. 리스트 인덱스가 곧 시각(0~23시)입니다."},
+        {"q": "왜 10분마다만 새로 받아오나요?", "a": "날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다."},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- CH4
+{
+  "id": "ch4", "num": "04", "title": "MQ-2 가스센서 대시보드", "accent": "#F59E0B",
+  "subtitle": "공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 다크 테마 대시보드를 만듭니다.",
+  "goals": [
+    "ADC로 가스센서 값을 읽고 전압·비율로 바꿀 수 있다",
+    "이동 평균으로 값을 안정시킬 수 있다",
+    "임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다",
+  ],
+  "why": "공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 1장의 웹서버 구조에 ‘판단(임계값)’과 ‘예쁜 화면’이 더해진, 가장 완성도 높은 대시보드입니다.",
+  "sections": [
+    {"title": "핵심 개념", "items": [
+      {"type": "concept", "items": [
+        {"t": "ADC (아날로그)", "d": "가스 농도 같은 ‘연속된 값’을 숫자로 바꿔 읽는 기능. 그로브 <b>A0 = GP26</b>. <code>ADC(Pin(26))</code>"},
+        {"t": "read_u16()", "d": "0~65535 사이 값으로 읽습니다. 가스가 짙을수록 값이 커져요."},
+        {"t": "이동 평균", "d": "여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code>"},
+        {"t": "임계값", "d": "SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요."},
+      ]},
+      {"type": "callout", "kind": "info", "title": "센서는 예열이 필요해요",
+       "html": "MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요."},
+    ]},
+    {"title": "따라하기", "items": [
+      {"type": "step_head", "html": "<b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)"},
+      {"type": "code", "label": "Step 1 · 한 번 읽기", "lang": "python", "file": "snippets/ch4_01_read.py"},
+      {"type": "step_head", "html": "<b>Step 2.</b> 반복해서 읽고, Thonny <b>플로터</b>로 그래프 보기. (셸 옆 ‘Plotter’ 켜기)"},
+      {"type": "code", "label": "Step 2 · 반복 읽기 (플로터)", "lang": "python", "file": "snippets/ch4_02_loop.py"},
+      {"type": "step_head", "html": "<b>Step 3.</b> 원시값을 전압·비율로 바꿔 의미를 부여합니다."},
+      {"type": "code", "label": "Step 3 · 전압·비율 변환", "lang": "python", "file": "snippets/ch4_03_convert.py"},
+      {"type": "step_head", "html": "<b>Step 4.</b> 완성형 대시보드. <b>복사해서 main.py로 저장</b>하면, 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)"},
+      {"type": "code", "label": "전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch4_dashboard.py"},
+    ]},
+    {"title": "자주 하는 실수", "items": [
+      {"type": "mistakes", "items": [
+        {"sym": "값이 늘 0이거나 65535에 붙어 있음", "cause": "센서를 A0가 아닌 다른 포트에 꽂음.", "fix": "그로브 <b>A0(=GP26)</b>에 꽂았는지 확인하세요. D포트에 꽂으면 아날로그 값을 못 읽습니다."},
+        {"sym": "켜자마자 ‘위험’으로 뜸", "cause": "예열 전이라 값이 큼.", "fix": "1~2분 기다리세요. 그래도 항상 위험이면 임계값(SAFE/WARNING/DANGER 숫자)을 우리 환경에 맞게 올리세요."},
+        {"sym": "ImportError: wifi_config", "cause": "wifi_config.py가 피코에 없음.", "fix": "1장 Step 2의 wifi_config.py를 피코에 저장하세요. 이 코드는 <code>WIFI_SSID/WIFI_PASSWORD</code> 이름을 씁니다."},
+      ]},
+    ]},
+    {"title": "스스로 점검하기", "items": [
+      {"type": "check", "items": [
+        {"q": "MQ-2는 그로브의 어느 포트에 꽂나요?", "a": "A0 (= GP26 = ADC0). 아날로그 포트입니다."},
+        {"q": "값을 안정시키는 read_average는 무엇을 하나요?", "a": "여러 번(기본 10번) 읽어 평균을 냅니다. 출렁임이 줄어요."},
+        {"q": "임계값은 어디서나 같은 숫자를 쓰면 되나요?", "a": "아니요. 센서·환경마다 기준이 달라, 우리 교실에서 직접 보고 보정해야 합니다."},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- CH5
+{
+  "id": "ch5", "num": "05", "title": "자유 프로젝트", "accent": "#8B5CF6",
+  "subtitle": "지금까지 배운 LED·센서·웹·날씨 API를 조합해, 나만의 작품을 바이브코딩으로 완성합니다.",
+  "goals": [
+    "여러 기능을 조합해 새 작품을 기획할 수 있다",
+    "AI에게 명확하게 부탁하고, 받은 코드를 점검할 수 있다",
+  ],
+  "why": "도구는 다 익혔어요. 이제 <b>‘무엇을 만들까’</b>가 남았습니다. 작은 아이디어 하나면 충분해요. 아래 아이디어와 프롬프트 틀을 출발점으로 삼아, 우리 교실·우리 집에 쓸모 있는 작품을 만들어 보세요.",
+  "sections": [
+    {"title": "아이디어 모음", "items": [
+      {"type": "ideas", "items": [
+        {"t": "🌧️ 우산 알리미", "d": "날씨 시계(3장)에서 오늘 강수확률이 60% 넘는 시간대가 있으면, 현관 LED를 파랑으로 깜빡여 ‘우산 챙겨!’"},
+        {"t": "🌬️ 스마트 환기등", "d": "가스센서(4장) 값이 WARNING을 넘으면 LED를 노랑→빨강으로, 웹에 ‘환기하세요’ 알림."},
+        {"t": "📶 와이파이 약한 자리 찾기", "d": "RSSI 대시보드(1장)를 들고 다니며 집에서 신호가 약한 곳을 LED 게이지로 탐색."},
+        {"t": "🌡️ 오늘 날씨 무드등", "d": "강수확률 대신 기온을 받아(Open-Meteo) 더우면 빨강, 추우면 파랑으로 방 전체 분위기 표현."},
+      ]},
+    ]},
+    {"title": "AI에게 잘 부탁하는 틀", "items": [
+      {"type": "text", "html": "막연히 ‘만들어 줘’보다, <b>① 지금 상태 → ② 추가할 동작 → ③ 제약(핀·timing·갱신주기)</b>을 함께 주면 훨씬 정확한 코드를 받습니다."},
+      {"type": "prompt", "label": "프롬프트 틀 (복사해서 채우세요)", "text":
+"[지금 상태] 내 피코는 지금 ____ 를 하고 있어. (예: Open-Meteo 강수확률을 10개 LED에 표시)\n[하드웨어] WS2813 LED 10개는 Pin 16, timing=(280,515,515,745) / MQ-2는 ADC Pin 26 / 와이파이는 wifi_config.py 사용.\n[추가할 동작] 여기에 ____ 기능을 더해 줘. (예: 강수확률 60% 넘으면 LED 깜빡)\n[제약] 외부 라이브러리는 최소로, 갱신은 ____초마다, 복사해서 바로 도는 완결형 코드로 줘.\n받은 코드에서 핀 번호와 timing 설정이 내 것과 같은지 확인할게."},
+      {"type": "callout", "kind": "tip", "title": "점검 체크리스트",
+       "html": "받은 코드를 올리기 전에: ① <code>timing=(280,515,515,745)</code> 있는지 ② 핀 번호(16 / 26)와 포트(D16 / A0) 맞는지 ③ 무한 반복 속 <code>sleep</code>으로 쉬어 주는지 ④ 와이파이/네트워크 요청이 과하지 않은지."},
+    ]},
+    {"title": "마무리", "items": [
+      {"type": "text", "html": "여기까지 왔다면, 여러분은 <b>센서로 데이터를 모으고 · 인터넷의 데이터를 가져오고 · LED와 웹으로 표현하는</b> IoT의 한 사이클을 전부 경험한 거예요. 도구는 거들 뿐, 진짜 중요한 건 ‘무엇을, 왜 만드는가’입니다. 멋진 작품을 만들어 보세요! 🎉"},
+    ]},
+  ],
+},
 ]
+CHAPTERS[0]["extra"] = ""   # FW_CARD는 0.4 섹션 안에 배치
 
-# ---------- 통계 ----------
-n_code = sum(1 for c in CHAPTERS for s in c["sections"] for it in s["items"] if it["type"]=="code")
-n_prompt = sum(1 for c in CHAPTERS for s in c["sections"] for it in s["items"] if it["type"]=="prompt")
+# ===================================================================
+#  렌더러
+# ===================================================================
+n_code = 0
+n_prompt = 0
 
-def esc(s): return html.escape(s, quote=True)
-def slug(s):
-    return re.sub(r'[^a-z0-9가-힣]+','-', s.lower()).strip('-')
+def render_item(it, accent):
+    global n_code, n_prompt
+    t = it["type"]
+    if t == "text":
+        return f'<p class="prose">{it["html"]}</p>'
+    if t == "raw":
+        return it["html"]
+    if t == "step_head":
+        return f'<p class="step-head">{it["html"]}</p>'
+    if t == "linkbtn":
+        return (f'<a class="linkbtn" href="{esc(it["href"])}" target="_blank" rel="noopener">'
+                f'🔗 {esc(it["label"])}</a>')
+    if t == "figure_hw":
+        return HW_FIGURE
+    if t == "callout":
+        icons = {"tip": "💡", "warn": "⚠️", "info": "ℹ️", "key": "🔑"}
+        ic = icons.get(it["kind"], "💡")
+        return (f'<div class="callout {it["kind"]}"><div class="callout-head">{ic} '
+                f'{esc(it["title"])}</div><div class="callout-body">{it["html"]}</div></div>')
+    if t == "goals":
+        lis = "".join(f'<li>{g}</li>' for g in it["items"])
+        return f'<div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul>{lis}</ul></div>'
+    if t == "check_list":
+        lis = "".join(f'<li>{g}</li>' for g in it["items"])
+        return f'<ul class="check-list">{lis}</ul>'
+    if t == "concept":
+        rows = "".join(f'<div class="concept"><div class="concept-t">{esc(c["t"])}</div>'
+                       f'<div class="concept-d">{c["d"]}</div></div>' for c in it["items"])
+        return f'<div class="concept-grid">{rows}</div>'
+    if t == "ideas":
+        rows = "".join(f'<div class="idea"><div class="idea-t">{c["t"]}</div>'
+                       f'<div class="idea-d">{c["d"]}</div></div>' for c in it["items"])
+        return f'<div class="idea-grid">{rows}</div>'
+    if t == "steps":
+        lis = "".join(f'<li><b>{esc(s["t"])}</b><span>{s["d"]}</span></li>' for s in it["items"])
+        return f'<ol class="steps">{lis}</ol>'
+    if t == "mistakes":
+        rows = ""
+        for m in it["items"]:
+            rows += (f'<div class="mistake"><div class="m-sym">❌ {esc(m["sym"])}</div>'
+                     f'<div class="m-row"><span class="m-tag">원인</span>{m["cause"]}</div>'
+                     f'<div class="m-row"><span class="m-tag fix">해결</span>{m["fix"]}</div></div>')
+        return f'<div class="mistakes">{rows}</div>'
+    if t == "check":
+        rows = ""
+        for c in it["items"]:
+            rows += (f'<details class="qa"><summary>{c["q"]}</summary>'
+                     f'<div class="qa-a">{c["a"]}</div></details>')
+        return f'<div class="checks">{rows}</div>'
+    if t == "code":
+        n_code += 1
+        code = it["code"] if "code" in it else load(it["file"])
+        code = esc(code.rstrip("\n"))
+        tag = it["lang"].upper()
+        label = esc(it["label"]) if it.get("label") else "코드"
+        return (f'<div class="block code-block">'
+                f'<div class="block-head"><span class="block-label">{label}</span>'
+                f'<span class="lang-tag">{tag}</span>'
+                f'<button class="copy-btn" aria-label="복사">복사</button></div>'
+                f'<pre><code class="language-{it["lang"]}">{code}</code></pre></div>')
+    if t == "prompt":
+        n_prompt += 1
+        return (f'<div class="block prompt-block" style="--accent:{accent}">'
+                f'<div class="block-head"><span class="prompt-ico">🤖</span>'
+                f'<span class="block-label">{esc(it["label"])}</span>'
+                f'<button class="copy-btn" aria-label="복사">복사</button></div>'
+                f'<div class="prompt-body">{esc(it["text"])}</div></div>')
+    return ""
 
-# ---------- HTML 생성 ----------
 def render():
     nav, main = [], []
     for c in CHAPTERS:
-        nav.append(f'<div class="nav-ch"><a href="#{c["id"]}" class="nav-ch-link" data-target="{c["id"]}"><span class="nav-dot" style="background:{c["accent"]}"></span>{esc(c["title"])}</a><div class="nav-secs">')
+        nav.append(f'<div class="nav-ch"><a href="#{c["id"]}" class="nav-ch-link" '
+                   f'data-target="{c["id"]}"><span class="nav-dot" '
+                   f'style="background:{c["accent"]}"></span>{esc(c["num"])}. {esc(c["title"])}</a>'
+                   f'<div class="nav-secs">')
         sec_html = []
         for si, s in enumerate(c["sections"]):
             sid = f'{c["id"]}-{si}'
             nav.append(f'<a href="#{sid}" class="nav-sec" data-target="{sid}">{esc(s["title"])}</a>')
-            items_html = []
-            for it in s["items"]:
-                if it["type"]=="code":
-                    code = esc(it["code"])
-                    tag = it["lang"].upper()
-                    items_html.append(f'''<div class="block code-block">
-<div class="block-head"><span class="block-label">{esc(it["label"]) if it["label"] else "코드"}</span><span class="lang-tag">{tag}</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<pre><code class="language-{it["lang"]}">{code}</code></pre></div>''')
-                else:
-                    items_html.append(f'''<div class="block prompt-block" style="--accent:{c["accent"]}">
-<div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">{esc(it["label"])}</span><button class="copy-btn" aria-label="복사">복사</button></div>
-<div class="prompt-body">{esc(it["text"])}</div></div>''')
-            sec_html.append(f'''<section class="sec" id="{sid}"><h3 class="sec-title">{esc(s["title"])}</h3>{"".join(items_html)}</section>''')
+            items_html = "".join(render_item(it, c["accent"]) for it in s["items"])
+            sec_html.append(f'<section class="sec" id="{sid}">'
+                            f'<h3 class="sec-title">{esc(s["title"])}</h3>{items_html}</section>')
         nav.append('</div></div>')
-        main.append(f'''<div class="chapter" id="{c["id"]}">
-<div class="ch-head"><span class="ch-num" style="color:{c["accent"]}">CHAPTER {c["num"]}</span>
-<h2 class="ch-title"><span class="ch-bar" style="background:{c["accent"]}"></span>{esc(c["title"])}</h2>
-<p class="ch-sub">{esc(c["subtitle"])}</p></div>
-{c.get("extra","")}
-{"".join(sec_html)}</div>''')
 
-    return TEMPLATE.format(nav="".join(nav), main="".join(main),
-                           n_code=n_code, n_prompt=n_prompt)
+        # 챕터 인트로 (목표 + 왜 배우나요)
+        goals = "".join(f'<li>{g}</li>' for g in c.get("goals", []))
+        intro = ''
+        if goals:
+            intro += f'<div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul>{goals}</ul></div>'
+        if c.get("why"):
+            intro += f'<div class="why"><div class="why-t">💡 왜 배우나요?</div><p>{c["why"]}</p></div>'
 
+        main.append(
+            f'<div class="chapter" id="{c["id"]}">'
+            f'<div class="ch-head"><span class="ch-num" style="color:{c["accent"]}">CHAPTER {c["num"]}</span>'
+            f'<h2 class="ch-title"><span class="ch-bar" style="background:{c["accent"]}"></span>{esc(c["title"])}</h2>'
+            f'<p class="ch-sub">{esc(c["subtitle"])}</p></div>'
+            f'{intro}{c.get("extra","")}{"".join(sec_html)}</div>')
+
+    out = TEMPLATE
+    out = out.replace("/*NAV*/", "".join(nav))
+    out = out.replace("/*MAIN*/", "".join(main))
+    out = out.replace("/*NCODE*/", str(n_code))
+    out = out.replace("/*NPROMPT*/", str(n_prompt))
+    return out
+
+# ===================================================================
+#  HTML 템플릿 (CSS는 그대로 — 토큰 치환 방식)
+# ===================================================================
 TEMPLATE = r'''<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>피코 바이브 코딩 · 코드 & 프롬프트 모음</title>
-<meta name="description" content="라즈베리파이 피코로 배우는 피지컬 컴퓨팅 — Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트 모음.">
+<title>피코 바이브 코딩 연수 · 코드 & 가이드</title>
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
 <style>
-:root{{
+:root{
   --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
   --sidebar:#fbfbfa; --code-bg:#f7f6f3; --radius:10px;
   --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,'D2Coding',monospace;
-}}
-*{{box-sizing:border-box;}}
-html{{scroll-behavior:smooth;}}
-body{{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;}}
-a{{color:inherit;text-decoration:none;}}
-.layout{{display:flex;max-width:1180px;margin:0 auto;}}
-/* 사이드바 */
-.sidebar{{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
-  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}}
-.brand{{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}}
-.brand small{{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}}
-.nav-ch{{margin-top:10px;}}
-.nav-ch-link{{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}}
-.nav-ch-link:hover{{background:#efefee;}}
-.nav-dot{{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}}
-.nav-secs{{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}}
-.nav-sec{{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}}
-.nav-sec:hover{{color:var(--fg);}}
-.nav-sec.active{{color:var(--fg);font-weight:600;border-left-color:var(--fg);}}
-/* 본문 */
-.main{{flex:1;min-width:0;padding:0 56px 120px;}}
-.hero{{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}}
-.hero h1{{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}}
-.hero p{{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:640px;}}
-.stats{{display:flex;gap:10px;flex-wrap:wrap;}}
-.stat{{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
-  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}}
-.stat b{{font-size:15px;color:var(--fg);font-weight:800;}}
-.chapter{{padding-top:30px;}}
-.ch-head{{margin:40px 0 8px;}}
-.ch-num{{font-size:12px;font-weight:800;letter-spacing:.12em;}}
-.ch-title{{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}}
-.ch-bar{{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}}
-.ch-sub{{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:660px;}}
-.sec{{padding-top:14px;}}
-.sec-title{{font-size:16.5px;font-weight:700;margin:26px 0 12px;letter-spacing:-.01em;}}
-/* 블록 공통 */
-.block{{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;}}
-.block-head{{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}}
-.block-label{{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}}
-.lang-tag{{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
-  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}}
-.copy-btn{{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
-  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}}
-.copy-btn:hover{{color:var(--fg);border-color:#d6d5d2;}}
-.copy-btn.done{{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}}
-.code-block pre{{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}}
-.code-block code{{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}}
-/* 프롬프트 콜아웃 */
-.prompt-block{{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}}
-.prompt-block .block-head{{background:color-mix(in srgb,var(--accent) 8%,#fff);
-  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}}
-.prompt-block .block-label{{color:color-mix(in srgb,var(--accent) 55%,#37352f);}}
-.prompt-ico{{font-size:15px;}}
-.prompt-body{{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.layout{display:flex;max-width:1180px;margin:0 auto;}
+.sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
+  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
+.brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.nav-ch{margin-top:10px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}
+.nav-ch-link:hover{background:#efefee;}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}
+.nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
+.nav-sec:hover{color:var(--fg);}
+.nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
+.main{flex:1;min-width:0;padding:0 56px 120px;}
+.hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+.hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
+.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:660px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
+.stat b{font-size:15px;color:var(--fg);font-weight:800;}
+.chapter{padding-top:30px;}
+.ch-head{margin:40px 0 8px;}
+.ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
+.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:14px;}
+.sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code{
+  font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:4px;padding:1px 6px;}
+.step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
+/* 챕터 인트로 */
+.goals{background:#f8f9ff;border:1px solid #e6e8fb;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fffdf5;border:1px solid #f1e9cf;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;}
+.why p{margin:0;font-size:14px;}
+/* 콜아웃 */
+.callout{border-radius:10px;padding:14px 18px;margin:14px 0;max-width:720px;border:1px solid var(--line);border-left-width:4px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{background:#f0faf4;border-left-color:#22c55e;}
+.callout.warn{background:#fff6f0;border-left-color:#f97316;}
+.callout.info{background:#f0f7ff;border-left-color:#3b82f6;}
+.callout.key{background:#f7f0ff;border-left-color:#8b5cf6;}
+/* 링크 버튼 */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6d5d2;
+  border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;margin:8px 8px 8px 0;transition:.15s;}
+.linkbtn:hover{border-color:#9b9b97;background:var(--code-bg);}
+/* 체크리스트(준비물) */
+.check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);}
+.check-list li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:16px;color:var(--muted);}
+/* 핵심 개념 그리드 */
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:#55524c;}
+/* 스텝 */
+.steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
+  background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
+.steps li b{display:block;margin-bottom:2px;}
+.steps li span{color:#55524c;font-size:13.5px;}
+/* 자주 하는 실수 */
+.mistakes{margin:12px 0;max-width:720px;}
+.mistake{border:1px solid #f0d9d9;border-radius:10px;padding:12px 15px;margin:10px 0;background:#fffafa;}
+.m-sym{font-weight:700;font-size:13.5px;color:#c0392b;margin-bottom:7px;}
+.m-row{font-size:13px;margin:4px 0;padding-left:2px;}
+.m-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#bbb;border-radius:5px;
+  padding:1px 7px;margin-right:7px;}
+.m-tag.fix{background:#22a06b;}
+/* 스스로 점검 */
+.checks{margin:12px 0;max-width:720px;}
+.qa{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:600;list-style:none;}
+.qa summary:before{content:"❓ ";}
+.qa[open] summary{border-bottom:1px solid var(--line);}
+.qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
+.qa-a:before{content:"✅ ";}
+/* 하드웨어 다이어그램 */
+.figure{margin:14px 0;max-width:760px;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
+/* 코드/프롬프트 블록 */
+.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
+.block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
+.copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}
+.prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
+.prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
+  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
+.prompt-block .block-label{color:color-mix(in srgb,var(--accent) 55%,#37352f);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
   white-space:pre-wrap;word-break:break-word;padding:15px 18px;
-  background:color-mix(in srgb,var(--accent) 4%,#fff);}}
-/* 펌웨어 다운로드 카드 */
-.fw-card{{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
-  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);
-  padding:22px 24px;margin:6px 0 26px;}}
-.fw-top{{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}}
-.fw-badge{{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
-  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}}
-.fw-title{{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}}
-.fw-meta{{margin:0;color:var(--muted);font-size:13px;}}
-.fw-meta b{{color:var(--fg);}}
-.dl-btn{{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+  background:color-mix(in srgb,var(--accent) 4%,#fff);}
+/* 펌웨어 카드 */
+.fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
+  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);padding:22px 24px;margin:12px 0 18px;max-width:840px;}
+.fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
+  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.fw-meta{margin:0;color:var(--muted);font-size:13px;}
+.fw-meta b{color:var(--fg);}
+.dl-btn{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
   font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
-  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}}
-.dl-btn:hover{{background:#4a5ae0;transform:translateY(-1px);}}
-.fw-steps-wrap{{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}}
-.fw-steps-title{{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}}
-.fw-steps{{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}}
-.fw-steps li{{padding-left:3px;}}
-.fw-dim{{color:var(--muted);}}
-.fw-steps code,.fw-note code{{font-family:var(--mono);font-size:12px;background:var(--code-bg);
-  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}}
-.fw-note{{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}}
-.fw-note a{{color:#3B47C2;text-decoration:underline;}}
-footer{{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}}
-/* 모바일 토글 */
-.menu-btn{{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
-  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}}
-.scrim{{display:none;}}
-@media(max-width:920px){{
-  .main{{padding:0 22px 100px;}}
-  .hero{{padding-top:74px;}}
-  .hero h1{{font-size:30px;}}
-  .menu-btn{{display:block;}}
-  .sidebar{{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}}
-  .sidebar.open{{transform:none;}}
-  .scrim.show{{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}}
-}}
+  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}
+.dl-btn:hover{background:#4a5ae0;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}
+.fw-steps li{padding-left:3px;}
+.fw-dim{color:var(--muted);}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}
+.fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+.fw-note a{color:#3B47C2;text-decoration:underline;}
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
+.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
+  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.scrim{display:none;}
+@media(max-width:920px){
+  .main{padding:0 22px 100px;}
+  .hero{padding-top:74px;}
+  .hero h1{font-size:30px;}
+  .menu-btn{display:block;}
+  .sidebar{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}
+  .sidebar.open{transform:none;}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}
+}
 </style>
 </head>
 <body>
@@ -433,63 +661,61 @@ footer{{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:
 <div class="scrim" id="scrim"></div>
 <div class="layout">
   <aside class="sidebar" id="sidebar">
-    <div class="brand">🔌 피코 바이브 코딩<small>코드 &amp; 프롬프트 모음 · Ch 1·2·3</small></div>
-    {nav}
+    <div class="brand">🔌 피코 바이브 코딩 연수<small>설치 · 와이파이 · LED · 날씨 · 가스센서</small></div>
+    /*NAV*/
   </aside>
   <main class="main">
     <header class="hero">
-      <h1>피코 바이브 코딩<br>코드 &amp; 프롬프트 모음</h1>
-      <p>라즈베리파이 피코로 배우는 피지컬 컴퓨팅. Chapter 1·2·3에 쓰이는 모든 MicroPython 코드와 AI 샘플 프롬프트를 한곳에 모았습니다. 각 블록의 <b>복사</b> 버튼으로 바로 가져다 쓰세요.</p>
+      <h1>피코 바이브 코딩 연수<br>코드 & 가이드</h1>
+      <p>라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 모든 코드를 <b>복사해 바로 실행</b>할 수 있게 모았습니다. 각 블록의 <b>복사</b> 버튼을 쓰세요.</p>
       <div class="stats">
-        <div class="stat"><b>3</b>개 챕터</div>
-        <div class="stat"><b>{n_code}</b>개 코드 블록</div>
-        <div class="stat"><b>{n_prompt}</b>개 샘플 프롬프트</div>
+        <div class="stat"><b>6</b>개 챕터</div>
+        <div class="stat"><b>/*NCODE*/</b>개 코드 블록</div>
+        <div class="stat"><b>/*NPROMPT*/</b>개 AI 프롬프트</div>
       </div>
     </header>
-    {main}
+    /*MAIN*/
     <footer>
-      라즈베리파이 피코 · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
-      이 페이지의 코드와 프롬프트는 수업 자료로 자유롭게 활용할 수 있습니다.
+      라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
     </footer>
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script>
-hljs.configure({{cssSelector:'pre code'}});
+hljs.configure({cssSelector:'pre code'});
 document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));
-// 복사 버튼
-document.querySelectorAll('.block').forEach(block=>{{
+document.querySelectorAll('.block').forEach(block=>{
   const btn=block.querySelector('.copy-btn'); if(!btn) return;
-  btn.addEventListener('click',()=>{{
+  btn.addEventListener('click',()=>{
     const code=block.querySelector('code');
     const body=block.querySelector('.prompt-body');
     const text=code?code.innerText:(body?body.innerText:'');
-    navigator.clipboard.writeText(text).then(()=>{{
+    navigator.clipboard.writeText(text).then(()=>{
       btn.textContent='복사됨'; btn.classList.add('done');
-      setTimeout(()=>{{btn.textContent='복사'; btn.classList.remove('done');}},1400);
-    }});
-  }});
-}});
-// 모바일 메뉴
+      setTimeout(()=>{btn.textContent='복사'; btn.classList.remove('done');},1400);
+    });
+  });
+});
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
-function toggle(o){{sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}}
+function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
 mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>toggle(false));
-sb.addEventListener('click',e=>{{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);}});
-// 스크롤스파이
+sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
 const secs=[...document.querySelectorAll('.sec, .chapter')];
 const links=new Map();
 document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
-const io=new IntersectionObserver(es=>{{
-  es.forEach(e=>{{if(e.isIntersecting){{
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
     document.querySelectorAll('.nav-sec.active').forEach(x=>x.classList.remove('active'));
     const l=links.get(e.target.id); if(l&&l.classList.contains('nav-sec'))l.classList.add('active');
-  }}}});
-}},{{rootMargin:'-10% 0px -80% 0px',threshold:0}});
+  }});
+},{rootMargin:'-10% 0px -80% 0px',threshold:0});
 secs.forEach(s=>io.observe(s));
 </script>
 </body>
 </html>'''
 
-open("/Users/greatsong/2026-vibe-pico/index.html","w",encoding="utf-8").write(render())
+with open(os.path.join(BASE, "index.html"), "w", encoding="utf-8") as f:
+    f.write(render())
 print(f"생성 완료 · 코드 {n_code}개 · 프롬프트 {n_prompt}개")
