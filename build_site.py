@@ -107,66 +107,92 @@ HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xml
 </svg></div>'''
 
 # API = 관공서 등본 발급 비유 (애니메이션 SVG)
-API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘정해진 양식(신청서)을 채워서 보내면, 원하는 결과물을 정해진 형식으로 돌려주는 창구’</b>예요. 동사무소에서 <b>등본</b> 떼는 것과 똑같죠 👇</p>
-<svg class="api-svg" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="신청서를 채워 보내면 결과물을 돌려받는 API 흐름 애니메이션">
-  <defs>
-    <filter id="ds2" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.14"/></filter>
-  </defs>
+API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘정해진 양식을 채워 보내면, 원하는 결과물을 정해진 형식으로 돌려주는 창구’</b>예요. <b>동사무소에서 등본 떼기</b>와 <b>우리가 만든 ‘피코로 날씨 받기’</b>가 똑같은 구조랍니다 👇</p>
+<svg class="api-svg" viewBox="0 0 760 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="등본 떼기 비유와 실제 API(위도·경도·시간으로 강수확률 받기)를 나란히 보여주는 애니메이션">
+  <defs><filter id="ds2" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.14"/></filter></defs>
 
-  <text x="380" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280">① 이름·주소 적기 &#160;→&#160; ② 창구에 제출(요청) &#160;→&#160; ③ 주민등록등본 받기(응답)</text>
-
-  <!-- 나(민원인) -->
-  <g filter="url(#ds2)"><rect x="20" y="118" width="168" height="96" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
-  <text x="104" y="158" text-anchor="middle" font-size="34">🙋</text>
-  <text x="104" y="185" text-anchor="middle" font-size="13" font-weight="800" fill="#2b2d3a">나 = 민원인</text>
-  <text x="104" y="203" text-anchor="middle" font-size="11" fill="#8a8fa6">피코 · 브라우저</text>
-
-  <!-- API 서버(관공서) -->
-  <g filter="url(#ds2)"><rect x="572" y="118" width="168" height="96" rx="18" fill="#eef0ff" stroke="#c3c9f5"/></g>
-  <text x="656" y="156" text-anchor="middle" font-size="32">🏛️</text>
-  <text x="656" y="183" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3b47c2">API = 관공서 창구</text>
-  <text x="656" y="201" text-anchor="middle" font-size="11" fill="#8a8fb0">Open-Meteo · 기상청 …</text>
-
-  <!-- 이동 트랙 -->
-  <line x1="196" y1="166" x2="564" y2="166" stroke="#e2e5f2" stroke-width="2" stroke-dasharray="3 6"/>
-
-  <!-- 신청서: 채워진 뒤 API로 이동 (10초 주기) -->
+  <!-- ===== 위: 비유(등본) ===== -->
+  <text x="20" y="26" font-size="12.5" font-weight="800" fill="#3b47c2">🏛️ 비유 — 동사무소에서 등본 떼기</text>
+  <g filter="url(#ds2)"><rect x="20" y="104" width="150" height="92" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="95" y="146" text-anchor="middle" font-size="30">🙋</text>
+  <text x="95" y="172" text-anchor="middle" font-size="12.5" font-weight="800" fill="#2b2d3a">나 = 민원인</text>
+  <g filter="url(#ds2)"><rect x="590" y="104" width="150" height="92" rx="18" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="665" y="144" text-anchor="middle" font-size="28">🏛️</text>
+  <text x="665" y="170" text-anchor="middle" font-size="12" font-weight="800" fill="#3b47c2">관공서 창구</text>
+  <text x="665" y="186" text-anchor="middle" font-size="10" fill="#8a8fb0">데이터 보관</text>
+  <line x1="176" y1="150" x2="584" y2="150" stroke="#e2e5f2" stroke-width="2" stroke-dasharray="3 6"/>
+  <!-- 등본 신청서 -->
   <g opacity="0">
-    <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#b9c0f5"/>
-    <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#5B6CF0"/><rect x="-60" y="-28" width="120" height="8" fill="#5B6CF0"/>
-    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 등본 신청서</text>
-    <text x="-52" y="-6" font-size="9" fill="#8a8fa6">이름:</text>
-    <text x="-25" y="-6" font-size="10" font-weight="700" fill="#3b47c2" opacity="0">홍길동<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
-    <text x="46" y="-6" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.13;0.17;1" values="0;0;1;1"/></text>
-    <text x="-52" y="13" font-size="9" fill="#8a8fa6">주소:</text>
-    <text x="-25" y="13" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">서울 ○○구<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.22;0.26;1" values="0;0;1;1"/></text>
-    <text x="46" y="13" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.23;0.27;1" values="0;0;1;1"/></text>
-    <text x="0" y="29" text-anchor="middle" font-size="8.5" fill="#9aa3c8">창구에 제출</text>
-    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
-      calcMode="spline" keyTimes="0;0.30;0.50;1" values="300,166;300,166;504,166;504,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <rect x="-58" y="-38" width="116" height="76" rx="8" fill="#ffffff" stroke="#5B6CF0"/>
+    <rect x="-58" y="-38" width="116" height="15" rx="8" fill="#5B6CF0"/><rect x="-58" y="-31" width="116" height="8" fill="#5B6CF0"/>
+    <text x="0" y="-26" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 등본 신청서</text>
+    <text x="-50" y="-4" font-size="9" fill="#8a8fa6">이름:</text>
+    <text x="-22" y="-4" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">홍길동<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
+    <text x="46" y="-4" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.13;0.17;1" values="0;0;1;1"/></text>
+    <text x="-50" y="16" font-size="9" fill="#8a8fa6">주소:</text>
+    <text x="-22" y="16" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">서울 ○○구<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.22;0.26;1" values="0;0;1;1"/></text>
+    <text x="46" y="16" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.23;0.27;1" values="0;0;1;1"/></text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.30;0.50;1" values="290,150;290,150;490,150;490,150" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
     <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.04;0.50;0.53;1" values="0;1;1;0;0"/>
   </g>
-
-  <!-- 결과물: API에서 나에게로 (원하는 데이터) -->
+  <!-- 주민등록등본 -->
   <g opacity="0">
-    <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#f0c6da"/>
-    <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#E0568A"/><rect x="-60" y="-28" width="120" height="8" fill="#E0568A"/>
-    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📄 주민등록등본</text>
-    <text x="-52" y="-5" font-size="9" fill="#55524c">성명: <tspan font-weight="700" fill="#2b2d3a">홍길동</tspan></text>
-    <text x="-52" y="8" font-size="9" fill="#55524c">주소: <tspan font-weight="700" fill="#2b2d3a">서울 ○○구</tspan></text>
-    <text x="-52" y="21" font-size="9" fill="#55524c">세대주: 홍길동</text>
-    <circle cx="42" cy="10" r="13" fill="none" stroke="#e0392f" stroke-width="1.6"/>
-    <text x="42" y="13" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e0392f">관인</text>
-    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
-      calcMode="spline" keyTimes="0;0.56;0.80;1" values="504,166;504,166;300,166;300,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <rect x="-58" y="-38" width="116" height="76" rx="8" fill="#ffffff" stroke="#f0c6da"/>
+    <rect x="-58" y="-38" width="116" height="15" rx="8" fill="#E0568A"/><rect x="-58" y="-31" width="116" height="8" fill="#E0568A"/>
+    <text x="0" y="-26" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📄 주민등록등본</text>
+    <text x="-50" y="-6" font-size="9" fill="#55524c">성명: <tspan font-weight="700" fill="#2b2d3a">홍길동</tspan></text>
+    <text x="-50" y="9" font-size="9" fill="#55524c">주소: <tspan font-weight="700" fill="#2b2d3a">서울 ○○구</tspan></text>
+    <text x="-50" y="24" font-size="9" fill="#55524c">세대주: 홍길동</text>
+    <circle cx="42" cy="8" r="13" fill="none" stroke="#e0392f" stroke-width="1.6"/><text x="42" y="11" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e0392f">관인</text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.56;0.80;1" values="490,150;490,150;290,150;290,150" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
     <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.54;0.58;0.93;1" values="0;0;1;1;0"/>
   </g>
 
-  <!-- 보조 설명 -->
-  <text x="380" y="252" text-anchor="middle" font-size="11" fill="#8a8fa6">🔑 일부 API(예: NASA)는 ‘신분증=키’가 있어야 발급</text>
-  <text x="380" y="276" text-anchor="middle" font-size="11" fill="#7a7f95">양식(URL)에 ‘무엇을·어디를’ 채워 보내면 → 원하는 데이터를 정해진 형식(JSON)으로 받아요</text>
+  <line x1="40" y1="232" x2="720" y2="232" stroke="#eceef5" stroke-width="1"/>
+
+  <!-- ===== 아래: 실제(API) ===== -->
+  <text x="20" y="262" font-size="12.5" font-weight="800" fill="#0e9488">🔌 실제 — 피코가 API로 데이터 받기 (우리가 만든 것)</text>
+  <g filter="url(#ds2)"><rect x="20" y="300" width="150" height="92" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="95" y="342" text-anchor="middle" font-size="28">🔌</text>
+  <text x="95" y="368" text-anchor="middle" font-size="12" font-weight="800" fill="#2b2d3a">피코 · 브라우저</text>
+  <text x="95" y="384" text-anchor="middle" font-size="10" fill="#8a8fa6">= 나(민원인)</text>
+  <g filter="url(#ds2)"><rect x="590" y="300" width="150" height="92" rx="18" fill="#e7f7f3" stroke="#bfe6dc"/></g>
+  <text x="665" y="340" text-anchor="middle" font-size="26">☁️</text>
+  <text x="665" y="366" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0e9488">Open-Meteo</text>
+  <text x="665" y="382" text-anchor="middle" font-size="10" fill="#5a9b90">= 관공서(API)</text>
+  <line x1="176" y1="346" x2="584" y2="346" stroke="#e2e5f2" stroke-width="2" stroke-dasharray="3 6"/>
+  <!-- 요청(URL) -->
+  <g opacity="0">
+    <rect x="-58" y="-38" width="116" height="76" rx="8" fill="#ffffff" stroke="#0e9488"/>
+    <rect x="-58" y="-38" width="116" height="15" rx="8" fill="#0e9488"/><rect x="-58" y="-31" width="116" height="8" fill="#0e9488"/>
+    <text x="0" y="-26" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 요청 (URL)</text>
+    <text x="-50" y="-10" font-size="9" fill="#8a8fa6">위도:</text>
+    <text x="-22" y="-10" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">37.5<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
+    <text x="46" y="-10" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.13;0.17;1" values="0;0;1;1"/></text>
+    <text x="-50" y="6" font-size="9" fill="#8a8fa6">경도:</text>
+    <text x="-22" y="6" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">127<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.18;0.22;1" values="0;0;1;1"/></text>
+    <text x="46" y="6" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.19;0.23;1" values="0;0;1;1"/></text>
+    <text x="-50" y="22" font-size="9" fill="#8a8fa6">시간:</text>
+    <text x="-22" y="22" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">15시<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.24;0.28;1" values="0;0;1;1"/></text>
+    <text x="46" y="22" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.25;0.29;1" values="0;0;1;1"/></text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.30;0.50;1" values="290,346;290,346;490,346;490,346" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.04;0.50;0.53;1" values="0;1;1;0;0"/>
+  </g>
+  <!-- 응답: 강수확률 -->
+  <g opacity="0">
+    <rect x="-58" y="-38" width="116" height="76" rx="8" fill="#ffffff" stroke="#bfe6dc"/>
+    <rect x="-58" y="-38" width="116" height="15" rx="8" fill="#0e9488"/><rect x="-58" y="-31" width="116" height="8" fill="#0e9488"/>
+    <text x="0" y="-26" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📦 응답 (JSON)</text>
+    <text x="0" y="6" text-anchor="middle" font-size="20" font-weight="800" fill="#2b2d3a">☔ 60%</text>
+    <text x="0" y="24" text-anchor="middle" font-size="9" fill="#8a8fa6">오늘 15시 강수확률</text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.56;0.80;1" values="490,346;490,346;290,346;290,346" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.54;0.58;0.93;1" values="0;0;1;1;0"/>
+  </g>
+
+  <text x="380" y="438" text-anchor="middle" font-size="11" fill="#7a7f95">이름·주소 = 위도·경도·시간(신청 내용) · 주민등록등본 = 강수확률(결과물) · 관공서 = API 서버</text>
+  <text x="380" y="458" text-anchor="middle" font-size="11" fill="#8a8fa6">형식만 다를 뿐, ‘양식 채워 제출(요청) → 결과 받기(응답)’는 똑같아요 · 🔑 일부 API는 ‘신분증=키’ 필요</text>
 </svg>
-<p style="margin:12px 0 0;font-size:12.5px;color:#7a7f95">관공서=서버 · 신청서=요청(URL) · 서류=응답(JSON) · 양식=규칙 · 신분증=API 키. 우리 코드는 ‘피코가 <b>오늘 강수확률 등본</b>을 떼 오는 것’ — <b>정보과학</b>(요청→응답)과 <b>과학</b>(데이터 탐구)이 만나는 지점이에요.</p>'''
+<p style="margin:12px 0 0;font-size:12.5px;color:#7a7f95">우리 코드는 ‘피코가 동사무소에서 <b>오늘 강수확률 등본</b>을 떼 오는 것’ — <b>정보과학</b>(요청→응답, 약속된 형식)과 <b>과학</b>(받은 데이터로 탐구)이 만나는 지점이에요.</p>'''
 
 # ===================================================================
 #  콘텐츠 정의
