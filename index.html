@@ -572,7 +572,7 @@ gauge(0)                              # 모두 끄기</code></pre></div></sectio
     <filter id="ds2" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.14"/></filter>
   </defs>
 
-  <text x="380" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280">① 양식 채우기 &#160;→&#160; ② API에 신청(요청) &#160;→&#160; ③ 결과물 받기(응답)</text>
+  <text x="380" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280">① 이름·주소 적기 &#160;→&#160; ② 창구에 제출(요청) &#160;→&#160; ③ 주민등록등본 받기(응답)</text>
 
   <!-- 나(민원인) -->
   <g filter="url(#ds2)"><rect x="20" y="118" width="168" height="96" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
@@ -593,14 +593,14 @@ gauge(0)                              # 모두 끄기</code></pre></div></sectio
   <g opacity="0">
     <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#b9c0f5"/>
     <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#5B6CF0"/><rect x="-60" y="-28" width="120" height="8" fill="#5B6CF0"/>
-    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 신청서 (요청)</text>
-    <text x="-52" y="-6" font-size="9" fill="#8a8fa6">무엇:</text>
-    <text x="-25" y="-6" font-size="10" font-weight="700" fill="#3b47c2" opacity="0">강수확률<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
+    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 등본 신청서</text>
+    <text x="-52" y="-6" font-size="9" fill="#8a8fa6">이름:</text>
+    <text x="-25" y="-6" font-size="10" font-weight="700" fill="#3b47c2" opacity="0">홍길동<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
     <text x="46" y="-6" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.13;0.17;1" values="0;0;1;1"/></text>
-    <text x="-52" y="13" font-size="9" fill="#8a8fa6">어디:</text>
-    <text x="-25" y="13" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">서울 37.5,127<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.22;0.26;1" values="0;0;1;1"/></text>
+    <text x="-52" y="13" font-size="9" fill="#8a8fa6">주소:</text>
+    <text x="-25" y="13" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">서울 ○○구<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.22;0.26;1" values="0;0;1;1"/></text>
     <text x="46" y="13" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.23;0.27;1" values="0;0;1;1"/></text>
-    <text x="0" y="29" text-anchor="middle" font-size="8.5" fill="#9aa3c8">URL에 담아 전송</text>
+    <text x="0" y="29" text-anchor="middle" font-size="8.5" fill="#9aa3c8">창구에 제출</text>
     <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
       calcMode="spline" keyTimes="0;0.30;0.50;1" values="300,166;300,166;504,166;504,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
     <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.04;0.50;0.53;1" values="0;1;1;0;0"/>
@@ -610,9 +610,12 @@ gauge(0)                              # 모두 끄기</code></pre></div></sectio
   <g opacity="0">
     <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#f0c6da"/>
     <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#E0568A"/><rect x="-60" y="-28" width="120" height="8" fill="#E0568A"/>
-    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📦 결과물 (응답·JSON)</text>
-    <text x="0" y="6" text-anchor="middle" font-size="20" font-weight="800" fill="#2b2d3a">☔ 60%</text>
-    <text x="0" y="24" text-anchor="middle" font-size="9" fill="#8a8fa6">오늘 강수확률</text>
+    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📄 주민등록등본</text>
+    <text x="-52" y="-5" font-size="9" fill="#55524c">성명: <tspan font-weight="700" fill="#2b2d3a">홍길동</tspan></text>
+    <text x="-52" y="8" font-size="9" fill="#55524c">주소: <tspan font-weight="700" fill="#2b2d3a">서울 ○○구</tspan></text>
+    <text x="-52" y="21" font-size="9" fill="#55524c">세대주: 홍길동</text>
+    <circle cx="42" cy="10" r="13" fill="none" stroke="#e0392f" stroke-width="1.6"/>
+    <text x="42" y="13" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e0392f">관인</text>
     <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
       calcMode="spline" keyTimes="0;0.56;0.80;1" values="504,166;504,166;300,166;300,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
     <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.54;0.58;0.93;1" values="0;0;1;1;0"/>
