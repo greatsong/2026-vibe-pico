@@ -106,6 +106,51 @@ HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xml
   <text x="20" y="244" font-size="10.5" fill="#a7adc0">● 그로브 포트  ·  LED → D16(GP16, 디지털)  ·  MQ-2 → A0(GP26, 아날로그)</text>
 </svg></div>'''
 
+# API = 관공서 등본 발급 비유 (애니메이션 SVG)
+API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘데이터를 가진 기관에 정해진 양식으로 신청하면, 정해진 형식으로 발급해 주는 창구’</b>예요. 동사무소에서 <b>등본</b> 떼는 것과 똑같죠 👇</p>
+<svg class="api-svg" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="API를 관공서 등본 발급에 빗댄 요청-응답 흐름도">
+  <defs>
+    <marker id="aR" markerWidth="10" markerHeight="10" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5B6CF0"/></marker>
+    <marker id="aL" markerWidth="10" markerHeight="10" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#E0568A"/></marker>
+    <filter id="ds2" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- 나(민원인) -->
+  <g filter="url(#ds2)"><rect x="20" y="120" width="182" height="96" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="111" y="160" text-anchor="middle" font-size="34">🙋</text>
+  <text x="111" y="187" text-anchor="middle" font-size="13" font-weight="800" fill="#2b2d3a">나 = 민원인</text>
+  <text x="111" y="205" text-anchor="middle" font-size="11" fill="#8a8fa6">피코 · 브라우저</text>
+
+  <!-- API 서버(관공서) -->
+  <g filter="url(#ds2)"><rect x="558" y="120" width="182" height="96" rx="18" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="649" y="158" text-anchor="middle" font-size="32">🏛️</text>
+  <text x="649" y="185" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3b47c2">API = 관공서 창구</text>
+  <text x="649" y="203" text-anchor="middle" font-size="11" fill="#8a8fb0">Open-Meteo · 기상청 …</text>
+
+  <!-- 요청(위, 오른쪽으로) -->
+  <line x1="204" y1="151" x2="554" y2="151" stroke="#c8cdf5" stroke-width="3" marker-end="url(#aR)"/>
+  <rect x="292" y="121" width="178" height="27" rx="13" fill="#eef0ff" stroke="#c3c9f5"/>
+  <text x="381" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#3b47c2">📝 요청 = 신청서(URL)</text>
+  <circle r="6" cy="151" fill="#5B6CF0">
+    <animate attributeName="cx" values="212;546" dur="2.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 응답(아래, 왼쪽으로) -->
+  <line x1="554" y1="186" x2="204" y2="186" stroke="#f3cfe0" stroke-width="3" marker-end="url(#aL)"/>
+  <rect x="286" y="189" width="190" height="27" rx="13" fill="#fff0f6" stroke="#f3cfe0"/>
+  <text x="381" y="207" text-anchor="middle" font-size="12" font-weight="700" fill="#b83d72">📦 응답 = 발급 서류(JSON)</text>
+  <circle r="6" cy="186" fill="#E0568A">
+    <animate attributeName="cx" values="546;212" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 보조 설명 -->
+  <text x="381" y="244" text-anchor="middle" font-size="11" fill="#8a8fa6">🔑 일부 API(예: NASA)는 ‘신분증=키’가 있어야 발급</text>
+  <text x="381" y="270" text-anchor="middle" font-size="11" fill="#7a7f95">신청서에 ‘무엇을(강수확률)·어디를(위도·경도)’ 적어 보내면 → 정해진 형식(JSON)으로 받아요</text>
+</svg>
+<p style="margin:12px 0 0;font-size:12.5px;color:#7a7f95">관공서=서버 · 신청서=요청(URL) · 서류=응답(JSON) · 양식=규칙 · 신분증=API 키. 우리 코드는 ‘피코가 <b>오늘 강수확률 등본</b>을 떼 오는 것’ — <b>정보과학</b>(요청→응답)과 <b>과학</b>(데이터 탐구)이 만나는 지점이에요.</p>'''
+
 # ===================================================================
 #  콘텐츠 정의
 # ===================================================================
@@ -317,7 +362,7 @@ CHAPTERS = [
         {"t": "6~23 → 10칸 매핑", "d": "오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다."},
       ]},
       {"type": "dig", "title": "API가 대체 뭐예요? — 관공서에서 등본 떼기로 이해하기",
-       "html": "<b>API</b>는 ‘<b>데이터를 가진 기관에 정해진 양식으로 신청하면, 정해진 형식으로 발급해 주는 창구</b>’예요. 동사무소(관공서)에서 <b>등본</b> 떼는 걸 떠올리면 똑같습니다.<br><br>· <b>관공서 = 서버</b> — 데이터를 보관한 곳(Open-Meteo, 기상청 등)<br>· <b>민원 창구·무인발급기 = API</b> — 신청을 받아 서류를 내주는 곳<br>· <b>신청서 = 요청(주소·URL)</b> — ‘무슨 서류를(등본=강수확률), 누구 것을(주소=위도·경도)’ 적어 제출<br>· <b>발급된 서류 = 응답(JSON 데이터)</b> — 정해진 형식으로 받아옴<br>· <b>정해진 양식 = 규칙</b> — 칸을 잘못 쓰면 발급이 안 되듯, 주소·항목 이름을 정확히 써야 함<br>· <b>일부는 신분증·번호표 = API 키</b> — 아무나 못 받게 한 곳(예: NASA)은 키가 필요<br><br>즉 우리가 만든 코드는 ‘피코가 동사무소에 가서 오늘 강수확률 등본을 떼 오는 것’과 같아요. <b>정보과학</b>(요청→응답, 약속된 형식)과 <b>과학</b>(받은 데이터로 탐구)이 만나는 지점이죠."},
+       "html": API_ANALOGY_SVG},
       {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
       {"type": "callout", "kind": "info", "title": "설치 없이 바로 됩니다",
        "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
@@ -789,6 +834,7 @@ a{color:inherit;text-decoration:none;}
 .diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
   border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
 .hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--font);}
+.api-svg{width:100%;height:auto;background:#fbfcff;border:1px solid #e6e8f5;border-radius:14px;padding:8px;font-family:var(--font);}
 /* 코드/프롬프트 블록 */
 .block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
 .block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
