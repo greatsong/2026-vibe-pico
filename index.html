@@ -7,7 +7,7 @@
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 :root{
   --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
@@ -120,8 +120,14 @@ a{color:inherit;text-decoration:none;}
   background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
 .copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
 .copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
-.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}
-.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#282c34;}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:#abb2bf;}
+.code-block .block-head{background:#21252b;border-bottom-color:#181b20;}
+.code-block .block-label{color:#c7cdd6;}
+.code-block .lang-tag{color:#9aa3b2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn{color:#aeb6c2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn:hover{color:#fff;border-color:#5a6275;}
+.code-block .copy-btn.done{color:#79e3b4;border-color:#2f6b4f;background:#1f3a2c;}
 .prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
 .prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
   border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
@@ -181,7 +187,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
       <p>라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 모든 코드를 <b>복사해 바로 실행</b>할 수 있게 모았습니다. 각 블록의 <b>복사</b> 버튼을 쓰세요.</p>
       <div class="stats">
         <div class="stat"><b>6</b>개 챕터</div>
-        <div class="stat"><b>17</b>개 코드 블록</div>
+        <div class="stat"><b>18</b>개 코드 블록</div>
         <div class="stat"><b>2</b>개 AI 프롬프트</div>
       </div>
     </header>
@@ -513,7 +519,7 @@ for n in range(0, NUM + 1):           # 0칸 → 10칸 차오르기
     gauge(n)
     time.sleep(0.2)
 time.sleep(1)
-gauge(0)                              # 모두 끄기</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 색이 깨지거나 엉뚱한 칸이 켜짐</div><div class="m-row"><span class="m-tag">원인</span><b>timing 인자 누락.</b></div><div class="m-row"><span class="m-tag fix">해결</span><code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다.</div></div><div class="mistake"><div class="m-sym">❌ 색을 정했는데 안 켜짐</div><div class="m-row"><span class="m-tag">원인</span><code>np.write()</code>를 빠뜨림.</div><div class="m-row"><span class="m-tag fix">해결</span>색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요.</div></div><div class="mistake"><div class="m-sym">❌ 10번째 칸에서 에러</div><div class="m-row"><span class="m-tag">원인</span><code>np[10]</code>을 씀 (칸은 0~9).</div><div class="m-row"><span class="m-tag fix">해결</span>10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>.</div></div><div class="mistake"><div class="m-sym">❌ 눈이 부시고 피코가 뜨거움</div><div class="m-row"><span class="m-tag">원인</span>밝기를 너무 높게 줌.</div><div class="m-row"><span class="m-tag fix">해결</span>(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다.</div></div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>WS2813 LED를 만들 때 꼭 넣어야 하는 인자는?</summary><div class="qa-a"><code>timing=(280, 515, 515, 745)</code>. 없으면 색이 깨집니다.</div></details><details class="qa"><summary>색을 바꾼 뒤 화면(LED)에 반영하려면?</summary><div class="qa-a"><code>np.write()</code>를 호출합니다.</div></details><details class="qa"><summary>10칸 중 다섯 칸만 켜서 ‘50%’를 표현하려면?</summary><div class="qa-a">0~4번 칸을 색으로, 5~9번 칸을 (0,0,0)으로 두고 write. (게이지 방식)</div></details></div></section></div><div class="chapter" id="ch3"><div class="ch-head"><span class="ch-num" style="color:#3B82F6">CHAPTER 03</span><h2 class="ch-title"><span class="ch-bar" style="background:#3B82F6"></span>날씨 비 예보 대시보드</h2><p class="ch-sub">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만듭니다. 웹 화면은 바이브코딩으로 덧붙여요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Open-Meteo에서 강수확률 데이터를 받아올 수 있다</li><li>받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다</li><li>6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다</li><li>AI에게 부탁해 웹 대시보드까지 덧붙일 수 있다(바이브코딩)</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>여기서부터 진짜 ‘세상의 데이터’를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, 거실의 LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 됩니다. 출근 전 LED만 보고 우산을 챙길 수 있죠.</p></div><section class="sec" id="ch3-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">Open-Meteo</div><div class="concept-d">무료·<b>API 키 불필요</b>한 날씨 서비스. 위도·경도만 넣으면 시간대별 강수확률을 줍니다.</div></div><div class="concept"><div class="concept-t">강수확률(precipitation_probability)</div><div class="concept-d">그 시각에 비가 올 가능성(%). 0시~23시까지 24개가 옵니다.</div></div><div class="concept"><div class="concept-t">HTTP 요청 (requests)</div><div class="concept-d">피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code></div></div><div class="concept"><div class="concept-t">6~23 → 10칸 매핑</div><div class="concept-d">오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다.</div></div></div><a class="linkbtn" href="https://open-meteo.com" target="_blank" rel="noopener">🔗 open-meteo.com — 무료 날씨 API (키 불필요)</a><div class="callout info"><div class="callout-head">ℹ️ 설치 없이 바로 됩니다</div><div class="callout-body">이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다.</div></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)</p><p class="step-head"><b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 강수확률 받아오기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 1단계: 오늘의 강수확률 가져오기 (설치 불필요) ===
+gauge(0)                              # 모두 끄기</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 색이 깨지거나 엉뚱한 칸이 켜짐</div><div class="m-row"><span class="m-tag">원인</span><b>timing 인자 누락.</b></div><div class="m-row"><span class="m-tag fix">해결</span><code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다.</div></div><div class="mistake"><div class="m-sym">❌ 색을 정했는데 안 켜짐</div><div class="m-row"><span class="m-tag">원인</span><code>np.write()</code>를 빠뜨림.</div><div class="m-row"><span class="m-tag fix">해결</span>색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요.</div></div><div class="mistake"><div class="m-sym">❌ 10번째 칸에서 에러</div><div class="m-row"><span class="m-tag">원인</span><code>np[10]</code>을 씀 (칸은 0~9).</div><div class="m-row"><span class="m-tag fix">해결</span>10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>.</div></div><div class="mistake"><div class="m-sym">❌ 눈이 부시고 피코가 뜨거움</div><div class="m-row"><span class="m-tag">원인</span>밝기를 너무 높게 줌.</div><div class="m-row"><span class="m-tag fix">해결</span>(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다.</div></div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>WS2813 LED를 만들 때 꼭 넣어야 하는 인자는?</summary><div class="qa-a"><code>timing=(280, 515, 515, 745)</code>. 없으면 색이 깨집니다.</div></details><details class="qa"><summary>색을 바꾼 뒤 화면(LED)에 반영하려면?</summary><div class="qa-a"><code>np.write()</code>를 호출합니다.</div></details><details class="qa"><summary>10칸 중 다섯 칸만 켜서 ‘50%’를 표현하려면?</summary><div class="qa-a">0~4번 칸을 색으로, 5~9번 칸을 (0,0,0)으로 두고 write. (게이지 방식)</div></details></div></section></div><div class="chapter" id="ch3"><div class="ch-head"><span class="ch-num" style="color:#3B82F6">CHAPTER 03</span><h2 class="ch-title"><span class="ch-bar" style="background:#3B82F6"></span>날씨 비 예보 대시보드</h2><p class="ch-sub">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Open-Meteo에서 강수확률 데이터를 받아올 수 있다</li><li>받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다</li><li>6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다</li><li>LED와 똑같은 정보를 보여 주는 웹 대시보드(색 범례 포함)를 띄울 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>여기서부터 진짜 ‘세상의 데이터’를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, 거실의 LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 됩니다. 출근 전 LED만 보고 우산을 챙길 수 있죠.</p></div><section class="sec" id="ch3-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">Open-Meteo</div><div class="concept-d">무료·<b>API 키 불필요</b>한 날씨 서비스. 위도·경도만 넣으면 시간대별 강수확률을 줍니다.</div></div><div class="concept"><div class="concept-t">강수확률(precipitation_probability)</div><div class="concept-d">그 시각에 비가 올 가능성(%). 0시~23시까지 24개가 옵니다.</div></div><div class="concept"><div class="concept-t">HTTP 요청 (requests)</div><div class="concept-d">피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code></div></div><div class="concept"><div class="concept-t">6~23 → 10칸 매핑</div><div class="concept-d">오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다.</div></div></div><a class="linkbtn" href="https://open-meteo.com" target="_blank" rel="noopener">🔗 open-meteo.com — 무료 날씨 API (키 불필요)</a><div class="callout info"><div class="callout-head">ℹ️ 설치 없이 바로 됩니다</div><div class="callout-body">이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다.</div></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)</p><p class="step-head"><b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 강수확률 받아오기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 1단계: 오늘의 강수확률 가져오기 (설치 불필요) ===
 # 피코에 기본 내장된 socket + ssl 만으로 Open-Meteo(HTTPS)에 접속합니다.
 import network, socket, ssl, json, time, gc
 from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
@@ -740,7 +746,257 @@ if ip:
 여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.
 - 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.
 - LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).
-받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ImportError: no module named &#x27;requests&#x27;</div><div class="m-row"><span class="m-tag">원인</span><b>requests 설치 버전</b>을 쓰는데 모듈이 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>기본(무설치) 버전을 쓰면 이 오류가 안 납니다. 굳이 requests 버전을 쓰려면 Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 와이파이 연결 후 설치하세요.</div></div><div class="mistake"><div class="m-sym">❌ ssl/연결 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>TLS 연결이 일시적으로 실패하거나 메모리 부족.</div><div class="m-row"><span class="m-tag fix">해결</span>다시 실행해 보세요. 코드는 매 요청 전 <code>gc.collect()</code>로 메모리를 정리하고, 인증서 검증은 생략(<code>CERT_NONE</code>)합니다. 자주 끊기면 갱신 간격을 늘리세요.</div></div><div class="mistake"><div class="m-sym">❌ 위도·경도를 바꿨는데 엉뚱한 지역</div><div class="m-row"><span class="m-tag">원인</span>위도(LAT)와 경도(LON)를 바꿔 넣음.</div><div class="m-row"><span class="m-tag fix">해결</span>한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다.</div></div><div class="mistake"><div class="m-sym">❌ 메모리 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>HTTPS 응답이 큰데 자주 부름.</div><div class="m-row"><span class="m-tag fix">해결</span>필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다.</div></div></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>Open-Meteo는 API 키가 필요한가요?</summary><div class="qa-a">아니요. 무료이고 키 없이 위도·경도만으로 씁니다.</div></details><details class="qa"><summary>강수확률 24개 중 6시 값은 어떻게 꺼내나요?</summary><div class="qa-a"><code>probs[6]</code>. 리스트 인덱스가 곧 시각(0~23시)입니다.</div></details><details class="qa"><summary>왜 10분마다만 새로 받아오나요?</summary><div class="qa-a">날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다.</div></details></div></section></div><div class="chapter" id="ch4"><div class="ch-head"><span class="ch-num" style="color:#F59E0B">CHAPTER 04</span><h2 class="ch-title"><span class="ch-bar" style="background:#F59E0B"></span>MQ-2 가스센서 대시보드</h2><p class="ch-sub">공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 다크 테마 대시보드를 만듭니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>ADC로 가스센서 값을 읽고 전압·비율로 바꿀 수 있다</li><li>이동 평균으로 값을 안정시킬 수 있다</li><li>임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 1장의 웹서버 구조에 ‘판단(임계값)’과 ‘예쁜 화면’이 더해진, 가장 완성도 높은 대시보드입니다.</p></div><section class="sec" id="ch4-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">ADC (아날로그)</div><div class="concept-d">가스 농도 같은 ‘연속된 값’을 숫자로 바꿔 읽는 기능. 그로브 <b>A0 = GP26</b>. <code>ADC(Pin(26))</code></div></div><div class="concept"><div class="concept-t">read_u16()</div><div class="concept-d">0~65535 사이 값으로 읽습니다. 가스가 짙을수록 값이 커져요.</div></div><div class="concept"><div class="concept-t">이동 평균</div><div class="concept-d">여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code></div></div><div class="concept"><div class="concept-t">임계값</div><div class="concept-d">SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 센서는 예열이 필요해요</div><div class="callout-body">MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요.</div></div></section><section class="sec" id="ch4-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MQ-2 가스센서 값 한 번 읽기 (그로브 A0 = GP26 = ADC0)
+받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div><p class="step-head"><b>Step 5.</b> 직접 부탁하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 LED + 웹 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보: 10개 LED + 웹 대시보드 (설치 불필요) ===
+# 피코가 LED 날씨 시계이면서 동시에 웹서버가 됩니다.
+# 같은 와이파이의 스마트폰/PC에서 접속하면:
+#   · 피코 10칸 LED와 똑같은 색의 칸 (이 시각에 비가 오는지)
+#   · 색이 무슨 뜻인지 알려 주는 범례
+#   · 6시~23시 시간별 강수확률 막대그래프
+import network, socket, ssl, json, time, gc
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+LAT = 37.5665       # 우리 지역 위도 (바꾸세요)
+LON = 126.9780      # 우리 지역 경도
+HOST = &quot;api.open-meteo.com&quot;
+REFRESH = 600       # 날씨 갱신 주기(초). 600 = 10분
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+HOURS = [round(6 + i * (23 - 6) / (NUM - 1)) for i in range(NUM)]
+
+# 강수확률 단계 → LED 색(rgb). 웹 범례 색·의미와 똑같이 맞춰 둡니다.
+#   0~20 맑음(연초록) · 20~50 흐림(노랑) · 50~80 비 가능(파랑) · 80~ 비 확실(보라)
+LEVELS = [(20, (0, 30, 5)), (50, (30, 25, 0)), (80, (0, 10, 40)), (101, (15, 0, 40))]
+
+state = {&quot;probs&quot;: [None] * 24, &quot;date&quot;: &quot;&quot;, &quot;fetched&quot;: None}
+
+
+def level_index(p):
+    p = p if p is not None else 0
+    for i, (thr, _rgb) in enumerate(LEVELS):
+        if p &lt; thr:
+            return i
+    return len(LEVELS) - 1
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+def http_get_json(host, path):
+    gc.collect()
+    addr = socket.getaddrinfo(host, 443)[0][-1]
+    s = socket.socket()
+    s.connect(addr)
+    try:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.verify_mode = ssl.CERT_NONE          # 피코엔 인증서 목록이 없어 검증 생략
+        s = ctx.wrap_socket(s, server_hostname=host)
+    except AttributeError:                       # 옛 펌웨어 호환
+        s = ssl.wrap_socket(s, server_hostname=host)
+    s.write((&quot;GET %s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n&quot;
+             % (path, host)).encode())
+    buf = b&quot;&quot;
+    while True:
+        chunk = s.read(512)
+        if not chunk:
+            break
+        buf += chunk
+    s.close()
+    return json.loads(buf.split(b&quot;\r\n\r\n&quot;, 1)[1])
+
+
+def refresh():
+    path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
+            &quot;&amp;hourly=precipitation_probability&quot;
+            &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    hourly = http_get_json(HOST, path)[&quot;hourly&quot;]
+    state[&quot;probs&quot;] = hourly[&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+    state[&quot;date&quot;] = hourly[&quot;time&quot;][0][:10]                 # &quot;YYYY-MM-DD&quot;
+    state[&quot;fetched&quot;] = time.ticks_ms()
+    for i, h in enumerate(HOURS):                          # LED 갱신
+        np[i] = LEVELS[level_index(state[&quot;probs&quot;][h])][1]
+    np.write()
+    print(&quot;날씨 갱신:&quot;, state[&quot;date&quot;])
+
+
+def refresh_if_due():
+    if (state[&quot;fetched&quot;] is None or
+            time.ticks_diff(time.ticks_ms(), state[&quot;fetched&quot;]) &gt; REFRESH * 1000):
+        try:
+            refresh()
+        except Exception as e:
+            print(&quot;갱신 오류:&quot;, e)
+
+
+def data_json():
+    p = state[&quot;probs&quot;]
+    ago = 0 if state[&quot;fetched&quot;] is None else \
+        time.ticks_diff(time.ticks_ms(), state[&quot;fetched&quot;]) // 1000
+    leds = [{&quot;h&quot;: h, &quot;p&quot;: p[h], &quot;lv&quot;: level_index(p[h])} for h in HOURS]
+    hourly = [{&quot;h&quot;: h, &quot;p&quot;: p[h], &quot;lv&quot;: level_index(p[h])} for h in range(6, 24)]
+    return json.dumps({&quot;date&quot;: state[&quot;date&quot;], &quot;ago&quot;: ago,
+                       &quot;leds&quot;: leds, &quot;hourly&quot;: hourly})
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;오늘의 비 예보 · LED 날씨 시계&lt;/title&gt;
+&lt;style&gt;
+  :root{ --bg:#0b1020; --panel:#161c30; --line:#26304d; --text:#e8edf7; --muted:#8b93ab; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--bg); color:var(--text); padding:22px 14px; min-height:100vh;
+        font-family:&#x27;Noto Sans KR&#x27;,system-ui,-apple-system,sans-serif; }
+  .wrap{ max-width:760px; margin:0 auto; }
+  header{ text-align:center; margin-bottom:18px; }
+  h1{ font-size:clamp(18px,4.5vw,26px); }
+  .sub{ color:var(--muted); font-size:13px; margin-top:7px; }
+  .card{ background:var(--panel); border:1px solid var(--line);
+         border-radius:16px; padding:18px; margin:14px 0; }
+  .h2{ font-size:12px; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
+  .leds{ display:grid; grid-template-columns:repeat(10,1fr); gap:7px; }
+  .led{ text-align:center; }
+  .dot{ height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.08);
+        box-shadow:0 0 14px var(--g,transparent); transition:.5s; }
+  .led .hr{ font-size:11px; color:var(--muted); margin-top:7px; }
+  .led .pp{ font-size:12px; font-weight:700; margin-top:2px; }
+  .legend{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .lg{ display:flex; align-items:center; gap:10px; font-size:13px; }
+  .sw{ width:22px; height:22px; border-radius:6px; flex:0 0 22px; }
+  .lg .r{ color:var(--muted); font-size:11px; }
+  .bars{ display:flex; align-items:flex-end; gap:4px; height:130px; }
+  .bar{ flex:1; display:flex; flex-direction:column; justify-content:flex-end;
+        align-items:center; height:100%; }
+  .bar .b{ width:100%; border-radius:4px 4px 0 0; transition:.5s; min-height:2px; }
+  .bar .t{ font-size:9px; color:var(--muted); margin-top:5px; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;header&gt;
+    &lt;h1&gt;🌧️ 오늘의 비 예보 · LED 날씨 시계&lt;/h1&gt;
+    &lt;div class=&quot;sub&quot; id=&quot;sub&quot;&gt;불러오는 중…&lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;LED 바 — 피코의 10칸과 똑같은 색&lt;/div&gt;
+    &lt;div class=&quot;leds&quot; id=&quot;leds&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;색이 뜻하는 것&lt;/div&gt;
+    &lt;div class=&quot;legend&quot; id=&quot;legend&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;시간별 강수확률 (6시 → 23시)&lt;/div&gt;
+    &lt;div class=&quot;bars&quot; id=&quot;bars&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// 웹 범례 — 피코 LEVELS와 같은 의미/순서
+const LV = [
+  { n:&#x27;맑음&#x27;,    c:&#x27;#22c55e&#x27;, r:&#x27;0–20%&#x27;  },
+  { n:&#x27;흐림&#x27;,    c:&#x27;#eab308&#x27;, r:&#x27;20–50%&#x27; },
+  { n:&#x27;비 가능&#x27;, c:&#x27;#3b82f6&#x27;, r:&#x27;50–80%&#x27; },
+  { n:&#x27;비 확실&#x27;, c:&#x27;#8b5cf6&#x27;, r:&#x27;80–100%&#x27;}
+];
+
+document.getElementById(&#x27;legend&#x27;).innerHTML = LV.map(l =&gt;
+  `&lt;div class=&quot;lg&quot;&gt;&lt;span class=&quot;sw&quot; style=&quot;background:${l.c}&quot;&gt;&lt;/span&gt;
+   &lt;div&gt;&lt;div&gt;${l.n}&lt;/div&gt;&lt;div class=&quot;r&quot;&gt;강수확률 ${l.r}&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+
+const pct = p =&gt; (p == null ? &#x27;-&#x27; : p + &#x27;%&#x27;);
+
+async function load(){
+  try{
+    const j = await (await fetch(&#x27;/data&#x27;)).json();
+    document.getElementById(&#x27;sub&#x27;).textContent =
+      `${j.date} 예보 · ${j.ago}초 전 갱신 · 10분마다 자동 갱신`;
+    document.getElementById(&#x27;leds&#x27;).innerHTML = j.leds.map(d =&gt; {
+      const c = LV[d.lv].c;
+      return `&lt;div class=&quot;led&quot;&gt;
+                &lt;div class=&quot;dot&quot; style=&quot;background:${c}; --g:${c}&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;hr&quot;&gt;${d.h}시&lt;/div&gt;
+                &lt;div class=&quot;pp&quot; style=&quot;color:${c}&quot;&gt;${pct(d.p)}&lt;/div&gt;
+              &lt;/div&gt;`;
+    }).join(&#x27;&#x27;);
+    document.getElementById(&#x27;bars&#x27;).innerHTML = j.hourly.map(d =&gt; {
+      const c = LV[d.lv].c;
+      const h = (d.p == null ? 2 : Math.max(2, d.p));
+      return `&lt;div class=&quot;bar&quot; title=&quot;${d.h}시 ${pct(d.p)}&quot;&gt;
+                &lt;div class=&quot;b&quot; style=&quot;height:${h}%; background:${c}&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;t&quot;&gt;${d.h}&lt;/div&gt;
+              &lt;/div&gt;`;
+    }).join(&#x27;&#x27;);
+  }catch(e){
+    document.getElementById(&#x27;sub&#x27;).textContent = &#x27;응답 없음 — 다시 시도 중…&#x27;;
+  }
+}
+load();
+setInterval(load, 30000);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;&quot;&quot;&quot;
+
+
+def send_response(conn, status, content_type, body):
+    header = (&quot;HTTP/1.1 %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n&quot;
+              &quot;Access-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n&quot;
+              % (status, content_type, len(body))).encode()
+    conn.sendall(header + body)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    srv.settimeout(REFRESH)        # 방문자가 없어도 주기적으로 깨어나 날씨를 갱신
+    print(&quot;대시보드 열림 — 위 주소로 접속하세요 (Ctrl+C로 종료)&quot;)
+    while True:
+        refresh_if_due()
+        try:
+            conn, _ = srv.accept()
+        except OSError:            # accept 타임아웃 → 위로 올라가 날씨 갱신
+            continue
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                send_response(conn, &quot;200 OK&quot;, &quot;application/json&quot;, data_json().encode())
+            else:
+                send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            print(&quot;요청 처리 오류:&quot;, e)
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    refresh()
+    print(&quot;대시보드 주소:  http://%s&quot; % ip)
+    run_server()</code></pre></div><div class="callout key"><div class="callout-head">🔑 대시보드 읽는 법 — 색이 곧 비 예보</div><div class="callout-body">화면의 10칸은 피코 LED와 1:1로 같아요. 칸 위 시각(6시·8시…)과 색을 보면 <b>‘이 시각에 비가 오는구나’</b>를 알 수 있습니다.<br>🟩 <b>맑음</b> 0–20% · 🟨 <b>흐림</b> 20–50% · 🟦 <b>비 가능</b> 50–80% · 🟪 <b>비 확실</b> 80–100%.<br>아래 막대그래프는 6시~23시 전체 흐름이라, 파랑·보라가 모이는 구간이 ‘비 오는 시간대’입니다. 임계값(20·50·80)이나 색은 코드 맨 위 <code>LEVELS</code>에서 바꾸면 LED·웹이 함께 바뀝니다.</div></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ImportError: no module named &#x27;requests&#x27;</div><div class="m-row"><span class="m-tag">원인</span><b>requests 설치 버전</b>을 쓰는데 모듈이 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>기본(무설치) 버전을 쓰면 이 오류가 안 납니다. 굳이 requests 버전을 쓰려면 Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 와이파이 연결 후 설치하세요.</div></div><div class="mistake"><div class="m-sym">❌ ssl/연결 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>TLS 연결이 일시적으로 실패하거나 메모리 부족.</div><div class="m-row"><span class="m-tag fix">해결</span>다시 실행해 보세요. 코드는 매 요청 전 <code>gc.collect()</code>로 메모리를 정리하고, 인증서 검증은 생략(<code>CERT_NONE</code>)합니다. 자주 끊기면 갱신 간격을 늘리세요.</div></div><div class="mistake"><div class="m-sym">❌ 위도·경도를 바꿨는데 엉뚱한 지역</div><div class="m-row"><span class="m-tag">원인</span>위도(LAT)와 경도(LON)를 바꿔 넣음.</div><div class="m-row"><span class="m-tag fix">해결</span>한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다.</div></div><div class="mistake"><div class="m-sym">❌ 메모리 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>HTTPS 응답이 큰데 자주 부름.</div><div class="m-row"><span class="m-tag fix">해결</span>필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다.</div></div><div class="mistake"><div class="m-sym">❌ 대시보드 주소가 안 열림</div><div class="m-row"><span class="m-tag">원인</span>스마트폰이 피코와 다른 와이파이이거나 <code>https</code>로 접속.</div><div class="m-row"><span class="m-tag fix">해결</span>셸에 찍힌 주소를 <b><code>http://</code></b>(s 없이)로, 피코와 <b>같은 와이파이</b>에서 여세요. LED는 떠도 화면이 안 뜨면 갱신을 기다리거나 페이지를 새로고침하세요.</div></div></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>Open-Meteo는 API 키가 필요한가요?</summary><div class="qa-a">아니요. 무료이고 키 없이 위도·경도만으로 씁니다.</div></details><details class="qa"><summary>강수확률 24개 중 6시 값은 어떻게 꺼내나요?</summary><div class="qa-a"><code>probs[6]</code>. 리스트 인덱스가 곧 시각(0~23시)입니다.</div></details><details class="qa"><summary>왜 10분마다만 새로 받아오나요?</summary><div class="qa-a">날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다.</div></details></div></section></div><div class="chapter" id="ch4"><div class="ch-head"><span class="ch-num" style="color:#F59E0B">CHAPTER 04</span><h2 class="ch-title"><span class="ch-bar" style="background:#F59E0B"></span>MQ-2 가스센서 대시보드</h2><p class="ch-sub">공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 다크 테마 대시보드를 만듭니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>ADC로 가스센서 값을 읽고 전압·비율로 바꿀 수 있다</li><li>이동 평균으로 값을 안정시킬 수 있다</li><li>임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 1장의 웹서버 구조에 ‘판단(임계값)’과 ‘예쁜 화면’이 더해진, 가장 완성도 높은 대시보드입니다.</p></div><section class="sec" id="ch4-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">ADC (아날로그)</div><div class="concept-d">가스 농도 같은 ‘연속된 값’을 숫자로 바꿔 읽는 기능. 그로브 <b>A0 = GP26</b>. <code>ADC(Pin(26))</code></div></div><div class="concept"><div class="concept-t">read_u16()</div><div class="concept-d">0~65535 사이 값으로 읽습니다. 가스가 짙을수록 값이 커져요.</div></div><div class="concept"><div class="concept-t">이동 평균</div><div class="concept-d">여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code></div></div><div class="concept"><div class="concept-t">임계값</div><div class="concept-d">SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 센서는 예열이 필요해요</div><div class="callout-body">MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요.</div></div></section><section class="sec" id="ch4-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MQ-2 가스센서 값 한 번 읽기 (그로브 A0 = GP26 = ADC0)
 from machine import ADC, Pin
 
 gas_sensor = ADC(Pin(26))
@@ -1031,18 +1287,38 @@ if ip:
 </div>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script>
-hljs.configure({cssSelector:'pre code'});
-document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백 (둘 다 처리)
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
 document.querySelectorAll('.block').forEach(block=>{
   const btn=block.querySelector('.copy-btn'); if(!btn) return;
-  btn.addEventListener('click',()=>{
+  btn.addEventListener('click', async ()=>{
     const code=block.querySelector('code');
     const body=block.querySelector('.prompt-body');
     const text=code?code.innerText:(body?body.innerText:'');
-    navigator.clipboard.writeText(text).then(()=>{
-      btn.textContent='복사됨'; btn.classList.add('done');
-      setTimeout(()=>{btn.textContent='복사'; btn.classList.remove('done');},1400);
-    });
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
   });
 });
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');

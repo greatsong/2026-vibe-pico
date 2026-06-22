@@ -280,12 +280,12 @@ CHAPTERS = [
 # ----------------------------------------------------------------- CH3
 {
   "id": "ch3", "num": "03", "title": "날씨 비 예보 대시보드", "accent": "#3B82F6",
-  "subtitle": "인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만듭니다. 웹 화면은 바이브코딩으로 덧붙여요.",
+  "subtitle": "인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.",
   "goals": [
     "Open-Meteo에서 강수확률 데이터를 받아올 수 있다",
     "받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다",
     "6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다",
-    "AI에게 부탁해 웹 대시보드까지 덧붙일 수 있다(바이브코딩)",
+    "LED와 똑같은 정보를 보여 주는 웹 대시보드(색 범례 포함)를 띄울 수 있다",
   ],
   "why": "여기서부터 진짜 ‘세상의 데이터’를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, 거실의 LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 됩니다. 출근 전 LED만 보고 우산을 챙길 수 있죠.",
   "sections": [
@@ -314,6 +314,10 @@ CHAPTERS = [
 "지금 피코가 Open-Meteo에서 오늘 강수확률을 받아 10개 WS2813 LED(Pin 16, timing=(280,515,515,745))에 6시~23시 색으로 표시하고 있어.\n여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.\n- LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).\n받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게."},
       {"type": "callout", "kind": "tip", "title": "바이브코딩의 핵심",
        "html": "AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다."},
+      {"type": "step_head", "html": "<b>Step 5.</b> 직접 부탁하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)"},
+      {"type": "code", "label": "전체 코드 · 날씨 LED + 웹 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py"},
+      {"type": "callout", "kind": "key", "title": "대시보드 읽는 법 — 색이 곧 비 예보",
+       "html": "화면의 10칸은 피코 LED와 1:1로 같아요. 칸 위 시각(6시·8시…)과 색을 보면 <b>‘이 시각에 비가 오는구나’</b>를 알 수 있습니다.<br>🟩 <b>맑음</b> 0–20% · 🟨 <b>흐림</b> 20–50% · 🟦 <b>비 가능</b> 50–80% · 🟪 <b>비 확실</b> 80–100%.<br>아래 막대그래프는 6시~23시 전체 흐름이라, 파랑·보라가 모이는 구간이 ‘비 오는 시간대’입니다. 임계값(20·50·80)이나 색은 코드 맨 위 <code>LEVELS</code>에서 바꾸면 LED·웹이 함께 바뀝니다."},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
@@ -321,6 +325,7 @@ CHAPTERS = [
         {"sym": "ssl/연결 오류로 멈춤", "cause": "TLS 연결이 일시적으로 실패하거나 메모리 부족.", "fix": "다시 실행해 보세요. 코드는 매 요청 전 <code>gc.collect()</code>로 메모리를 정리하고, 인증서 검증은 생략(<code>CERT_NONE</code>)합니다. 자주 끊기면 갱신 간격을 늘리세요."},
         {"sym": "위도·경도를 바꿨는데 엉뚱한 지역", "cause": "위도(LAT)와 경도(LON)를 바꿔 넣음.", "fix": "한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다."},
         {"sym": "메모리 오류로 멈춤", "cause": "HTTPS 응답이 큰데 자주 부름.", "fix": "필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다."},
+        {"sym": "대시보드 주소가 안 열림", "cause": "스마트폰이 피코와 다른 와이파이이거나 <code>https</code>로 접속.", "fix": "셸에 찍힌 주소를 <b><code>http://</code></b>(s 없이)로, 피코와 <b>같은 와이파이</b>에서 여세요. LED는 떠도 화면이 안 뜨면 갱신을 기다리거나 페이지를 새로고침하세요."},
       ]},
     ]},
     {"title": "스스로 점검하기", "items": [
@@ -534,7 +539,7 @@ TEMPLATE = r'''<!DOCTYPE html>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 :root{
   --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
@@ -647,8 +652,14 @@ a{color:inherit;text-decoration:none;}
   background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
 .copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
 .copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
-.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#fff;}
-.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#282c34;}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:#abb2bf;}
+.code-block .block-head{background:#21252b;border-bottom-color:#181b20;}
+.code-block .block-label{color:#c7cdd6;}
+.code-block .lang-tag{color:#9aa3b2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn{color:#aeb6c2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn:hover{color:#fff;border-color:#5a6275;}
+.code-block .copy-btn.done{color:#79e3b4;border-color:#2f6b4f;background:#1f3a2c;}
 .prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
 .prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
   border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
@@ -721,18 +732,38 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 </div>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script>
-hljs.configure({cssSelector:'pre code'});
-document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백 (둘 다 처리)
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
 document.querySelectorAll('.block').forEach(block=>{
   const btn=block.querySelector('.copy-btn'); if(!btn) return;
-  btn.addEventListener('click',()=>{
+  btn.addEventListener('click', async ()=>{
     const code=block.querySelector('code');
     const body=block.querySelector('.prompt-body');
     const text=code?code.innerText:(body?body.innerText:'');
-    navigator.clipboard.writeText(text).then(()=>{
-      btn.textContent='복사됨'; btn.classList.add('done');
-      setTimeout(()=>{btn.textContent='복사'; btn.classList.remove('done');},1400);
-    });
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
   });
 });
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
