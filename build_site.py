@@ -107,64 +107,61 @@ HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xml
 </svg></div>'''
 
 # API = 관공서 등본 발급 비유 (애니메이션 SVG)
-API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘데이터를 가진 기관에 정해진 양식으로 신청하면, 정해진 형식으로 발급해 주는 창구’</b>예요. 동사무소에서 <b>등본</b> 떼는 것과 똑같죠 👇</p>
-<svg class="api-svg" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="API를 관공서 등본 발급에 빗댄 요청-응답 흐름도">
+API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘정해진 양식(신청서)을 채워서 보내면, 원하는 결과물을 정해진 형식으로 돌려주는 창구’</b>예요. 동사무소에서 <b>등본</b> 떼는 것과 똑같죠 👇</p>
+<svg class="api-svg" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="신청서를 채워 보내면 결과물을 돌려받는 API 흐름 애니메이션">
   <defs>
-    <marker id="aR" markerWidth="10" markerHeight="10" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5B6CF0"/></marker>
-    <marker id="aL" markerWidth="10" markerHeight="10" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#E0568A"/></marker>
-    <filter id="ds2" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.12"/></filter>
+    <filter id="ds2" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.14"/></filter>
   </defs>
 
+  <text x="380" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280">① 양식 채우기 &#160;→&#160; ② API에 신청(요청) &#160;→&#160; ③ 결과물 받기(응답)</text>
+
   <!-- 나(민원인) -->
-  <g filter="url(#ds2)"><rect x="20" y="120" width="182" height="96" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
-  <text x="111" y="160" text-anchor="middle" font-size="34">🙋</text>
-  <text x="111" y="187" text-anchor="middle" font-size="13" font-weight="800" fill="#2b2d3a">나 = 민원인</text>
-  <text x="111" y="205" text-anchor="middle" font-size="11" fill="#8a8fa6">피코 · 브라우저</text>
+  <g filter="url(#ds2)"><rect x="20" y="118" width="168" height="96" rx="18" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="104" y="158" text-anchor="middle" font-size="34">🙋</text>
+  <text x="104" y="185" text-anchor="middle" font-size="13" font-weight="800" fill="#2b2d3a">나 = 민원인</text>
+  <text x="104" y="203" text-anchor="middle" font-size="11" fill="#8a8fa6">피코 · 브라우저</text>
 
   <!-- API 서버(관공서) -->
-  <g filter="url(#ds2)"><rect x="558" y="120" width="182" height="96" rx="18" fill="#eef0ff" stroke="#c3c9f5"/></g>
-  <text x="649" y="158" text-anchor="middle" font-size="32">🏛️</text>
-  <text x="649" y="185" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3b47c2">API = 관공서 창구</text>
-  <text x="649" y="203" text-anchor="middle" font-size="11" fill="#8a8fb0">Open-Meteo · 기상청 …</text>
+  <g filter="url(#ds2)"><rect x="572" y="118" width="168" height="96" rx="18" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="656" y="156" text-anchor="middle" font-size="32">🏛️</text>
+  <text x="656" y="183" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3b47c2">API = 관공서 창구</text>
+  <text x="656" y="201" text-anchor="middle" font-size="11" fill="#8a8fb0">Open-Meteo · 기상청 …</text>
 
-  <!-- 요청(위, 오른쪽으로) -->
-  <line x1="204" y1="151" x2="554" y2="151" stroke="#c8cdf5" stroke-width="3" marker-end="url(#aR)"/>
-  <rect x="292" y="121" width="178" height="27" rx="13" fill="#eef0ff" stroke="#c3c9f5"/>
-  <text x="381" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#3b47c2">📝 요청 = 신청서(URL)</text>
-  <!-- 신청서(양식 채워진 서류)가 API로 -->
+  <!-- 이동 트랙 -->
+  <line x1="196" y1="166" x2="564" y2="166" stroke="#e2e5f2" stroke-width="2" stroke-dasharray="3 6"/>
+
+  <!-- 신청서: 채워진 뒤 API로 이동 (10초 주기) -->
   <g opacity="0">
-    <rect x="-21" y="-22" width="42" height="46" rx="5" fill="#ffffff" stroke="#b9c0f5"/>
-    <rect x="-21" y="-22" width="42" height="11" rx="5" fill="#5B6CF0"/><rect x="-21" y="-16" width="42" height="5" fill="#5B6CF0"/>
-    <rect x="-14" y="-4" width="11" height="3.4" rx="1.7" fill="#9aa3c8"/><rect x="-1" y="-4" width="15" height="3.4" rx="1.7" fill="#5B6CF0"/>
-    <rect x="-14" y="5" width="11" height="3.4" rx="1.7" fill="#9aa3c8"/><rect x="-1" y="5" width="13" height="3.4" rx="1.7" fill="#5B6CF0"/>
-    <rect x="-14" y="14" width="18" height="3.4" rx="1.7" fill="#9aa3c8"/>
-    <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite"
-      keyTimes="0;0.08;0.46;1" values="236,151;236,151;520,151;520,151" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1"/>
-    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
-      keyTimes="0;0.08;0.42;0.5;1" values="0;1;1;0;0"/>
+    <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#b9c0f5"/>
+    <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#5B6CF0"/><rect x="-60" y="-28" width="120" height="8" fill="#5B6CF0"/>
+    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📝 신청서 (요청)</text>
+    <text x="-52" y="-6" font-size="9" fill="#8a8fa6">무엇:</text>
+    <text x="-25" y="-6" font-size="10" font-weight="700" fill="#3b47c2" opacity="0">강수확률<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.12;0.16;1" values="0;0;1;1"/></text>
+    <text x="46" y="-6" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.13;0.17;1" values="0;0;1;1"/></text>
+    <text x="-52" y="13" font-size="9" fill="#8a8fa6">어디:</text>
+    <text x="-25" y="13" font-size="9.5" font-weight="700" fill="#3b47c2" opacity="0">서울 37.5,127<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.22;0.26;1" values="0;0;1;1"/></text>
+    <text x="46" y="13" text-anchor="middle" font-size="11" fill="#22c55e" opacity="0">✓<animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.23;0.27;1" values="0;0;1;1"/></text>
+    <text x="0" y="29" text-anchor="middle" font-size="8.5" fill="#9aa3c8">URL에 담아 전송</text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
+      calcMode="spline" keyTimes="0;0.30;0.50;1" values="300,166;300,166;504,166;504,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.04;0.50;0.53;1" values="0;1;1;0;0"/>
   </g>
 
-  <!-- 응답(아래, 왼쪽으로) -->
-  <line x1="554" y1="186" x2="204" y2="186" stroke="#f3cfe0" stroke-width="3" marker-end="url(#aL)"/>
-  <rect x="286" y="189" width="190" height="27" rx="13" fill="#fff0f6" stroke="#f3cfe0"/>
-  <text x="381" y="207" text-anchor="middle" font-size="12" font-weight="700" fill="#b83d72">📦 응답 = 발급 서류(JSON)</text>
-  <!-- 결과물(데이터 카드)이 나에게로 -->
+  <!-- 결과물: API에서 나에게로 (원하는 데이터) -->
   <g opacity="0">
-    <rect x="-22" y="-22" width="44" height="46" rx="5" fill="#ffffff" stroke="#f0c6da"/>
-    <rect x="-22" y="-22" width="44" height="11" rx="5" fill="#E0568A"/><rect x="-22" y="-16" width="44" height="5" fill="#E0568A"/>
-    <rect x="-15" y="2" width="6" height="16" rx="1" fill="#22c55e"/>
-    <rect x="-6" y="-4" width="6" height="22" rx="1" fill="#f59e0b"/>
-    <rect x="3" y="6" width="6" height="12" rx="1" fill="#3b82f6"/>
-    <line x1="-17" y1="18.5" x2="13" y2="18.5" stroke="#e3c4d4" stroke-width="1"/>
-    <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite"
-      keyTimes="0;0.52;0.92;1" values="520,186;520,186;236,186;236,186" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1"/>
-    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
-      keyTimes="0;0.5;0.56;0.92;1" values="0;0;1;1;0"/>
+    <rect x="-60" y="-36" width="120" height="72" rx="8" fill="#ffffff" stroke="#f0c6da"/>
+    <rect x="-60" y="-36" width="120" height="16" rx="8" fill="#E0568A"/><rect x="-60" y="-28" width="120" height="8" fill="#E0568A"/>
+    <text x="0" y="-24" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">📦 결과물 (응답·JSON)</text>
+    <text x="0" y="6" text-anchor="middle" font-size="20" font-weight="800" fill="#2b2d3a">☔ 60%</text>
+    <text x="0" y="24" text-anchor="middle" font-size="9" fill="#8a8fa6">오늘 강수확률</text>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite"
+      calcMode="spline" keyTimes="0;0.56;0.80;1" values="504,166;504,166;300,166;300,166" keySplines="0 0 1 1;0.45 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="10s" repeatCount="indefinite" keyTimes="0;0.54;0.58;0.93;1" values="0;0;1;1;0"/>
   </g>
 
   <!-- 보조 설명 -->
-  <text x="381" y="244" text-anchor="middle" font-size="11" fill="#8a8fa6">🔑 일부 API(예: NASA)는 ‘신분증=키’가 있어야 발급</text>
-  <text x="381" y="270" text-anchor="middle" font-size="11" fill="#7a7f95">신청서에 ‘무엇을(강수확률)·어디를(위도·경도)’ 적어 보내면 → 정해진 형식(JSON)으로 받아요</text>
+  <text x="380" y="252" text-anchor="middle" font-size="11" fill="#8a8fa6">🔑 일부 API(예: NASA)는 ‘신분증=키’가 있어야 발급</text>
+  <text x="380" y="276" text-anchor="middle" font-size="11" fill="#7a7f95">양식(URL)에 ‘무엇을·어디를’ 채워 보내면 → 원하는 데이터를 정해진 형식(JSON)으로 받아요</text>
 </svg>
 <p style="margin:12px 0 0;font-size:12.5px;color:#7a7f95">관공서=서버 · 신청서=요청(URL) · 서류=응답(JSON) · 양식=규칙 · 신분증=API 키. 우리 코드는 ‘피코가 <b>오늘 강수확률 등본</b>을 떼 오는 것’ — <b>정보과학</b>(요청→응답)과 <b>과학</b>(데이터 탐구)이 만나는 지점이에요.</p>'''
 
