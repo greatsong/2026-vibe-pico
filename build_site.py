@@ -155,6 +155,8 @@ CHAPTERS = [
     {"title": "0.4 · MicroPython 펌웨어 설치", "items": [
       {"type": "text", "html": "갓 산 피코에는 아직 파이썬을 실행할 ‘속살’이 없어요. <b>MicroPython 펌웨어</b>를 한 번 설치하면, 그때부터 피코가 파이썬 코드를 알아듣습니다. (처음 한 번만 하면 됩니다)"},
       {"type": "raw", "html": FW_CARD},
+      {"type": "dig", "title": "펌웨어? MicroPython? BOOTSEL? — 용어 정리",
+       "html": "<b>펌웨어(firmware)</b>는 어떤 기기를 켰을 때 가장 먼저 돌아가는 ‘기본 소프트웨어’예요. 컴퓨터의 운영체제(윈도우·macOS)에 해당하는, 피코의 속살이라고 보면 됩니다.<br><br><b>MicroPython</b>은 피코 같은 작은 컴퓨터(마이크로컨트롤러)에서 돌아가도록 만든 <b>파이썬</b>이에요. 이 펌웨어를 설치하면, 그때부터 피코가 우리가 쓴 파이썬 코드를 알아듣습니다. (C/C++로도 쓸 수 있지만, 파이썬이 가장 쉬워요.)<br><br><b>BOOTSEL 버튼</b>은 피코를 ‘펌웨어를 새로 받을 준비(부트로더) 모드’로 켜는 버튼이에요. 이 버튼을 누른 채 USB를 꽂으면 컴퓨터에 USB 드라이브처럼 나타나고, 거기에 <code>.uf2</code> 파일을 끌어다 놓으면 설치됩니다.<br><br><b>.uf2</b>는 이런 보드에 드래그&드롭으로 펌웨어를 넣도록 만든 파일 형식(USB Flashing Format)입니다."},
       {"type": "mistakes", "items": [
         {"sym": "RP2350 드라이브가 안 나타남", "cause": "BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.", "fix": "케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다."},
       ]},
@@ -191,7 +193,7 @@ CHAPTERS = [
     "피코를 작은 웹서버로 만들어 브라우저에서 데이터를 본다",
     "‘피코는 /data로 값만 주고, 그래프는 브라우저가 그린다’는 구조를 이해한다",
   ],
-  "why": "센서 값을 셸에서만 보면 나만 볼 수 있죠. 하지만 피코가 <b>웹서버</b>가 되면, 같은 와이파이에 있는 누구나 스마트폰으로 실시간 값을 볼 수 있어요. 이 장에서 익히는 <b>‘피코=서버, 브라우저=화면’</b> 구조는 3·4장(날씨·가스 대시보드)에서 똑같이 재사용됩니다.",
+  "why": "센서 값을 셸에서만 보면 나만 볼 수 있죠. 하지만 피코가 <b>웹서버</b>가 되면, 같은 와이파이에 있는 누구나 스마트폰으로 실시간 값을 볼 수 있어요. 이 장에서 익히는 <b>‘피코=서버, 브라우저=화면’</b> 구조는 뒤의 날씨·가스 대시보드에서도 똑같이 재사용됩니다.",
   "sections": [
     {"title": "핵심 개념", "items": [
       {"type": "concept", "items": [
@@ -200,6 +202,8 @@ CHAPTERS = [
         {"t": "소켓 웹서버", "d": "포트 80에서 브라우저의 접속을 기다리다가, 요청이 오면 HTML이나 데이터를 돌려주는 작은 서버."},
         {"t": "/data 폴링", "d": "브라우저가 1초마다 <code>/data</code>를 불러 최신 값을 받고, Chart.js로 그래프를 갱신하는 방식."},
       ]},
+      {"type": "dig", "title": "RSSI는 왜 -50, -80처럼 ‘음수’일까? (dBm과 데시벨)",
+       "html": "RSSI(Received Signal Strength Indicator)의 단위 <b>dBm</b>은 ‘1밀리와트(mW)에 견준 신호 세기를 데시벨로 나타낸 값’이에요. 정의상 <b>0 dBm = 1 mW</b>입니다.<br><br>와이파이 신호가 안테나에 도달할 때의 전력은 1 mW보다 <b>훨씬 작아서</b>(보통 1조분의 1 수준), 로그(데시벨)로 바꾸면 <b>음수</b>가 됩니다. 그래서 값이 항상 마이너스예요.<br>· -30 dBm ≈ 아주 강함(공유기 바로 옆)<br>· -67 dBm ≈ 영상통화도 무난<br>· -80 dBm ≈ 약함, 끊길 수 있음<br><br>데시벨은 <b>로그 스케일</b>이라, 10 dB 차이가 전력 <b>10배</b> 차이예요. 즉 -60에서 -70으로 떨어지면 신호 전력이 1/10로 준 겁니다. 숫자 차이는 작아 보여도 체감 차이가 큰 이유죠."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
@@ -249,6 +253,8 @@ CHAPTERS = [
         {"t": "칸 번호 0~9", "d": "10개니까 <code>np[0]</code>부터 <code>np[9]</code>까지. 0부터 시작!"},
         {"t": "밝기는 낮게", "d": "(255,255,255)는 너무 밝고 전류도 많이 써요. (30,30,30) 정도면 충분히 보입니다."},
       ]},
+      {"type": "dig", "title": "timing=(280, 515, 515, 745)의 정체 (1선 통신과 GRB)",
+       "html": "WS2813 같은 LED는 칸이 10개여도 <b>데이터 선이 하나</b>뿐이에요. 그래서 0과 1을 <b>‘펄스(전기 신호)의 길이’</b>로 구분합니다. 이게 <b>1-wire(원-와이어) 프로토콜</b>이에요.<br><br>네 숫자는 <b>나노초(ns, 10억분의 1초)</b> 단위의 시간이고, 각각:<br>· <b>T0H</b>=280 — ‘0’을 보낼 때 켜 두는 시간<br>· <b>T0L</b>=515 — ‘0’을 보낼 때 꺼 두는 시간<br>· <b>T1H</b>=515 — ‘1’을 보낼 때 켜 두는 시간<br>· <b>T1L</b>=745 — ‘1’을 보낼 때 꺼 두는 시간<br><br>이 길이가 칩이 기대하는 값과 안 맞으면 0을 1로, 1을 0으로 잘못 읽어 <b>색이 깨집니다.</b> 칩 종류마다 기대 시간이 조금씩 달라, WS2813엔 이 네 값을 직접 지정해 주는 거예요.<br><br>또 하나, 사람은 색을 (빨강, 초록, 파랑) = RGB 순서로 생각하지만 이 LED는 내부적으로 <b>GRB(초록·빨강·파랑) 순서</b>로 받습니다. MicroPython의 NeoPixel이 알아서 맞춰 주니 우리는 <code>(r, g, b)</code>로 쓰면 됩니다."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 한 칸만 켜 보기."},
@@ -301,6 +307,8 @@ CHAPTERS = [
        "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
       {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
        "html": "이 장의 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다. 이름·비밀번호를 정확히.)"},
+      {"type": "dig", "title": "HTTPS와 인증서 — 코드의 CERT_NONE은 무슨 뜻일까?",
+       "html": "주소가 <code>https://</code>로 시작하면, 피코와 서버 사이 통신이 <b>암호화(TLS)</b>됩니다. 중간에서 누가 엿봐도 내용을 못 읽죠.<br><br>원래 인터넷 브라우저는 ‘이 서버가 진짜 open-meteo가 맞는지’를 <b>인증서</b>로 확인합니다. 이때 신뢰할 수 있는 기관(CA) 목록이 필요한데, <b>피코에는 그 목록이 기본으로 들어 있지 않아요.</b> 그래서 코드에서 <code>ssl.CERT_NONE</code>으로 ‘서버 신원 확인은 건너뛰고, 암호화만 쓰겠다’고 한 거예요.<br><br>교육용으로 공개 날씨 데이터를 받는 정도는 충분히 안전합니다. 다만 <b>로그인·비밀번호처럼 민감한 정보</b>를 주고받을 땐 신원 확인을 생략하면 안 되니, 그때는 인증서를 갖춘 환경에서 해야 합니다."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)"},
@@ -345,6 +353,8 @@ CHAPTERS = [
         {"t": "응답(JSON) 구조", "d": "<code>hourly.time</code>(시각 배열)과 <code>hourly.기온</code>(값 배열)이 <b>같은 순서로 짝</b>을 이룹니다. 그래서 <code>값[6]</code>이 곧 그 날 6시 값이에요."},
         {"t": "기간 고르기", "d": "<code>forecast_days=1</code>(오늘) · <code>past_days=7</code>(지난 일주일) · archive는 <code>start_date</code>/<code>end_date</code>로 특정 기간."},
       ]},
+      {"type": "dig", "title": "‘강수확률 60%’가 실제로 뜻하는 것",
+       "html": "강수확률(POP, Probability of Precipitation)은 <b>그 시간·그 지역에 0.1mm 이상의 비가 내릴 통계적 확률</b>입니다. 비의 ‘양’이나 ‘세기’가 아니라 ‘올지 안 올지의 가능성’이에요.<br><br>흔한 오해 두 가지:<br>· ‘60%’는 <b>‘하늘의 60%에 비가 온다’</b>는 뜻이 아니에요.<br>· ‘비가 60% 세기로 온다’는 뜻도 아니에요.<br><br>예보 모델이 같은 조건을 여러 번 시뮬레이션했을 때 <b>10번 중 6번꼴로 비가 내렸다</b>는 의미에 가깝습니다. 그래서 강수확률이 높아도 실제로 안 올 수 있고, 낮아도 소나기가 올 수 있어요. 수업에서 ‘확률’과 ‘실제 관측’의 차이를 이야기하기 좋은 소재입니다."},
       {"type": "callout", "kind": "tip", "title": "변수 바꾸는 법 — 주소의 hourly= 뒤만 고치면 끝",
        "html": "앞서 만든 코드에서 요청 주소의 <code>hourly=</code> 뒤만 바꾸면 다른 데이터를 받습니다.<br>· 기온: <code>...&hourly=temperature_2m</code><br>· 자외선 지수: <code>...&hourly=uv_index</code><br>· 일사량(태양광): <code>...&hourly=shortwave_radiation</code><br>여러 개를 쉼표로: <code>...&hourly=temperature_2m,relative_humidity_2m</code><br>과거 데이터는 주소를 <code>https://archive-api.open-meteo.com/v1/archive</code> 로 바꾸고 <code>&start_date=2015-06-01&end_date=2015-06-30</code> 처럼."},
       {"type": "ideas", "items": [
@@ -356,19 +366,23 @@ CHAPTERS = [
       {"type": "linkbtn", "href": "https://open-meteo.com/en/docs", "label": "open-meteo.com/en/docs — 변수·파라미터 전체 문서"},
     ]},
     {"title": "과학 수업에 쓸 만한 다른 오픈 API", "items": [
-      {"type": "text", "html": "Open-Meteo 말고도, <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많습니다. 피코로 가져와 LED·대시보드로 만들 수도 있고, 수업 시간에 브라우저나 파이썬으로 바로 보여 줘도 좋아요. 과목별로 골라 봤습니다. (모두 JSON으로 응답하며, 2026년 기준 동작 확인)"},
+      {"type": "text", "html": "Open-Meteo 말고도, <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많습니다. 피코로 가져와 LED·대시보드로 만들 수도 있고, 수업 시간에 브라우저나 파이썬으로 바로 보여 줘도 좋아요. 과목별로 골라 봤습니다. <b>각 카드에 ‘국내 적용 가능 여부’</b>를 표시했어요. (2026년 기준 직접 호출해 동작·국내 데이터 확인)"},
+      {"type": "callout", "kind": "info", "title": "표시 기호 읽는 법",
+       "html": "🇰🇷 <b>국내 OK</b> — 우리나라 위치·데이터로 잘 작동 · 🌍 <b>전 지구(국내 포함)</b> — 전 세계 공통 데이터라 국내도 해당 · 🌐 <b>국적 무관</b> — 화학·천문처럼 지역과 상관없는 보편 데이터 · 🌎 <b>해외 위주</b> — 데이터가 해외 중심이라 국내 활용은 제한적"},
       {"type": "ideas", "items": [
-        {"t": "🌫️ Open-Meteo 대기질 — 환경", "d": "미세먼지 PM2.5·PM10, 오존, 유럽 AQI. <b>키 불필요</b><br><code>air-quality-api.open-meteo.com/v1/air-quality</code><br>💡 미세먼지 LED 신호등 / 교실 안팎 비교"},
-        {"t": "🌍 USGS 지진 — 지구과학", "d": "전 세계 실시간 지진(규모·위치·깊이) GeoJSON. <b>키 불필요</b><br><code>earthquake.usgs.gov/.../summary/4.5_day.geojson</code><br>💡 규모를 LED 게이지로 / 최근 지진 대시보드"},
-        {"t": "🛰️ ISS 위치 — 천문·물리", "d": "국제우주정거장 실시간 위·경도, 고도, 속도(약 27,000km/h). <b>키 불필요</b><br><code>api.wheretheiss.at/v1/satellites/25544</code><br>💡 우리 머리 위 통과 시각 / 궤도 속도 체감"},
-        {"t": "☀️ 일출·일몰 — 천문·지구과학", "d": "일출·일몰·남중시각·낮 길이·박명 시간. <b>키 불필요</b><br><code>api.sunrise-sunset.org/json?lat=..&lng=..</code><br>💡 계절별 낮 길이 변화 그래프 / 일몰에 LED 점등"},
-        {"t": "🌞 NOAA 우주날씨 — 천문·지구", "d": "태양 활동, Kp 지수(지자기 폭풍), 오로라 가능성. <b>키 불필요</b><br><code>services.swpc.noaa.gov/products/…k-index.json</code><br>💡 Kp 높으면 LED 보라(오로라 경보)"},
-        {"t": "⚗️ PubChem — 화학", "d": "화합물 이름 → 분자식·분자량·구조. <b>키 불필요</b><br><code>pubchem.ncbi.nlm.nih.gov/rest/pug/…</code><br>💡 물질명 입력→분자량 표시 / 화학식 퀴즈"},
-        {"t": "🔭 NASA Open APIs — 천문", "d": "오늘의 천문사진(APOD), 화성 로버 사진, 근지구 소행성(NEO). <b>무료 키</b>(DEMO_KEY로 체험)<br><code>api.nasa.gov</code><br>💡 매일 우주사진 게시 / 소행성 접근 알림"},
-        {"t": "🐦 GBIF·iNaturalist — 생물", "d": "생물 종 분포·관찰 기록 데이터베이스. <b>키 불필요</b><br><code>api.gbif.org/v1</code> · <code>api.inaturalist.org/v1</code><br>💡 우리 지역 관찰 생물 / 종 분포 지도"},
+        {"t": "🌫️ Open-Meteo 대기질 — 환경", "d": "🌍 <b>전 지구(국내 포함)</b><br>미세먼지 PM2.5·PM10, 오존, 유럽식 AQI. <b>키 불필요</b><br><code>air-quality-api.open-meteo.com/v1/air-quality</code><br>💡 미세먼지 LED 신호등 / 교실 안팎 비교<br><span style='color:#9a8'>※ 공식 국내 미세먼지는 ‘에어코리아’ 권장(아래)</span>"},
+        {"t": "🌍 USGS 지진 — 지구과학", "d": "🌎 <b>해외 위주</b> (전 세계 지진이나 국내 지진은 드물게 잡힘 — 최근 1년 한반도 M2.5+ 4건)<br>실시간 지진 규모·위치·깊이 GeoJSON. <b>키 불필요</b><br><code>earthquake.usgs.gov/.../summary/4.5_day.geojson</code><br>💡 전 세계 지진 대시보드 / 국내 지진은 기상청 권장(아래)"},
+        {"t": "🛰️ ISS 위치 — 천문·물리", "d": "🌍 <b>전 지구(국내 상공 포함)</b><br>국제우주정거장 실시간 위·경도, 고도, 속도(약 27,000km/h). <b>키 불필요</b><br><code>api.wheretheiss.at/v1/satellites/25544</code><br>💡 우리 머리 위 통과 시각 / 궤도 속도 체감"},
+        {"t": "☀️ 일출·일몰 — 천문·지구과학", "d": "🇰🇷 <b>국내 OK</b> (위·경도만 넣으면 됨)<br>일출·일몰·남중시각·낮 길이·박명 시간. <b>키 불필요</b><br><code>api.sunrise-sunset.org/json?lat=..&lng=..</code><br>💡 계절별 낮 길이 변화 그래프 / 일몰에 LED 점등"},
+        {"t": "🌞 NOAA 우주날씨 — 천문·지구", "d": "🌍 <b>전 지구 공통(국내 포함)</b><br>태양 활동, Kp 지수(지자기 폭풍), 오로라 가능성. <b>키 불필요</b><br><code>services.swpc.noaa.gov/products/…k-index.json</code><br>💡 Kp 높으면 LED 보라(오로라 경보)"},
+        {"t": "⚗️ PubChem — 화학", "d": "🌐 <b>국적 무관</b> (화학은 어디서나 동일)<br>화합물 이름 → 분자식·분자량·구조. <b>키 불필요</b><br><code>pubchem.ncbi.nlm.nih.gov/rest/pug/…</code><br>💡 물질명 입력→분자량 표시 / 화학식 퀴즈"},
+        {"t": "🔭 NASA Open APIs — 천문", "d": "🌐 <b>국적 무관</b> (우주는 만국 공통)<br>오늘의 천문사진(APOD), 화성 로버 사진, 근지구 소행성(NEO). <b>무료 키</b>(DEMO_KEY는 요청 제한 있어 무료 키 발급 권장)<br><code>api.nasa.gov</code><br>💡 매일 우주사진 게시 / 소행성 접근 알림"},
+        {"t": "🐦 GBIF·iNaturalist — 생물", "d": "🇰🇷 <b>국내 OK</b> (한국 관찰기록 GBIF 약 880만 건·iNaturalist 서울권 수만 건)<br>생물 종 분포·관찰 기록. <b>키 불필요</b><br><code>api.gbif.org/v1</code> · <code>api.inaturalist.org/v1</code><br>💡 우리 지역 관찰 생물 / 종 분포 지도"},
       ]},
+      {"type": "callout", "kind": "key", "title": "🇰🇷 국내 공식 데이터가 필요하면 — 공공데이터포털",
+       "html": "‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <b>공공데이터포털(data.go.kr)</b>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <b>에어코리아(한국환경공단) 미세먼지</b> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span>"},
       {"type": "callout", "kind": "info", "title": "피코로 가져올 때 한 가지",
-       "html": "대부분 <b>https + JSON</b>이라, 3장의 <code>http_get_json()</code>(소켓+ssl) 함수를 그대로 써서 받을 수 있어요. 다만 응답이 큰 API(지진 전체 목록, NASA 이미지 등)는 피코 메모리에 부담이 될 수 있으니, <b>필요한 항목만 요청</b>하거나 수업에서는 컴퓨터(파이썬·브라우저)로 보여 주는 방법도 좋습니다. NASA처럼 키가 필요한 곳은 사이트에서 무료로 발급받으세요."},
+       "html": "대부분 <b>https + JSON</b>이라, 3장의 <code>http_get_json()</code>(소켓+ssl) 함수를 그대로 써서 받을 수 있어요. 다만 응답이 큰 API(지진 전체 목록, NASA 이미지 등)는 피코 메모리에 부담이 될 수 있으니, <b>필요한 항목만 요청</b>하거나 수업에서는 컴퓨터(파이썬·브라우저)로 보여 주는 방법도 좋습니다."},
     ]},
   ],
 },
@@ -390,6 +404,8 @@ CHAPTERS = [
         {"t": "이동 평균", "d": "여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code>"},
         {"t": "임계값", "d": "SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요."},
       ]},
+      {"type": "dig", "title": "ADC가 ‘전압’을 ‘숫자’로 바꾸는 원리 (볼트 변환)",
+       "html": "센서는 가스 농도를 <b>전압(아날로그)</b>으로 내보냅니다. 0V~3.3V 사이의 ‘연속된’ 값이죠. 그런데 컴퓨터는 숫자만 다루니, 이 전압을 숫자로 바꿔야 합니다. 그 변환기가 <b>ADC(Analog-to-Digital Converter, 아날로그→디지털 변환기)</b>예요.<br><br>피코의 ADC는 <b>16비트</b> 해상도로 읽습니다. 16비트 = 2¹⁶ = <b>65536단계</b>, 그래서 <code>read_u16()</code>은 <b>0 ~ 65535</b> 사이 숫자를 돌려줘요.<br>· 0V → 0<br>· 3.3V(최대) → 65535<br>· 그 사이는 비례. 따라서 숫자를 전압으로 되돌리면:<br><code>전압(V) = read_u16() / 65535 × 3.3</code><br><br>예) 읽은 값이 32768이면 → 32768/65535×3.3 ≈ <b>1.65V</b> (딱 절반).<br><br><b>주의:</b> MQ-2에서 ‘전압이 곧 가스 농도(ppm)’는 아닙니다. 정확한 ppm은 보정·계산이 필요해서, 수업에서는 <b>상대적인 변화(평소보다 높다/낮다)</b>를 보는 지표로 씁니다. 그래서 SAFE/WARNING/DANGER 임계값도 우리 교실에서 직접 보고 정합니다."},
       {"type": "callout", "kind": "info", "title": "센서는 예열이 필요해요",
        "html": "MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요."},
       {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
@@ -506,6 +522,9 @@ def render_item(it, accent):
             rows += (f'<details class="qa"><summary>{c["q"]}</summary>'
                      f'<div class="qa-a">{c["a"]}</div></details>')
         return f'<div class="checks">{rows}</div>'
+    if t == "dig":
+        return (f'<details class="dig"><summary>🔬 더 알아보기 — {esc(it["title"])}</summary>'
+                f'<div class="dig-body">{it["html"]}</div></details>')
     if t == "code":
         n_code += 1
         code = it["code"] if "code" in it else load(it["file"])
@@ -618,7 +637,7 @@ a{color:inherit;text-decoration:none;}
 .sec{padding-top:14px;}
 .sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
 .prose{font-size:14.5px;margin:12px 0;max-width:720px;}
-.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code{
+.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code,.dig-body code{
   font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
   border-radius:4px;padding:1px 6px;}
 .step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
@@ -676,6 +695,16 @@ a{color:inherit;text-decoration:none;}
 .qa[open] summary{border-bottom:1px solid var(--line);}
 .qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
 .qa-a:before{content:"✅ ";}
+/* 더 알아보기 (심화 이론) */
+.dig{border:1px solid #dde2f2;border-left:4px solid #6b7cff;border-radius:10px;margin:14px 0;max-width:760px;
+  background:linear-gradient(180deg,#fafbff,#fff);}
+.dig summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:13.5px;color:#3a45a8;list-style:none;}
+.dig summary::-webkit-details-marker{display:none;}
+.dig summary:after{content:"▾";float:right;color:#9aa1cf;transition:.2s;}
+.dig[open] summary:after{transform:rotate(180deg);}
+.dig[open] summary{border-bottom:1px solid #e7eaf7;}
+.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:#44464f;}
+.dig-body b{color:#2f3a96;}
 /* 하드웨어 다이어그램 */
 .figure{margin:14px 0;max-width:760px;}
 .diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
