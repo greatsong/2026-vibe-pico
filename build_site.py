@@ -297,15 +297,18 @@ CHAPTERS = [
         {"t": "6~23 → 10칸 매핑", "d": "오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다."},
       ]},
       {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
-      {"type": "callout", "kind": "info", "title": "requests(urequests)는 한 번만 설치",
-       "html": "인터넷에서 데이터를 받으려면 <b>requests</b> 모듈이 필요해요. Thonny에서 <b>도구(Tools) → 패키지 관리(Manage packages)</b> → 검색창에 <code>requests</code> 입력 → 설치. (피코가 와이파이에 연결된 상태에서) 한 번만 하면 됩니다. 아래 코드는 <code>requests</code>가 없으면 <code>urequests</code>로 자동 대체합니다."},
+      {"type": "callout", "kind": "info", "title": "설치 없이 바로 됩니다",
+       "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)"},
       {"type": "step_head", "html": "<b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)"},
       {"type": "code", "label": "Step 2 · 강수확률 받아오기", "lang": "python", "file": "snippets/ch3_fetch.py"},
-      {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (10분마다 새 예보로 갱신)"},
-      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py)", "lang": "python", "file": "snippets/ch3_full.py"},
+      {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (추가 설치 없음 · 10분마다 새 예보로 갱신)"},
+      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py) — 무설치", "lang": "python", "file": "snippets/ch3_full.py"},
+      {"type": "callout", "kind": "tip", "title": "더 짧게 쓰고 싶다면 — requests 버전 (설치 1회)",
+       "html": "위 무설치 버전이 기본이에요. 만약 <code>requests</code>를 설치할 수 있는 환경이라면, HTTP 부분을 훨씬 짧게 쓸 수 있습니다. Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 한 번 설치(피코가 와이파이 연결된 상태)한 뒤 아래 버전을 쓰세요. 동작은 똑같습니다."},
+      {"type": "code", "label": "대안 · 날씨 시계 (requests 설치 버전)", "lang": "python", "file": "snippets/ch3_full_requests.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 LED만으로 부족하면, AI에게 부탁해 <b>웹 화면</b>까지 덧붙입니다. 1장에서 익힌 ‘피코=서버, 브라우저=화면’ 구조를 그대로 써 달라고 하면 돼요."},
       {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요", "text":
 "지금 피코가 Open-Meteo에서 오늘 강수확률을 받아 10개 WS2813 LED(Pin 16, timing=(280,515,515,745))에 6시~23시 색으로 표시하고 있어.\n여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.\n- LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).\n받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게."},
@@ -314,7 +317,8 @@ CHAPTERS = [
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
-        {"sym": "ImportError: no module named 'requests'", "cause": "requests/urequests 미설치.", "fix": "위 ‘패키지 관리’ 안내대로 설치하세요. 와이파이 연결 후 설치해야 합니다."},
+        {"sym": "ImportError: no module named 'requests'", "cause": "<b>requests 설치 버전</b>을 쓰는데 모듈이 없음.", "fix": "기본(무설치) 버전을 쓰면 이 오류가 안 납니다. 굳이 requests 버전을 쓰려면 Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 와이파이 연결 후 설치하세요."},
+        {"sym": "ssl/연결 오류로 멈춤", "cause": "TLS 연결이 일시적으로 실패하거나 메모리 부족.", "fix": "다시 실행해 보세요. 코드는 매 요청 전 <code>gc.collect()</code>로 메모리를 정리하고, 인증서 검증은 생략(<code>CERT_NONE</code>)합니다. 자주 끊기면 갱신 간격을 늘리세요."},
         {"sym": "위도·경도를 바꿨는데 엉뚱한 지역", "cause": "위도(LAT)와 경도(LON)를 바꿔 넣음.", "fix": "한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다."},
         {"sym": "메모리 오류로 멈춤", "cause": "HTTPS 응답이 큰데 자주 부름.", "fix": "필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다."},
       ]},

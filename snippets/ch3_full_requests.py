@@ -1,14 +1,18 @@
-# === 오늘의 비 예보를 10개 LED에 담는 '날씨 시계' (설치 불필요) ===
-# 내장 socket + ssl 로 Open-Meteo에 접속 — 추가 설치 없이 복붙 실행됩니다.
+# === 오늘의 비 예보를 10개 LED에 담는 '날씨 시계' ===
+# 6시~23시를 10칸으로 나눠, 각 칸의 색으로 강수확률을 보여 줍니다.
 #   맑음(연초록) → 흐림(노랑) → 비 가능(파랑) → 비 확실(보라)
-import network, socket, ssl, json, time, gc
+import network, time
 from machine import Pin
 from neopixel import NeoPixel
 from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
 
+try:
+    import requests
+except ImportError:
+    import urequests as requests
+
 LAT = 37.5665      # 우리 지역 위도
 LON = 126.9780     # 우리 지역 경도
-HOST = "api.open-meteo.com"
 
 TIMING = (280, 515, 515, 745)
 NUM = 10
@@ -31,34 +35,15 @@ def connect_wifi():
     print("\n연결 실패"); return False
 
 
-def http_get_json(host, path):
-    gc.collect()
-    addr = socket.getaddrinfo(host, 443)[0][-1]
-    s = socket.socket()
-    s.connect(addr)
-    try:
-        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-        ctx.verify_mode = ssl.CERT_NONE          # 피코엔 인증서 목록이 없어 검증 생략
-        s = ctx.wrap_socket(s, server_hostname=host)
-    except AttributeError:                       # 옛 펌웨어 호환
-        s = ssl.wrap_socket(s, server_hostname=host)
-    s.write(("GET %s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n"
-             % (path, host)).encode())
-    buf = b""
-    while True:
-        chunk = s.read(512)
-        if not chunk:
-            break
-        buf += chunk
-    s.close()
-    return json.loads(buf.split(b"\r\n\r\n", 1)[1])
-
-
 def get_rain_probs():
-    path = ("/v1/forecast?latitude=%s&longitude=%s"
-            "&hourly=precipitation_probability"
-            "&timezone=Asia%%2FSeoul&forecast_days=1" % (LAT, LON))
-    return http_get_json(HOST, path)["hourly"]["precipitation_probability"]
+    url = ("https://api.open-meteo.com/v1/forecast"
+           "?latitude=%s&longitude=%s"
+           "&hourly=precipitation_probability"
+           "&timezone=Asia%%2FSeoul&forecast_days=1" % (LAT, LON))
+    res = requests.get(url)
+    data = res.json()
+    res.close()
+    return data["hourly"]["precipitation_probability"]   # 24개 (0~23시)
 
 
 def prob_to_color(p):
