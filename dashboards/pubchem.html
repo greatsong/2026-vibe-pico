@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="lab.css">
 
 
+<script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -34,14 +35,14 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>인기 물질</label><select id="preset" onchange="pick()"><option value="">— 인기 물질 고르기 —</option><option value="water">물</option><option value="oxygen">산소</option><option value="carbon dioxide">이산화탄소</option><option value="nitrogen">질소</option><option value="glucose">포도당</option><option value="sucrose">설탕(수크로스)</option><option value="sodium chloride">소금(염화나트륨)</option><option value="ethanol">에탄올(알코올)</option><option value="acetic acid">아세트산(식초)</option><option value="ammonia">암모니아</option><option value="methane">메테인</option><option value="hydrogen peroxide">과산화수소</option><option value="sodium bicarbonate">베이킹소다</option><option value="caffeine">카페인</option><option value="ascorbic acid">비타민C</option><option value="aspirin">아스피린</option><option value="acetaminophen">아세트아미노펜(타이레놀)</option><option value="nicotine">니코틴</option></select><label>또는 직접</label><input id="name" list="cmplist" value="caffeine" style="width:160px" placeholder="영문 이름"><datalist id="cmplist"><option value="water">물</option><option value="oxygen">산소</option><option value="carbon dioxide">이산화탄소</option><option value="nitrogen">질소</option><option value="glucose">포도당</option><option value="sucrose">설탕(수크로스)</option><option value="sodium chloride">소금(염화나트륨)</option><option value="ethanol">에탄올(알코올)</option><option value="acetic acid">아세트산(식초)</option><option value="ammonia">암모니아</option><option value="methane">메테인</option><option value="hydrogen peroxide">과산화수소</option><option value="sodium bicarbonate">베이킹소다</option><option value="caffeine">카페인</option><option value="ascorbic acid">비타민C</option><option value="aspirin">아스피린</option><option value="acetaminophen">아세트아미노펜(타이레놀)</option><option value="nicotine">니코틴</option></datalist><button onclick="run()">검색</button></div><div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">영문 이름으로 검색돼요(예: water, glucose). 목록에 없는 물질은 <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">PubChem에서 직접 검색 ↗</a> 후 영문명을 넣어 보세요.</div><div id="status" class="status">불러오는 중…</div><div class="molwrap"><img id="img" alt="구조" src=""><div><div class="grid" style="grid-template-columns:1fr"><div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div><div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div></div></div>
+    <div class="controls"><label>인기 물질</label><select id="preset" onchange="pick()"><option value="">— 인기 물질 고르기 —</option><option value="water">물</option><option value="oxygen">산소</option><option value="carbon dioxide">이산화탄소</option><option value="nitrogen">질소</option><option value="glucose">포도당</option><option value="sucrose">설탕(수크로스)</option><option value="sodium chloride">소금(염화나트륨)</option><option value="ethanol">에탄올(알코올)</option><option value="acetic acid">아세트산(식초)</option><option value="ammonia">암모니아</option><option value="methane">메테인</option><option value="hydrogen peroxide">과산화수소</option><option value="sodium bicarbonate">베이킹소다</option><option value="caffeine">카페인</option><option value="ascorbic acid">비타민C</option><option value="aspirin">아스피린</option><option value="acetaminophen">아세트아미노펜(타이레놀)</option><option value="nicotine">니코틴</option></select><label>또는 직접</label><input id="name" list="cmplist" value="caffeine" style="width:160px" placeholder="영문 이름"><datalist id="cmplist"><option value="water">물</option><option value="oxygen">산소</option><option value="carbon dioxide">이산화탄소</option><option value="nitrogen">질소</option><option value="glucose">포도당</option><option value="sucrose">설탕(수크로스)</option><option value="sodium chloride">소금(염화나트륨)</option><option value="ethanol">에탄올(알코올)</option><option value="acetic acid">아세트산(식초)</option><option value="ammonia">암모니아</option><option value="methane">메테인</option><option value="hydrogen peroxide">과산화수소</option><option value="sodium bicarbonate">베이킹소다</option><option value="caffeine">카페인</option><option value="ascorbic acid">비타민C</option><option value="aspirin">아스피린</option><option value="acetaminophen">아세트아미노펜(타이레놀)</option><option value="nicotine">니코틴</option></datalist><button onclick="run()">검색</button></div><div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">영문 이름으로 검색돼요(예: water, glucose). 목록에 없는 물질은 <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">PubChem에서 직접 검색 ↗</a> 후 영문명을 넣어 보세요.</div><div id="status" class="status">불러오는 중…</div><div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px"><div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div><div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div><div class="seg"><button id="b2d" class="seg-on" onclick="setView('2d')">평면 2D</button><button id="b3d" onclick="setView('3d')">입체 3D 🧊</button></div><div id="view2d"><img id="img" class="molimg" alt="구조" src=""></div><div id="view3d" style="display:none"><div id="v3d" class="mol3d"></div><div style="font-size:11px;color:#7a7f95;text-align:center;margin-top:6px">드래그로 회전 · 휠로 확대 (3D 모양이 없는 단순 물질도 있어요)</div></div>
   </section>
 
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
     <li>여러 물질 <b>분자량 비교</b>(물·포도당·카페인…)</li>
-    <li>분자량 크기를 <b>LED 막대</b>로</li>
+    <li><b>3D 구조</b>를 돌려 보며 분자 모양·입체 이해(2D보다 직관적!)</li>
     <li>화학식만 보여 주고 <b>물질 맞히기 퀴즈</b></li>
   </ul>
   </section>
@@ -49,7 +50,25 @@
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
 <script>
+let CID=null, viewer=null, mode='2d';
 function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('name').value=v; run(); } }
+function setView(m){
+  mode=m;
+  document.getElementById('b2d').className = m==='2d'?'seg-on':'';
+  document.getElementById('b3d').className = m==='3d'?'seg-on':'';
+  document.getElementById('view2d').style.display = m==='2d'?'':'none';
+  document.getElementById('view3d').style.display = m==='3d'?'':'none';
+  if(m==='3d' && CID) render3d(CID);
+}
+function render3d(cid){
+  const box=document.getElementById('v3d');
+  if(!viewer){ viewer=$3Dmol.createViewer(box,{backgroundColor:'0xf4f6fc'}); }
+  viewer.clear();
+  $3Dmol.download('cid:'+cid, viewer, {}, ()=>{
+    viewer.setStyle({}, {stick:{radius:0.14}, sphere:{scale:0.28}});
+    viewer.zoomTo(); viewer.render();
+  });
+}
 async function run(){
   const name=document.getElementById('name').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
@@ -57,10 +76,12 @@ async function run(){
     const base='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/'+encodeURIComponent(name);
     const j=await (await fetch(base+'/property/MolecularFormula,MolecularWeight/JSON')).json();
     const p=j.PropertyTable.Properties[0];
+    CID=p.CID;
     document.getElementById('formula').textContent=p.MolecularFormula;
     document.getElementById('mw').textContent=parseFloat(p.MolecularWeight).toFixed(2);
     document.getElementById('img').src=base+'/PNG';
     s.textContent='✓ '+name+' (CID '+p.CID+')';
+    if(mode==='3d') render3d(CID);
   }catch(e){ s.className='status err'; s.textContent='그 이름의 물질을 못 찾았어요. 영문 이름으로 다시 시도해 보세요.'; }
 }
 run();

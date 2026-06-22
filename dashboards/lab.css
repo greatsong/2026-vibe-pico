@@ -81,6 +81,11 @@ a{text-decoration:none;color:inherit;}
 .bigimg{width:100%;border-radius:14px;border:1px solid var(--line);margin-top:8px;display:block;}
 .molwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
 .molwrap img{width:180px;height:180px;background:#fff;border:1px solid var(--line);border-radius:14px;}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:14px;}
+.seg button{font-family:var(--font);font-size:13px;font-weight:700;border:none;background:#fff;color:var(--muted);padding:9px 18px;cursor:pointer;}
+.seg button.seg-on{background:linear-gradient(120deg,var(--pico1),var(--pico2));color:#fff;}
+.molimg{width:220px;height:220px;display:block;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;}
+.mol3d{height:340px;position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#f4f6fc;}
 footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
 .gcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;transition:.15s;
@@ -99,4 +104,11 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
   color:#fff;font-weight:800;font-size:13px;text-align:center;line-height:24px;margin-bottom:7px;}
 .s3 b{font-size:14px;}
 .s3 span{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.recgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+.reccard{display:block;background:#fafbff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:.15s;}
+.reccard:hover{border-color:#cdd3f3;background:#f4f6ff;}
+.reccard .re{font-size:22px;}
+.reccard .rt{font-weight:800;font-size:14px;margin:5px 0 2px;}
+.reccard .rf{font-size:11.5px;color:#3b47c2;font-weight:600;}
+.reccard .rd{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5;}
 .pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}

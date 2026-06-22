@@ -15,7 +15,7 @@ LEAFLET = ('<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/le
            '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>')
 
 def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False, lead="",
-         src_name="", src_url="", refs=(), maps=False):
+         src_name="", src_url="", refs=(), maps=False, head=""):
     src = (f'<a class="srclink" href="{src_url}" target="_blank" rel="noopener">🔗 원 데이터 출처: {src_name} ↗</a>'
            if src_url else "")
     refhtml = ""
@@ -33,6 +33,7 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
 <link rel="stylesheet" href="lab.css">
 {CHART if chart else ""}
 {LEAFLET if maps else ""}
+{head}
 </head>
 <body>
 <div class="wrap">
@@ -155,6 +156,11 @@ a{text-decoration:none;color:inherit;}
 .bigimg{width:100%;border-radius:14px;border:1px solid var(--line);margin-top:8px;display:block;}
 .molwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
 .molwrap img{width:180px;height:180px;background:#fff;border:1px solid var(--line);border-radius:14px;}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:14px;}
+.seg button{font-family:var(--font);font-size:13px;font-weight:700;border:none;background:#fff;color:var(--muted);padding:9px 18px;cursor:pointer;}
+.seg button.seg-on{background:linear-gradient(120deg,var(--pico1),var(--pico2));color:#fff;}
+.molimg{width:220px;height:220px;display:block;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;}
+.mol3d{height:340px;position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#f4f6fc;}
 footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
 .gcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;transition:.15s;
@@ -173,6 +179,13 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
   color:#fff;font-weight:800;font-size:13px;text-align:center;line-height:24px;margin-bottom:7px;}
 .s3 b{font-size:14px;}
 .s3 span{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.recgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+.reccard{display:block;background:#fafbff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:.15s;}
+.reccard:hover{border-color:#cdd3f3;background:#f4f6ff;}
+.reccard .re{font-size:22px;}
+.reccard .rt{font-weight:800;font-size:14px;margin:5px 0 2px;}
+.reccard .rf{font-size:11.5px;color:#3b47c2;font-weight:600;}
+.reccard .rd{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5;}
 .pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
 '''
 with open(os.path.join(OUT, "lab.css"), "w", encoding="utf-8") as f:
@@ -496,19 +509,43 @@ page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무�
   </table>''',
   apply_html='''<ul>
     <li>여러 물질 <b>분자량 비교</b>(물·포도당·카페인…)</li>
-    <li>분자량 크기를 <b>LED 막대</b>로</li>
+    <li><b>3D 구조</b>를 돌려 보며 분자 모양·입체 이해(2D보다 직관적!)</li>
     <li>화학식만 보여 주고 <b>물질 맞히기 퀴즈</b></li>
   </ul>''',
+  head='<script src="https://3Dmol.org/build/3Dmol-min.js"></script>',
   body=f'<div class="controls"><label>인기 물질</label><select id="preset" onchange="pick()">{PRESET}</select>'
        f'<label>또는 직접</label><input id="name" list="cmplist" value="caffeine" style="width:160px" placeholder="영문 이름">'
        f'<datalist id="cmplist">{DLIST}</datalist><button onclick="run()">검색</button></div>'
        '<div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">영문 이름으로 검색돼요(예: water, glucose). 목록에 없는 물질은 '
        '<a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">PubChem에서 직접 검색 ↗</a> 후 영문명을 넣어 보세요.</div>'
        '<div id="status" class="status">불러오는 중…</div>'
-       '<div class="molwrap"><img id="img" alt="구조" src=""><div>'
-       '<div class="grid" style="grid-template-columns:1fr"><div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div>'
-       '<div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div></div></div>',
-  js='''function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('name').value=v; run(); } }
+       '<div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">'
+       '<div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div>'
+       '<div class="seg"><button id="b2d" class="seg-on" onclick="setView(\'2d\')">평면 2D</button>'
+       '<button id="b3d" onclick="setView(\'3d\')">입체 3D 🧊</button></div>'
+       '<div id="view2d"><img id="img" class="molimg" alt="구조" src=""></div>'
+       '<div id="view3d" style="display:none"><div id="v3d" class="mol3d"></div>'
+       '<div style="font-size:11px;color:#7a7f95;text-align:center;margin-top:6px">드래그로 회전 · 휠로 확대 (3D 모양이 없는 단순 물질도 있어요)</div></div>',
+  js='''let CID=null, viewer=null, mode='2d';
+function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('name').value=v; run(); } }
+function setView(m){
+  mode=m;
+  document.getElementById('b2d').className = m==='2d'?'seg-on':'';
+  document.getElementById('b3d').className = m==='3d'?'seg-on':'';
+  document.getElementById('view2d').style.display = m==='2d'?'':'none';
+  document.getElementById('view3d').style.display = m==='3d'?'':'none';
+  if(m==='3d' && CID) render3d(CID);
+}
+function render3d(cid){
+  const box=document.getElementById('v3d');
+  if(!viewer){ viewer=$3Dmol.createViewer(box,{backgroundColor:'0xf4f6fc'}); }
+  viewer.clear();
+  $3Dmol.download('cid:'+cid, viewer, {}, ()=>{
+    viewer.setStyle({}, {stick:{radius:0.14}, sphere:{scale:0.28}});
+    viewer.zoomTo(); viewer.render();
+  });
+}
 async function run(){
   const name=document.getElementById('name').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
@@ -516,10 +553,12 @@ async function run(){
     const base='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/'+encodeURIComponent(name);
     const j=await (await fetch(base+'/property/MolecularFormula,MolecularWeight/JSON')).json();
     const p=j.PropertyTable.Properties[0];
+    CID=p.CID;
     document.getElementById('formula').textContent=p.MolecularFormula;
     document.getElementById('mw').textContent=parseFloat(p.MolecularWeight).toFixed(2);
     document.getElementById('img').src=base+'/PNG';
     s.textContent='✓ '+name+' (CID '+p.CID+')';
+    if(mode==='3d') render3d(CID);
   }catch(e){ s.className='status err'; s.textContent='그 이름의 물질을 못 찾았어요. 영문 이름으로 다시 시도해 보세요.'; }
 }
 run();''')
@@ -540,28 +579,33 @@ page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK
     <li>관찰 기록 수를 <b>자릿수 LED</b>로(흔한 종 vs 희귀종)</li>
     <li>계절별 관찰 <b>시기 비교</b>(철새는 언제 많이 보일까?)</li>
   </ul>''',
-  maps=True,
+  maps=True, chart=True,
   body='<div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button>'
        '<span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div>'
        '<div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div>'
        '<div id="map" class="map"></div>'
-       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">최근 좌표가 있는 관찰 지점을 지도에 표시 · 점을 누르면 관찰 날짜·장소</div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">📍 관찰 지점(좌표 있는 것) · 점을 누르면 관찰 날짜·장소</div>'
+       '<h3 style="margin:18px 0 2px;font-size:14px">📅 월별 관찰 분포 (계절성)</h3>'
+       '<div class="chartbox"><canvas id="mchart" height="110"></canvas></div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:6px 2px 4px;text-align:center">한국 내 전체 관찰 기록을 월별로 — 특정 계절에 몰려 있나요?</div>'
        '<ul class="list" id="list"></ul>'
        '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
        '<li>이 생물은 도시 근처에 많나요, 산·강 근처에 많나요? 왜 그럴까요?</li>'
-       '<li>관찰이 특정 계절에 몰려 있나요? 철새·곤충이라면 무엇을 뜻할까요?</li>'
-       '<li>다른 종으로 바꿔 검색해 분포를 비교해 보세요(흔한 종 vs 보기 드문 종).</li>'
+       '<li>월별 그래프가 특정 계절에 솟아 있나요? 철새라면 봄·가을(이동철)에, 곤충은 여름에 몰릴 수 있어요.</li>'
+       '<li>다른 종(철새 vs 텃새)으로 바꿔 월별 분포를 비교해 보세요.</li>'
        '</ul></div>',
-  js='''let map, layer;
+  js='''let map, layer, mchart;
+const MON=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+function seasonColor(m){ return (m>=3&&m<=5)?'#22c55e':(m>=6&&m<=8)?'#ef4444':(m>=9&&m<=11)?'#f59e0b':'#3b82f6'; }
 async function run(){
   const sp=document.getElementById('sp').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   if(!map){ map=L.map('map').setView([36.4,127.8],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:14}).addTo(map); }
   try{
-    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&limit=120`;
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&facet=month&facetLimit=12&limit=120`;
     const j=await (await fetch(u)).json();
     document.getElementById('cnt').textContent=j.count.toLocaleString();
     const pts=(j.results||[]).filter(r=>r.decimalLatitude!=null);
@@ -574,6 +618,13 @@ async function run(){
       L.circleMarker(a,{radius:5,color:'#1f9d63',weight:1,fillColor:'#22c55e',fillOpacity:.6})
         .bindPopup(`<b>${r.scientificName||sp}</b><br>${r.locality||r.stateProvince||'위치 미상'}<br>${(r.eventDate||'').slice(0,10)||'날짜 미상'}`).addTo(layer); });
     if(ll.length) map.fitBounds(ll,{padding:[30,30],maxZoom:11});
+    const months=Array(12).fill(0);
+    const mf=(j.facets||[]).find(f=>f.field==='MONTH');
+    if(mf) mf.counts.forEach(c=>{ const m=parseInt(c.name); if(m>=1&&m<=12) months[m-1]=c.count; });
+    if(mchart) mchart.destroy();
+    mchart=new Chart(document.getElementById('mchart'),{type:'bar',data:{labels:MON,
+      datasets:[{label:'관찰 수',data:months,backgroundColor:months.map((_,i)=>seasonColor(i+1))}]},
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     document.getElementById('list').innerHTML=pts.slice(0,8).map(r=>
       `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
     ).join('') || '<li class="meta">좌표가 있는 관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
@@ -699,6 +750,22 @@ def gcard(item):
             f'<div class="gt">{t}</div><div class="gs">{sub}</div>'
             f'<div class="ghook">🔎 {hook}</div></a>')
 cards = "".join(gcard(it) for it in GAL)
+REC = [
+ ("🦖","PokéAPI","게임·생물","키 없음 · 🟢브라우저","포켓몬 도감 — 타입·능력치·진화","https://pokeapi.co"),
+ ("🐶","Dog / Cat API","재미·생물","키 없음 · 🟢브라우저","랜덤 강아지·고양이 사진","https://dog.ceo/dog-api/"),
+ ("📖","위키백과 API","전 과목","키 없음 · 🟢브라우저","문서 요약·검색(한국어 지원)","https://ko.wikipedia.org/api/rest_v1/"),
+ ("🌍","REST Countries","사회·지리","키 없음","나라별 인구·면적·수도·국기","https://restcountries.com"),
+ ("💱","Frankfurter","경제·수학","키 없음","환율(유럽중앙은행 기준)","https://frankfurter.dev"),
+ ("🗓️","Nager.Date","사회","키 없음","나라별 공휴일 목록","https://date.nager.at"),
+ ("🎮","Open Trivia DB","퀴즈·전과목","키 없음","다지선다 퀴즈 문제 은행","https://opentdb.com"),
+ ("📚","Open Library","국어·사회","키 없음","책 정보·표지 이미지","https://openlibrary.org/developers/api"),
+ ("🦠","disease.sh","보건·통계","키 없음","감염병 통계 데이터","https://disease.sh"),
+ ("🇰🇷","공공데이터포털","전 과목(국내)","키 필요","버스도착·대기·기상 등 국내 공식","https://www.data.go.kr"),
+]
+recs = "".join(
+ f'<a class="reccard" href="{u}" target="_blank" rel="noopener"><div class="re">{e}</div>'
+ f'<div class="rt">{n}</div><div class="rf">{f} · {k}</div><div class="rd">{w}</div></a>'
+ for e,n,f,k,w,u in REC)
 index_html = f'''<!DOCTYPE html>
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -726,6 +793,12 @@ index_html = f'''<!DOCTYPE html>
   <div class="gallery">{cards}</div>
 
   <div class="card" style="margin-top:18px">
+    <h2 style="font-size:14px;font-weight:800;margin-bottom:4px">🧭 더 탐험할 오픈 API <span style="font-weight:500;color:#7a7f95;font-size:12px">— 과학이 아니어도 좋아요</span></h2>
+    <p style="font-size:12.5px;color:#7a7f95;margin-bottom:12px">대부분 무료이고, <b>🟢브라우저</b> 표시는 위 대시보드처럼 바로 fetch해 만들 수 있어요(CORS 허용 확인).</p>
+    <div class="recgrid">{recs}</div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
     <h2 style="font-size:14px;font-weight:800;margin-bottom:8px">💡 API가 뭐예요? — 한 줄 요약</h2>
     <p style="font-size:13.5px;color:#44464f;line-height:1.8">관공서에서 <b>등본</b>을 떼듯, ‘데이터를 가진 기관에 정해진 양식으로 신청(요청)하면 정해진 형식으로 발급(응답)해 주는 창구’가 <b>API</b>예요.
     여기 9곳은 모두 <b>무료</b>이고, NASA만 키가 필요합니다(페이지에 포함). 더 자세한 설명은 교재 3장과 부록에 있어요.</p>

@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="lab.css">
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 </head>
 <body>
 <div class="wrap">
@@ -34,7 +35,7 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button><span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div><div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div><div id="map" class="map"></div><div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">최근 좌표가 있는 관찰 지점을 지도에 표시 · 점을 누르면 관찰 날짜·장소</div><ul class="list" id="list"></ul><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>이 생물은 도시 근처에 많나요, 산·강 근처에 많나요? 왜 그럴까요?</li><li>관찰이 특정 계절에 몰려 있나요? 철새·곤충이라면 무엇을 뜻할까요?</li><li>다른 종으로 바꿔 검색해 분포를 비교해 보세요(흔한 종 vs 보기 드문 종).</li></ul></div>
+    <div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button><span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div><div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div><div id="map" class="map"></div><div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">📍 관찰 지점(좌표 있는 것) · 점을 누르면 관찰 날짜·장소</div><h3 style="margin:18px 0 2px;font-size:14px">📅 월별 관찰 분포 (계절성)</h3><div class="chartbox"><canvas id="mchart" height="110"></canvas></div><div style="font-size:11px;color:#7a7f95;margin:6px 2px 4px;text-align:center">한국 내 전체 관찰 기록을 월별로 — 특정 계절에 몰려 있나요?</div><ul class="list" id="list"></ul><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>이 생물은 도시 근처에 많나요, 산·강 근처에 많나요? 왜 그럴까요?</li><li>월별 그래프가 특정 계절에 솟아 있나요? 철새라면 봄·가을(이동철)에, 곤충은 여름에 몰릴 수 있어요.</li><li>다른 종(철새 vs 텃새)으로 바꿔 월별 분포를 비교해 보세요.</li></ul></div>
   </section>
 
   <section class="card apply">
@@ -49,14 +50,16 @@
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
 <script>
-let map, layer;
+let map, layer, mchart;
+const MON=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+function seasonColor(m){ return (m>=3&&m<=5)?'#22c55e':(m>=6&&m<=8)?'#ef4444':(m>=9&&m<=11)?'#f59e0b':'#3b82f6'; }
 async function run(){
   const sp=document.getElementById('sp').value.trim();
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   if(!map){ map=L.map('map').setView([36.4,127.8],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:14}).addTo(map); }
   try{
-    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&limit=120`;
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&hasCoordinate=true&facet=month&facetLimit=12&limit=120`;
     const j=await (await fetch(u)).json();
     document.getElementById('cnt').textContent=j.count.toLocaleString();
     const pts=(j.results||[]).filter(r=>r.decimalLatitude!=null);
@@ -69,6 +72,13 @@ async function run(){
       L.circleMarker(a,{radius:5,color:'#1f9d63',weight:1,fillColor:'#22c55e',fillOpacity:.6})
         .bindPopup(`<b>${r.scientificName||sp}</b><br>${r.locality||r.stateProvince||'위치 미상'}<br>${(r.eventDate||'').slice(0,10)||'날짜 미상'}`).addTo(layer); });
     if(ll.length) map.fitBounds(ll,{padding:[30,30],maxZoom:11});
+    const months=Array(12).fill(0);
+    const mf=(j.facets||[]).find(f=>f.field==='MONTH');
+    if(mf) mf.counts.forEach(c=>{ const m=parseInt(c.name); if(m>=1&&m<=12) months[m-1]=c.count; });
+    if(mchart) mchart.destroy();
+    mchart=new Chart(document.getElementById('mchart'),{type:'bar',data:{labels:MON,
+      datasets:[{label:'관찰 수',data:months,backgroundColor:months.map((_,i)=>seasonColor(i+1))}]},
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     document.getElementById('list').innerHTML=pts.slice(0,8).map(r=>
       `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
     ).join('') || '<li class="meta">좌표가 있는 관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
