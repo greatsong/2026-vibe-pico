@@ -817,38 +817,64 @@ page("worldbank", "🌱", "나라별 CO₂·에너지", "사회·환경·에너�
     <li>지표를 바꿔 인구·GDP 등 다른 데이터로 확장</li>
   </ul>''',
   chart=True,
+  head='<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>',
   body='<div class="controls"><label>지표</label><select id="ind" onchange="run()">'
-       '<option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)">1인당 CO₂ 배출량 (톤)</option>'
-       '<option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)">재생에너지 비중 (%)</option>'
+       '<option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)|Reds">1인당 CO₂ 배출량 (톤)</option>'
+       '<option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)|Greens">재생에너지 비중 (%)</option>'
        '</select><button onclick="run()">불러오기</button></div>'
        '<div id="status" class="status">불러오는 중…</div>'
+       '<div id="wmap" style="height:400px;border-radius:14px;overflow:hidden;border:1px solid var(--line);"></div>'
+       '<div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">색이 진할수록 값이 큰 나라 · 나라 위에 마우스를 올리면 값이 보여요(최근 가능 연도)</div>'
+       '<div class="grid"><div class="stat" style="border-color:#E0568A"><div class="lab">🇰🇷 한국 값</div><div class="val" id="kr">--</div><div class="unit" id="kru"></div></div>'
+       '<div class="stat"><div class="lab">세계 순위</div><div class="val" id="rank" style="font-size:24px">--</div><div class="unit" id="ranku"></div></div></div>'
+       '<h3 style="margin:18px 0 2px;font-size:14px">📊 주요국 비교</h3>'
        '<div class="chartbox"><canvas id="ch" height="150"></canvas></div>'
-       '<ul class="list" id="list"></ul>'
        '<div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul>'
-       '<li>1인당 CO₂ 배출이 큰 나라들은 어떤 공통점이 있을까요?</li>'
-       '<li>우리나라의 재생에너지 비중은 다른 나라와 비교해 높은 편인가요?</li>'
-       '<li>두 지표(CO₂ vs 재생에너지)는 서로 어떤 관계가 있을까요?</li>'
+       '<li>지도에서 색이 진한(값이 큰) 나라들은 주로 어느 대륙에 있나요? 어떤 공통점이 있을까요?</li>'
+       '<li>우리나라의 세계 순위는 몇 위인가요? 생각보다 높나요, 낮나요?</li>'
+       '<li>지표를 CO₂ ↔ 재생에너지로 바꿔 보세요. 두 지도의 색 분포는 반대인가요, 비슷한가요?</li>'
        '</ul></div>',
-  js='''let chart;
-const CO=[['KR','한국'],['JP','일본'],['US','미국'],['DE','독일'],['FR','프랑스'],['CN','중국'],['IN','인도'],['BR','브라질']];
+  js='''let chart, META=null;
+const MAJ=[['KOR','한국'],['JPN','일본'],['USA','미국'],['DEU','독일'],['FRA','프랑스'],['CHN','중국'],['IND','인도'],['BRA','브라질']];
+async function getMeta(){
+  if(META) return META;
+  const d=await (await fetch('https://api.worldbank.org/v2/country?format=json&per_page=400')).json();
+  META={}; (d[1]||[]).forEach(c=>{ if(c.region && c.region.value!=='Aggregates') META[c.id]={name:c.name}; });
+  return META;
+}
 async function run(){
-  const [code,label]=document.getElementById('ind').value.split('|');
+  const [code,label,scale]=document.getElementById('ind').value.split('|');
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const ids=CO.map(c=>c[0]).join(';');
-    const u=`https://api.worldbank.org/v2/country/${ids}/indicator/${code}?format=json&date=2015:2023&per_page=600`;
+    const meta=await getMeta();
+    const u=`https://api.worldbank.org/v2/country/all/indicator/${code}?format=json&date=2018:2023&per_page=2000`;
     const arr=(await (await fetch(u)).json())[1]||[];
-    const by={};
-    arr.forEach(r=>{ if(r.value==null) return; const id=r.country.id; if(!(id in by)||r.date>by[id].y) by[id]={v:r.value,y:r.date}; });
-    const rows=CO.map(([id,ko])=>({ko,...(by[id]||{v:null})})).filter(r=>r.v!=null).sort((a,b)=>b.v-a.v);
-    s.textContent='✓ '+label+' · 최근값';
+    const latest={};
+    arr.forEach(r=>{ const k=r.countryiso3code; if(r.value==null||!k||!(k in meta))return;
+      if(!(k in latest)||r.date>latest[k].y) latest[k]={v:r.value,y:r.date}; });
+    const locs=Object.keys(latest), z=locs.map(k=>latest[k].v),
+          text=locs.map(k=>`${meta[k].name}: ${latest[k].v.toFixed(1)} (${latest[k].y})`);
+    s.textContent='✓ '+label+' · 최근 가능 연도';
+    // 세계 지도(choropleth)
+    Plotly.newPlot('wmap',[{type:'choropleth',locationmode:'ISO-3',locations:locs,z,text,
+      hoverinfo:'text',colorscale:scale,reversescale:false,
+      marker:{line:{color:'#ffffff',width:0.4}},colorbar:{thickness:12,len:0.9}}],
+      {geo:{showframe:false,showcoastlines:false,projection:{type:'natural earth'},bgcolor:'rgba(0,0,0,0)'},
+       margin:{t:6,b:6,l:0,r:0},paper_bgcolor:'rgba(0,0,0,0)'},
+      {displayModeBar:false,responsive:true});
+    // 한국 값·순위
+    const kr=latest['KOR'];
+    const sorted=locs.map(k=>latest[k].v).sort((a,b)=>b-a);
+    document.getElementById('kr').textContent = kr? kr.v.toFixed(1):'-';
+    document.getElementById('kru').textContent = kr? label.replace(/.*\\(|\\)/g,''): '';
+    document.getElementById('rank').textContent = kr? (sorted.indexOf(kr.v)+1)+'위':'-';
+    document.getElementById('ranku').textContent = `전체 ${locs.length}개국 중 (${kr?kr.y:''})`;
+    // 주요국 비교 막대
+    const rows=MAJ.map(([id,ko])=>({ko,v:latest[id]?latest[id].v:null})).filter(r=>r.v!=null).sort((a,b)=>b.v-a.v);
     if(chart) chart.destroy();
     chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:rows.map(r=>r.ko),
       datasets:[{label,data:rows.map(r=>r.v),backgroundColor:rows.map(r=>r.ko==='한국'?'#E0568A':'#5B6CF0')}]},
       options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}}}});
-    document.getElementById('list').innerHTML=rows.map(r=>
-      `<li><span class="badge" style="background:${r.ko==='한국'?'#E0568A':'#5B6CF0'}">${r.v.toFixed(1)}</span>
-       <span>${r.ko}<span class="meta"> · ${r.y}년</span></span></li>`).join('');
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 run();''')
