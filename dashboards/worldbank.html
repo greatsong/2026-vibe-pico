@@ -70,17 +70,17 @@ async function run(){
     const meta=await getMeta();
     const u=`https://api.worldbank.org/v2/country/all/indicator/${code}?format=json&date=2018:2023&per_page=2000`;
     const arr=(await (await fetch(u)).json())[1]||[];
-    // 나라마다 최신 연도가 다르면 비교가 불공정 → 자료가 충분히 채워진 '최신 한 해'로 통일
-    const cnt={};
-    arr.forEach(r=>{ if(r.value!=null&&r.countryiso3code&&meta[r.countryiso3code]) cnt[r.date]=(cnt[r.date]||0)+1; });
-    const yrs=Object.keys(cnt); const maxc=Math.max(...yrs.map(y=>cnt[y]));
-    const refYear=yrs.filter(y=>cnt[y]>=0.7*maxc).sort().pop();
+    // 기준 연도 = '한국(KOR)이 가진 가장 최근 연도'. 그 해에 자료 있는 나라만 같은 해로 비교
+    // (전체 국가 수가 적더라도 한국의 최신값을 우선해서 보여줌)
+    const krYears=arr.filter(r=>r.countryiso3code==='KOR'&&r.value!=null).map(r=>r.date).sort();
+    const anyYears=[...new Set(arr.filter(r=>r.value!=null&&r.countryiso3code&&meta[r.countryiso3code]).map(r=>r.date))].sort();
+    const refYear=(krYears.length?krYears:anyYears).pop();
     const latest={};
     arr.forEach(r=>{ const k=r.countryiso3code; if(r.value==null||!k||!(k in meta)||r.date!==refYear)return; latest[k]={v:r.value,y:r.date}; });
     const locs=Object.keys(latest), z=locs.map(k=>latest[k].v),
           text=locs.map(k=>`${meta[k].name}: ${latest[k].v.toFixed(1)}`);
-    s.textContent='✓ '+label+' · '+refYear+'년 기준(전 세계 같은 해로 비교)';
-    document.getElementById('yr').textContent=refYear+'년 기준';
+    s.textContent='✓ '+label+' · '+refYear+'년(한국 최신 자료) · '+locs.length+'개국 같은 해 비교';
+    document.getElementById('yr').textContent=refYear+'년 기준(한국 최신 자료)';
     // 세계 지도(choropleth)
     const krv = latest['KOR'] ? latest['KOR'].v.toFixed(1) : '-';
     Plotly.newPlot('wmap',[
