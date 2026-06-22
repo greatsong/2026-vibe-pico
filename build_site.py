@@ -45,21 +45,57 @@ FW_CARD = f'''<div class="fw-card">
   <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
 </div>'''
 
-# 하드웨어 연결 다이어그램
-HW_FIGURE = '''<div class="figure"><pre class="diagram">
-        USB 케이블                  그로브 케이블
-  ┌──────────┐                ┌─────────────────┐
-  │   PC /   │                │   D16 포트  ●────┼──▶  🟦 WS2813 LED 바 (10개)
-  │  노트북  │◀── USB ──▶┌──┴──────┐          │
-  └──────────┘           │  피코    │  그로브   │
-                         │ 2 WH +   │   베이스  │
-                         │ 그로브   │   쉴드    │
-                         │ 쉴드     │           │
-                         └──┬───────┘   A0 포트 ●────┼──▶  🟫 MQ-2 가스센서
-                            └─────────────────┘
-   LED  → 그로브 <b>D16</b> 포트 (= GP16, 디지털)
-   MQ-2 → 그로브 <b>A0</b>  포트 (= GP26, 아날로그 ADC0)
-</pre></div>'''
+# 하드웨어 연결 다이어그램 (SVG)
+HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코와 그로브 쉴드, LED, 가스센서 연결도">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#8a8780"/>
+    </marker>
+  </defs>
+  <!-- 연결선 -->
+  <line x1="146" y1="112" x2="236" y2="112" stroke="#8a8780" stroke-width="2" marker-end="url(#ah)" marker-start="url(#ah)"/>
+  <text x="191" y="103" text-anchor="middle" font-size="12" fill="#7b7872">USB</text>
+  <line x1="450" y1="95"  x2="538" y2="95"  stroke="#8a8780" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="450" y1="166" x2="538" y2="166" stroke="#8a8780" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="494" y="86"  text-anchor="middle" font-size="11" fill="#7b7872">그로브 케이블</text>
+
+  <!-- PC -->
+  <rect x="16" y="70" width="130" height="84" rx="12" fill="#f7f6f3" stroke="#d6d5d2"/>
+  <rect x="40" y="86" width="82" height="46" rx="4" fill="#fff" stroke="#c9c8c4"/>
+  <rect x="70" y="132" width="22" height="8" fill="#d6d5d2"/>
+  <text x="81" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#37352f">PC / 노트북</text>
+
+  <!-- 피코 + 쉴드 -->
+  <rect x="240" y="40" width="210" height="160" rx="14" fill="#eef0ff" stroke="#b9c0f5"/>
+  <text x="345" y="74"  text-anchor="middle" font-size="11.5" fill="#5b6cf0">Raspberry Pi</text>
+  <text x="345" y="96"  text-anchor="middle" font-size="16" font-weight="800" fill="#37352f">Pico 2 WH</text>
+  <text x="345" y="120" text-anchor="middle" font-size="12" fill="#7b7872">+ 그로브 베이스 쉴드</text>
+  <!-- 포트 -->
+  <text x="404" y="99"  text-anchor="end" font-size="12" font-weight="700" fill="#1f9d63">D16</text>
+  <circle cx="450" cy="95" r="6" fill="#1f9d63"/>
+  <text x="404" y="170" text-anchor="end" font-size="12" font-weight="700" fill="#d4762a">A0</text>
+  <circle cx="450" cy="166" r="6" fill="#d4762a"/>
+
+  <!-- LED 바 -->
+  <rect x="540" y="68" width="204" height="56" rx="12" fill="#fff" stroke="#cdd6f7"/>
+  <g>
+    <rect x="556" y="84" width="11" height="24" rx="2" fill="#3b82f6"/>
+    <rect x="569" y="84" width="11" height="24" rx="2" fill="#22c55e"/>
+    <rect x="582" y="84" width="11" height="24" rx="2" fill="#f59e0b"/>
+  </g>
+  <text x="602" y="91" font-size="12.5" font-weight="700" fill="#37352f">WS2813 LED 바 · 10개</text>
+  <text x="602" y="109" font-size="10.5" fill="#7b7872">그로브 D16 = GP16 · 디지털</text>
+
+  <!-- MQ-2 -->
+  <rect x="540" y="139" width="204" height="56" rx="12" fill="#fff" stroke="#f0dcc4"/>
+  <circle cx="568" cy="167" r="11" fill="#b45309"/>
+  <circle cx="568" cy="167" r="5" fill="#e8a45c"/>
+  <text x="588" y="162" font-size="12.5" font-weight="700" fill="#37352f">MQ-2 가스센서</text>
+  <text x="588" y="180" font-size="10.5" fill="#7b7872">그로브 A0 = GP26 · ADC0</text>
+
+  <!-- 범례 -->
+  <text x="16" y="232" font-size="11" fill="#7b7872">● 그로브 포트 &#160;·&#160; LED → D16(GP16) &#160;·&#160; MQ-2 → A0(GP26)</text>
+</svg></div>'''
 
 # ===================================================================
 #  콘텐츠 정의
@@ -599,6 +635,7 @@ a{color:inherit;text-decoration:none;}
 .figure{margin:14px 0;max-width:760px;}
 .diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
   border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
+.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--font);}
 /* 코드/프롬프트 블록 */
 .block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
 .block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
