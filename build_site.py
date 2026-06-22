@@ -204,7 +204,7 @@ CHAPTERS = [
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
       {"type": "code", "label": "Step 1 · 와이파이 스캔", "lang": "python", "file": "snippets/ch1_scan.py"},
-      {"type": "step_head", "html": "<b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b>라는 별도 파일로 저장합니다. (피코에 새 파일로 저장!) 이 파일은 1·3·4장에서 모두 함께 씁니다."},
+      {"type": "step_head", "html": "<b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b>라는 별도 파일로 저장합니다. (피코에 새 파일로 저장!) 와이파이를 쓰는 코드는 모두 이 파일을 함께 씁니다."},
       {"type": "code", "label": "Step 2 · wifi_config.py (따로 저장)", "lang": "python", "file": "snippets/wifi_config.py"},
       {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결하고 신호 세기를 1초마다 출력합니다. (손코딩으로 원리 확인)"},
       {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
@@ -299,6 +299,8 @@ CHAPTERS = [
       {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
       {"type": "callout", "kind": "info", "title": "설치 없이 바로 됩니다",
        "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
+      {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
+       "html": "이 장의 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다. 이름·비밀번호를 정확히.)"},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)"},
@@ -309,9 +311,9 @@ CHAPTERS = [
       {"type": "callout", "kind": "tip", "title": "더 짧게 쓰고 싶다면 — requests 버전 (설치 1회)",
        "html": "위 무설치 버전이 기본이에요. 만약 <code>requests</code>를 설치할 수 있는 환경이라면, HTTP 부분을 훨씬 짧게 쓸 수 있습니다. Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 한 번 설치(피코가 와이파이 연결된 상태)한 뒤 아래 버전을 쓰세요. 동작은 똑같습니다."},
       {"type": "code", "label": "대안 · 날씨 시계 (requests 설치 버전)", "lang": "python", "file": "snippets/ch3_full_requests.py"},
-      {"type": "step_head", "html": "<b>Step 4.</b> 이제 LED만으로 부족하면, AI에게 부탁해 <b>웹 화면</b>까지 덧붙입니다. 1장에서 익힌 ‘피코=서버, 브라우저=화면’ 구조를 그대로 써 달라고 하면 돼요."},
-      {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요", "text":
-"지금 피코가 Open-Meteo에서 오늘 강수확률을 받아 10개 WS2813 LED(Pin 16, timing=(280,515,515,745))에 6시~23시 색으로 표시하고 있어.\n여기에 1장에서 쓴 방식(소켓 웹서버 + /data JSON + Chart.js)으로 웹 대시보드를 더해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 줘.\n- LED와 웹이 같은 데이터로 갱신되고, 날씨는 10분마다만 새로 받아와 줘(피코가 버겁지 않게).\n받은 코드가 내 LAT/LON과 timing 설정을 그대로 쓰는지 꼭 확인할게."},
+      {"type": "step_head", "html": "<b>Step 4.</b> 직접 만들어 보고 싶다면, 아래 프롬프트를 <b>그대로 복사해 AI 도구(Claude 등)에 붙여넣으세요.</b> 교재를 모르는 AI도 바로 작업할 수 있게, 필요한 정보가 모두 들어 있습니다."},
+      {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] Open-Meteo API에서 오늘의 시간별 강수확률을 받아, WS2813 LED 10개에 6시~23시를 색으로 표시하고 있어. LED는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[추가할 기능] 여기에 웹 대시보드를 더해 줘:\n- 피코가 직접 소켓 기반 웹서버가 되어 80번 포트에서 응답하게 해 줘(외부 라이브러리 없이).\n- 브라우저가 /data 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 주고, 색의 의미(범례)도 함께 표시해 줘.\n- LED와 웹이 같은 데이터를 쓰고, 날씨 데이터는 10분에 한 번만 새로 받아와 줘(피코가 버겁지 않게).\n[조건] 복사해서 바로 실행되는 완결형 main.py로 주고, 위도/경도(LAT/LON)와 timing 값은 내가 바꿔 쓸 수 있게 코드 맨 위에 둬 줘."},
       {"type": "callout", "kind": "tip", "title": "바이브코딩의 핵심",
        "html": "AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다."},
       {"type": "step_head", "html": "<b>Step 5.</b> 직접 부탁하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)"},
@@ -346,7 +348,7 @@ CHAPTERS = [
     "이동 평균으로 값을 안정시킬 수 있다",
     "임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다",
   ],
-  "why": "공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 1장의 웹서버 구조에 ‘판단(임계값)’과 ‘예쁜 화면’이 더해진, 가장 완성도 높은 대시보드입니다.",
+  "why": "공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 센서값을 ‘판단(임계값)’하고 피코가 웹서버가 되어 ‘예쁜 화면’으로 보여 주는, 가장 완성도 높은 대시보드입니다.",
   "sections": [
     {"title": "핵심 개념", "items": [
       {"type": "concept", "items": [
@@ -357,6 +359,8 @@ CHAPTERS = [
       ]},
       {"type": "callout", "kind": "info", "title": "센서는 예열이 필요해요",
        "html": "MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요."},
+      {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
+       "html": "대시보드 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다.)"},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)"},
@@ -372,7 +376,7 @@ CHAPTERS = [
       {"type": "mistakes", "items": [
         {"sym": "값이 늘 0이거나 65535에 붙어 있음", "cause": "센서를 A0가 아닌 다른 포트에 꽂음.", "fix": "그로브 <b>A0(=GP26)</b>에 꽂았는지 확인하세요. D포트에 꽂으면 아날로그 값을 못 읽습니다."},
         {"sym": "켜자마자 ‘위험’으로 뜸", "cause": "예열 전이라 값이 큼.", "fix": "1~2분 기다리세요. 그래도 항상 위험이면 임계값(SAFE/WARNING/DANGER 숫자)을 우리 환경에 맞게 올리세요."},
-        {"sym": "ImportError: wifi_config", "cause": "wifi_config.py가 피코에 없음.", "fix": "1장 Step 2의 wifi_config.py를 피코에 저장하세요. 이 코드는 <code>WIFI_SSID/WIFI_PASSWORD</code> 이름을 씁니다."},
+        {"sym": "ImportError: wifi_config", "cause": "<code>wifi_config.py</code>가 피코에 없음.", "fix": "main.py와 같은 위치에 <code>wifi_config.py</code> 파일을 새로 만들어 두 줄만 적으세요. <code>WIFI_SSID = \"와이파이이름\"</code> / <code>WIFI_PASSWORD = \"비밀번호\"</code> (위 핵심 개념의 안내 참고)."},
       ]},
     ]},
     {"title": "스스로 점검하기", "items": [
