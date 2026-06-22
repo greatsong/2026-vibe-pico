@@ -35,7 +35,7 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>지표</label><select id="ind" onchange="run()"><option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)|Reds">1인당 CO₂ 배출량 (톤)</option><option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)|Greens">재생에너지 비중 (%)</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div id="wmap" style="height:400px;border-radius:14px;overflow:hidden;border:1px solid var(--line);"></div><div style="font-size:11.5px;color:#7a7f95;margin:8px 2px;text-align:center"><b id="yr">--</b> · 색이 진할수록 값이 큰 나라 · 나라에 마우스를 올리면 값이 보여요</div><div class="grid"><div class="stat" style="border-color:#E0568A"><div class="lab">🇰🇷 한국 값</div><div class="val" id="kr">--</div><div class="unit" id="kru"></div></div><div class="stat"><div class="lab">세계 순위</div><div class="val" id="rank" style="font-size:24px">--</div><div class="unit" id="ranku"></div></div></div><h3 style="margin:18px 0 2px;font-size:14px">📊 주요국 비교</h3><div class="chartbox"><canvas id="ch" height="150"></canvas></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>지도에서 색이 진한(값이 큰) 나라들은 주로 어느 대륙에 있나요? 어떤 공통점이 있을까요?</li><li>우리나라의 세계 순위는 몇 위인가요? 생각보다 높나요, 낮나요?</li><li>지표를 CO₂ ↔ 재생에너지로 바꿔 보세요. 두 지도의 색 분포는 반대인가요, 비슷한가요?</li></ul></div>
+    <div class="controls"><label>지표</label><select id="ind" onchange="run()"><option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)|Reds">1인당 CO₂ 배출량 (톤)</option><option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)|Greens">재생에너지 비중 (%)</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div id="wmap" style="height:400px;border-radius:14px;overflow:hidden;border:1px solid var(--line);"></div><div style="font-size:11.5px;color:#7a7f95;margin:8px 2px;text-align:center"><b id="yr">--</b> · 색이 진할수록 값이 큰 나라 · 나라에 마우스를 올리면 값이 보여요</div><div class="grid"><div class="stat" style="border-color:#E0568A"><div class="lab">🇰🇷 한국 값</div><div class="val" id="kr">--</div><div class="unit" id="kru"></div></div><div class="stat"><div class="lab">세계 중앙값</div><div class="val" id="med" style="font-size:24px">--</div><div class="unit" id="medu"></div></div><div class="stat"><div class="lab">한국 순위 (값 큰 순)</div><div class="val" id="rank" style="font-size:22px">--</div><div class="unit" id="ranku"></div></div></div><h3 style="margin:18px 0 2px;font-size:14px">📊 주요국 비교</h3><div class="chartbox"><canvas id="ch" height="150"></canvas></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>지도에서 색이 진한(값이 큰) 나라들은 주로 어느 대륙에 있나요? 어떤 공통점이 있을까요?</li><li>우리나라의 세계 순위는 몇 위인가요? 생각보다 높나요, 낮나요?</li><li>지표를 CO₂ ↔ 재생에너지로 바꿔 보세요. 두 지도의 색 분포는 반대인가요, 비슷한가요?</li></ul></div>
   </section>
 
   <section class="card apply">
@@ -83,13 +83,21 @@ async function run(){
       {geo:{showframe:false,showcoastlines:false,projection:{type:'natural earth'},bgcolor:'rgba(0,0,0,0)'},
        margin:{t:6,b:6,l:0,r:0},paper_bgcolor:'rgba(0,0,0,0)'},
       {displayModeBar:false,responsive:true});
-    // 한국 값·순위
+    // 한국 값 · 세계 중앙값 · 순위(상/하위)
     const kr=latest['KOR'];
-    const sorted=locs.map(k=>latest[k].v).sort((a,b)=>b-a);
+    const vals=locs.map(k=>latest[k].v);
+    const desc=[...vals].sort((a,b)=>b-a);
+    const med=[...vals].sort((a,b)=>a-b)[Math.floor(vals.length/2)];
+    const unit=label.replace(/.*\(|\)/g,'');
     document.getElementById('kr').textContent = kr? kr.v.toFixed(1):'-';
-    document.getElementById('kru').textContent = kr? label.replace(/.*\(|\)/g,''): '';
-    document.getElementById('rank').textContent = kr? (sorted.indexOf(kr.v)+1)+'위':'-';
-    document.getElementById('ranku').textContent = `전체 ${locs.length}개국 중 (${kr?kr.y:''})`;
+    document.getElementById('kru').textContent = unit;
+    document.getElementById('med').textContent = med.toFixed(1);
+    document.getElementById('medu').textContent = unit;
+    if(kr){ const rank=desc.indexOf(kr.v)+1;
+      const pos = rank<=vals.length*0.25?'상위권 🔺' : rank>=vals.length*0.75?'하위권 🔻' : '중간권';
+      document.getElementById('rank').textContent = rank+'위';
+      document.getElementById('ranku').textContent = `전체 ${vals.length}개국 중 · ${pos}`;
+    } else { document.getElementById('rank').textContent='-'; document.getElementById('ranku').textContent=''; }
     // 주요국 비교 막대
     const rows=MAJ.map(([id,ko])=>({ko,v:latest[id]?latest[id].v:null})).filter(r=>r.v!=null).sort((a,b)=>b.v-a.v);
     if(chart) chart.destroy();
