@@ -27,11 +27,13 @@
     <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=…</code><br><code>api.nasa.gov/neo/rest/v1/feed?start_date=…&amp;end_date=…&amp;api_key=…</code></td></tr>
     <tr><td class="k">확장</td><td>같은 키로 지구사진(EPIC), 화성 날씨 등 다른 API도 호출 가능</td></tr>
   </table>
+    <a class="srclink" href="https://api.nasa.gov" target="_blank" rel="noopener">🔗 원 데이터 출처: NASA Open APIs ↗</a>
+    <div class="refs"><span class="refs-t">📺 더 보기</span><a class="refchip" href="https://apod.nasa.gov/apod/" target="_blank" rel="noopener">오늘의 천문사진 APOD</a><a class="refchip" href="https://api.nasa.gov/" target="_blank" rel="noopener">소행성 NeoWs 안내</a></div>
   </section>
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:300px"><button onclick="run()">불러오기</button></div><h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13px;color:#44464f;margin-top:10px;line-height:1.8"></p><h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3><div id="nstatus" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div><ul class="list" id="nlist"></ul>
+    <div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:300px"><button onclick="run()">불러오기</button></div><h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13px;color:#44464f;margin-top:10px;line-height:1.8"></p><h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3><div id="nstatus" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div><div id="astro"></div><div style="font-size:11px;color:#8a8fa6;margin:2px 2px 10px;text-align:center">⬤ 크기=지름 · 색=위험(빨강)/안전(파랑) · 가로축=지구로부터 거리(달까지 거리의 배수, 로그) · 점에 마우스를 올리면 상세</div><ul class="list" id="nlist"></ul>
   </section>
 
   <section class="card apply">
@@ -79,6 +81,7 @@ async function loadNeo(key){
       haz:a.is_potentially_hazardous_asteroid
     })).sort((x,y)=>x.km-y.km);
     s.textContent='✓ '+t+' 기준';
+    drawAstro(arr);
     document.getElementById('nlist').innerHTML=arr.map(a=>{
       const moon=(a.km/MOON).toFixed(1);
       const c=a.haz?'#ef4444':'#64748b';
@@ -86,6 +89,31 @@ async function loadNeo(key){
         <span>${a.name}<br><span class="meta">지름 약 ${a.dia.toLocaleString()}m · 최근접 ${Math.round(a.km).toLocaleString()}km(달까지 거리의 ${moon}배) · ${a.vel.toLocaleString()}km/h</span></span></li>`;
     }).join('') || '<li class="meta">오늘 접근 기록이 없어요.</li>';
   }catch(e){ s.className='status err'; s.textContent='소행성 데이터를 못 받았어요: '+e.message; }
+}
+function drawAstro(arr){
+  const XMIN=110, XMAX=688, CY=120, EX=54;
+  const xOf=ld=>{ ld=Math.max(1,Math.min(220,ld)); return XMIN+(Math.log10(ld)/Math.log10(220))*(XMAX-XMIN); };
+  const n=arr.length;
+  let g='<svg class="astro" viewBox="0 0 720 244" xmlns="http://www.w3.org/2000/svg">';
+  g+='<defs><radialGradient id="eg" cx="34%" cy="30%"><stop offset="0" stop-color="#8fb8ff"/><stop offset="1" stop-color="#1f4fc0"/></radialGradient></defs>';
+  for(let k=0;k<46;k++){ g+=`<circle cx="${(k*149)%720}" cy="${(k*83)%244}" r="${k%6?0.8:1.5}" fill="#fff" opacity="0.16"/>`; }
+  g+=`<line x1="${EX}" y1="${CY}" x2="${XMAX}" y2="${CY}" stroke="#2a3553" stroke-width="1" stroke-dasharray="3 6"/>`;
+  [1,10,100].forEach(v=>{ const x=xOf(v); g+=`<line x1="${x}" y1="30" x2="${x}" y2="208" stroke="#1d2742" stroke-width="1"/><text x="${x}" y="226" fill="#5b678c" font-size="10" text-anchor="middle">달거리 ${v}×</text>`; });
+  g+=`<circle class="earthpulse" cx="${EX}" cy="${CY}" r="30" fill="#3b82f6" opacity="0.16"/><circle cx="${EX}" cy="${CY}" r="22" fill="url(#eg)"/><text x="${EX}" y="${CY+40}" fill="#9fb3e8" font-size="11" text-anchor="middle">지구</text>`;
+  const mx=xOf(1); g+=`<circle cx="${mx}" cy="${CY}" r="6" fill="#cfd4e2"/><text x="${mx}" y="${CY-13}" fill="#8b93ab" font-size="10" text-anchor="middle">달</text>`;
+  arr.forEach((a,i)=>{
+    const ld=a.km/MOON, x=xOf(ld);
+    const y = n>1 ? 56+(i*(126/(n-1))) : CY;
+    const r = Math.max(5, Math.min(18, 5+a.dia/28));
+    const c = a.haz ? '#ef4444' : '#9aa7d6';
+    g+=`<g transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><g class="ast" style="animation-delay:${(i*0.3).toFixed(2)}s"><g class="ast-pop" style="animation-delay:${(i*0.09).toFixed(2)}s">`
+      +`<title>${a.name} · 지름 ${a.dia.toLocaleString()}m · ${Math.round(a.km).toLocaleString()}km(달거리 ${ld.toFixed(1)}배) · ${a.vel.toLocaleString()}km/h${a.haz?' · ⚠️위험':''}</title>`
+      +`<circle r="${(r+7).toFixed(1)}" fill="${c}" opacity="0.16"/><circle r="${r.toFixed(1)}" fill="${c}"/>`
+      +(a.dia>=140?`<text y="3.4" text-anchor="middle" font-size="9" font-weight="800" fill="#0b1224">${a.dia}m</text>`:'')
+      +`</g></g></g>`;
+  });
+  g+='</svg>';
+  document.getElementById('astro').innerHTML=g;
 }
 function run(){ const key=document.getElementById('key').value.trim()||'DEMO_KEY'; loadApod(key); loadNeo(key); }
 run();

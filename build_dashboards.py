@@ -12,7 +12,14 @@ os.makedirs(OUT, exist_ok=True)
 
 CHART = '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>'
 
-def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False, lead=""):
+def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False, lead="",
+         src_name="", src_url="", refs=()):
+    src = (f'<a class="srclink" href="{src_url}" target="_blank" rel="noopener">🔗 원 데이터 출처: {src_name} ↗</a>'
+           if src_url else "")
+    refhtml = ""
+    if refs:
+        chips = "".join(f'<a class="refchip" href="{u}" target="_blank" rel="noopener">{l}</a>' for l, u in refs)
+        refhtml = f'<div class="refs"><span class="refs-t">📺 더 보기</span>{chips}</div>'
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -37,6 +44,8 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
     <h2>📋 어떤 데이터인가요?</h2>
     {f'<p class="lead">{lead}</p>' if lead else ""}
     {info}
+    {src}
+    {refhtml}
   </section>
 
   <section class="card live">
@@ -92,6 +101,25 @@ a{text-decoration:none;color:inherit;}
 .info td.k{width:108px;color:var(--muted);font-weight:600;}
 .info code,.live code{font-family:var(--mono);font-size:12px;background:#f3f4fa;border:1px solid var(--line);
   border-radius:5px;padding:1px 6px;word-break:break-all;}
+.srclink{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;color:#3b47c2;
+  background:#eef0ff;border:1px solid #d7defb;border-radius:10px;padding:8px 14px;}
+.srclink:hover{background:#e3e7ff;}
+.refs{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.refs-t{font-size:12px;font-weight:700;color:var(--muted);}
+.refchip{font-size:12.5px;font-weight:600;color:#b83d72;background:#fff0f6;border:1px solid #f6d3e3;
+  border-radius:999px;padding:6px 12px;}
+.refchip:hover{background:#ffe3ef;}
+/* 소행성 애니메이션 시각화 */
+.astro{width:100%;height:auto;background:radial-gradient(120% 140% at 12% 50%,#0b1224,#070a16);
+  border:1px solid #1d2540;border-radius:16px;margin:6px 0 6px;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes twinkle{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.ast{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.ast .rock{transform-box:fill-box;transform-origin:center;}
+.ast-pop{animation:pop .5s ease-out both;transform-box:fill-box;transform-origin:center;}
+.earthpulse{animation:twinkle 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
 .apply ul{margin:0;padding-left:18px;}
 .apply li{font-size:14px;margin:7px 0;}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
@@ -139,6 +167,8 @@ SEOUL = ('<div class="controls">'
 # 1) 날씨 (Open-Meteo)
 page("weather", "🌤️", "오늘의 날씨", "지구과학·환경", "🇰🇷 국내 OK · 🌍 전 세계",
   lead="독일의 비영리 팀이 전 세계 여러 나라 기상청의 <b>슈퍼컴퓨터 예보</b>를 모아 무료로 공개해요. 위도·경도만 찍으면 <b>지구 어디든</b> 시간별 기온·강수확률·바람을 돌려줍니다. 회원가입도, API 키도 필요 없어요.",
+  src_name="Open-Meteo", src_url="https://open-meteo.com",
+  refs=[("Open-Meteo 공식 문서", "https://open-meteo.com/en/docs")],
   info='''<table>
     <tr><td class="k">무엇</td><td>전 세계 시간별 기온·강수확률·바람 등 (Open-Meteo)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료 · 교육용 자유 사용</td></tr>
@@ -184,6 +214,8 @@ run();''')
 # 2) 대기질
 page("airquality", "🌫️", "미세먼지 (대기질)", "환경", "🌍 전 지구(국내 포함)",
   lead="같은 Open-Meteo가 유럽 <b>CAMS 대기질 모델</b>로 전 지구의 미세먼지(PM2.5·PM10)·오존을 시간별로 알려줘요. 멀리 중국발 황사가 우리 동네로 오는 흐름까지 숫자로 볼 수 있죠.",
+  src_name="Open-Meteo Air Quality", src_url="https://open-meteo.com/en/docs/air-quality-api",
+  refs=[("에어코리아(국내 공식)", "https://www.airkorea.or.kr")],
   info='''<table>
     <tr><td class="k">무엇</td><td>PM2.5·PM10·오존 등 대기질 (Open-Meteo Air Quality)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -224,6 +256,8 @@ run();''')
 # 3) 지진 (USGS)
 page("earthquake", "🌍", "전 세계 지진", "지구과학", "🌎 해외 위주(국내 지진은 드묾)",
   lead="미국 <b>지질조사국(USGS)</b>이 전 세계 지진계 네트워크로 잡은 지진을 <b>1분 단위</b>로 갱신해 공개합니다. 지금 이 순간 지구 어딘가에서 흔들린 땅을 실시간으로 만나 보세요.",
+  src_name="USGS Earthquake Hazards Program", src_url="https://earthquake.usgs.gov",
+  refs=[("USGS 실시간 지진 지도", "https://earthquake.usgs.gov/earthquakes/map/"), ("기상청 지진정보(국내)", "https://www.weather.go.kr/w/eqk-vol/search/korea.do")],
   info='''<table>
     <tr><td class="k">무엇</td><td>실시간 지진 목록(규모·위치·깊이·시각), GeoJSON (USGS)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -268,6 +302,8 @@ run();''')
 # 4) ISS
 page("iss", "🛰️", "국제우주정거장 ISS", "천문·물리", "🌍 전 지구(국내 상공 포함)",
   lead="축구장만 한 <b>국제우주정거장(ISS)</b>이 지금 지구 위 약 <b>420km</b>에서 <b>시속 27,000km</b>로 날고 있어요. 약 90분에 지구를 한 바퀴! 그 위치를 초 단위로 알려주는 서비스입니다.",
+  src_name="Where the ISS at?", src_url="https://wheretheiss.at",
+  refs=[("NASA Spot the Station", "https://spotthestation.nasa.gov"), ("ISS 실시간 영상(NASA)", "https://www.nasa.gov/live/")],
   info='''<table>
     <tr><td class="k">무엇</td><td>ISS의 실시간 위·경도·고도·속도 (wheretheiss.at)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -310,6 +346,7 @@ tick(); setInterval(tick,5000);''')
 # 5) 일출·일몰
 page("sunrise", "🌅", "일출·일몰·낮 길이", "천문·지구과학", "🇰🇷 국내 OK",
   lead="전 세계 <b>어떤 좌표든</b> 오늘 해가 뜨고 지는 시각을 천문 계산으로 알려줘요. 위도를 북극 가까이 바꿔 보면 해가 안 지는 <b>백야</b>도 데이터로 확인할 수 있습니다.",
+  src_name="Sunrise-Sunset.org", src_url="https://sunrise-sunset.org",
   info='''<table>
     <tr><td class="k">무엇</td><td>일출·일몰·남중·낮 길이·박명 시각 (sunrise-sunset.org)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -345,6 +382,8 @@ run();''')
 # 6) 우주날씨 Kp
 page("spaceweather", "🌞", "우주날씨 (Kp 지수)", "천문·지구과학", "🌍 전 지구 공통",
   lead="미국 해양대기청(NOAA) <b>우주기상예보센터(SWPC)</b>가 태양 폭풍이 지구 자기장을 흔드는 정도(<b>Kp 지수</b>)를 3시간마다 발표해요. 뉴스에 나오는 ‘오로라 예보’가 바로 이 데이터랍니다.",
+  src_name="NOAA 우주기상예보센터(SWPC)", src_url="https://www.swpc.noaa.gov",
+  refs=[("NOAA 오로라 예보", "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"), ("SpaceWeatherLive(한국어)", "https://www.spaceweatherlive.com/ko.html")],
   info='''<table>
     <tr><td class="k">무엇</td><td>지자기 폭풍 정도 Kp 지수(0~9)·태양 활동 (NOAA SWPC)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -383,6 +422,7 @@ run();''')
 # 7) PubChem 화학
 page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무관",
   lead="미국 국립보건원(NIH)이 운영하는 세계 최대 화학 백과 <b>PubChem</b>. <b>1억 종</b>이 넘는 물질의 이름만 넣으면 분자식·분자량은 물론 <b>구조 그림</b>까지 그려 줍니다.",
+  src_name="PubChem (미국 국립보건원 NIH)", src_url="https://pubchem.ncbi.nlm.nih.gov",
   info='''<table>
     <tr><td class="k">무엇</td><td>물질 이름으로 분자식·분자량·구조 그림 (PubChem)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -417,6 +457,8 @@ run();''')
 # 8) GBIF 생물
 page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK",
   lead="전 세계 박물관·연구자·시민과학자가 모은 생물 관찰 기록 <b>20억 건 이상</b>을 한곳에 모은 <b>GBIF</b>. ‘우리나라에서 까치가 언제·어디서 관찰됐나’ 같은 것도 찾을 수 있어요(한국 약 880만 건).",
+  src_name="GBIF (세계생물다양성정보기구)", src_url="https://www.gbif.org/country/KR/summary",
+  refs=[("국립생물자원관", "https://www.nibr.go.kr")],
   info='''<table>
     <tr><td class="k">무엇</td><td>전 세계 생물 관찰 기록 DB(종·위치·날짜·사진) (GBIF)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -450,6 +492,8 @@ run();''')
 # 9) NASA APOD
 page("nasa", "🔭", "NASA 우주 데이터", "천문", "🌐 국적 무관 · 키 필요",
   lead="<b>NASA</b>의 공개 데이터 두 가지를 함께 봅니다. 1995년부터 <b>매일 한 장씩</b> 올라오는 천문사진(APOD)과, 오늘 <b>지구 가까이 지나가는 소행성</b>(NeoWs) 목록이에요. 같은 API 키 하나로 여러 우주 데이터에 접근할 수 있죠.",
+  src_name="NASA Open APIs", src_url="https://api.nasa.gov",
+  refs=[("오늘의 천문사진 APOD", "https://apod.nasa.gov/apod/"), ("소행성 NeoWs 안내", "https://api.nasa.gov/")],
   info='''<table>
     <tr><td class="k">무엇</td><td>천문사진(APOD) + 근지구 소행성(NeoWs) — NASA Open APIs</td></tr>
     <tr><td class="k">API 키</td><td><b>필요</b> · <b>api.nasa.gov</b>에서 무료 발급(이 페이지엔 키가 들어 있어요)</td></tr>
@@ -470,6 +514,8 @@ page("nasa", "🔭", "NASA 우주 데이터", "천문", "🌐 국적 무관 · �
        '<h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3>'
        '<div id="nstatus" class="status">불러오는 중…</div>'
        '<div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div>'
+       '<div id="astro"></div>'
+       '<div style="font-size:11px;color:#8a8fa6;margin:2px 2px 10px;text-align:center">⬤ 크기=지름 · 색=위험(빨강)/안전(파랑) · 가로축=지구로부터 거리(달까지 거리의 배수, 로그) · 점에 마우스를 올리면 상세</div>'
        '<ul class="list" id="nlist"></ul>',
   js='''const MOON=384400; // 달까지 평균거리(km)
 async function loadApod(key){
@@ -504,6 +550,7 @@ async function loadNeo(key){
       haz:a.is_potentially_hazardous_asteroid
     })).sort((x,y)=>x.km-y.km);
     s.textContent='✓ '+t+' 기준';
+    drawAstro(arr);
     document.getElementById('nlist').innerHTML=arr.map(a=>{
       const moon=(a.km/MOON).toFixed(1);
       const c=a.haz?'#ef4444':'#64748b';
@@ -511,6 +558,31 @@ async function loadNeo(key){
         <span>${a.name}<br><span class="meta">지름 약 ${a.dia.toLocaleString()}m · 최근접 ${Math.round(a.km).toLocaleString()}km(달까지 거리의 ${moon}배) · ${a.vel.toLocaleString()}km/h</span></span></li>`;
     }).join('') || '<li class="meta">오늘 접근 기록이 없어요.</li>';
   }catch(e){ s.className='status err'; s.textContent='소행성 데이터를 못 받았어요: '+e.message; }
+}
+function drawAstro(arr){
+  const XMIN=110, XMAX=688, CY=120, EX=54;
+  const xOf=ld=>{ ld=Math.max(1,Math.min(220,ld)); return XMIN+(Math.log10(ld)/Math.log10(220))*(XMAX-XMIN); };
+  const n=arr.length;
+  let g='<svg class="astro" viewBox="0 0 720 244" xmlns="http://www.w3.org/2000/svg">';
+  g+='<defs><radialGradient id="eg" cx="34%" cy="30%"><stop offset="0" stop-color="#8fb8ff"/><stop offset="1" stop-color="#1f4fc0"/></radialGradient></defs>';
+  for(let k=0;k<46;k++){ g+=`<circle cx="${(k*149)%720}" cy="${(k*83)%244}" r="${k%6?0.8:1.5}" fill="#fff" opacity="0.16"/>`; }
+  g+=`<line x1="${EX}" y1="${CY}" x2="${XMAX}" y2="${CY}" stroke="#2a3553" stroke-width="1" stroke-dasharray="3 6"/>`;
+  [1,10,100].forEach(v=>{ const x=xOf(v); g+=`<line x1="${x}" y1="30" x2="${x}" y2="208" stroke="#1d2742" stroke-width="1"/><text x="${x}" y="226" fill="#5b678c" font-size="10" text-anchor="middle">달거리 ${v}×</text>`; });
+  g+=`<circle class="earthpulse" cx="${EX}" cy="${CY}" r="30" fill="#3b82f6" opacity="0.16"/><circle cx="${EX}" cy="${CY}" r="22" fill="url(#eg)"/><text x="${EX}" y="${CY+40}" fill="#9fb3e8" font-size="11" text-anchor="middle">지구</text>`;
+  const mx=xOf(1); g+=`<circle cx="${mx}" cy="${CY}" r="6" fill="#cfd4e2"/><text x="${mx}" y="${CY-13}" fill="#8b93ab" font-size="10" text-anchor="middle">달</text>`;
+  arr.forEach((a,i)=>{
+    const ld=a.km/MOON, x=xOf(ld);
+    const y = n>1 ? 56+(i*(126/(n-1))) : CY;
+    const r = Math.max(5, Math.min(18, 5+a.dia/28));
+    const c = a.haz ? '#ef4444' : '#9aa7d6';
+    g+=`<g transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><g class="ast" style="animation-delay:${(i*0.3).toFixed(2)}s"><g class="ast-pop" style="animation-delay:${(i*0.09).toFixed(2)}s">`
+      +`<title>${a.name} · 지름 ${a.dia.toLocaleString()}m · ${Math.round(a.km).toLocaleString()}km(달거리 ${ld.toFixed(1)}배) · ${a.vel.toLocaleString()}km/h${a.haz?' · ⚠️위험':''}</title>`
+      +`<circle r="${(r+7).toFixed(1)}" fill="${c}" opacity="0.16"/><circle r="${r.toFixed(1)}" fill="${c}"/>`
+      +(a.dia>=140?`<text y="3.4" text-anchor="middle" font-size="9" font-weight="800" fill="#0b1224">${a.dia}m</text>`:'')
+      +`</g></g></g>`;
+  });
+  g+='</svg>';
+  document.getElementById('astro').innerHTML=g;
 }
 function run(){ const key=document.getElementById('key').value.trim()||'DEMO_KEY'; loadApod(key); loadNeo(key); }
 run();''')
