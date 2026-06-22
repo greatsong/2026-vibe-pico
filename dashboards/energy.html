@@ -35,43 +35,50 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">연평균 일사량</div><div class="val" id="sun">--</div><div class="unit">kWh/m²/일</div></div><div class="stat"><div class="lab">연평균 풍속</div><div class="val" id="wind">--</div><div class="unit">m/s (10m 높이)</div></div></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>일사량이 가장 높은 달은 언제인가요? 장마철(6~7월)에는 왜 낮아질까요?</li><li>우리 지역은 태양광과 풍력 중 무엇이 더 유리할까요? (일사량 vs 풍속)</li><li>위도를 적도/극지방으로 바꾸면 일사량은 어떻게 달라지나요?</li></ul></div>
+    <div class="controls"><label>비교 지역</label><select id="loc" onchange="run()"><option value="-0.18|-78.47|적도 · 키토(위도 0°)">적도 · 키토 (위도 0°)</option><option value="1.35|103.82|적도 부근 · 싱가포르(위도 1°)">적도 부근 · 싱가포르 (위도 1°)</option><option value="25.0|30.0|사하라 사막(위도 25°)">사하라 사막 (위도 25°)</option><option value="-23.7|133.9|호주 내륙(위도 -24°)">호주 내륙 (위도 -24°)</option><option value="37.57|126.98|🇰🇷 서울(위도 37°)">🇰🇷 서울 (위도 37°)</option><option value="64.13|-21.9|아이슬란드 레이캬비크(위도 64°)">아이슬란드 (위도 64°)</option><option value="78.22|15.65|극지방 · 스발바르(위도 78°)">극지방 · 스발바르 (위도 78°)</option></select><button onclick="run()">비교</button></div><div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">선택한 지역을 <b>막대</b>로, <b>🇰🇷서울</b>을 선으로 겹쳐 보여줘요 — 위도에 따라 일사량이 어떻게 달라지는지 비교!</div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">선택 지역 연평균 일사량</div><div class="val" id="sun">--</div><div class="unit">kWh/m²/일</div></div><div class="stat"><div class="lab">🇰🇷 서울 연평균 일사량</div><div class="val" id="sunS" style="color:#E0568A">--</div><div class="unit">kWh/m²/일</div></div><div class="stat"><div class="lab">선택 지역 연평균 풍속</div><div class="val" id="wind">--</div><div class="unit">m/s</div></div></div><div class="chartbox"><canvas id="ch" height="130"></canvas></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>적도(키토)와 극지방(스발바르)의 일사량을 서울과 비교해 보세요. 위도가 높아질수록 일사량은 어떻게 변하나요?</li><li>극지방은 여름·겨울 일사량 차이가 왜 그렇게 클까요?(백야·극야) 적도는 왜 일 년 내내 비슷할까요?</li><li>사막은 위도가 높아도 일사량이 매우 큰 편이에요. 왜 그럴까요?(구름·강수)</li></ul></div>
   </section>
 
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
+    <li>위도가 다른 지역(<b>적도·사막·극지방</b>)을 골라 <b>서울과 일사량 비교</b></li>
     <li>우리 지역 <b>태양광 발전 잠재력</b> 가늠(일사량이 높은 달은?)</li>
     <li>태양광 LED 게이지: 일사량을 10칸으로(여름↑ 겨울↓)</li>
-    <li>여러 지역 비교 — <b>태양광 vs 풍력</b> 어디가 유리할까?</li>
   </ul>
   </section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
 <script>
-let chart;
+let chart, seoulCache=null;
 const M=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 const K=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+async function fetchPoint(lat,lon){
+  const u=`https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=${lon}&latitude=${lat}&format=JSON`;
+  return (await (await fetch(u)).json()).properties.parameter;
+}
 async function run(){
-  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const [lat,lon,name]=document.getElementById('loc').value.split('|');
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const u=`https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=${lon}&latitude=${lat}&format=JSON`;
-    const p=(await (await fetch(u)).json()).properties.parameter;
+    const p=await fetchPoint(lat,lon);
+    if(!seoulCache) seoulCache=await fetchPoint(37.57,126.98);
     const sun=K.map(k=>p.ALLSKY_SFC_SW_DWN[k]), wind=K.map(k=>p.WS10M[k]);
+    const sunSeoul=K.map(k=>seoulCache.ALLSKY_SFC_SW_DWN[k]);
     document.getElementById('sun').textContent=p.ALLSKY_SFC_SW_DWN.ANN.toFixed(2);
+    document.getElementById('sunS').textContent=seoulCache.ALLSKY_SFC_SW_DWN.ANN.toFixed(2);
     document.getElementById('wind').textContent=p.WS10M.ANN.toFixed(1);
-    s.textContent='✓ 30년 기후 평년값 기준';
+    s.textContent='✓ '+name+' vs 서울 · 30년 기후 평년값';
+    const isSeoul=name.includes('서울');
+    const ds=[{type:'bar',label:name+' 일사량',data:sun,backgroundColor:'rgba(245,158,11,.65)',yAxisID:'y'}];
+    if(!isSeoul) ds.push({type:'line',label:'🇰🇷 서울 일사량',data:sunSeoul,borderColor:'#E0568A',backgroundColor:'rgba(224,86,138,.08)',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y'});
     if(chart) chart.destroy();
-    chart=new Chart(document.getElementById('ch'),{data:{labels:M,datasets:[
-      {type:'bar',label:'태양 일사량(kWh/m²/일)',data:sun,backgroundColor:'rgba(245,158,11,.6)',yAxisID:'y'},
-      {type:'line',label:'풍속(m/s)',data:wind,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',tension:.3,pointRadius:0,yAxisID:'y1'}]},
+    chart=new Chart(document.getElementById('ch'),{data:{labels:M,datasets:ds},
       options:{responsive:true,interaction:{intersect:false,mode:'index'},
-        scales:{y:{position:'left',title:{display:true,text:'kWh/m²/일'}},
-                y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'m/s'}}}}});
+        scales:{y:{beginAtZero:true,title:{display:true,text:'태양 일사량 (kWh/m²/일)'}}}}});
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
+document.getElementById('loc').value='-0.18|-78.47|적도 · 키토(위도 0°)';
 run();
 </script>
 </body>
