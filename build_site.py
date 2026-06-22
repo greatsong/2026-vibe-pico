@@ -790,6 +790,9 @@ a{color:inherit;text-decoration:none;}
 .pico-accent{background:linear-gradient(120deg,#5B6CF0,#E0568A);-webkit-background-clip:text;
   background-clip:text;color:transparent;font-weight:900;}
 .brand-emoji{font-size:17px;}
+/* '피지컬 코딩'의 [피][코] 글자 강조 — 피코 워드플레이 */
+.pk{background:linear-gradient(120deg,#5B6CF0,#E0568A);color:#fff;font-weight:900;
+  border-radius:7px;padding:0 .26em;margin:0 .02em;}
 /* 하드웨어 다이어그램 */
 .figure{margin:14px 0;max-width:760px;}
 .diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
@@ -863,12 +866,12 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 <div class="scrim" id="scrim"></div>
 <div class="layout">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 피지컬 코딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
+    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
     /*NAV*/
   </aside>
   <main class="main">
     <header class="hero">
-      <h1>데이터로 탐구하는<br><span class="pico-accent">피코</span> 바이브 피지컬 코딩 🐣</h1>
+      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
       <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
       <div class="stats">
         <div class="stat"><b>/*NCH*/</b>개 챕터</div>

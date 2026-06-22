@@ -19,7 +19,8 @@
   </header>
 
   <section class="card info">
-    <h2>📋 API 기본 정보</h2>
+    <h2>📋 어떤 데이터인가요?</h2>
+    <p class="lead"><b>NASA</b>가 1995년부터 <b>매일 한 장씩</b> 골라 올리는 우주 사진과 천문학자의 설명(APOD). 성운, 은하, 행성… 오늘은 어떤 우주가 기다리고 있을까요?</p>
     <table>
     <tr><td class="k">무엇</td><td>매일 바뀌는 천문 사진·설명 APOD (NASA)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요</b> — <code>DEMO_KEY</code>로 체험, <b>api.nasa.gov</b>에서 무료 발급</td></tr>
@@ -30,7 +31,7 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:180px"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13.5px;color:#44464f;margin-top:10px;line-height:1.8"></p>
+    <div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:180px"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13.5px;color:#44464f;margin-top:10px;line-height:1.8"></p>
   </section>
 
   <section class="card apply">
@@ -49,7 +50,7 @@ async function run(){
   const key=document.getElementById('key').value.trim()||'DEMO_KEY';
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 8000);
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 12000);
     const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal});
     clearTimeout(to);
     if(res.status===429||res.status===503){ throw new Error('호출 제한(DEMO_KEY) — 잠시 후 또는 내 키로'); }

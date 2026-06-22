@@ -12,7 +12,7 @@ os.makedirs(OUT, exist_ok=True)
 
 CHART = '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>'
 
-def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False):
+def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False, lead=""):
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -34,7 +34,8 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
   </header>
 
   <section class="card info">
-    <h2>📋 API 기본 정보</h2>
+    <h2>📋 어떤 데이터인가요?</h2>
+    {f'<p class="lead">{lead}</p>' if lead else ""}
     {info}
   </section>
 
@@ -83,6 +84,9 @@ a{text-decoration:none;color:inherit;}
   box-shadow:0 4px 18px rgba(40,50,90,.04);}
 .card h2{font-size:15px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
 .card h2 .hint{font-weight:500;font-size:12px;color:var(--muted);}
+.lead{font-size:14.5px;line-height:1.8;color:#3a3d4d;background:linear-gradient(180deg,#f7f8ff,#fff);
+  border-left:4px solid #5B6CF0;border-radius:0 12px 12px 0;padding:13px 16px;margin-bottom:14px;}
+.lead b{color:#3b47c2;}
 .info table{width:100%;border-collapse:collapse;font-size:13.5px;}
 .info td{padding:7px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
 .info td.k{width:108px;color:var(--muted);font-weight:600;}
@@ -134,6 +138,7 @@ SEOUL = ('<div class="controls">'
 # ===================================================================
 # 1) 날씨 (Open-Meteo)
 page("weather", "🌤️", "오늘의 날씨", "지구과학·환경", "🇰🇷 국내 OK · 🌍 전 세계",
+  lead="독일의 비영리 팀이 전 세계 여러 나라 기상청의 <b>슈퍼컴퓨터 예보</b>를 모아 무료로 공개해요. 위도·경도만 찍으면 <b>지구 어디든</b> 시간별 기온·강수확률·바람을 돌려줍니다. 회원가입도, API 키도 필요 없어요.",
   info='''<table>
     <tr><td class="k">무엇</td><td>전 세계 시간별 기온·강수확률·바람 등 (Open-Meteo)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료 · 교육용 자유 사용</td></tr>
@@ -178,6 +183,7 @@ run();''')
 
 # 2) 대기질
 page("airquality", "🌫️", "미세먼지 (대기질)", "환경", "🌍 전 지구(국내 포함)",
+  lead="같은 Open-Meteo가 유럽 <b>CAMS 대기질 모델</b>로 전 지구의 미세먼지(PM2.5·PM10)·오존을 시간별로 알려줘요. 멀리 중국발 황사가 우리 동네로 오는 흐름까지 숫자로 볼 수 있죠.",
   info='''<table>
     <tr><td class="k">무엇</td><td>PM2.5·PM10·오존 등 대기질 (Open-Meteo Air Quality)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -217,6 +223,7 @@ run();''')
 
 # 3) 지진 (USGS)
 page("earthquake", "🌍", "전 세계 지진", "지구과학", "🌎 해외 위주(국내 지진은 드묾)",
+  lead="미국 <b>지질조사국(USGS)</b>이 전 세계 지진계 네트워크로 잡은 지진을 <b>1분 단위</b>로 갱신해 공개합니다. 지금 이 순간 지구 어딘가에서 흔들린 땅을 실시간으로 만나 보세요.",
   info='''<table>
     <tr><td class="k">무엇</td><td>실시간 지진 목록(규모·위치·깊이·시각), GeoJSON (USGS)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -260,6 +267,7 @@ run();''')
 
 # 4) ISS
 page("iss", "🛰️", "국제우주정거장 ISS", "천문·물리", "🌍 전 지구(국내 상공 포함)",
+  lead="축구장만 한 <b>국제우주정거장(ISS)</b>이 지금 지구 위 약 <b>420km</b>에서 <b>시속 27,000km</b>로 날고 있어요. 약 90분에 지구를 한 바퀴! 그 위치를 초 단위로 알려주는 서비스입니다.",
   info='''<table>
     <tr><td class="k">무엇</td><td>ISS의 실시간 위·경도·고도·속도 (wheretheiss.at)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -301,6 +309,7 @@ tick(); setInterval(tick,5000);''')
 
 # 5) 일출·일몰
 page("sunrise", "🌅", "일출·일몰·낮 길이", "천문·지구과학", "🇰🇷 국내 OK",
+  lead="전 세계 <b>어떤 좌표든</b> 오늘 해가 뜨고 지는 시각을 천문 계산으로 알려줘요. 위도를 북극 가까이 바꿔 보면 해가 안 지는 <b>백야</b>도 데이터로 확인할 수 있습니다.",
   info='''<table>
     <tr><td class="k">무엇</td><td>일출·일몰·남중·낮 길이·박명 시각 (sunrise-sunset.org)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -335,6 +344,7 @@ run();''')
 
 # 6) 우주날씨 Kp
 page("spaceweather", "🌞", "우주날씨 (Kp 지수)", "천문·지구과학", "🌍 전 지구 공통",
+  lead="미국 해양대기청(NOAA) <b>우주기상예보센터(SWPC)</b>가 태양 폭풍이 지구 자기장을 흔드는 정도(<b>Kp 지수</b>)를 3시간마다 발표해요. 뉴스에 나오는 ‘오로라 예보’가 바로 이 데이터랍니다.",
   info='''<table>
     <tr><td class="k">무엇</td><td>지자기 폭풍 정도 Kp 지수(0~9)·태양 활동 (NOAA SWPC)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -372,6 +382,7 @@ run();''')
 
 # 7) PubChem 화학
 page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무관",
+  lead="미국 국립보건원(NIH)이 운영하는 세계 최대 화학 백과 <b>PubChem</b>. <b>1억 종</b>이 넘는 물질의 이름만 넣으면 분자식·분자량은 물론 <b>구조 그림</b>까지 그려 줍니다.",
   info='''<table>
     <tr><td class="k">무엇</td><td>물질 이름으로 분자식·분자량·구조 그림 (PubChem)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -405,6 +416,7 @@ run();''')
 
 # 8) GBIF 생물
 page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK",
+  lead="전 세계 박물관·연구자·시민과학자가 모은 생물 관찰 기록 <b>20억 건 이상</b>을 한곳에 모은 <b>GBIF</b>. ‘우리나라에서 까치가 언제·어디서 관찰됐나’ 같은 것도 찾을 수 있어요(한국 약 880만 건).",
   info='''<table>
     <tr><td class="k">무엇</td><td>전 세계 생물 관찰 기록 DB(종·위치·날짜·사진) (GBIF)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
@@ -437,6 +449,7 @@ run();''')
 
 # 9) NASA APOD
 page("nasa", "🔭", "오늘의 천문사진 (NASA)", "천문", "🌐 국적 무관 · 키 필요",
+  lead="<b>NASA</b>가 1995년부터 <b>매일 한 장씩</b> 골라 올리는 우주 사진과 천문학자의 설명(APOD). 성운, 은하, 행성… 오늘은 어떤 우주가 기다리고 있을까요?",
   info='''<table>
     <tr><td class="k">무엇</td><td>매일 바뀌는 천문 사진·설명 APOD (NASA)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요</b> — <code>DEMO_KEY</code>로 체험, <b>api.nasa.gov</b>에서 무료 발급</td></tr>
@@ -448,7 +461,7 @@ page("nasa", "🔭", "오늘의 천문사진 (NASA)", "천문", "🌐 국적 무
     <li>설명을 번역해 <b>오늘의 천문 이야기</b></li>
     <li>NASA의 다른 API(<b>화성 사진·소행성</b>)로 확장</li>
   </ul>''',
-  body='<div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:180px"><button onclick="run()">불러오기</button></div>'
+  body='<div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:180px"><button onclick="run()">불러오기</button></div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div>'
        '<div id="media"></div>'
@@ -457,7 +470,7 @@ page("nasa", "🔭", "오늘의 천문사진 (NASA)", "천문", "🌐 국적 무
   const key=document.getElementById('key').value.trim()||'DEMO_KEY';
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 8000);
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 12000);
     const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal});
     clearTimeout(to);
     if(res.status===429||res.status===503){ throw new Error('호출 제한(DEMO_KEY) — 잠시 후 또는 내 키로'); }
