@@ -213,7 +213,7 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결하고 신호 세기를 1초마다 출력합니다. (손코딩으로 원리 확인)"},
       {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 아래는 <b>복사해서 main.py로 저장하면 바로 도는</b> 완결형 대시보드예요. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요."},
-      {"type": "code", "label": "전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py"},
+      {"type": "code", "label": "전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py", "fold": True},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
@@ -302,6 +302,8 @@ CHAPTERS = [
         {"t": "HTTP 요청 (requests)", "d": "피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code>"},
         {"t": "6~23 → 10칸 매핑", "d": "오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다."},
       ]},
+      {"type": "dig", "title": "API가 대체 뭐예요? — 관공서에서 등본 떼기로 이해하기",
+       "html": "<b>API</b>는 ‘<b>데이터를 가진 기관에 정해진 양식으로 신청하면, 정해진 형식으로 발급해 주는 창구</b>’예요. 동사무소(관공서)에서 <b>등본</b> 떼는 걸 떠올리면 똑같습니다.<br><br>· <b>관공서 = 서버</b> — 데이터를 보관한 곳(Open-Meteo, 기상청 등)<br>· <b>민원 창구·무인발급기 = API</b> — 신청을 받아 서류를 내주는 곳<br>· <b>신청서 = 요청(주소·URL)</b> — ‘무슨 서류를(등본=강수확률), 누구 것을(주소=위도·경도)’ 적어 제출<br>· <b>발급된 서류 = 응답(JSON 데이터)</b> — 정해진 형식으로 받아옴<br>· <b>정해진 양식 = 규칙</b> — 칸을 잘못 쓰면 발급이 안 되듯, 주소·항목 이름을 정확히 써야 함<br>· <b>일부는 신분증·번호표 = API 키</b> — 아무나 못 받게 한 곳(예: NASA)은 키가 필요<br><br>즉 우리가 만든 코드는 ‘피코가 동사무소에 가서 오늘 강수확률 등본을 떼 오는 것’과 같아요. <b>정보과학</b>(요청→응답, 약속된 형식)과 <b>과학</b>(받은 데이터로 탐구)이 만나는 지점이죠."},
       {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
       {"type": "callout", "kind": "info", "title": "설치 없이 바로 됩니다",
        "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
@@ -315,17 +317,17 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 2.</b> 강수확률을 받아 셸에 출력해 봅니다. (손코딩 — 데이터가 어떻게 생겼는지 확인)"},
       {"type": "code", "label": "Step 2 · 강수확률 받아오기", "lang": "python", "file": "snippets/ch3_fetch.py"},
       {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (추가 설치 없음 · 10분마다 새 예보로 갱신)"},
-      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py) — 무설치", "lang": "python", "file": "snippets/ch3_full.py"},
+      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py) — 무설치", "lang": "python", "file": "snippets/ch3_full.py", "fold": True},
       {"type": "callout", "kind": "tip", "title": "더 짧게 쓰고 싶다면 — requests 버전 (설치 1회)",
        "html": "위 무설치 버전이 기본이에요. 만약 <code>requests</code>를 설치할 수 있는 환경이라면, HTTP 부분을 훨씬 짧게 쓸 수 있습니다. Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 한 번 설치(피코가 와이파이 연결된 상태)한 뒤 아래 버전을 쓰세요. 동작은 똑같습니다."},
-      {"type": "code", "label": "대안 · 날씨 시계 (requests 설치 버전)", "lang": "python", "file": "snippets/ch3_full_requests.py"},
+      {"type": "code", "label": "대안 · 날씨 시계 (requests 설치 버전)", "lang": "python", "file": "snippets/ch3_full_requests.py", "fold": True},
       {"type": "step_head", "html": "<b>Step 4.</b> 직접 만들어 보고 싶다면, 아래 프롬프트를 <b>그대로 복사해 AI 도구(Claude 등)에 붙여넣으세요.</b> 교재를 모르는 AI도 바로 작업할 수 있게, 필요한 정보가 모두 들어 있습니다."},
       {"type": "prompt", "label": "AI에게 이렇게 부탁해 보세요 (그대로 복사)", "text":
 "라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] Open-Meteo API에서 오늘의 시간별 강수확률을 받아, WS2813 LED 10개에 6시~23시를 색으로 표시하고 있어. LED는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[추가할 기능] 여기에 웹 대시보드를 더해 줘:\n- 피코가 직접 소켓 기반 웹서버가 되어 80번 포트에서 응답하게 해 줘(외부 라이브러리 없이).\n- 브라우저가 /data 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 주고, 색의 의미(범례)도 함께 표시해 줘.\n- LED와 웹이 같은 데이터를 쓰고, 날씨 데이터는 10분에 한 번만 새로 받아와 줘(피코가 버겁지 않게).\n[조건] 복사해서 바로 실행되는 완결형 main.py로 주고, 위도/경도(LAT/LON)와 timing 값은 내가 바꿔 쓸 수 있게 코드 맨 위에 둬 줘."},
       {"type": "callout", "kind": "tip", "title": "바이브코딩의 핵심",
        "html": "AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 부탁 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다."},
       {"type": "step_head", "html": "<b>Step 5.</b> 직접 부탁하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)"},
-      {"type": "code", "label": "전체 코드 · 날씨 LED + 웹 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py"},
+      {"type": "code", "label": "전체 코드 · 날씨 LED + 웹 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py", "fold": True},
       {"type": "callout", "kind": "key", "title": "대시보드 읽는 법 — 색이 곧 비 예보",
        "html": "화면의 10칸은 피코 LED와 1:1로 같아요. 칸 위 시각(6시·8시…)과 색을 보면 <b>‘이 시각에 비가 오는구나’</b>를 알 수 있습니다.<br>🟩 <b>맑음</b> 0–20% · 🟨 <b>흐림</b> 20–50% · 🟦 <b>비 가능</b> 50–80% · 🟪 <b>비 확실</b> 80–100%.<br>아래 막대그래프는 6시~23시 전체 흐름이라, 파랑·보라가 모이는 구간이 ‘비 오는 시간대’입니다. 임계값(20·50·80)이나 색은 코드 맨 위 <code>LEVELS</code>에서 바꾸면 LED·웹이 함께 바뀝니다."},
     ]},
@@ -419,7 +421,7 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 3.</b> 원시값을 전압·비율로 바꿔 의미를 부여합니다."},
       {"type": "code", "label": "Step 3 · 전압·비율 변환", "lang": "python", "file": "snippets/ch4_03_convert.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 완성형 대시보드. <b>복사해서 main.py로 저장</b>하면, 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)"},
-      {"type": "code", "label": "전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch4_dashboard.py"},
+      {"type": "code", "label": "전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch4_dashboard.py", "fold": True},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
@@ -463,7 +465,55 @@ CHAPTERS = [
        "html": "받은 코드를 올리기 전에: ① <code>timing=(280,515,515,745)</code> 있는지 ② 핀 번호(16 / 26)와 포트(D16 / A0) 맞는지 ③ 무한 반복 속 <code>sleep</code>으로 쉬어 주는지 ④ 와이파이/네트워크 요청이 과하지 않은지."},
     ]},
     {"title": "마무리", "items": [
-      {"type": "text", "html": "여기까지 왔다면, 여러분은 <b>센서로 데이터를 모으고 · 인터넷의 데이터를 가져오고 · LED와 웹으로 표현하는</b> IoT의 한 사이클을 전부 경험한 거예요. 도구는 거들 뿐, 진짜 중요한 건 ‘무엇을, 왜 만드는가’입니다. 멋진 작품을 만들어 보세요! 🎉"},
+      {"type": "text", "html": "여기까지 왔다면, 여러분은 <b>센서로 데이터를 모으고 · 인터넷의 데이터를 가져오고 · LED와 웹으로 표현하는</b> 데이터 기반 탐구의 한 사이클을 전부 경험한 거예요. 도구는 거들 뿐, 진짜 중요한 건 ‘무엇을, 왜 만드는가’입니다. 멋진 작품을 만들어 보세요! 🎉"},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- 부록 A
+{
+  "id": "apx", "num": "A", "title": "부록 · 오픈 API 예제 모음", "accent": "#0EA5A0",
+  "subtitle": "프로젝트할 때 골라 쓰는 ‘작동하는’ API 예제 모음입니다. 처음부터 읽을 필요는 없어요 — 필요한 것만 펼쳐서 복사하세요.",
+  "why": "3장에서 API로 데이터를 받아 LED로 표현하는 법을 익혔죠. 여기서는 <b>과목별 오픈 API 8가지</b>를, 받은 데이터를 바로 <b>10칸 LED</b>로 보여 주는 짧은 예제로 정리했습니다. 모두 2026년 기준 동작을 확인했고, 설치 없이(socket+ssl) 돌아갑니다.",
+  "sections": [
+    {"title": "이 부록 쓰는 법", "items": [
+      {"type": "callout", "kind": "info", "title": "세 가지만 기억하세요",
+       "html": "① 모든 예제는 <b>wifi_config.py</b>(WIFI_SSID·WIFI_PASSWORD 두 줄)가 같은 위치에 필요해요. ② LED는 <b>그로브 D16(GP16)</b>에 꽂은 WS2813 10개 기준입니다. ③ 코드 위쪽의 <b>위도·경도(LAT·LON)나 검색어</b>를 우리 지역·주제로 바꿔 쓰세요. 긴 코드는 <b>‘펼쳐서 복사’</b>를 누르면 열립니다."},
+      {"type": "callout", "kind": "key", "title": "국내 적용 여부 한눈에",
+       "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS·우주날씨) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 자세한 건 3장 ‘과학 수업에 쓸 만한 다른 오픈 API’ 참고."},
+    ]},
+    {"title": "1) 미세먼지 신호등 — 환경 🌍", "items": [
+      {"type": "text", "html": "Open-Meteo 대기질로 <b>PM2.5</b>를 받아, 한국 등급(좋음·보통·나쁨·매우나쁨)에 따라 LED 10칸을 신호등 색으로 채웁니다."},
+      {"type": "code", "label": "미세먼지 신호등", "lang": "python", "file": "snippets/ex_airquality.py", "fold": True},
+    ]},
+    {"title": "2) 지진 규모 게이지 — 지구과학 🌎", "items": [
+      {"type": "text", "html": "USGS에서 최근 하루 지진(M2.5+)을 받아, 가장 큰 규모를 <b>LED 게이지</b>로 표시합니다. (국내 지진은 드물어 전 세계 기준)"},
+      {"type": "code", "label": "지진 규모 게이지", "lang": "python", "file": "snippets/ex_earthquake.py", "fold": True},
+    ]},
+    {"title": "3) ISS가 머리 위에? — 천문·물리 🌍", "items": [
+      {"type": "text", "html": "국제우주정거장의 실시간 위치를 받아 <b>내 위치와의 거리</b>를 계산하고, 가까울수록 LED를 더 많이 켭니다."},
+      {"type": "code", "label": "ISS 근접도", "lang": "python", "file": "snippets/ex_iss.py", "fold": True},
+    ]},
+    {"title": "4) 낮 길이 게이지 — 천문·지구과학 🇰🇷", "items": [
+      {"type": "text", "html": "오늘의 일출·일몰로 <b>낮 길이</b>를 구해, 하루 24시간 중 낮의 비율만큼 LED를 켭니다. 계절이 바뀌면 칸 수도 달라져요."},
+      {"type": "code", "label": "낮 길이 게이지", "lang": "python", "file": "snippets/ex_sunrise.py", "fold": True},
+    ]},
+    {"title": "5) 우주날씨 Kp 지수 — 천문·지구 🌍", "items": [
+      {"type": "text", "html": "NOAA의 <b>Kp 지수</b>(지자기 폭풍 정도, 0~9)를 받아 LED로 표시합니다. 높으면 보라색 — 고위도 오로라 가능성!"},
+      {"type": "code", "label": "Kp 오로라 미터", "lang": "python", "file": "snippets/ex_spaceweather.py", "fold": True},
+    ]},
+    {"title": "6) 물질 분자량 막대 — 화학 🌐", "items": [
+      {"type": "text", "html": "PubChem에서 물질 이름(영문)으로 <b>화학식·분자량</b>을 받아, 분자량 크기를 LED 막대로 보여 줍니다. <code>NAME</code>을 바꿔 여러 물질을 비교해 보세요."},
+      {"type": "code", "label": "분자량 막대", "lang": "python", "file": "snippets/ex_pubchem.py", "fold": True},
+    ]},
+    {"title": "7) 우리나라 생물 관찰 — 생물 🇰🇷", "items": [
+      {"type": "text", "html": "GBIF에서 <b>한국의 특정 생물 관찰 기록 수</b>를 받아, 자릿수(10배마다 한 칸)만큼 LED를 켭니다. <code>SPECIES</code>(학명)를 바꿔 보세요."},
+      {"type": "code", "label": "생물 관찰 기록", "lang": "python", "file": "snippets/ex_gbif.py", "fold": True},
+    ]},
+    {"title": "8) 오늘의 천문사진 — 천문 🌐 (키 필요)", "items": [
+      {"type": "text", "html": "NASA APOD로 오늘의 천문사진 <b>제목·이미지 주소</b>를 받아옵니다. 사진은 브라우저에서 열어 보세요. (무료 키 발급 권장)"},
+      {"type": "callout", "kind": "warn", "title": "키와 메모리 주의",
+       "html": "NASA는 <b>API 키</b>가 필요해요. <code>DEMO_KEY</code>로 맛볼 수 있지만 호출 제한이 있으니 <b>api.nasa.gov</b>에서 무료 키를 받으세요. 설명(explanation) 텍스트가 길어 피코 메모리에 부담이 될 수 있으니, 사진 감상은 컴퓨터(브라우저)를 권합니다."},
+      {"type": "code", "label": "NASA 오늘의 천문사진", "lang": "python", "file": "snippets/ex_nasa.py", "fold": True},
     ]},
   ],
 },
@@ -527,15 +577,22 @@ def render_item(it, accent):
                 f'<div class="dig-body">{it["html"]}</div></details>')
     if t == "code":
         n_code += 1
-        code = it["code"] if "code" in it else load(it["file"])
-        code = esc(code.rstrip("\n"))
+        raw = it["code"] if "code" in it else load(it["file"])
+        raw = raw.rstrip("\n")
+        code = esc(raw)
         tag = it["lang"].upper()
         label = esc(it["label"]) if it.get("label") else "코드"
-        return (f'<div class="block code-block">'
-                f'<div class="block-head"><span class="block-label">{label}</span>'
-                f'<span class="lang-tag">{tag}</span>'
-                f'<button class="copy-btn" aria-label="복사">복사</button></div>'
-                f'<pre><code class="language-{it["lang"]}">{code}</code></pre></div>')
+        block = (f'<div class="block code-block">'
+                 f'<div class="block-head"><span class="block-label">{label}</span>'
+                 f'<span class="lang-tag">{tag}</span>'
+                 f'<button class="copy-btn" aria-label="복사">복사</button></div>'
+                 f'<pre><code class="language-{it["lang"]}">{code}</code></pre></div>')
+        if it.get("fold"):
+            lines = raw.count("\n") + 1
+            return (f'<details class="codefold"><summary>{label} '
+                    f'<span class="fold-hint">· {lines}줄 · 펼쳐서 복사</span></summary>'
+                    f'{block}</details>')
+        return block
     if t == "prompt":
         n_prompt += 1
         return (f'<div class="block prompt-block" style="--accent:{accent}">'
@@ -581,6 +638,7 @@ def render():
     out = out.replace("/*MAIN*/", "".join(main))
     out = out.replace("/*NCODE*/", str(n_code))
     out = out.replace("/*NPROMPT*/", str(n_prompt))
+    out = out.replace("/*NCH*/", str(len(CHAPTERS)))
     return out
 
 # ===================================================================
@@ -591,7 +649,7 @@ TEMPLATE = r'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>피코 바이브 코딩 연수 · 코드 & 가이드</title>
+<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -705,6 +763,22 @@ a{color:inherit;text-decoration:none;}
 .dig[open] summary{border-bottom:1px solid #e7eaf7;}
 .dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:#44464f;}
 .dig-body b{color:#2f3a96;}
+/* 코드 접기 */
+.codefold{margin:12px 0;max-width:840px;}
+.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #cfd3e6;border-radius:10px;
+  background:#f7f8fd;font-size:13px;font-weight:700;color:#4a4f74;}
+.codefold>summary::-webkit-details-marker{display:none;}
+.codefold>summary:before{content:"📄 ";}
+.codefold>summary:after{content:"  ▾";color:#aab;}
+.codefold[open]>summary:after{content:"  ▴";}
+.codefold[open]>summary{border-style:solid;border-color:var(--line);border-bottom:none;
+  border-radius:10px 10px 0 0;background:var(--code-bg);}
+.codefold .fold-hint{font-weight:500;color:#9aa;}
+.codefold .block{margin:0;border-radius:0 0 10px 10px;}
+/* 귀여운 브랜딩 강조 */
+.pico-accent{background:linear-gradient(120deg,#5B6CF0,#E0568A);-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-weight:900;}
+.brand-emoji{font-size:17px;}
 /* 하드웨어 다이어그램 */
 .figure{margin:14px 0;max-width:760px;}
 .diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
@@ -778,15 +852,15 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 <div class="scrim" id="scrim"></div>
 <div class="layout">
   <aside class="sidebar" id="sidebar">
-    <div class="brand">🔌 피코 바이브 코딩 연수<small>설치 · 와이파이 · LED · 날씨 · 가스센서</small></div>
+    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 피지컬 코딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
     /*NAV*/
   </aside>
   <main class="main">
     <header class="hero">
-      <h1>피코 바이브 코딩 연수<br>코드 & 가이드</h1>
-      <p>라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서 대시보드까지, 모든 코드를 <b>복사해 바로 실행</b>할 수 있게 모았습니다. 각 블록의 <b>복사</b> 버튼을 쓰세요.</p>
+      <h1>데이터로 탐구하는<br><span class="pico-accent">피코</span> 바이브 피지컬 코딩 🐣</h1>
+      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
       <div class="stats">
-        <div class="stat"><b>6</b>개 챕터</div>
+        <div class="stat"><b>/*NCH*/</b>개 챕터</div>
         <div class="stat"><b>/*NCODE*/</b>개 코드 블록</div>
         <div class="stat"><b>/*NPROMPT*/</b>개 AI 프롬프트</div>
       </div>
@@ -822,7 +896,7 @@ document.querySelectorAll('.block').forEach(block=>{
   btn.addEventListener('click', async ()=>{
     const code=block.querySelector('code');
     const body=block.querySelector('.prompt-body');
-    const text=code?code.innerText:(body?body.innerText:'');
+    const text=code?code.textContent:(body?body.textContent:'');
     try{
       if(navigator.clipboard && window.isSecureContext){
         await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
