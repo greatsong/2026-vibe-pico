@@ -337,6 +337,39 @@ CHAPTERS = [
         {"q": "왜 10분마다만 새로 받아오나요?", "a": "날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다."},
       ]},
     ]},
+    {"title": "Open-Meteo 자세히 알기", "items": [
+      {"type": "text", "html": "<b>Open-Meteo</b>는 독일의 비영리 프로젝트로, 여러 나라 기상청의 공개 수치예보 모델을 모아 누구나 쓸 수 있게 제공합니다. <b>API 키도, 회원가입도 필요 없고</b>, 비상업·교육용은 자유롭게 쓸 수 있어요. 주소(URL) 하나에 ‘어디(위도·경도)·무엇(변수)·언제(기간)’를 적어 보내면, 그 자리에서 JSON으로 답을 줍니다."},
+      {"type": "concept", "items": [
+        {"t": "여러 종류의 API", "d": "<b>forecast</b>(예보) · <b>archive</b>(1940년~ 과거 데이터) · <b>air-quality</b>(대기질) · <b>marine</b>(파고·해양) · <b>elevation</b>(고도). 주소의 앞부분만 바꾸면 됩니다."},
+        {"t": "고를 수 있는 변수", "d": "기온 <code>temperature_2m</code> · 습도 <code>relative_humidity_2m</code> · 강수확률 <code>precipitation_probability</code> · 풍속 <code>windspeed_10m</code> · 기압 <code>surface_pressure</code> · 자외선 <code>uv_index</code> · 일사량 <code>shortwave_radiation</code>"},
+        {"t": "응답(JSON) 구조", "d": "<code>hourly.time</code>(시각 배열)과 <code>hourly.기온</code>(값 배열)이 <b>같은 순서로 짝</b>을 이룹니다. 그래서 <code>값[6]</code>이 곧 그 날 6시 값이에요."},
+        {"t": "기간 고르기", "d": "<code>forecast_days=1</code>(오늘) · <code>past_days=7</code>(지난 일주일) · archive는 <code>start_date</code>/<code>end_date</code>로 특정 기간."},
+      ]},
+      {"type": "callout", "kind": "tip", "title": "변수 바꾸는 법 — 주소의 hourly= 뒤만 고치면 끝",
+       "html": "앞서 만든 코드에서 요청 주소의 <code>hourly=</code> 뒤만 바꾸면 다른 데이터를 받습니다.<br>· 기온: <code>...&hourly=temperature_2m</code><br>· 자외선 지수: <code>...&hourly=uv_index</code><br>· 일사량(태양광): <code>...&hourly=shortwave_radiation</code><br>여러 개를 쉼표로: <code>...&hourly=temperature_2m,relative_humidity_2m</code><br>과거 데이터는 주소를 <code>https://archive-api.open-meteo.com/v1/archive</code> 로 바꾸고 <code>&start_date=2015-06-01&end_date=2015-06-30</code> 처럼."},
+      {"type": "ideas", "items": [
+        {"t": "📈 하루 기온 곡선", "d": "기온을 받아 24시간 그래프 → 일교차·최고/최저 시각 찾기 (지구과학)"},
+        {"t": "🌡️ 기후변화 비교", "d": "archive로 ‘10년 전 6월’과 ‘올해 6월’ 평균기온 비교 (환경·기후)"},
+        {"t": "☀️ 자외선 경보등", "d": "uv_index가 높으면 LED 빨강 → 자외선 차단 알림 (보건·물리)"},
+        {"t": "🔆 태양광 발전 추정", "d": "shortwave_radiation(일사량)으로 발전량 어림 (에너지·물리)"},
+      ]},
+      {"type": "linkbtn", "href": "https://open-meteo.com/en/docs", "label": "open-meteo.com/en/docs — 변수·파라미터 전체 문서"},
+    ]},
+    {"title": "과학 수업에 쓸 만한 다른 오픈 API", "items": [
+      {"type": "text", "html": "Open-Meteo 말고도, <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많습니다. 피코로 가져와 LED·대시보드로 만들 수도 있고, 수업 시간에 브라우저나 파이썬으로 바로 보여 줘도 좋아요. 과목별로 골라 봤습니다. (모두 JSON으로 응답하며, 2026년 기준 동작 확인)"},
+      {"type": "ideas", "items": [
+        {"t": "🌫️ Open-Meteo 대기질 — 환경", "d": "미세먼지 PM2.5·PM10, 오존, 유럽 AQI. <b>키 불필요</b><br><code>air-quality-api.open-meteo.com/v1/air-quality</code><br>💡 미세먼지 LED 신호등 / 교실 안팎 비교"},
+        {"t": "🌍 USGS 지진 — 지구과학", "d": "전 세계 실시간 지진(규모·위치·깊이) GeoJSON. <b>키 불필요</b><br><code>earthquake.usgs.gov/.../summary/4.5_day.geojson</code><br>💡 규모를 LED 게이지로 / 최근 지진 대시보드"},
+        {"t": "🛰️ ISS 위치 — 천문·물리", "d": "국제우주정거장 실시간 위·경도, 고도, 속도(약 27,000km/h). <b>키 불필요</b><br><code>api.wheretheiss.at/v1/satellites/25544</code><br>💡 우리 머리 위 통과 시각 / 궤도 속도 체감"},
+        {"t": "☀️ 일출·일몰 — 천문·지구과학", "d": "일출·일몰·남중시각·낮 길이·박명 시간. <b>키 불필요</b><br><code>api.sunrise-sunset.org/json?lat=..&lng=..</code><br>💡 계절별 낮 길이 변화 그래프 / 일몰에 LED 점등"},
+        {"t": "🌞 NOAA 우주날씨 — 천문·지구", "d": "태양 활동, Kp 지수(지자기 폭풍), 오로라 가능성. <b>키 불필요</b><br><code>services.swpc.noaa.gov/products/…k-index.json</code><br>💡 Kp 높으면 LED 보라(오로라 경보)"},
+        {"t": "⚗️ PubChem — 화학", "d": "화합물 이름 → 분자식·분자량·구조. <b>키 불필요</b><br><code>pubchem.ncbi.nlm.nih.gov/rest/pug/…</code><br>💡 물질명 입력→분자량 표시 / 화학식 퀴즈"},
+        {"t": "🔭 NASA Open APIs — 천문", "d": "오늘의 천문사진(APOD), 화성 로버 사진, 근지구 소행성(NEO). <b>무료 키</b>(DEMO_KEY로 체험)<br><code>api.nasa.gov</code><br>💡 매일 우주사진 게시 / 소행성 접근 알림"},
+        {"t": "🐦 GBIF·iNaturalist — 생물", "d": "생물 종 분포·관찰 기록 데이터베이스. <b>키 불필요</b><br><code>api.gbif.org/v1</code> · <code>api.inaturalist.org/v1</code><br>💡 우리 지역 관찰 생물 / 종 분포 지도"},
+      ]},
+      {"type": "callout", "kind": "info", "title": "피코로 가져올 때 한 가지",
+       "html": "대부분 <b>https + JSON</b>이라, 3장의 <code>http_get_json()</code>(소켓+ssl) 함수를 그대로 써서 받을 수 있어요. 다만 응답이 큰 API(지진 전체 목록, NASA 이미지 등)는 피코 메모리에 부담이 될 수 있으니, <b>필요한 항목만 요청</b>하거나 수업에서는 컴퓨터(파이썬·브라우저)로 보여 주는 방법도 좋습니다. NASA처럼 키가 필요한 곳은 사이트에서 무료로 발급받으세요."},
+    ]},
   ],
 },
 # ----------------------------------------------------------------- CH4
@@ -618,6 +651,8 @@ a{color:inherit;text-decoration:none;}
 .concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
 .concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
 .concept-d,.idea-d{font-size:13px;color:#55524c;}
+.idea-d code,.concept-d code{word-break:break-all;}
+.idea-d{line-height:1.7;}
 /* 스텝 */
 .steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
 .steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
