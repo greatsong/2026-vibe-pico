@@ -590,19 +590,36 @@ gauge(0)                              # 모두 끄기</code></pre></div></sectio
   <line x1="204" y1="151" x2="554" y2="151" stroke="#c8cdf5" stroke-width="3" marker-end="url(#aR)"/>
   <rect x="292" y="121" width="178" height="27" rx="13" fill="#eef0ff" stroke="#c3c9f5"/>
   <text x="381" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#3b47c2">📝 요청 = 신청서(URL)</text>
-  <circle r="6" cy="151" fill="#5B6CF0">
-    <animate attributeName="cx" values="212;546" dur="2.6s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite"/>
-  </circle>
+  <!-- 신청서(양식 채워진 서류)가 API로 -->
+  <g opacity="0">
+    <rect x="-21" y="-22" width="42" height="46" rx="5" fill="#ffffff" stroke="#b9c0f5"/>
+    <rect x="-21" y="-22" width="42" height="11" rx="5" fill="#5B6CF0"/><rect x="-21" y="-16" width="42" height="5" fill="#5B6CF0"/>
+    <rect x="-14" y="-4" width="11" height="3.4" rx="1.7" fill="#9aa3c8"/><rect x="-1" y="-4" width="15" height="3.4" rx="1.7" fill="#5B6CF0"/>
+    <rect x="-14" y="5" width="11" height="3.4" rx="1.7" fill="#9aa3c8"/><rect x="-1" y="5" width="13" height="3.4" rx="1.7" fill="#5B6CF0"/>
+    <rect x="-14" y="14" width="18" height="3.4" rx="1.7" fill="#9aa3c8"/>
+    <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite"
+      keyTimes="0;0.08;0.46;1" values="236,151;236,151;520,151;520,151" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
+      keyTimes="0;0.08;0.42;0.5;1" values="0;1;1;0;0"/>
+  </g>
 
   <!-- 응답(아래, 왼쪽으로) -->
   <line x1="554" y1="186" x2="204" y2="186" stroke="#f3cfe0" stroke-width="3" marker-end="url(#aL)"/>
   <rect x="286" y="189" width="190" height="27" rx="13" fill="#fff0f6" stroke="#f3cfe0"/>
   <text x="381" y="207" text-anchor="middle" font-size="12" font-weight="700" fill="#b83d72">📦 응답 = 발급 서류(JSON)</text>
-  <circle r="6" cy="186" fill="#E0568A">
-    <animate attributeName="cx" values="546;212" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
-  </circle>
+  <!-- 결과물(데이터 카드)이 나에게로 -->
+  <g opacity="0">
+    <rect x="-22" y="-22" width="44" height="46" rx="5" fill="#ffffff" stroke="#f0c6da"/>
+    <rect x="-22" y="-22" width="44" height="11" rx="5" fill="#E0568A"/><rect x="-22" y="-16" width="44" height="5" fill="#E0568A"/>
+    <rect x="-15" y="2" width="6" height="16" rx="1" fill="#22c55e"/>
+    <rect x="-6" y="-4" width="6" height="22" rx="1" fill="#f59e0b"/>
+    <rect x="3" y="6" width="6" height="12" rx="1" fill="#3b82f6"/>
+    <line x1="-17" y1="18.5" x2="13" y2="18.5" stroke="#e3c4d4" stroke-width="1"/>
+    <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite"
+      keyTimes="0;0.52;0.92;1" values="520,186;520,186;236,186;236,186" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1"/>
+    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
+      keyTimes="0;0.5;0.56;0.92;1" values="0;0;1;1;0"/>
+  </g>
 
   <!-- 보조 설명 -->
   <text x="381" y="244" text-anchor="middle" font-size="11" fill="#8a8fa6">🔑 일부 API(예: NASA)는 ‘신분증=키’가 있어야 발급</text>
