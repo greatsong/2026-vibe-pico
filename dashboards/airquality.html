@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미세먼지 (대기질) · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🌫️</div>
+    <h1>미세먼지 (대기질)</h1>
+    <div class="tags"><span class="tag subj">환경</span><span class="tag region">🌍 전 지구(국내 포함)</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>PM2.5·PM10·오존 등 대기질 (Open-Meteo Air Quality)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>air-quality-api.open-meteo.com/v1/air-quality?...&amp;current=pm2_5,pm10</code></td></tr>
+    <tr><td class="k">참고</td><td>전 지구 모델 기반. <b>공식 국내값은 ‘에어코리아’</b> 권장</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat" id="g25"><div class="lab">PM2.5 (초미세)</div><div class="val" id="v25">--</div><div class="unit" id="t25">µg/m³</div></div><div class="stat"><div class="lab">PM10 (미세)</div><div class="val" id="v10">--</div><div class="unit">µg/m³</div></div></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>등급에 따라 <b>LED 신호등</b>(좋음·보통·나쁨·매우나쁨)</li>
+    <li>교실 안(센서)과 바깥(API) <b>비교 탐구</b></li>
+    <li>하루 중 미세먼지가 높은 <b>시간대 찾기</b></li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+let chart;
+function grade(pm){ if(pm<=15)return['좋음','#22c55e']; if(pm<=35)return['보통','#3b82f6']; if(pm<=75)return['나쁨','#f59e0b']; return['매우나쁨','#ef4444']; }
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,pm10&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1`;
+    const j=await (await fetch(u)).json();
+    const pm=j.current.pm2_5, [name,color]=grade(pm);
+    document.getElementById('v25').textContent=pm; document.getElementById('v25').style.color=color;
+    document.getElementById('t25').textContent='µg/m³ · '+name;
+    document.getElementById('g25').style.borderColor=color;
+    document.getElementById('v10').textContent=j.current.pm10;
+    s.textContent='✓ 현재 기준 · 등급: '+name;
+    const labels=j.hourly.time.map(x=>x.slice(11,16)), data=j.hourly.pm2_5;
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'line',data:{labels,datasets:[{label:'PM2.5',data,borderColor:color,backgroundColor:color+'22',fill:true,tension:.3,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();
+</script>
+</body>
+</html>

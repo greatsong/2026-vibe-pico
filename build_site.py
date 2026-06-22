@@ -476,6 +476,9 @@ CHAPTERS = [
   "why": "3장에서 API로 데이터를 받아 LED로 표현하는 법을 익혔죠. 여기서는 <b>과목별 오픈 API 8가지</b>를, 받은 데이터를 바로 <b>10칸 LED</b>로 보여 주는 짧은 예제로 정리했습니다. 모두 2026년 기준 동작을 확인했고, 설치 없이(socket+ssl) 돌아갑니다.",
   "sections": [
     {"title": "이 부록 쓰는 법", "items": [
+      {"type": "callout", "kind": "key", "title": "🌐 먼저 — 브라우저 라이브 대시보드로 ‘느낌’ 잡기",
+       "html": "코드를 올리기 전에, <b>API가 주는 데이터가 어떻게 생겼는지</b> 눈으로 먼저 보세요. 아래 갤러리는 <b>브라우저에서 직접 공개 데이터를 받아 그리는 샘플 대시보드</b>예요(설치·피코 없이 클릭만 하면 됩니다). 각 페이지에 API 기본 정보와 응용 아이디어도 함께 있어요."},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (9종)"},
       {"type": "callout", "kind": "info", "title": "세 가지만 기억하세요",
        "html": "① 모든 예제는 <b>wifi_config.py</b>(WIFI_SSID·WIFI_PASSWORD 두 줄)가 같은 위치에 필요해요. ② LED는 <b>그로브 D16(GP16)</b>에 꽂은 WS2813 10개 기준입니다. ③ 코드 위쪽의 <b>위도·경도(LAT·LON)나 검색어</b>를 우리 지역·주제로 바꿔 쓰세요. 긴 코드는 <b>‘펼쳐서 복사’</b>를 누르면 열립니다."},
       {"type": "callout", "kind": "key", "title": "국내 적용 여부 한눈에",
@@ -484,36 +487,44 @@ CHAPTERS = [
     {"title": "1) 미세먼지 신호등 — 환경 🌍", "items": [
       {"type": "text", "html": "Open-Meteo 대기질로 <b>PM2.5</b>를 받아, 한국 등급(좋음·보통·나쁨·매우나쁨)에 따라 LED 10칸을 신호등 색으로 채웁니다."},
       {"type": "code", "label": "미세먼지 신호등", "lang": "python", "file": "snippets/ex_airquality.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/airquality.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "2) 지진 규모 게이지 — 지구과학 🌎", "items": [
       {"type": "text", "html": "USGS에서 최근 하루 지진(M2.5+)을 받아, 가장 큰 규모를 <b>LED 게이지</b>로 표시합니다. (국내 지진은 드물어 전 세계 기준)"},
       {"type": "code", "label": "지진 규모 게이지", "lang": "python", "file": "snippets/ex_earthquake.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/earthquake.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "3) ISS가 머리 위에? — 천문·물리 🌍", "items": [
       {"type": "text", "html": "국제우주정거장의 실시간 위치를 받아 <b>내 위치와의 거리</b>를 계산하고, 가까울수록 LED를 더 많이 켭니다."},
       {"type": "code", "label": "ISS 근접도", "lang": "python", "file": "snippets/ex_iss.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/iss.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "4) 낮 길이 게이지 — 천문·지구과학 🇰🇷", "items": [
       {"type": "text", "html": "오늘의 일출·일몰로 <b>낮 길이</b>를 구해, 하루 24시간 중 낮의 비율만큼 LED를 켭니다. 계절이 바뀌면 칸 수도 달라져요."},
       {"type": "code", "label": "낮 길이 게이지", "lang": "python", "file": "snippets/ex_sunrise.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/sunrise.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "5) 우주날씨 Kp 지수 — 천문·지구 🌍", "items": [
       {"type": "text", "html": "NOAA의 <b>Kp 지수</b>(지자기 폭풍 정도, 0~9)를 받아 LED로 표시합니다. 높으면 보라색 — 고위도 오로라 가능성!"},
       {"type": "code", "label": "Kp 오로라 미터", "lang": "python", "file": "snippets/ex_spaceweather.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/spaceweather.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "6) 물질 분자량 막대 — 화학 🌐", "items": [
       {"type": "text", "html": "PubChem에서 물질 이름(영문)으로 <b>화학식·분자량</b>을 받아, 분자량 크기를 LED 막대로 보여 줍니다. <code>NAME</code>을 바꿔 여러 물질을 비교해 보세요."},
       {"type": "code", "label": "분자량 막대", "lang": "python", "file": "snippets/ex_pubchem.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/pubchem.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "7) 우리나라 생물 관찰 — 생물 🇰🇷", "items": [
       {"type": "text", "html": "GBIF에서 <b>한국의 특정 생물 관찰 기록 수</b>를 받아, 자릿수(10배마다 한 칸)만큼 LED를 켭니다. <code>SPECIES</code>(학명)를 바꿔 보세요."},
       {"type": "code", "label": "생물 관찰 기록", "lang": "python", "file": "snippets/ex_gbif.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/gbif.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "8) 오늘의 천문사진 — 천문 🌐 (키 필요)", "items": [
       {"type": "text", "html": "NASA APOD로 오늘의 천문사진 <b>제목·이미지 주소</b>를 받아옵니다. 사진은 브라우저에서 열어 보세요. (무료 키 발급 권장)"},
       {"type": "callout", "kind": "warn", "title": "키와 메모리 주의",
        "html": "NASA는 <b>API 키</b>가 필요해요. <code>DEMO_KEY</code>로 맛볼 수 있지만 호출 제한이 있으니 <b>api.nasa.gov</b>에서 무료 키를 받으세요. 설명(explanation) 텍스트가 길어 피코 메모리에 부담이 될 수 있으니, 사진 감상은 컴퓨터(브라우저)를 권합니다."},
       {"type": "code", "label": "NASA 오늘의 천문사진", "lang": "python", "file": "snippets/ex_nasa.py", "fold": True},
+      {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
   ],
 },

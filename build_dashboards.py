@@ -1,0 +1,517 @@
+# -*- coding: utf-8 -*-
+"""오픈 API 라이브 대시보드 생성기 → dashboards/*.html
+
+API별로 브라우저에서 직접 데이터를 받아(fetch) 그리는 샘플 대시보드 한 장씩.
+각 페이지: API 기본 정보 + 라이브 대시보드 + 응용 가능성.
+모두 CORS 허용을 확인한 API만 사용(브라우저에서 바로 호출 가능).
+"""
+import os
+BASE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(BASE, "dashboards")
+os.makedirs(OUT, exist_ok=True)
+
+CHART = '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>'
+
+def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=False):
+    html = f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title} · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+{CHART if chart else ""}
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">{emoji}</div>
+    <h1>{title}</h1>
+    <div class="tags"><span class="tag subj">{subject}</span><span class="tag region">{region}</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    {info}
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    {body}
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    {apply_html}
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+{js}
+</script>
+</body>
+</html>'''
+    with open(os.path.join(OUT, slug + ".html"), "w", encoding="utf-8") as f:
+        f.write(html)
+
+# ===================================================================
+LAB_CSS = r'''
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --ink:#2b2d3a; --muted:#7a7f95; --line:#eceef5;
+  --pico1:#5B6CF0; --pico2:#E0568A;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:18px 16px 80px;}
+.back{display:inline-block;color:var(--muted);font-size:13px;font-weight:600;margin:6px 0 14px;}
+.back:hover{color:var(--pico1);}
+a{text-decoration:none;color:inherit;}
+.phead{text-align:center;margin:8px 0 22px;}
+.bigemoji{font-size:46px;line-height:1;}
+.phead h1{font-size:clamp(22px,5vw,30px);font-weight:800;letter-spacing:-.02em;margin:8px 0 10px;}
+.tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:4px 12px;}
+.tag.subj{background:#eef0ff;color:#3b47c2;}
+.tag.region{background:#fff0f6;color:#b83d72;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin:14px 0;
+  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+.card h2{font-size:15px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+.card h2 .hint{font-weight:500;font-size:12px;color:var(--muted);}
+.info table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.info td{padding:7px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
+.info td.k{width:108px;color:var(--muted);font-weight:600;}
+.info code,.live code{font-family:var(--mono);font-size:12px;background:#f3f4fa;border:1px solid var(--line);
+  border-radius:5px;padding:1px 6px;word-break:break-all;}
+.apply ul{margin:0;padding-left:18px;}
+.apply li{font-size:14px;margin:7px 0;}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.controls input,.controls select{font-family:var(--font);font-size:14px;border:1px solid var(--line);
+  border-radius:10px;padding:9px 12px;background:#fff;min-width:0;}
+.controls input{width:120px;}
+.controls button{font-family:var(--font);font-size:14px;font-weight:700;color:#fff;cursor:pointer;border:none;
+  border-radius:10px;padding:9px 18px;background:linear-gradient(120deg,var(--pico1),var(--pico2));}
+.controls button:hover{filter:brightness(1.05);}
+.controls label{font-size:12.5px;color:var(--muted);font-weight:600;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
+.stat{background:#fafbff;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;}
+.stat .lab{font-size:11px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.stat .val{font-size:30px;font-weight:800;margin-top:6px;line-height:1.1;}
+.stat .unit{font-size:11px;color:var(--muted);margin-top:3px;}
+.status{font-size:13px;color:var(--muted);padding:8px 0;}
+.status.err{color:#d94a5a;}
+.chartbox{margin-top:14px;}
+.list{list-style:none;padding:0;margin:8px 0 0;}
+.list li{display:flex;gap:12px;align-items:baseline;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13.5px;}
+.badge{flex:0 0 auto;font-weight:800;font-size:13px;border-radius:8px;padding:3px 9px;color:#fff;}
+.list .meta{color:var(--muted);font-size:12px;}
+.bigimg{width:100%;border-radius:14px;border:1px solid var(--line);margin-top:8px;display:block;}
+.molwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+.molwrap img{width:180px;height:180px;background:#fff;border:1px solid var(--line);border-radius:14px;}
+footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;transition:.15s;
+  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+.gcard:hover{transform:translateY(-2px);border-color:#cdd3f3;}
+.gcard .ge{font-size:30px;}
+.gcard .gt{font-weight:800;font-size:15px;margin:8px 0 4px;}
+.gcard .gs{font-size:12.5px;color:var(--muted);}
+.pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
+'''
+with open(os.path.join(OUT, "lab.css"), "w", encoding="utf-8") as f:
+    f.write(LAB_CSS)
+
+SEOUL = ('<div class="controls">'
+         '<label>위도</label><input id="lat" value="37.5665">'
+         '<label>경도</label><input id="lon" value="126.9780">'
+         '<button onclick="run()">불러오기</button></div>')
+
+# ===================================================================
+# 1) 날씨 (Open-Meteo)
+page("weather", "🌤️", "오늘의 날씨", "지구과학·환경", "🇰🇷 국내 OK · 🌍 전 세계",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>전 세계 시간별 기온·강수확률·바람 등 (Open-Meteo)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료 · 교육용 자유 사용</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.open-meteo.com/v1/forecast?latitude=..&amp;longitude=..&amp;hourly=temperature_2m</code></td></tr>
+    <tr><td class="k">받는 형식</td><td>JSON · <code>hourly.time[]</code> 과 <code>hourly.temperature_2m[]</code> 가 짝</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>하루 <b>기온 곡선</b>으로 일교차·최고/최저 시각 찾기</li>
+    <li>강수확률을 <b>10칸 LED</b>로(3장 ‘날씨 시계’)</li>
+    <li>과거 데이터(archive)로 <b>10년 전과 올해 기온 비교</b> → 기후변화 탐구</li>
+  </ul>''',
+  body=SEOUL + '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">현재 기온</div><div class="val" id="now">--</div><div class="unit">°C</div></div>'
+       '<div class="stat"><div class="lab">오늘 최고/최저</div><div class="val" id="hilo" style="font-size:22px">--</div><div class="unit">°C</div></div>'
+       '<div class="stat"><div class="lab">최대 강수확률</div><div class="val" id="pop">--</div><div class="unit">%</div></div></div>'
+       '<div class="chartbox"><canvas id="ch" height="120"></canvas></div>',
+  chart=True,
+  js='''let chart;
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&hourly=temperature_2m,precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1`;
+    const j=await (await fetch(u)).json();
+    const t=j.hourly.temperature_2m, p=j.hourly.precipitation_probability;
+    const labels=j.hourly.time.map(x=>x.slice(11,16));
+    document.getElementById('now').textContent=j.current.temperature_2m;
+    document.getElementById('hilo').textContent=Math.max(...t)+' / '+Math.min(...t);
+    document.getElementById('pop').textContent=Math.max(...p.filter(v=>v!=null));
+    s.textContent='✓ '+(j.timezone||'')+' · 오늘 0~23시';
+    const ctx=document.getElementById('ch');
+    if(chart) chart.destroy();
+    chart=new Chart(ctx,{data:{labels,datasets:[
+      {type:'line',label:'기온(°C)',data:t,borderColor:'#5B6CF0',backgroundColor:'rgba(91,108,240,.1)',fill:true,tension:.3,pointRadius:0,yAxisID:'y'},
+      {type:'bar',label:'강수확률(%)',data:p,backgroundColor:'rgba(224,86,138,.35)',yAxisID:'y1'}]},
+      options:{responsive:true,interaction:{intersect:false,mode:'index'},
+        scales:{y:{position:'left',title:{display:true,text:'°C'}},
+                y1:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'%'}}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 2) 대기질
+page("airquality", "🌫️", "미세먼지 (대기질)", "환경", "🌍 전 지구(국내 포함)",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>PM2.5·PM10·오존 등 대기질 (Open-Meteo Air Quality)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>air-quality-api.open-meteo.com/v1/air-quality?...&amp;current=pm2_5,pm10</code></td></tr>
+    <tr><td class="k">참고</td><td>전 지구 모델 기반. <b>공식 국내값은 ‘에어코리아’</b> 권장</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>등급에 따라 <b>LED 신호등</b>(좋음·보통·나쁨·매우나쁨)</li>
+    <li>교실 안(센서)과 바깥(API) <b>비교 탐구</b></li>
+    <li>하루 중 미세먼지가 높은 <b>시간대 찾기</b></li>
+  </ul>''',
+  body=SEOUL + '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat" id="g25"><div class="lab">PM2.5 (초미세)</div><div class="val" id="v25">--</div><div class="unit" id="t25">µg/m³</div></div>'
+       '<div class="stat"><div class="lab">PM10 (미세)</div><div class="val" id="v10">--</div><div class="unit">µg/m³</div></div></div>'
+       '<div class="chartbox"><canvas id="ch" height="120"></canvas></div>',
+  chart=True,
+  js='''let chart;
+function grade(pm){ if(pm<=15)return['좋음','#22c55e']; if(pm<=35)return['보통','#3b82f6']; if(pm<=75)return['나쁨','#f59e0b']; return['매우나쁨','#ef4444']; }
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,pm10&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1`;
+    const j=await (await fetch(u)).json();
+    const pm=j.current.pm2_5, [name,color]=grade(pm);
+    document.getElementById('v25').textContent=pm; document.getElementById('v25').style.color=color;
+    document.getElementById('t25').textContent='µg/m³ · '+name;
+    document.getElementById('g25').style.borderColor=color;
+    document.getElementById('v10').textContent=j.current.pm10;
+    s.textContent='✓ 현재 기준 · 등급: '+name;
+    const labels=j.hourly.time.map(x=>x.slice(11,16)), data=j.hourly.pm2_5;
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'line',data:{labels,datasets:[{label:'PM2.5',data,borderColor:color,backgroundColor:color+'22',fill:true,tension:.3,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 3) 지진 (USGS)
+page("earthquake", "🌍", "전 세계 지진", "지구과학", "🌎 해외 위주(국내 지진은 드묾)",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>실시간 지진 목록(규모·위치·깊이·시각), GeoJSON (USGS)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson</code></td></tr>
+    <tr><td class="k">국내</td><td>한반도 지진은 드물게 잡힘 → <b>국내는 기상청 권장</b></td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>가장 큰 규모를 <b>LED 게이지</b>로</li>
+    <li>규모별로 지진 <b>개수 세기</b>(통계 탐구)</li>
+    <li>위·경도로 <b>세계 지도에 표시</b>(판 경계와 비교)</li>
+  </ul>''',
+  body='<div class="controls"><label>기간·규모</label><select id="feed">'
+       '<option value="2.5_day">최근 하루 · M2.5+</option>'
+       '<option value="4.5_day">최근 하루 · M4.5+</option>'
+       '<option value="significant_week">최근 일주일 · 큰 지진</option>'
+       '<option value="all_hour">최근 1시간 · 전체</option>'
+       '</select><button onclick="run()">불러오기</button></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">발생 건수</div><div class="val" id="cnt">--</div></div>'
+       '<div class="stat"><div class="lab">최대 규모</div><div class="val" id="mx">--</div><div class="unit">M</div></div></div>'
+       '<ul class="list" id="list"></ul>',
+  js='''function mcolor(m){ return m<3?'#22c55e':m<5?'#f59e0b':'#ef4444'; }
+function ago(t){ const s=(Date.now()-t)/1000; if(s<3600)return Math.round(s/60)+'분 전'; if(s<86400)return Math.round(s/3600)+'시간 전'; return Math.round(s/86400)+'일 전'; }
+async function run(){
+  const feed=document.getElementById('feed').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const j=await (await fetch(`https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${feed}.geojson`)).json();
+    const q=j.features.filter(f=>f.properties.mag!=null).sort((a,b)=>b.properties.mag-a.properties.mag);
+    document.getElementById('cnt').textContent=j.metadata.count;
+    document.getElementById('mx').textContent=q.length?q[0].properties.mag.toFixed(1):'--';
+    s.textContent='✓ '+j.metadata.title;
+    document.getElementById('list').innerHTML=q.slice(0,12).map(f=>{
+      const p=f.properties, c=mcolor(p.mag);
+      return `<li><span class="badge" style="background:${c}">M${p.mag.toFixed(1)}</span>
+        <span>${p.place||'-'}<br><span class="meta">${ago(p.time)} · 깊이 ${f.geometry.coordinates[2]}km</span></span></li>`;
+    }).join('') || '<li class="meta">이 조건에 해당하는 지진이 없어요.</li>';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 4) ISS
+page("iss", "🛰️", "국제우주정거장 ISS", "천문·물리", "🌍 전 지구(국내 상공 포함)",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>ISS의 실시간 위·경도·고도·속도 (wheretheiss.at)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.wheretheiss.at/v1/satellites/25544</code></td></tr>
+    <tr><td class="k">갱신</td><td>이 페이지는 <b>5초마다 자동 갱신</b>됩니다</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>내 위치와의 <b>거리</b>로 ‘머리 위 통과’ 알림 LED</li>
+    <li>속도(약 27,000km/h)로 <b>궤도 운동</b> 체감</li>
+    <li>위치를 모아 <b>지나간 경로</b> 그리기</li>
+  </ul>''',
+  body='<div class="controls"><label>내 위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">ISS 위도</div><div class="val" id="ilat" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">ISS 경도</div><div class="val" id="ilon" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">고도</div><div class="val" id="alt" style="font-size:24px">--</div><div class="unit">km</div></div>'
+       '<div class="stat"><div class="lab">속도</div><div class="val" id="vel" style="font-size:20px">--</div><div class="unit">km/h</div></div></div>'
+       '<div class="stat" id="distbox" style="margin-top:12px"><div class="lab">내 위치에서 거리</div><div class="val" id="dist">--</div><div class="unit" id="overhead">km</div></div>',
+  js='''function dkm(la1,lo1,la2,lo2){const R=6371,r=Math.PI/180;
+  const a=Math.sin((la2-la1)*r/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin((lo2-lo1)*r/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));}
+async function tick(){
+  const s=document.getElementById('status');
+  try{
+    const j=await (await fetch('https://api.wheretheiss.at/v1/satellites/25544')).json();
+    document.getElementById('ilat').textContent=j.latitude.toFixed(2);
+    document.getElementById('ilon').textContent=j.longitude.toFixed(2);
+    document.getElementById('alt').textContent=Math.round(j.altitude);
+    document.getElementById('vel').textContent=Math.round(j.velocity).toLocaleString();
+    const la=parseFloat(document.getElementById('lat').value), lo=parseFloat(document.getElementById('lon').value);
+    const d=dkm(la,lo,j.latitude,j.longitude);
+    document.getElementById('dist').textContent=Math.round(d).toLocaleString();
+    const over=d<2200; document.getElementById('overhead').textContent=over?'km · 🛰️ 머리 위 하늘권!':'km';
+    document.getElementById('distbox').style.borderColor=over?'#5B6CF0':'';
+    s.textContent='✓ 5초마다 자동 갱신 중';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+tick(); setInterval(tick,5000);''')
+
+# 5) 일출·일몰
+page("sunrise", "🌅", "일출·일몰·낮 길이", "천문·지구과학", "🇰🇷 국내 OK",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>일출·일몰·남중·낮 길이·박명 시각 (sunrise-sunset.org)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.sunrise-sunset.org/json?lat=..&amp;lng=..&amp;formatted=0</code></td></tr>
+    <tr><td class="k">시각</td><td>UTC로 옵니다 → 이 페이지가 <b>한국 시간으로 변환</b>해 표시</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>계절별 <b>낮 길이 변화</b> 그래프(하지·동지 비교)</li>
+    <li>낮 길이만큼 <b>LED 게이지</b></li>
+    <li>위도를 바꿔 <b>적도 vs 극지방</b> 낮 길이 비교</li>
+  </ul>''',
+  body=SEOUL + '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">일출</div><div class="val" id="sr" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">일몰</div><div class="val" id="ss" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">낮 길이</div><div class="val" id="dl" style="font-size:22px">--</div></div>'
+       '<div class="stat"><div class="lab">남중(정오)</div><div class="val" id="noon" style="font-size:24px">--</div></div></div>',
+  js='''function hm(iso){ return new Date(iso).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const r=(await (await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`)).json()).results;
+    document.getElementById('sr').textContent=hm(r.sunrise);
+    document.getElementById('ss').textContent=hm(r.sunset);
+    document.getElementById('noon').textContent=hm(r.solar_noon);
+    const h=Math.floor(r.day_length/3600), m=Math.round(r.day_length%3600/60);
+    document.getElementById('dl').textContent=h+'시간 '+m+'분';
+    s.textContent='✓ 오늘 · 한국 시간 기준';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 6) 우주날씨 Kp
+page("spaceweather", "🌞", "우주날씨 (Kp 지수)", "천문·지구과학", "🌍 전 지구 공통",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>지자기 폭풍 정도 Kp 지수(0~9)·태양 활동 (NOAA SWPC)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>services.swpc.noaa.gov/products/noaa-planetary-k-index.json</code></td></tr>
+    <tr><td class="k">의미</td><td>Kp가 클수록 지자기 교란 ↑ · 고위도 <b>오로라</b> 가능성 ↑</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>Kp가 높으면 LED를 <b>보라색</b>으로(오로라 경보)</li>
+    <li>며칠치 Kp <b>변화 그래프</b>로 태양 활동 관찰</li>
+    <li>뉴스의 ‘태양 폭풍’ 기사와 <b>데이터로 비교</b></li>
+  </ul>''',
+  body='<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat" id="kbox"><div class="lab">현재 Kp 지수</div><div class="val" id="kp">--</div><div class="unit" id="kstate">0~9</div></div></div>'
+       '<div class="chartbox"><canvas id="ch" height="120"></canvas></div>',
+  chart=True,
+  js='''let chart;
+function kcolor(k){ return k<4?'#22c55e':k<6?'#f59e0b':'#8b5cf6'; }
+async function run(){
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const arr=await (await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json')).json();
+    const last=arr.slice(-24);
+    const kp=arr[arr.length-1].Kp, c=kcolor(kp);
+    document.getElementById('kp').textContent=kp.toFixed(1); document.getElementById('kp').style.color=c;
+    document.getElementById('kstate').textContent=kp<4?'조용함':kp<6?'활동적':'폭풍! 오로라 가능';
+    document.getElementById('kbox').style.borderColor=c;
+    s.textContent='✓ 최근 '+last.length+'개 측정값(3시간 간격)';
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:last.map(r=>r.time_tag.slice(5,16).replace('T',' ')),
+      datasets:[{label:'Kp',data:last.map(r=>r.Kp),backgroundColor:last.map(r=>kcolor(r.Kp))}]},
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:9}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 7) PubChem 화학
+page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무관",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>물질 이름으로 분자식·분자량·구조 그림 (PubChem)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/<i>caffeine</i>/property/MolecularWeight/JSON</code></td></tr>
+    <tr><td class="k">그림</td><td>같은 주소의 <code>/PNG</code> 로 2D 구조 이미지를 받습니다</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>여러 물질 <b>분자량 비교</b>(물·포도당·카페인…)</li>
+    <li>분자량 크기를 <b>LED 막대</b>로</li>
+    <li>화학식만 보여 주고 <b>물질 맞히기 퀴즈</b></li>
+  </ul>''',
+  body='<div class="controls"><label>물질(영문)</label><input id="name" value="caffeine" style="width:160px"><button onclick="run()">검색</button></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="molwrap"><img id="img" alt="구조" src=""><div>'
+       '<div class="grid" style="grid-template-columns:1fr"><div class="stat"><div class="lab">분자식</div><div class="val" id="formula" style="font-size:24px">--</div></div>'
+       '<div class="stat"><div class="lab">분자량</div><div class="val" id="mw">--</div><div class="unit">g/mol</div></div></div></div></div>',
+  js='''async function run(){
+  const name=document.getElementById('name').value.trim();
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const base='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/'+encodeURIComponent(name);
+    const j=await (await fetch(base+'/property/MolecularFormula,MolecularWeight/JSON')).json();
+    const p=j.PropertyTable.Properties[0];
+    document.getElementById('formula').textContent=p.MolecularFormula;
+    document.getElementById('mw').textContent=parseFloat(p.MolecularWeight).toFixed(2);
+    document.getElementById('img').src=base+'/PNG';
+    s.textContent='✓ '+name+' (CID '+p.CID+')';
+  }catch(e){ s.className='status err'; s.textContent='그 이름의 물질을 못 찾았어요. 영문 이름으로 다시 시도해 보세요.'; }
+}
+run();''')
+
+# 8) GBIF 생물
+page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>전 세계 생물 관찰 기록 DB(종·위치·날짜·사진) (GBIF)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.gbif.org/v1/occurrence/search?country=KR&amp;scientificName=Pica%20pica</code></td></tr>
+    <tr><td class="k">국내</td><td>한국 관찰기록 약 <b>880만 건</b> — 풍부</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>관찰 기록 수를 <b>자릿수 LED</b>로(흔한 종 vs 희귀종)</li>
+    <li>관찰 <b>위치를 지도</b>에 → 분포 탐구</li>
+    <li>계절별 관찰 <b>시기 비교</b>(철새 등)</li>
+  </ul>''',
+  body='<div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:170px"><button onclick="run()">검색</button></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div></div>'
+       '<ul class="list" id="list"></ul>',
+  js='''async function run(){
+  const sp=document.getElementById('sp').value.trim();
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&limit=10`;
+    const j=await (await fetch(u)).json();
+    document.getElementById('cnt').textContent=j.count.toLocaleString();
+    s.textContent='✓ 한국 내 '+sp+' 관찰';
+    document.getElementById('list').innerHTML=(j.results||[]).map(r=>
+      `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
+    ).join('') || '<li class="meta">관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();''')
+
+# 9) NASA APOD
+page("nasa", "🔭", "오늘의 천문사진 (NASA)", "천문", "🌐 국적 무관 · 키 필요",
+  info='''<table>
+    <tr><td class="k">무엇</td><td>매일 바뀌는 천문 사진·설명 APOD (NASA)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요</b> — <code>DEMO_KEY</code>로 체험, <b>api.nasa.gov</b>에서 무료 발급</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=DEMO_KEY</code></td></tr>
+    <tr><td class="k">주의</td><td>DEMO_KEY는 시간당 호출 제한 → 안 되면 잠시 후/내 키로</td></tr>
+  </table>''',
+  apply_html='''<ul>
+    <li>교실 모니터에 <b>매일 우주사진</b> 띄우기</li>
+    <li>설명을 번역해 <b>오늘의 천문 이야기</b></li>
+    <li>NASA의 다른 API(<b>화성 사진·소행성</b>)로 확장</li>
+  </ul>''',
+  body='<div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:180px"><button onclick="run()">불러오기</button></div>'
+       '<div id="status" class="status">불러오는 중…</div>'
+       '<h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div>'
+       '<div id="media"></div>'
+       '<p id="exp" style="font-size:13.5px;color:#44464f;margin-top:10px;line-height:1.8"></p>',
+  js='''async function run(){
+  const key=document.getElementById('key').value.trim()||'DEMO_KEY';
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 8000);
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal});
+    clearTimeout(to);
+    if(res.status===429||res.status===503){ throw new Error('호출 제한(DEMO_KEY) — 잠시 후 또는 내 키로'); }
+    const j=await res.json();
+    if(j.error){ throw new Error(j.error.message||'호출 제한'); }
+    document.getElementById('title').textContent=j.title;
+    document.getElementById('date').textContent=j.date+(j.copyright?(' · © '+j.copyright):'');
+    document.getElementById('media').innerHTML = j.media_type==='image'
+      ? `<img class="bigimg" src="${j.url}" alt="${j.title}">`
+      : `<iframe class="bigimg" style="height:420px" src="${j.url}" allowfullscreen></iframe>`;
+    document.getElementById('exp').textContent=j.explanation;
+    s.textContent='✓ NASA APOD';
+  }catch(e){ s.className='status err'; s.textContent='못 받았어요(DEMO_KEY 호출 제한일 수 있어요): '+e.message; }
+}
+run();''')
+
+# ===================================================================
+# 갤러리 index
+GAL = [
+ ("weather","🌤️","오늘의 날씨","지구과학·환경"),
+ ("airquality","🌫️","미세먼지","환경"),
+ ("earthquake","🌍","전 세계 지진","지구과학"),
+ ("iss","🛰️","ISS 위치","천문·물리"),
+ ("sunrise","🌅","일출·일몰","천문·지구"),
+ ("spaceweather","🌞","우주날씨 Kp","천문·지구"),
+ ("pubchem","⚗️","물질 정보","화학"),
+ ("gbif","🐦","생물 관찰","생물"),
+ ("nasa","🔭","오늘의 천문사진","천문"),
+]
+cards = "".join(
+ f'<a class="gcard" href="{s}.html"><div class="ge">{e}</div>'
+ f'<div class="gt">{t}</div><div class="gs">{sub}</div></a>' for s,e,t,sub in GAL)
+index_html = f'''<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오픈 API 라이브 대시보드 갤러리</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+</head><body>
+<div class="wrap">
+  <a class="back" href="../index.html">← 교재로 돌아가기</a>
+  <header class="phead">
+    <div class="bigemoji">🛰️🌤️⚗️</div>
+    <h1>오픈 API <span class="pico-accent">라이브 대시보드</span></h1>
+    <p style="color:#7a7f95;font-size:14px;max-width:560px;margin:6px auto 0">
+      브라우저에서 직접 공개 데이터를 받아와 그려 봅니다. 어떤 데이터를, 어떻게 쓸 수 있는지
+      ‘느낌’을 잡는 샘플 프로젝트예요. 카드를 눌러 살아 있는 데이터를 만나 보세요.</p>
+  </header>
+  <div class="gallery">{cards}</div>
+  <footer>모두 키 없이(또는 무료 키로) 브라우저에서 바로 호출 · 데이터는 각 제공처의 것입니다.</footer>
+</div>
+</body></html>'''
+with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
+    f.write(index_html)
+
+print("대시보드 생성 완료 ·", len(GAL), "개 페이지 + 갤러리 + lab.css")

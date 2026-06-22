@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우주날씨 (Kp 지수) · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🌞</div>
+    <h1>우주날씨 (Kp 지수)</h1>
+    <div class="tags"><span class="tag subj">천문·지구과학</span><span class="tag region">🌍 전 지구 공통</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>지자기 폭풍 정도 Kp 지수(0~9)·태양 활동 (NOAA SWPC)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>services.swpc.noaa.gov/products/noaa-planetary-k-index.json</code></td></tr>
+    <tr><td class="k">의미</td><td>Kp가 클수록 지자기 교란 ↑ · 고위도 <b>오로라</b> 가능성 ↑</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat" id="kbox"><div class="lab">현재 Kp 지수</div><div class="val" id="kp">--</div><div class="unit" id="kstate">0~9</div></div></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>Kp가 높으면 LED를 <b>보라색</b>으로(오로라 경보)</li>
+    <li>며칠치 Kp <b>변화 그래프</b>로 태양 활동 관찰</li>
+    <li>뉴스의 ‘태양 폭풍’ 기사와 <b>데이터로 비교</b></li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+let chart;
+function kcolor(k){ return k<4?'#22c55e':k<6?'#f59e0b':'#8b5cf6'; }
+async function run(){
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const arr=await (await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json')).json();
+    const last=arr.slice(-24);
+    const kp=arr[arr.length-1].Kp, c=kcolor(kp);
+    document.getElementById('kp').textContent=kp.toFixed(1); document.getElementById('kp').style.color=c;
+    document.getElementById('kstate').textContent=kp<4?'조용함':kp<6?'활동적':'폭풍! 오로라 가능';
+    document.getElementById('kbox').style.borderColor=c;
+    s.textContent='✓ 최근 '+last.length+'개 측정값(3시간 간격)';
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:last.map(r=>r.time_tag.slice(5,16).replace('T',' ')),
+      datasets:[{label:'Kp',data:last.map(r=>r.Kp),backgroundColor:last.map(r=>kcolor(r.Kp))}]},
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:9}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();
+</script>
+</body>
+</html>

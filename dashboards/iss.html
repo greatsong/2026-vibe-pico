@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>국제우주정거장 ISS · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🛰️</div>
+    <h1>국제우주정거장 ISS</h1>
+    <div class="tags"><span class="tag subj">천문·물리</span><span class="tag region">🌍 전 지구(국내 상공 포함)</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>ISS의 실시간 위·경도·고도·속도 (wheretheiss.at)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.wheretheiss.at/v1/satellites/25544</code></td></tr>
+    <tr><td class="k">갱신</td><td>이 페이지는 <b>5초마다 자동 갱신</b>됩니다</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>내 위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">ISS 위도</div><div class="val" id="ilat" style="font-size:24px">--</div></div><div class="stat"><div class="lab">ISS 경도</div><div class="val" id="ilon" style="font-size:24px">--</div></div><div class="stat"><div class="lab">고도</div><div class="val" id="alt" style="font-size:24px">--</div><div class="unit">km</div></div><div class="stat"><div class="lab">속도</div><div class="val" id="vel" style="font-size:20px">--</div><div class="unit">km/h</div></div></div><div class="stat" id="distbox" style="margin-top:12px"><div class="lab">내 위치에서 거리</div><div class="val" id="dist">--</div><div class="unit" id="overhead">km</div></div>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>내 위치와의 <b>거리</b>로 ‘머리 위 통과’ 알림 LED</li>
+    <li>속도(약 27,000km/h)로 <b>궤도 운동</b> 체감</li>
+    <li>위치를 모아 <b>지나간 경로</b> 그리기</li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+function dkm(la1,lo1,la2,lo2){const R=6371,r=Math.PI/180;
+  const a=Math.sin((la2-la1)*r/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin((lo2-lo1)*r/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));}
+async function tick(){
+  const s=document.getElementById('status');
+  try{
+    const j=await (await fetch('https://api.wheretheiss.at/v1/satellites/25544')).json();
+    document.getElementById('ilat').textContent=j.latitude.toFixed(2);
+    document.getElementById('ilon').textContent=j.longitude.toFixed(2);
+    document.getElementById('alt').textContent=Math.round(j.altitude);
+    document.getElementById('vel').textContent=Math.round(j.velocity).toLocaleString();
+    const la=parseFloat(document.getElementById('lat').value), lo=parseFloat(document.getElementById('lon').value);
+    const d=dkm(la,lo,j.latitude,j.longitude);
+    document.getElementById('dist').textContent=Math.round(d).toLocaleString();
+    const over=d<2200; document.getElementById('overhead').textContent=over?'km · 🛰️ 머리 위 하늘권!':'km';
+    document.getElementById('distbox').style.borderColor=over?'#5B6CF0':'';
+    s.textContent='✓ 5초마다 자동 갱신 중';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+tick(); setInterval(tick,5000);
+</script>
+</body>
+</html>

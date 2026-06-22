@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리나라 생물 관찰 · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🐦</div>
+    <h1>우리나라 생물 관찰</h1>
+    <div class="tags"><span class="tag subj">생물</span><span class="tag region">🇰🇷 국내 OK</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>전 세계 생물 관찰 기록 DB(종·위치·날짜·사진) (GBIF)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.gbif.org/v1/occurrence/search?country=KR&amp;scientificName=Pica%20pica</code></td></tr>
+    <tr><td class="k">국내</td><td>한국 관찰기록 약 <b>880만 건</b> — 풍부</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:170px"><button onclick="run()">검색</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div></div><ul class="list" id="list"></ul>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>관찰 기록 수를 <b>자릿수 LED</b>로(흔한 종 vs 희귀종)</li>
+    <li>관찰 <b>위치를 지도</b>에 → 분포 탐구</li>
+    <li>계절별 관찰 <b>시기 비교</b>(철새 등)</li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+async function run(){
+  const sp=document.getElementById('sp').value.trim();
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=${encodeURIComponent(sp)}&limit=10`;
+    const j=await (await fetch(u)).json();
+    document.getElementById('cnt').textContent=j.count.toLocaleString();
+    s.textContent='✓ 한국 내 '+sp+' 관찰';
+    document.getElementById('list').innerHTML=(j.results||[]).map(r=>
+      `<li><span>${r.scientificName||sp}<br><span class="meta">${r.locality||r.stateProvince||'위치 미상'} · ${(r.eventDate||'').slice(0,10)||'날짜 미상'}</span></span></li>`
+    ).join('') || '<li class="meta">관찰 기록이 없어요. 학명을 확인해 보세요.</li>';
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();
+</script>
+</body>
+</html>

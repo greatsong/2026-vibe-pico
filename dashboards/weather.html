@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오늘의 날씨 · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🌤️</div>
+    <h1>오늘의 날씨</h1>
+    <div class="tags"><span class="tag subj">지구과학·환경</span><span class="tag region">🇰🇷 국내 OK · 🌍 전 세계</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>전 세계 시간별 기온·강수확률·바람 등 (Open-Meteo)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료 · 교육용 자유 사용</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.open-meteo.com/v1/forecast?latitude=..&amp;longitude=..&amp;hourly=temperature_2m</code></td></tr>
+    <tr><td class="k">받는 형식</td><td>JSON · <code>hourly.time[]</code> 과 <code>hourly.temperature_2m[]</code> 가 짝</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">현재 기온</div><div class="val" id="now">--</div><div class="unit">°C</div></div><div class="stat"><div class="lab">오늘 최고/최저</div><div class="val" id="hilo" style="font-size:22px">--</div><div class="unit">°C</div></div><div class="stat"><div class="lab">최대 강수확률</div><div class="val" id="pop">--</div><div class="unit">%</div></div></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>하루 <b>기온 곡선</b>으로 일교차·최고/최저 시각 찾기</li>
+    <li>강수확률을 <b>10칸 LED</b>로(3장 ‘날씨 시계’)</li>
+    <li>과거 데이터(archive)로 <b>10년 전과 올해 기온 비교</b> → 기후변화 탐구</li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+let chart;
+async function run(){
+  const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&hourly=temperature_2m,precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1`;
+    const j=await (await fetch(u)).json();
+    const t=j.hourly.temperature_2m, p=j.hourly.precipitation_probability;
+    const labels=j.hourly.time.map(x=>x.slice(11,16));
+    document.getElementById('now').textContent=j.current.temperature_2m;
+    document.getElementById('hilo').textContent=Math.max(...t)+' / '+Math.min(...t);
+    document.getElementById('pop').textContent=Math.max(...p.filter(v=>v!=null));
+    s.textContent='✓ '+(j.timezone||'')+' · 오늘 0~23시';
+    const ctx=document.getElementById('ch');
+    if(chart) chart.destroy();
+    chart=new Chart(ctx,{data:{labels,datasets:[
+      {type:'line',label:'기온(°C)',data:t,borderColor:'#5B6CF0',backgroundColor:'rgba(91,108,240,.1)',fill:true,tension:.3,pointRadius:0,yAxisID:'y'},
+      {type:'bar',label:'강수확률(%)',data:p,backgroundColor:'rgba(224,86,138,.35)',yAxisID:'y1'}]},
+      options:{responsive:true,interaction:{intersect:false,mode:'index'},
+        scales:{y:{position:'left',title:{display:true,text:'°C'}},
+                y1:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'%'}}}}});
+  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
+}
+run();
+</script>
+</body>
+</html>

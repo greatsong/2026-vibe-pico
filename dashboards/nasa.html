@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오늘의 천문사진 (NASA) · 라이브 대시보드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="lab.css">
+
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 대시보드 갤러리</a>
+  <header class="phead">
+    <div class="bigemoji">🔭</div>
+    <h1>오늘의 천문사진 (NASA)</h1>
+    <div class="tags"><span class="tag subj">천문</span><span class="tag region">🌐 국적 무관 · 키 필요</span></div>
+  </header>
+
+  <section class="card info">
+    <h2>📋 API 기본 정보</h2>
+    <table>
+    <tr><td class="k">무엇</td><td>매일 바뀌는 천문 사진·설명 APOD (NASA)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요</b> — <code>DEMO_KEY</code>로 체험, <b>api.nasa.gov</b>에서 무료 발급</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=DEMO_KEY</code></td></tr>
+    <tr><td class="k">주의</td><td>DEMO_KEY는 시간당 호출 제한 → 안 되면 잠시 후/내 키로</td></tr>
+  </table>
+  </section>
+
+  <section class="card live">
+    <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
+    <div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:180px"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13.5px;color:#44464f;margin-top:10px;line-height:1.8"></p>
+  </section>
+
+  <section class="card apply">
+    <h2>💡 이렇게 응용해 보세요</h2>
+    <ul>
+    <li>교실 모니터에 <b>매일 우주사진</b> 띄우기</li>
+    <li>설명을 번역해 <b>오늘의 천문 이야기</b></li>
+    <li>NASA의 다른 API(<b>화성 사진·소행성</b>)로 확장</li>
+  </ul>
+  </section>
+
+  <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
+</div>
+<script>
+async function run(){
+  const key=document.getElementById('key').value.trim()||'DEMO_KEY';
+  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 8000);
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal});
+    clearTimeout(to);
+    if(res.status===429||res.status===503){ throw new Error('호출 제한(DEMO_KEY) — 잠시 후 또는 내 키로'); }
+    const j=await res.json();
+    if(j.error){ throw new Error(j.error.message||'호출 제한'); }
+    document.getElementById('title').textContent=j.title;
+    document.getElementById('date').textContent=j.date+(j.copyright?(' · © '+j.copyright):'');
+    document.getElementById('media').innerHTML = j.media_type==='image'
+      ? `<img class="bigimg" src="${j.url}" alt="${j.title}">`
+      : `<iframe class="bigimg" style="height:420px" src="${j.url}" allowfullscreen></iframe>`;
+    document.getElementById('exp').textContent=j.explanation;
+    s.textContent='✓ NASA APOD';
+  }catch(e){ s.className='status err'; s.textContent='못 받았어요(DEMO_KEY 호출 제한일 수 있어요): '+e.message; }
+}
+run();
+</script>
+</body>
+</html>
