@@ -212,7 +212,7 @@ CHAPTERS = [
         {"t": "/data 폴링", "d": "브라우저가 1초마다 <code>/data</code>를 불러 최신 값을 받고, Chart.js로 그래프를 갱신하는 방식."},
       ]},
       {"type": "dig", "title": "RSSI는 왜 -50, -80처럼 ‘음수’일까? (dBm과 데시벨)",
-       "html": "RSSI(Received Signal Strength Indicator)의 단위 <b>dBm</b>은 ‘1밀리와트(mW)에 견준 신호 세기를 데시벨로 나타낸 값’이에요. 정의상 <b>0 dBm = 1 mW</b>입니다.<br><br>와이파이 신호가 안테나에 도달할 때의 전력은 1 mW보다 <b>훨씬 작아서</b>(보통 1조분의 1 수준), 로그(데시벨)로 바꾸면 <b>음수</b>가 됩니다. 그래서 값이 항상 마이너스예요.<br>· -30 dBm ≈ 아주 강함(공유기 바로 옆)<br>· -67 dBm ≈ 영상통화도 무난<br>· -80 dBm ≈ 약함, 끊길 수 있음<br><br>데시벨은 <b>로그 스케일</b>이라, 10 dB 차이가 전력 <b>10배</b> 차이예요. 즉 -60에서 -70으로 떨어지면 신호 전력이 1/10로 준 겁니다. 숫자 차이는 작아 보여도 체감 차이가 큰 이유죠."},
+       "html": "RSSI(Received Signal Strength Indicator)의 단위 <b>dBm</b>은 ‘1밀리와트(mW)에 견준 신호 세기를 데시벨로 나타낸 값’이에요. 정의상 <b>0 dBm = 1 mW</b>입니다.<br><br>와이파이 신호가 안테나에 도달할 때의 전력은 1 mW보다 <b>훨씬 작아서</b>(보통 1mW의 수만분의 1 ~ 1억분의 1 수준), 로그(데시벨)로 바꾸면 <b>음수</b>가 됩니다. 그래서 값이 항상 마이너스예요.<br>· -30 dBm ≈ 아주 강함(공유기 바로 옆)<br>· -67 dBm ≈ 영상통화도 무난<br>· -80 dBm ≈ 약함, 끊길 수 있음<br><br>데시벨은 <b>로그 스케일</b>이라, 10 dB 차이가 전력 <b>10배</b> 차이예요. 즉 -60에서 -70으로 떨어지면 신호 전력이 1/10로 준 겁니다. 숫자 차이는 작아 보여도 체감 차이가 큰 이유죠."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
@@ -268,7 +268,7 @@ CHAPTERS = [
         {"t": "밝기는 낮게", "d": "(255,255,255)는 너무 밝고 전류도 많이 써요. (30,30,30) 정도면 충분히 보입니다."},
       ]},
       {"type": "dig", "title": "timing=(280, 515, 515, 745)의 정체 (1선 통신과 GRB)",
-       "html": "WS2813 같은 LED는 칸이 10개여도 <b>데이터 선이 하나</b>뿐이에요. 그래서 0과 1을 <b>‘펄스(전기 신호)의 길이’</b>로 구분합니다. 이게 <b>1-wire(원-와이어) 프로토콜</b>이에요.<br><br>네 숫자는 <b>나노초(ns, 10억분의 1초)</b> 단위의 시간이고, 각각:<br>· <b>T0H</b>=280 — ‘0’을 보낼 때 켜 두는 시간<br>· <b>T0L</b>=515 — ‘0’을 보낼 때 꺼 두는 시간<br>· <b>T1H</b>=515 — ‘1’을 보낼 때 켜 두는 시간<br>· <b>T1L</b>=745 — ‘1’을 보낼 때 꺼 두는 시간<br><br>이 길이가 칩이 기대하는 값과 안 맞으면 0을 1로, 1을 0으로 잘못 읽어 <b>색이 깨집니다.</b> 칩 종류마다 기대 시간이 조금씩 달라, WS2813엔 이 네 값을 직접 지정해 주는 거예요.<br><br>또 하나, 사람은 색을 (빨강, 초록, 파랑) = RGB 순서로 생각하지만 이 LED는 내부적으로 <b>GRB(초록·빨강·파랑) 순서</b>로 받습니다. MicroPython의 NeoPixel이 알아서 맞춰 주니 우리는 <code>(r, g, b)</code>로 쓰면 됩니다."},
+       "html": "WS2813 같은 LED는 칸이 10개여도 <b>데이터 선이 하나</b>뿐이에요. 그래서 0과 1을 <b>‘펄스(전기 신호)의 길이’</b>로 구분합니다. 이게 <b>1-wire(원-와이어) 프로토콜</b>이에요.<br><br>네 숫자는 <b>나노초(ns, 10억분의 1초)</b> 단위의 시간이고, 각각:<br>· <b>T0H</b>=280 — ‘0’을 보낼 때 켜 두는 시간<br>· <b>T0L</b>=515 — ‘0’을 보낼 때 꺼 두는 시간<br>· <b>T1H</b>=515 — ‘1’을 보낼 때 켜 두는 시간<br>· <b>T1L</b>=745 — ‘1’을 보낼 때 꺼 두는 시간<br><br>이 길이가 칩이 기대하는 값과 안 맞으면 0을 1로, 1을 0으로 잘못 읽어 <b>색이 깨집니다.</b> 칩 종류마다 기대 시간이 조금씩 달라, WS2813엔 이 네 값을 직접 지정해 주는 거예요.<br><br>또 하나, 사람은 색을 (빨강, 초록, 파랑) = RGB 순서로 생각하지만 이 LED는 내부적으로 <b>GRB(초록·빨강·파랑) 순서</b>로 데이터를 받습니다. 대부분의 펌웨어에서는 <code>(r, g, b)</code>로 쓰면 되지만, 혹시 빨강·초록이 바뀌어 보이면 순서를 조정하면 돼요."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 한 칸만 켜 보기."},
@@ -485,59 +485,47 @@ CHAPTERS = [
 },
 # ----------------------------------------------------------------- 부록 A
 {
-  "id": "apx", "num": "A", "title": "부록 · 오픈 API 예제 모음", "accent": "#0EA5A0",
-  "subtitle": "프로젝트할 때 골라 쓰는 ‘작동하는’ API 예제 모음입니다. 처음부터 읽을 필요는 없어요 — 필요한 것만 펼쳐서 복사하세요.",
-  "why": "3장에서 API로 데이터를 받아 LED로 표현하는 법을 익혔죠. 이 부록에는 <b>과목별 오픈 API 예제 8가지</b>를, 받은 데이터를 <b>피코의 10칸 LED</b>로 보여 주는 짧은 코드로 정리했어요(설치 없이 <code>socket</code>+<code>ssl</code>로 동작). 코드를 올리기 전에 <b>데이터를 눈으로 먼저</b> 보고 싶다면, 브라우저에서 바로 그려 보는 <b>‘오픈 API 라이브 대시보드’(지도·그래프까지, 아래 링크)</b>를 함께 보세요. 사용한 API는 2026년 기준으로 응답을 확인했습니다.",
+  "id": "apx", "num": "A", "title": "부록 · 오픈 API 한눈에 보기", "accent": "#0EA5A0",
+  "subtitle": "프로젝트에 쓸 만한 과목별 오픈 API 카탈로그예요. 각 API가 어떤 데이터를 주고 무엇을 탐구할 수 있는지 보고, 바로 살아 있는 대시보드로 들어가 보세요.",
+  "why": "3장에서 API로 데이터를 받아 표현하는 흐름을 익혔죠. 이 부록은 과목별 오픈 API를 <b>한눈에 정리한 카탈로그</b>예요 — 각 API가 <b>어떤 데이터</b>를 주고 <b>어떤 탐구</b>를 할 수 있는지, 그리고 <b>브라우저에서 바로 그려 보는 라이브 대시보드</b>로 연결됩니다. 피코로 직접 받아오려면 3장 ‘날씨 시계’에서 쓴 <code>socket</code>+<code>ssl</code> 방식을 그대로 응용하면 돼요. (API는 2026년 기준 응답 확인)",
   "sections": [
     {"title": "이 부록 쓰는 법", "items": [
-      {"type": "callout", "kind": "key", "title": "🌐 먼저 — 브라우저 라이브 대시보드로 ‘느낌’ 잡기",
-       "html": "코드를 올리기 전에, <b>API가 주는 데이터가 어떻게 생겼는지</b> 눈으로 먼저 보세요. 아래 갤러리는 <b>브라우저에서 직접 공개 데이터를 받아 그리는 샘플 대시보드</b>예요(설치·피코 없이 클릭만 하면 됩니다). 각 페이지에 API 기본 정보와 응용 아이디어도 함께 있어요."},
-      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (9종)"},
-      {"type": "callout", "kind": "info", "title": "세 가지만 기억하세요",
-       "html": "① 모든 예제는 <b>wifi_config.py</b>(WIFI_SSID·WIFI_PASSWORD 두 줄)가 같은 위치에 필요해요. ② LED는 <b>그로브 D16(GP16)</b>에 꽂은 WS2813 10개 기준입니다. ③ 코드 위쪽의 <b>위도·경도(LAT·LON)나 검색어</b>를 우리 지역·주제로 바꿔 쓰세요. 긴 코드는 <b>‘펼쳐서 복사’</b>를 누르면 열립니다."},
-      {"type": "callout", "kind": "key", "title": "국내 적용 여부 한눈에",
-       "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS·우주날씨) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 자세한 건 3장 ‘과학 수업에 쓸 만한 다른 오픈 API’ 참고."},
+      {"type": "callout", "kind": "key", "title": "🌐 라이브 대시보드로 데이터를 ‘직접’ 만나 보기",
+       "html": "각 API 카드의 <b>‘라이브 대시보드 열기’</b>를 누르면, 브라우저에서 <b>지금 데이터를 받아 지도·그래프로 그려 주는 페이지</b>가 열려요(설치·피코 없이 클릭만). 위치·물질·종을 바꿔 가며 탐구하고, 페이지마다 ‘🔎 탐구 질문’도 있습니다."},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종)"},
+      {"type": "callout", "kind": "info", "title": "국내 적용 여부 한눈에",
+       "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS·우주날씨) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 국내 공식 데이터는 공공데이터포털(키 필요)을 쓰세요."},
     ]},
-    {"title": "1) 미세먼지 신호등 — 환경 🌍", "items": [
-      {"type": "text", "html": "Open-Meteo 대기질로 <b>PM2.5</b>를 받아, 한국 등급(좋음·보통·나쁨·매우나쁨)에 따라 LED 10칸을 신호등 색으로 채웁니다."},
-      {"type": "code", "label": "미세먼지 신호등", "lang": "python", "file": "snippets/ex_airquality.py", "fold": True},
+    {"title": "1) 미세먼지 (대기질) — 환경 🌍", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — PM2.5·PM10·오존 등 시간별 대기질(Open-Meteo, 키 불필요).<br><b>🔎 어떤 탐구</b> — 지금 등급(좋음~매우나쁨) 판정 · 하루 중 미세먼지가 높은 시간대 찾기 · 우리 동네와 다른 지역 공기질 비교."},
       {"type": "linkbtn", "href": "dashboards/airquality.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "2) 지진 규모 게이지 — 지구과학 🌎", "items": [
-      {"type": "text", "html": "USGS에서 최근 하루 지진(M2.5+)을 받아, 가장 큰 규모를 <b>LED 게이지</b>로 표시합니다. (국내 지진은 드물어 전 세계 기준)"},
-      {"type": "code", "label": "지진 규모 게이지", "lang": "python", "file": "snippets/ex_earthquake.py", "fold": True},
+    {"title": "2) 전 세계 지진 — 지구과학 🌎", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 실시간 지진의 규모·위치·깊이·시각(USGS, 키 불필요).<br><b>🔎 어떤 탐구</b> — 세계 지도에 찍어 ‘불의 고리’ 패턴 관찰 · 규모별 발생 수 세기 · 최대 규모 추적. (국내 지진은 드물어 기상청 권장)"},
       {"type": "linkbtn", "href": "dashboards/earthquake.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "3) ISS가 머리 위에? — 천문·물리 🌍", "items": [
-      {"type": "text", "html": "국제우주정거장의 실시간 위치를 받아 <b>내 위치와의 거리</b>를 계산하고, 가까울수록 LED를 더 많이 켭니다."},
-      {"type": "code", "label": "ISS 근접도", "lang": "python", "file": "snippets/ex_iss.py", "fold": True},
+    {"title": "3) 국제우주정거장 ISS — 천문·물리 🌍", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — ISS의 실시간 위·경도·고도·속도(wheretheiss, 키 불필요).<br><b>🔎 어떤 탐구</b> — 지금 어느 나라 상공인지 지도로 추적 · 내 위치와의 거리 · 궤도가 물결치는 이유(궤도 경사) 탐구."},
       {"type": "linkbtn", "href": "dashboards/iss.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "4) 낮 길이 게이지 — 천문·지구과학 🇰🇷", "items": [
-      {"type": "text", "html": "오늘의 일출·일몰로 <b>낮 길이</b>를 구해, 하루 24시간 중 낮의 비율만큼 LED를 켭니다. 계절이 바뀌면 칸 수도 달라져요."},
-      {"type": "code", "label": "낮 길이 게이지", "lang": "python", "file": "snippets/ex_sunrise.py", "fold": True},
+    {"title": "4) 일출·일몰·낮 길이 — 천문·지구과학 🇰🇷", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 일출·일몰·남중시각·낮 길이(sunrise-sunset, 키 불필요).<br><b>🔎 어떤 탐구</b> — 계절별 낮 길이 변화 · 위도를 바꿔 적도 vs 극지방(백야·극야) 비교."},
       {"type": "linkbtn", "href": "dashboards/sunrise.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "5) 우주날씨 Kp 지수 — 천문·지구 🌍", "items": [
-      {"type": "text", "html": "NOAA의 <b>Kp 지수</b>(지자기 폭풍 정도, 0~9)를 받아 LED로 표시합니다. 높으면 보라색 — 고위도 오로라 가능성!"},
-      {"type": "code", "label": "Kp 오로라 미터", "lang": "python", "file": "snippets/ex_spaceweather.py", "fold": True},
+    {"title": "5) 우주날씨 Kp 지수 — 천문·지구과학 🌍", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 지자기 폭풍 정도 Kp 지수(0~9, NOAA, 키 불필요).<br><b>🔎 어떤 탐구</b> — 최근 며칠 Kp 변화로 태양 활동 관찰 · 값이 높을 때 고위도 오로라 가능성 토론."},
       {"type": "linkbtn", "href": "dashboards/spaceweather.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "6) 물질 분자량 막대 — 화학 🌐", "items": [
-      {"type": "text", "html": "PubChem에서 물질 이름(영문)으로 <b>화학식·분자량</b>을 받아, 분자량 크기를 LED 막대로 보여 줍니다. <code>NAME</code>을 바꿔 여러 물질을 비교해 보세요."},
-      {"type": "code", "label": "분자량 막대", "lang": "python", "file": "snippets/ex_pubchem.py", "fold": True},
+    {"title": "6) 물질 정보 — 화학 🌐", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 물질 이름 → 화학식·분자량·2D/3D 구조(PubChem, 키 불필요).<br><b>🔎 어떤 탐구</b> — 여러 물질 분자량 비교 · 3D 구조를 돌려 보며 모양 이해 · 화학식만 보고 물질 맞히기."},
       {"type": "linkbtn", "href": "dashboards/pubchem.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "7) 우리나라 생물 관찰 — 생물 🇰🇷", "items": [
-      {"type": "text", "html": "GBIF에서 <b>한국의 특정 생물 관찰 기록 수</b>를 받아, 자릿수(10배마다 한 칸)만큼 LED를 켭니다. <code>SPECIES</code>(학명)를 바꿔 보세요."},
-      {"type": "code", "label": "생물 관찰 기록", "lang": "python", "file": "snippets/ex_gbif.py", "fold": True},
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 생물 종별 관찰 기록·위치·날짜(GBIF, 한국 약 880만 건, 키 불필요).<br><b>🔎 어떤 탐구</b> — 관찰 지점을 지도에 찍어 분포(도시 vs 산) · 월별(계절) 분포 · 철새 vs 텃새 비교."},
       {"type": "linkbtn", "href": "dashboards/gbif.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "8) 오늘의 천문사진 — 천문 🌐 (키 필요)", "items": [
-      {"type": "text", "html": "NASA APOD로 오늘의 천문사진 <b>제목·이미지 주소</b>를 받아옵니다. 사진은 브라우저에서 열어 보세요. (무료 키 발급 권장)"},
-      {"type": "callout", "kind": "warn", "title": "키와 메모리 주의",
-       "html": "NASA는 <b>API 키</b>가 필요해요. <code>DEMO_KEY</code>로 맛볼 수 있지만 호출 제한이 있으니 <b>api.nasa.gov</b>에서 무료 키를 받으세요. 설명(explanation) 텍스트가 길어 피코 메모리에 부담이 될 수 있으니, 사진 감상은 컴퓨터(브라우저)를 권합니다."},
-      {"type": "code", "label": "NASA 오늘의 천문사진", "lang": "python", "file": "snippets/ex_nasa.py", "fold": True},
+    {"title": "8) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 무료 API 키가 필요해요(api.nasa.gov, 대시보드엔 키가 포함돼 있어요).</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
   ],
