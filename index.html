@@ -247,13 +247,13 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
     <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
     <ol class="fw-steps">
       <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요! 버튼 먼저 누르고 꽂기)</span></li>
-      <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
-      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
+      <li>컴퓨터에 <code>RP2350</code> 이라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다. <span class="fw-dim">(Pico 2 계열. 구형 Pico는 <code>RPI-RP2</code>)</span></li>
+      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RP2350</code> 드라이브로 복사(드래그)</b>합니다.</li>
       <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
     </ol>
   </div>
   <p class="fw-note">⚠️ 이 파일은 <b>Pico&nbsp;2&nbsp;W (WH)</b> 전용입니다. 다른 보드라면 <a href="https://micropython.org/download/RPI_PICO2_W/" target="_blank" rel="noopener">MicroPython 공식 다운로드 페이지</a>에서 맞는 펌웨어를 받으세요. · Thonny의 <i>‘Install MicroPython…’</i> 메뉴로 설치해도 됩니다.</p>
-</div><div class="mistakes"><div class="mistake"><div class="m-sym">❌ RPI-RP2 드라이브가 안 나타남</div><div class="m-row"><span class="m-tag">원인</span>BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.</div><div class="m-row"><span class="m-tag fix">해결</span>케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다.</div></div></div></section><section class="sec" id="ch0-4"><h3 class="sec-title">0.5 · Thonny와 피코 연결 + 첫 코드</h3><ol class="steps"><li><b>인터프리터 선택</b><span>Thonny 오른쪽 <b>아래 구석</b>을 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. 포트는 보통 자동으로 잡혀요.</span></li><li><b>셸에서 인사해 보기</b><span>아래 Shell 칸에 다음을 한 줄 입력하고 Enter.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">셸에 직접 입력</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 셸(아래쪽 Shell 창)에 한 줄씩 입력해 보세요
+</div><div class="mistakes"><div class="mistake"><div class="m-sym">❌ RP2350 드라이브가 안 나타남</div><div class="m-row"><span class="m-tag">원인</span>BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.</div><div class="m-row"><span class="m-tag fix">해결</span>케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다.</div></div></div></section><section class="sec" id="ch0-4"><h3 class="sec-title">0.5 · Thonny와 피코 연결 + 첫 코드</h3><ol class="steps"><li><b>인터프리터 선택</b><span>Thonny 오른쪽 <b>아래 구석</b>을 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. 포트는 보통 자동으로 잡혀요.</span></li><li><b>셸에서 인사해 보기</b><span>아래 Shell 칸에 다음을 한 줄 입력하고 Enter.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">셸에 직접 입력</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 셸(아래쪽 Shell 창)에 한 줄씩 입력해 보세요
 print(&quot;안녕, 피코!&quot;)</code></pre></div><p class="prose"><code>안녕, 피코!</code>가 셸에 찍히면, 컴퓨터와 피코가 <b>대화에 성공</b>한 거예요. 🎉 이제 보드 위 작은 LED를 깜빡여 봅시다.</p><div class="block code-block"><div class="block-head"><span class="block-label">보드 LED 깜빡이기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">from machine import Pin    # 핀 제어 도구
 import time               # 시간(대기) 도구
 
@@ -473,7 +473,6 @@ time.sleep(1)
 fill((0, 0, 0))      # 전체 끄기</code></pre></div><p class="step-head"><b>Step 3.</b> 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴).</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · 무지개 10칸</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴)
 from machine import Pin
 from neopixel import NeoPixel
-import time
 
 TIMING = (280, 515, 515, 745)
 NUM = 10
@@ -529,9 +528,15 @@ def connect_wifi():
     wlan.active(True)
     wlan.connect(SSID, PASSWORD)
     print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
-    while not wlan.isconnected():
-        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5)
-    print(&quot;\n연결 완료!&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
 
 
 def http_get_json(host, path):
@@ -558,15 +563,15 @@ def http_get_json(host, path):
     return json.loads(body)
 
 
-connect_wifi()
-path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
-        &quot;&amp;hourly=precipitation_probability&quot;
-        &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
-data = http_get_json(HOST, path)
+if connect_wifi():
+    path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
+            &quot;&amp;hourly=precipitation_probability&quot;
+            &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    data = http_get_json(HOST, path)
 
-probs = data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]   # 24개 (0~23시)
-for hour in range(6, 24):
-    print(&quot;%2d시 강수확률: %s%%&quot; % (hour, probs[hour]))</code></pre></div><p class="step-head"><b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (추가 설치 없음 · 10분마다 새 예보로 갱신)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 시계 (main.py) — 무설치</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보를 10개 LED에 담는 &#x27;날씨 시계&#x27; (설치 불필요) ===
+    probs = data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+    for hour in range(6, 24):
+        print(&quot;%2d시 강수확률: %s%%&quot; % (hour, probs[hour]))</code></pre></div><p class="step-head"><b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿉니다. 아래가 <b>복사하면 바로 도는</b> 완결형 ‘날씨 시계’예요. (추가 설치 없음 · 10분마다 새 예보로 갱신)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 시계 (main.py) — 무설치</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보를 10개 LED에 담는 &#x27;날씨 시계&#x27; (설치 불필요) ===
 # 내장 socket + ssl 로 Open-Meteo에 접속 — 추가 설치 없이 복붙 실행됩니다.
 #   맑음(연초록) → 흐림(노랑) → 비 가능(파랑) → 비 확실(보라)
 import network, socket, ssl, json, time, gc
@@ -591,12 +596,15 @@ def connect_wifi():
     wlan.active(True)
     wlan.connect(SSID, PASSWORD)
     print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
-    t = 20
-    while not wlan.isconnected() and t &gt; 0:
-        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); t -= 1
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
     if wlan.isconnected():
-        print(&quot;\n연결 완료:&quot;, wlan.ifconfig()[0]); return True
-    print(&quot;\n연결 실패&quot;); return False
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
 
 
 def http_get_json(host, path):
@@ -646,7 +654,8 @@ def show(probs):
 
 
 # 10분마다 새 예보를 받아 LED를 갱신
-if connect_wifi():
+ip = connect_wifi()
+if ip:
     while True:
         try:
             show(get_rain_probs())
@@ -681,12 +690,15 @@ def connect_wifi():
     wlan.active(True)
     wlan.connect(SSID, PASSWORD)
     print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
-    t = 20
-    while not wlan.isconnected() and t &gt; 0:
-        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); t -= 1
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
     if wlan.isconnected():
-        print(&quot;\n연결 완료:&quot;, wlan.ifconfig()[0]); return True
-    print(&quot;\n연결 실패&quot;); return False
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
 
 
 def get_rain_probs():
@@ -717,7 +729,8 @@ def show(probs):
 
 
 # 10분마다 새 예보를 받아 LED를 갱신
-if connect_wifi():
+ip = connect_wifi()
+if ip:
     while True:
         try:
             show(get_rain_probs())

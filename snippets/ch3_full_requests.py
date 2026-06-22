@@ -27,12 +27,15 @@ def connect_wifi():
     wlan.active(True)
     wlan.connect(SSID, PASSWORD)
     print("Wi-Fi 연결 중", end="")
-    t = 20
-    while not wlan.isconnected() and t > 0:
-        print(".", end=""); time.sleep(0.5); t -= 1
+    timeout = 20
+    while not wlan.isconnected() and timeout > 0:
+        print(".", end=""); time.sleep(0.5); timeout -= 1
     if wlan.isconnected():
-        print("\n연결 완료:", wlan.ifconfig()[0]); return True
-    print("\n연결 실패"); return False
+        ip = wlan.ifconfig()[0]
+        print("\n✅ 연결 완료!  IP:", ip)
+        return ip
+    print("\n❌ Wi-Fi 연결 실패")
+    return None
 
 
 def get_rain_probs():
@@ -63,7 +66,8 @@ def show(probs):
 
 
 # 10분마다 새 예보를 받아 LED를 갱신
-if connect_wifi():
+ip = connect_wifi()
+if ip:
     while True:
         try:
             show(get_rain_probs())

@@ -37,8 +37,8 @@ FW_CARD = f'''<div class="fw-card">
     <div class="fw-steps-title">이렇게 설치해요 — 드래그 한 번이면 끝</div>
     <ol class="fw-steps">
       <li><b>BOOTSEL 버튼을 누른 채</b> 피코를 USB 케이블로 컴퓨터에 연결합니다. <span class="fw-dim">(순서 중요! 버튼 먼저 누르고 꽂기)</span></li>
-      <li>컴퓨터에 <code>RPI-RP2</code> 라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다.</li>
-      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RPI-RP2</code> 드라이브로 복사(드래그)</b>합니다.</li>
+      <li>컴퓨터에 <code>RP2350</code> 이라는 USB 드라이브가 나타나면 버튼에서 손을 뗍니다. <span class="fw-dim">(Pico 2 계열. 구형 Pico는 <code>RPI-RP2</code>)</span></li>
+      <li>위 버튼으로 받은 <b>.uf2 파일을 <code>RP2350</code> 드라이브로 복사(드래그)</b>합니다.</li>
       <li>피코가 자동으로 재부팅되며 <b>설치 완료</b> — 이제 Thonny에서 코드를 올릴 수 있어요.</li>
     </ol>
   </div>
@@ -156,7 +156,7 @@ CHAPTERS = [
       {"type": "text", "html": "갓 산 피코에는 아직 파이썬을 실행할 ‘속살’이 없어요. <b>MicroPython 펌웨어</b>를 한 번 설치하면, 그때부터 피코가 파이썬 코드를 알아듣습니다. (처음 한 번만 하면 됩니다)"},
       {"type": "raw", "html": FW_CARD},
       {"type": "mistakes", "items": [
-        {"sym": "RPI-RP2 드라이브가 안 나타남", "cause": "BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.", "fix": "케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다."},
+        {"sym": "RP2350 드라이브가 안 나타남", "cause": "BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.", "fix": "케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다."},
       ]},
     ]},
     {"title": "0.5 · Thonny와 피코 연결 + 첫 코드", "items": [
@@ -437,9 +437,6 @@ def render_item(it, accent):
         ic = icons.get(it["kind"], "💡")
         return (f'<div class="callout {it["kind"]}"><div class="callout-head">{ic} '
                 f'{esc(it["title"])}</div><div class="callout-body">{it["html"]}</div></div>')
-    if t == "goals":
-        lis = "".join(f'<li>{g}</li>' for g in it["items"])
-        return f'<div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul>{lis}</ul></div>'
     if t == "check_list":
         lis = "".join(f'<li>{g}</li>' for g in it["items"])
         return f'<ul class="check-list">{lis}</ul>'

@@ -1,7 +1,6 @@
 # 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴)
 from machine import Pin
 from neopixel import NeoPixel
-import time
 
 TIMING = (280, 515, 515, 745)
 NUM = 10

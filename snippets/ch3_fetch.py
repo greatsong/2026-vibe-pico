@@ -13,9 +13,15 @@ def connect_wifi():
     wlan.active(True)
     wlan.connect(SSID, PASSWORD)
     print("Wi-Fi 연결 중", end="")
-    while not wlan.isconnected():
-        print(".", end=""); time.sleep(0.5)
-    print("\n연결 완료!")
+    timeout = 20
+    while not wlan.isconnected() and timeout > 0:
+        print(".", end=""); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print("\n✅ 연결 완료!  IP:", ip)
+        return ip
+    print("\n❌ Wi-Fi 연결 실패")
+    return None
 
 
 def http_get_json(host, path):
@@ -42,12 +48,12 @@ def http_get_json(host, path):
     return json.loads(body)
 
 
-connect_wifi()
-path = ("/v1/forecast?latitude=%s&longitude=%s"
-        "&hourly=precipitation_probability"
-        "&timezone=Asia%%2FSeoul&forecast_days=1" % (LAT, LON))
-data = http_get_json(HOST, path)
+if connect_wifi():
+    path = ("/v1/forecast?latitude=%s&longitude=%s"
+            "&hourly=precipitation_probability"
+            "&timezone=Asia%%2FSeoul&forecast_days=1" % (LAT, LON))
+    data = http_get_json(HOST, path)
 
-probs = data["hourly"]["precipitation_probability"]   # 24개 (0~23시)
-for hour in range(6, 24):
-    print("%2d시 강수확률: %s%%" % (hour, probs[hour]))
+    probs = data["hourly"]["precipitation_probability"]   # 24개 (0~23시)
+    for hour in range(6, 24):
+        print("%2d시 강수확률: %s%%" % (hour, probs[hour]))
