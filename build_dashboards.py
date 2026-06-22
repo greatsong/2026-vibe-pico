@@ -831,7 +831,7 @@ document.getElementById('loc').value='-0.18|-78.47|적도 · 키토(위도 0°)'
 run();''')
 
 # 12) 나라별 CO2·에너지 (World Bank)
-page("worldbank", "🌱", "나라별 CO₂·에너지", "사회·환경·에너지", "🌍 전 세계(국내 포함)",
+page("worldbank", "🌱", "나라별 CO₂·에너지", "환경·에너지·물리", "🌍 전 세계(국내 포함)",
   lead="<b>세계은행(World Bank)</b>이 모은 나라별 통계예요. 1인당 CO₂ 배출량, 재생에너지 비중 같은 지표로 <b>우리나라와 다른 나라를 데이터로 비교</b>해 볼 수 있어요.",
   src_name="World Bank Open Data", src_url="https://data.worldbank.org",
   info='''<table>
@@ -981,7 +981,7 @@ GAL = [
  ("gbif","🐦","생물 관찰","생물","이 생물은 어디에 사나? 도시 vs 산?","map"),
  ("nasa","🔭","NASA 우주 데이터","천문","오늘의 우주 사진은? 지구 곁 소행성은 몇 개?"),
  ("energy","⚡","태양·바람 에너지","에너지·물리","우리 지역은 태양광·풍력 중 뭐가 유리?"),
- ("worldbank","🌱","나라별 CO₂·에너지","사회·환경","우리나라 1인당 CO₂는 다른 나라보다?"),
+ ("worldbank","🌱","나라별 CO₂·에너지","환경·에너지·물리","우리나라 1인당 CO₂는 다른 나라보다?"),
 ]
 def gcard(item):
     s, e, t, sub, hook = item[0], item[1], item[2], item[3], item[4]
