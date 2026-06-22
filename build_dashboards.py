@@ -505,7 +505,8 @@ page("pubchem", "⚗️", "물질 정보 (화학)", "화학", "🌐 국적 무�
     <tr><td class="k">무엇</td><td>물질 이름으로 분자식·분자량·구조 그림 (PubChem)</td></tr>
     <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
     <tr><td class="k">요청 예</td><td><code>pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/<i>caffeine</i>/property/MolecularWeight/JSON</code></td></tr>
-    <tr><td class="k">그림</td><td>같은 주소의 <code>/PNG</code> 로 2D 구조 이미지를 받습니다</td></tr>
+    <tr><td class="k">2D 그림</td><td>같은 주소의 <code>/PNG</code> 로 평면 구조 이미지를 받습니다</td></tr>
+    <tr><td class="k">3D 구조</td><td>PubChem이 <b>계산한 3D 입체구조 좌표(SDF, <code>record_type=3d</code>)</b>를 받아 <a href="https://3Dmol.org" target="_blank" rel="noopener" style="color:#3b47c2">3Dmol.js</a>로 회전 가능하게 그립니다 — 데이터는 <b>PubChem</b>이 제공</td></tr>
   </table>''',
   apply_html='''<ul>
     <li>여러 물질 <b>분자량 비교</b>(물·포도당·카페인…)</li>
@@ -564,6 +565,17 @@ async function run(){
 run();''')
 
 # 8) GBIF 생물
+SP_GROUPS = [
+ ("새", [("까치","Pica pica"),("왜가리","Ardea cinerea"),("중대백로","Ardea alba"),
+         ("참새","Passer montanus"),("직박구리","Hypsipetes amaurotis"),("박새","Parus major")]),
+ ("포유류", [("고라니","Hydropotes inermis"),("멧돼지","Sus scrofa"),("청설모","Sciurus vulgaris")]),
+ ("양서류·곤충", [("청개구리","Dryophytes japonicus"),("호랑나비","Papilio xuthus")]),
+ ("식물", [("소나무","Pinus densiflora"),("은행나무","Ginkgo biloba"),("왕벚나무","Prunus yedoensis")]),
+]
+PRESET_SP = '<option value="">— 생물 고르기 —</option>' + ''.join(
+    f'<optgroup label="{g}">' + ''.join(f'<option value="{sci}">{ko} ({sci})</option>' for ko, sci in items) + '</optgroup>'
+    for g, items in SP_GROUPS)
+DLIST_SP = ''.join(f'<option value="{sci}">{ko}</option>' for g, items in SP_GROUPS for ko, sci in items)
 page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK",
   lead="전 세계 박물관·연구자·시민과학자가 모은 생물 관찰 기록 <b>20억 건 이상</b>을 한곳에 모은 <b>GBIF</b>. ‘우리나라에서 까치가 언제·어디서 관찰됐나’ 같은 것도 찾을 수 있어요(한국 약 880만 건).",
   src_name="GBIF (세계생물다양성정보기구)", src_url="https://www.gbif.org/country/KR/summary",
@@ -580,8 +592,11 @@ page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK
     <li>계절별 관찰 <b>시기 비교</b>(철새는 언제 많이 보일까?)</li>
   </ul>''',
   maps=True, chart=True,
-  body='<div class="controls"><label>학명</label><input id="sp" value="Pica pica" style="width:180px"><button onclick="run()">검색</button>'
-       '<span style="font-size:12px;color:#7a7f95">예: Pica pica(까치) · Egretta(백로) · Cervus nippon(꽃사슴)</span></div>'
+  body=f'<div class="controls"><label>생물 고르기</label><select id="preset" onchange="pick()">{PRESET_SP}</select>'
+       f'<label>또는 학명</label><input id="sp" list="splist" value="Pica pica" style="width:170px" placeholder="학명(라틴어)">'
+       f'<datalist id="splist">{DLIST_SP}</datalist><button onclick="run()">검색</button></div>'
+       '<div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">학명(라틴어)으로 검색돼요. 목록에 없는 종은 '
+       '<a href="https://www.gbif.org/species/search" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">GBIF 종 검색 ↗</a>에서 학명을 찾아 넣어 보세요.</div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<div class="grid"><div class="stat"><div class="lab">한국 관찰 기록</div><div class="val" id="cnt">--</div><div class="unit">건</div></div>'
        '<div class="stat"><div class="lab">지도에 표시(좌표 있는 것)</div><div class="val" id="mcnt" style="font-size:22px">--</div><div class="unit">개 지점</div></div></div>'
@@ -597,6 +612,7 @@ page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK
        '<li>다른 종(철새 vs 텃새)으로 바꿔 월별 분포를 비교해 보세요.</li>'
        '</ul></div>',
   js='''let map, layer, mchart;
+function pick(){ const v=document.getElementById('preset').value; if(v){ document.getElementById('sp').value=v; run(); } }
 const MON=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 function seasonColor(m){ return (m>=3&&m<=5)?'#22c55e':(m>=6&&m<=8)?'#ef4444':(m>=9&&m<=11)?'#f59e0b':'#3b82f6'; }
 async function run(){
