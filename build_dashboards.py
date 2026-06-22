@@ -776,8 +776,10 @@ page("energy", "⚡", "태양·바람 에너지", "에너지·물리·지구", "
        '<option value="37.57|126.98|🇰🇷 서울(위도 37°)">🇰🇷 서울 (위도 37°)</option>'
        '<option value="64.13|-21.9|아이슬란드 레이캬비크(위도 64°)">아이슬란드 (위도 64°)</option>'
        '<option value="78.22|15.65|극지방 · 스발바르(위도 78°)">극지방 · 스발바르 (위도 78°)</option>'
-       '</select><button onclick="run()">비교</button></div>'
-       '<div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">선택한 지역을 <b>막대</b>로, <b>🇰🇷서울</b>을 선으로 겹쳐 보여줘요 — 위도에 따라 일사량이 어떻게 달라지는지 비교!</div>'
+       '</select>'
+       '<label>그래프</label><select id="metric" onchange="draw()"><option value="sun">☀️ 태양 일사량</option><option value="wind">💨 풍속</option></select>'
+       '<button onclick="run()">비교</button></div>'
+       '<div style="font-size:12px;color:#7a7f95;margin:-6px 2px 12px">선택한 지역을 <b>막대</b>로, <b>🇰🇷서울</b>을 선으로 겹쳐 보여줘요. <b>그래프</b>를 일사량↔풍속으로 바꿔 둘 다 비교하세요!</div>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<div class="grid"><div class="stat"><div class="lab">선택 지역 연평균 일사량</div><div class="val" id="sun">--</div><div class="unit">kWh/m²/일</div></div>'
        '<div class="stat"><div class="lab">🇰🇷 서울 연평균 일사량</div><div class="val" id="sunS" style="color:#E0568A">--</div><div class="unit">kWh/m²/일</div></div>'
@@ -788,12 +790,28 @@ page("energy", "⚡", "태양·바람 에너지", "에너지·물리·지구", "
        '<li>극지방은 여름·겨울 일사량 차이가 왜 그렇게 클까요?(백야·극야) 적도는 왜 일 년 내내 비슷할까요?</li>'
        '<li>사막은 위도가 높아도 일사량이 매우 큰 편이에요. 왜 그럴까요?(구름·강수)</li>'
        '</ul></div>',
-  js='''let chart, seoulCache=null;
+  js='''let chart, seoulCache=null, cur=null, curName='';
 const M=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 const K=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 async function fetchPoint(lat,lon){
   const u=`https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=${lon}&latitude=${lat}&format=JSON`;
   return (await (await fetch(u)).json()).properties.parameter;
+}
+function draw(){
+  if(!cur||!seoulCache) return;
+  const metric=document.getElementById('metric').value;
+  const PK = metric==='sun'?'ALLSKY_SFC_SW_DWN':'WS10M';
+  const unit = metric==='sun'?'태양 일사량 (kWh/m²/일)':'풍속 (m/s, 10m 높이)';
+  const tag = metric==='sun'?' 일사량':' 풍속';
+  const col = metric==='sun'?'rgba(245,158,11,.65)':'rgba(59,130,246,.55)';
+  const a=K.map(k=>cur[PK][k]), b=K.map(k=>seoulCache[PK][k]);
+  const isSeoul=curName.includes('서울');
+  const ds=[{type:'bar',label:curName+tag,data:a,backgroundColor:col,yAxisID:'y'}];
+  if(!isSeoul) ds.push({type:'line',label:'🇰🇷 서울'+tag,data:b,borderColor:'#E0568A',backgroundColor:'rgba(224,86,138,.08)',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y'});
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('ch'),{data:{labels:M,datasets:ds},
+    options:{responsive:true,interaction:{intersect:false,mode:'index'},
+      scales:{y:{beginAtZero:true,title:{display:true,text:unit}}}}});
 }
 async function run(){
   const [lat,lon,name]=document.getElementById('loc').value.split('|');
@@ -801,19 +819,12 @@ async function run(){
   try{
     const p=await fetchPoint(lat,lon);
     if(!seoulCache) seoulCache=await fetchPoint(37.57,126.98);
-    const sun=K.map(k=>p.ALLSKY_SFC_SW_DWN[k]), wind=K.map(k=>p.WS10M[k]);
-    const sunSeoul=K.map(k=>seoulCache.ALLSKY_SFC_SW_DWN[k]);
+    cur=p; curName=name;
     document.getElementById('sun').textContent=p.ALLSKY_SFC_SW_DWN.ANN.toFixed(2);
     document.getElementById('sunS').textContent=seoulCache.ALLSKY_SFC_SW_DWN.ANN.toFixed(2);
     document.getElementById('wind').textContent=p.WS10M.ANN.toFixed(1);
     s.textContent='✓ '+name+' vs 서울 · 30년 기후 평년값';
-    const isSeoul=name.includes('서울');
-    const ds=[{type:'bar',label:name+' 일사량',data:sun,backgroundColor:'rgba(245,158,11,.65)',yAxisID:'y'}];
-    if(!isSeoul) ds.push({type:'line',label:'🇰🇷 서울 일사량',data:sunSeoul,borderColor:'#E0568A',backgroundColor:'rgba(224,86,138,.08)',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y'});
-    if(chart) chart.destroy();
-    chart=new Chart(document.getElementById('ch'),{data:{labels:M,datasets:ds},
-      options:{responsive:true,interaction:{intersect:false,mode:'index'},
-        scales:{y:{beginAtZero:true,title:{display:true,text:'태양 일사량 (kWh/m²/일)'}}}}});
+    draw();
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 document.getElementById('loc').value='-0.18|-78.47|적도 · 키토(위도 0°)';
@@ -880,9 +891,15 @@ async function run(){
     s.textContent='✓ '+label+' · '+refYear+'년 기준(전 세계 같은 해로 비교)';
     document.getElementById('yr').textContent=refYear+'년 기준';
     // 세계 지도(choropleth)
-    Plotly.newPlot('wmap',[{type:'choropleth',locationmode:'ISO-3',locations:locs,z,text,
-      hoverinfo:'text',colorscale:scale,reversescale:false,
-      marker:{line:{color:'#ffffff',width:0.4}},colorbar:{thickness:12,len:0.9}}],
+    const krv = latest['KOR'] ? latest['KOR'].v.toFixed(1) : '-';
+    Plotly.newPlot('wmap',[
+      {type:'choropleth',locationmode:'ISO-3',locations:locs,z,text,
+       hoverinfo:'text',colorscale:scale,reversescale:false,
+       marker:{line:{color:'#ffffff',width:0.4}},colorbar:{thickness:12,len:0.9}},
+      {type:'scattergeo',lon:[127.8],lat:[36.3],mode:'markers+text',
+       text:['🇰🇷 한국 '+krv],textposition:'middle right',hoverinfo:'skip',showlegend:false,
+       textfont:{size:12,color:'#b3245e'},marker:{size:9,color:'#E0568A',line:{color:'#fff',width:1.5}}}
+    ],
       {geo:{showframe:false,showcoastlines:false,projection:{type:'natural earth'},bgcolor:'rgba(0,0,0,0)'},
        margin:{t:6,b:6,l:0,r:0},paper_bgcolor:'rgba(0,0,0,0)'},
       {displayModeBar:false,responsive:true});

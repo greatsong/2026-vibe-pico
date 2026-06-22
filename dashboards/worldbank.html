@@ -77,9 +77,15 @@ async function run(){
     s.textContent='✓ '+label+' · '+refYear+'년 기준(전 세계 같은 해로 비교)';
     document.getElementById('yr').textContent=refYear+'년 기준';
     // 세계 지도(choropleth)
-    Plotly.newPlot('wmap',[{type:'choropleth',locationmode:'ISO-3',locations:locs,z,text,
-      hoverinfo:'text',colorscale:scale,reversescale:false,
-      marker:{line:{color:'#ffffff',width:0.4}},colorbar:{thickness:12,len:0.9}}],
+    const krv = latest['KOR'] ? latest['KOR'].v.toFixed(1) : '-';
+    Plotly.newPlot('wmap',[
+      {type:'choropleth',locationmode:'ISO-3',locations:locs,z,text,
+       hoverinfo:'text',colorscale:scale,reversescale:false,
+       marker:{line:{color:'#ffffff',width:0.4}},colorbar:{thickness:12,len:0.9}},
+      {type:'scattergeo',lon:[127.8],lat:[36.3],mode:'markers+text',
+       text:['🇰🇷 한국 '+krv],textposition:'middle right',hoverinfo:'skip',showlegend:false,
+       textfont:{size:12,color:'#b3245e'},marker:{size:9,color:'#E0568A',line:{color:'#fff',width:1.5}}}
+    ],
       {geo:{showframe:false,showcoastlines:false,projection:{type:'natural earth'},bgcolor:'rgba(0,0,0,0)'},
        margin:{t:6,b:6,l:0,r:0},paper_bgcolor:'rgba(0,0,0,0)'},
       {displayModeBar:false,responsive:true});
