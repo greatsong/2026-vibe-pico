@@ -25,7 +25,7 @@
     <p class="lead"><b>NASA</b>의 공개 데이터 두 가지를 함께 봅니다. 1995년부터 <b>매일 한 장씩</b> 올라오는 천문사진(APOD)과, 오늘 <b>지구 가까이 지나가는 소행성</b>(NeoWs) 목록이에요. 같은 API 키 하나로 여러 우주 데이터에 접근할 수 있죠.</p>
     <table>
     <tr><td class="k">무엇</td><td>천문사진(APOD) + 근지구 소행성(NeoWs) — NASA Open APIs</td></tr>
-    <tr><td class="k">API 키</td><td><b>필요</b> · <b>api.nasa.gov</b>에서 무료 발급(이 페이지엔 키가 들어 있어요)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요</b> · 기본은 공용 <code>DEMO_KEY</code>(횟수 제한) · 막히면 <b>api.nasa.gov</b>에서 무료 키 발급해 입력</td></tr>
     <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=…</code><br><code>api.nasa.gov/neo/rest/v1/feed?start_date=…&amp;end_date=…&amp;api_key=…</code></td></tr>
     <tr><td class="k">확장</td><td>같은 키로 지구사진(EPIC), 화성 날씨 등 다른 API도 호출 가능</td></tr>
   </table>
@@ -35,7 +35,7 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:300px"><button onclick="run()">불러오기</button></div><h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13px;color:#44464f;margin-top:10px;line-height:1.8"></p><h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3><div id="nstatus" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div><div id="astro"></div><div style="font-size:11px;color:#8a8fa6;margin:2px 2px 10px;text-align:center">⬤ 크기=지름 · 색=위험(빨강)/안전(파랑) · 가로축=지구로부터 거리(달까지 거리의 배수, 로그) · 점에 마우스를 올리면 상세</div><ul class="list" id="nlist"></ul>
+    <div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:200px"><button onclick="run()">불러오기</button><span style="font-size:12px;color:#7a7f95">DEMO_KEY는 횟수 제한이 있어요 → 막히면 <a href="https://api.nasa.gov" target="_blank" rel="noopener" style="color:#3b47c2">무료 키 발급</a> 후 입력</span></div><h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3><div id="status" class="status">불러오는 중…</div><h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div><div id="media"></div><p id="exp" style="font-size:13px;color:#44464f;margin-top:10px;line-height:1.8"></p><h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3><div id="nstatus" class="status">불러오는 중…</div><div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div><div id="astro"></div><div style="font-size:11px;color:#8a8fa6;margin:2px 2px 10px;text-align:center">⬤ 크기=지름 · 색=위험(빨강)/안전(파랑) · 가로축=지구로부터 거리(달까지 거리의 배수, 로그) · 점에 마우스를 올리면 상세</div><ul class="list" id="nlist"></ul>
   </section>
 
   <section class="card apply">

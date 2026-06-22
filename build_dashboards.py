@@ -661,7 +661,7 @@ page("nasa", "🔭", "NASA 우주 데이터", "천문", "🌐 국적 무관 · �
   refs=[("오늘의 천문사진 APOD", "https://apod.nasa.gov/apod/"), ("소행성 NeoWs 안내", "https://api.nasa.gov/")],
   info='''<table>
     <tr><td class="k">무엇</td><td>천문사진(APOD) + 근지구 소행성(NeoWs) — NASA Open APIs</td></tr>
-    <tr><td class="k">API 키</td><td><b>필요</b> · <b>api.nasa.gov</b>에서 무료 발급(이 페이지엔 키가 들어 있어요)</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요</b> · 기본은 공용 <code>DEMO_KEY</code>(횟수 제한) · 막히면 <b>api.nasa.gov</b>에서 무료 키 발급해 입력</td></tr>
     <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=…</code><br><code>api.nasa.gov/neo/rest/v1/feed?start_date=…&amp;end_date=…&amp;api_key=…</code></td></tr>
     <tr><td class="k">확장</td><td>같은 키로 지구사진(EPIC), 화성 날씨 등 다른 API도 호출 가능</td></tr>
   </table>''',
@@ -670,7 +670,8 @@ page("nasa", "🔭", "NASA 우주 데이터", "천문", "🌐 국적 무관 · �
     <li>오늘 가장 가까이 오는 소행성 <b>거리·크기 비교</b>(달까지 거리와 견주기)</li>
     <li><b>위험 소행성</b>(PHA)이 있으면 알림 LED — 지름·거리 데이터로 탐구</li>
   </ul>''',
-  body='<div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:300px"><button onclick="run()">불러오기</button></div>'
+  body='<div class="controls"><label>API 키</label><input id="key" value="DEMO_KEY" style="width:200px"><button onclick="run()">불러오기</button>'
+       '<span style="font-size:12px;color:#7a7f95">DEMO_KEY는 횟수 제한이 있어요 → 막히면 <a href="https://api.nasa.gov" target="_blank" rel="noopener" style="color:#3b47c2">무료 키 발급</a> 후 입력</span></div>'
        '<h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3>'
        '<div id="status" class="status">불러오는 중…</div>'
        '<h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div>'

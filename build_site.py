@@ -525,7 +525,7 @@ CHAPTERS = [
       {"type": "linkbtn", "href": "dashboards/gbif.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "8) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
-      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 무료 API 키가 필요해요(api.nasa.gov, 대시보드엔 키가 포함돼 있어요).</span>"},
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 api.nasa.gov에서 무료 키를 받아 넣으면 돼요.</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
   ],
