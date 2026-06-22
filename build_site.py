@@ -46,55 +46,64 @@ FW_CARD = f'''<div class="fw-card">
 </div>'''
 
 # 하드웨어 연결 다이어그램 (SVG)
-HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코와 그로브 쉴드, LED, 가스센서 연결도">
+HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코와 그로브 쉴드, LED, 가스센서 연결도">
   <defs>
-    <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 z" fill="#8a8780"/>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="6.5" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#aeb4c8"/>
     </marker>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.12"/>
+    </filter>
   </defs>
+
   <!-- 연결선 -->
-  <line x1="146" y1="112" x2="236" y2="112" stroke="#8a8780" stroke-width="2" marker-end="url(#ah)" marker-start="url(#ah)"/>
-  <text x="191" y="103" text-anchor="middle" font-size="12" fill="#7b7872">USB</text>
-  <line x1="450" y1="95"  x2="538" y2="95"  stroke="#8a8780" stroke-width="2" marker-end="url(#ah)"/>
-  <line x1="450" y1="166" x2="538" y2="166" stroke="#8a8780" stroke-width="2" marker-end="url(#ah)"/>
-  <text x="494" y="86"  text-anchor="middle" font-size="11" fill="#7b7872">그로브 케이블</text>
+  <line x1="152" y1="122" x2="246" y2="122" stroke="#c6cadb" stroke-width="2.5" marker-end="url(#ah)"/>
+  <text x="199" y="113" text-anchor="middle" font-size="11.5" fill="#8a8fa6" font-weight="600">USB</text>
+  <line x1="486" y1="150" x2="556" y2="150" stroke="#c6cadb" stroke-width="2.5" marker-end="url(#ah)"/>
+  <line x1="486" y1="192" x2="556" y2="192" stroke="#c6cadb" stroke-width="2.5" marker-end="url(#ah)"/>
+  <text x="521" y="140" text-anchor="middle" font-size="10.5" fill="#a7adc0" font-weight="600">그로브 케이블</text>
 
-  <!-- PC -->
-  <rect x="16" y="70" width="130" height="84" rx="12" fill="#f7f6f3" stroke="#d6d5d2"/>
-  <rect x="40" y="86" width="82" height="46" rx="4" fill="#fff" stroke="#c9c8c4"/>
-  <rect x="70" y="132" width="22" height="8" fill="#d6d5d2"/>
-  <text x="81" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#37352f">PC / 노트북</text>
+  <!-- PC / 노트북 -->
+  <g filter="url(#sh)">
+    <rect x="20" y="86" width="132" height="92" rx="16" fill="#ffffff" stroke="#e7e9f3"/></g>
+  <rect x="42" y="102" width="88" height="48" rx="5" fill="#f2f4fb" stroke="#d7dbeb"/>
+  <rect x="74" y="150" width="24" height="7" rx="2" fill="#d7dbeb"/>
+  <rect x="62" y="157" width="48" height="5" rx="2.5" fill="#e7e9f3"/>
+  <text x="86" y="174" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2b2d3a">PC / 노트북</text>
 
-  <!-- 피코 + 쉴드 -->
-  <rect x="240" y="40" width="210" height="160" rx="14" fill="#eef0ff" stroke="#b9c0f5"/>
-  <text x="345" y="74"  text-anchor="middle" font-size="11.5" fill="#5b6cf0">Raspberry Pi</text>
-  <text x="345" y="96"  text-anchor="middle" font-size="16" font-weight="800" fill="#37352f">Pico 2 WH</text>
-  <text x="345" y="120" text-anchor="middle" font-size="12" fill="#7b7872">+ 그로브 베이스 쉴드</text>
-  <!-- 포트 -->
-  <text x="404" y="99"  text-anchor="end" font-size="12" font-weight="700" fill="#1f9d63">D16</text>
-  <circle cx="450" cy="95" r="6" fill="#1f9d63"/>
-  <text x="404" y="170" text-anchor="end" font-size="12" font-weight="700" fill="#d4762a">A0</text>
-  <circle cx="450" cy="166" r="6" fill="#d4762a"/>
+  <!-- 피코 + 그로브 쉴드 -->
+  <g filter="url(#sh)">
+    <rect x="254" y="60" width="232" height="150" rx="20" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="370" y="94"  text-anchor="middle" font-size="11" fill="#6b78e8" font-weight="600">Raspberry Pi</text>
+  <text x="370" y="116" text-anchor="middle" font-size="18" font-weight="800" fill="#2b2d3a">Pico 2 WH</text>
+  <text x="370" y="137" text-anchor="middle" font-size="11.5" fill="#8a8fb0">+ 그로브 베이스 쉴드</text>
+  <!-- 포트 (오른쪽 가장자리, 제목과 겹치지 않게 아래쪽) -->
+  <text x="470" y="154" text-anchor="end" font-size="12" font-weight="800" fill="#1f9d63">D16</text>
+  <circle cx="486" cy="150" r="7" fill="#fff" stroke="#1f9d63" stroke-width="2.5"/>
+  <circle cx="486" cy="150" r="3" fill="#1f9d63"/>
+  <text x="470" y="196" text-anchor="end" font-size="12" font-weight="800" fill="#d4762a">A0</text>
+  <circle cx="486" cy="192" r="7" fill="#fff" stroke="#d4762a" stroke-width="2.5"/>
+  <circle cx="486" cy="192" r="3" fill="#d4762a"/>
 
-  <!-- LED 바 -->
-  <rect x="540" y="68" width="204" height="56" rx="12" fill="#fff" stroke="#cdd6f7"/>
-  <g>
-    <rect x="556" y="84" width="11" height="24" rx="2" fill="#3b82f6"/>
-    <rect x="569" y="84" width="11" height="24" rx="2" fill="#22c55e"/>
-    <rect x="582" y="84" width="11" height="24" rx="2" fill="#f59e0b"/>
-  </g>
-  <text x="602" y="91" font-size="12.5" font-weight="700" fill="#37352f">WS2813 LED 바 · 10개</text>
-  <text x="602" y="109" font-size="10.5" fill="#7b7872">그로브 D16 = GP16 · 디지털</text>
+  <!-- WS2813 LED 바 -->
+  <g filter="url(#sh)">
+    <rect x="558" y="124" width="204" height="54" rx="15" fill="#ffffff" stroke="#d7defb"/></g>
+  <rect x="576" y="139" width="11" height="24" rx="2.5" fill="#3b82f6"/>
+  <rect x="589" y="139" width="11" height="24" rx="2.5" fill="#22c55e"/>
+  <rect x="602" y="139" width="11" height="24" rx="2.5" fill="#f59e0b"/>
+  <text x="624" y="147" font-size="12.5" font-weight="700" fill="#2b2d3a">WS2813 LED 바 · 10개</text>
+  <text x="624" y="165" font-size="10.5" fill="#8a8fa6">그로브 D16 = GP16 · 디지털</text>
 
-  <!-- MQ-2 -->
-  <rect x="540" y="139" width="204" height="56" rx="12" fill="#fff" stroke="#f0dcc4"/>
-  <circle cx="568" cy="167" r="11" fill="#b45309"/>
-  <circle cx="568" cy="167" r="5" fill="#e8a45c"/>
-  <text x="588" y="162" font-size="12.5" font-weight="700" fill="#37352f">MQ-2 가스센서</text>
-  <text x="588" y="180" font-size="10.5" fill="#7b7872">그로브 A0 = GP26 · ADC0</text>
+  <!-- MQ-2 가스센서 -->
+  <g filter="url(#sh)">
+    <rect x="558" y="166" width="204" height="54" rx="15" fill="#ffffff" stroke="#f3e1cb"/></g>
+  <circle cx="588" cy="193" r="12" fill="#b45309"/>
+  <circle cx="588" cy="193" r="6" fill="#e8a45c"/>
+  <text x="612" y="189" font-size="12.5" font-weight="700" fill="#2b2d3a">MQ-2 가스센서</text>
+  <text x="612" y="207" font-size="10.5" fill="#8a8fa6">그로브 A0 = GP26 · ADC0</text>
 
   <!-- 범례 -->
-  <text x="16" y="232" font-size="11" fill="#7b7872">● 그로브 포트 &#160;·&#160; LED → D16(GP16) &#160;·&#160; MQ-2 → A0(GP26)</text>
+  <text x="20" y="244" font-size="10.5" fill="#a7adc0">● 그로브 포트  ·  LED → D16(GP16, 디지털)  ·  MQ-2 → A0(GP26, 아날로그)</text>
 </svg></div>'''
 
 # ===================================================================

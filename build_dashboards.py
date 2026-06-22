@@ -448,43 +448,71 @@ page("gbif", "🐦", "우리나라 생물 관찰", "생물", "🇰🇷 국내 OK
 run();''')
 
 # 9) NASA APOD
-page("nasa", "🔭", "오늘의 천문사진 (NASA)", "천문", "🌐 국적 무관 · 키 필요",
-  lead="<b>NASA</b>가 1995년부터 <b>매일 한 장씩</b> 골라 올리는 우주 사진과 천문학자의 설명(APOD). 성운, 은하, 행성… 오늘은 어떤 우주가 기다리고 있을까요?",
+page("nasa", "🔭", "NASA 우주 데이터", "천문", "🌐 국적 무관 · 키 필요",
+  lead="<b>NASA</b>의 공개 데이터 두 가지를 함께 봅니다. 1995년부터 <b>매일 한 장씩</b> 올라오는 천문사진(APOD)과, 오늘 <b>지구 가까이 지나가는 소행성</b>(NeoWs) 목록이에요. 같은 API 키 하나로 여러 우주 데이터에 접근할 수 있죠.",
   info='''<table>
-    <tr><td class="k">무엇</td><td>매일 바뀌는 천문 사진·설명 APOD (NASA)</td></tr>
-    <tr><td class="k">API 키</td><td><b>필요</b> — <code>DEMO_KEY</code>로 체험, <b>api.nasa.gov</b>에서 무료 발급</td></tr>
-    <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=DEMO_KEY</code></td></tr>
-    <tr><td class="k">주의</td><td>DEMO_KEY는 시간당 호출 제한 → 안 되면 잠시 후/내 키로</td></tr>
+    <tr><td class="k">무엇</td><td>천문사진(APOD) + 근지구 소행성(NeoWs) — NASA Open APIs</td></tr>
+    <tr><td class="k">API 키</td><td><b>필요</b> · <b>api.nasa.gov</b>에서 무료 발급(이 페이지엔 키가 들어 있어요)</td></tr>
+    <tr><td class="k">요청 예</td><td><code>api.nasa.gov/planetary/apod?api_key=…</code><br><code>api.nasa.gov/neo/rest/v1/feed?start_date=…&amp;end_date=…&amp;api_key=…</code></td></tr>
+    <tr><td class="k">확장</td><td>같은 키로 지구사진(EPIC), 화성 날씨 등 다른 API도 호출 가능</td></tr>
   </table>''',
   apply_html='''<ul>
-    <li>교실 모니터에 <b>매일 우주사진</b> 띄우기</li>
-    <li>설명을 번역해 <b>오늘의 천문 이야기</b></li>
-    <li>NASA의 다른 API(<b>화성 사진·소행성</b>)로 확장</li>
+    <li>교실 모니터에 <b>매일 우주사진</b> 띄우기(설명 번역해 ‘오늘의 천문 이야기’)</li>
+    <li>오늘 가장 가까이 오는 소행성 <b>거리·크기 비교</b>(달까지 거리와 견주기)</li>
+    <li><b>위험 소행성</b>(PHA)이 있으면 알림 LED — 지름·거리 데이터로 탐구</li>
   </ul>''',
-  body='<div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:180px"><button onclick="run()">불러오기</button></div>'
+  body='<div class="controls"><label>API 키</label><input id="key" value="SCIgZnFwHKdey57AE3CkOMG87y4DDRDiUi152ry2" style="width:300px"><button onclick="run()">불러오기</button></div>'
+       '<h3 style="margin:6px 0 2px;font-size:15px">🌌 오늘의 천문사진 (APOD)</h3>'
        '<div id="status" class="status">불러오는 중…</div>'
-       '<h3 id="title" style="margin:6px 0;font-size:18px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div>'
+       '<h3 id="title" style="margin:6px 0;font-size:17px"></h3><div class="meta" id="date" style="color:#7a7f95;font-size:12px"></div>'
        '<div id="media"></div>'
-       '<p id="exp" style="font-size:13.5px;color:#44464f;margin-top:10px;line-height:1.8"></p>',
-  js='''async function run(){
-  const key=document.getElementById('key').value.trim()||'DEMO_KEY';
+       '<p id="exp" style="font-size:13px;color:#44464f;margin-top:10px;line-height:1.8"></p>'
+       '<h3 style="margin:24px 0 2px;font-size:15px;border-top:1px solid #eceef5;padding-top:18px">🪨 오늘 지구 곁을 지나는 소행성 (NeoWs)</h3>'
+       '<div id="nstatus" class="status">불러오는 중…</div>'
+       '<div class="grid"><div class="stat"><div class="lab">오늘 접근 소행성</div><div class="val" id="ncnt">--</div><div class="unit">개</div></div></div>'
+       '<ul class="list" id="nlist"></ul>',
+  js='''const MOON=384400; // 달까지 평균거리(km)
+async function loadApod(key){
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 12000);
-    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal});
-    clearTimeout(to);
-    if(res.status===429||res.status===503){ throw new Error('호출 제한(DEMO_KEY) — 잠시 후 또는 내 키로'); }
-    const j=await res.json();
-    if(j.error){ throw new Error(j.error.message||'호출 제한'); }
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),12000);
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key='+key,{signal:ctrl.signal}); clearTimeout(to);
+    if(res.status===429||res.status===503) throw new Error('호출 제한 — 잠시 후 다시');
+    const j=await res.json(); if(j.error) throw new Error(j.error.message);
     document.getElementById('title').textContent=j.title;
     document.getElementById('date').textContent=j.date+(j.copyright?(' · © '+j.copyright):'');
     document.getElementById('media').innerHTML = j.media_type==='image'
       ? `<img class="bigimg" src="${j.url}" alt="${j.title}">`
       : `<iframe class="bigimg" style="height:420px" src="${j.url}" allowfullscreen></iframe>`;
     document.getElementById('exp').textContent=j.explanation;
-    s.textContent='✓ NASA APOD';
-  }catch(e){ s.className='status err'; s.textContent='못 받았어요(DEMO_KEY 호출 제한일 수 있어요): '+e.message; }
+    s.textContent='✓ '+j.date;
+  }catch(e){ s.className='status err'; s.textContent='사진을 못 받았어요: '+e.message; }
 }
+async function loadNeo(key){
+  const s=document.getElementById('nstatus'); s.className='status'; s.textContent='불러오는 중…';
+  try{
+    const t=new Date().toISOString().slice(0,10);
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),12000);
+    const res=await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${t}&end_date=${t}&api_key=${key}`,{signal:ctrl.signal}); clearTimeout(to);
+    if(res.status===429||res.status===503) throw new Error('호출 제한 — 잠시 후 다시');
+    const j=await res.json(); if(j.error_message) throw new Error(j.error_message);
+    document.getElementById('ncnt').textContent=j.element_count;
+    const arr=(Object.values(j.near_earth_objects)[0]||[]).map(a=>({
+      name:a.name, dia:Math.round(a.estimated_diameter.meters.estimated_diameter_max),
+      km:+a.close_approach_data[0].miss_distance.kilometers,
+      vel:Math.round(+a.close_approach_data[0].relative_velocity.kilometers_per_hour),
+      haz:a.is_potentially_hazardous_asteroid
+    })).sort((x,y)=>x.km-y.km);
+    s.textContent='✓ '+t+' 기준';
+    document.getElementById('nlist').innerHTML=arr.map(a=>{
+      const moon=(a.km/MOON).toFixed(1);
+      const c=a.haz?'#ef4444':'#64748b';
+      return `<li><span class="badge" style="background:${c}">${a.haz?'위험':'안전'}</span>
+        <span>${a.name}<br><span class="meta">지름 약 ${a.dia.toLocaleString()}m · 최근접 ${Math.round(a.km).toLocaleString()}km(달까지 거리의 ${moon}배) · ${a.vel.toLocaleString()}km/h</span></span></li>`;
+    }).join('') || '<li class="meta">오늘 접근 기록이 없어요.</li>';
+  }catch(e){ s.className='status err'; s.textContent='소행성 데이터를 못 받았어요: '+e.message; }
+}
+function run(){ const key=document.getElementById('key').value.trim()||'DEMO_KEY'; loadApod(key); loadNeo(key); }
 run();''')
 
 # ===================================================================
@@ -498,7 +526,7 @@ GAL = [
  ("spaceweather","🌞","우주날씨 Kp","천문·지구"),
  ("pubchem","⚗️","물질 정보","화학"),
  ("gbif","🐦","생물 관찰","생물"),
- ("nasa","🔭","오늘의 천문사진","천문"),
+ ("nasa","🔭","NASA 우주 데이터","천문"),
 ]
 cards = "".join(
  f'<a class="gcard" href="{s}.html"><div class="ge">{e}</div>'
