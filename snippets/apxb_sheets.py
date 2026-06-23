@@ -3,8 +3,8 @@ import network, socket, ssl, time, gc
 from machine import ADC, Pin
 from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
 
-# ↓ 구글에서 복사한 주소를 그대로 붙여넣으세요 (.../exec 로 끝나는 주소)
-WEB_APP_URL = "https://script.google.com/macros/s/여기에_붙여넣기/exec"
+# ↓ 이 따옴표 안 주소 전체를, 구글에서 복사한 웹 앱 주소(.../exec)로 바꾸세요
+WEB_APP_URL = "https://script.google.com/macros/s/...여기에_주소_붙여넣기.../exec"
 INTERVAL = 60                 # 몇 초마다 보낼지 (60 = 1분)
 gas = ADC(Pin(26))           # 가스센서 (그로브 A0)
 

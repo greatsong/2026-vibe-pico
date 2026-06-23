@@ -50,6 +50,7 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>{title} · 라이브 대시보드</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -255,11 +256,17 @@ COPY_JS = (
     "<script>"
     "function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');"
     "setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}"
-    "function vcopypre(b){var p=document.getElementById('vibepre');"
-    "navigator.clipboard.writeText(p?p.textContent:'').then(function(){_vflash(b);});}"
+    "function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;"
+    "ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();"
+    "document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}"
+    "catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\\u2318+C):',t);}}"
+    "function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){"
+    "navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}"
+    "else{_vfallback(t,b);}}"
+    "function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}"
     "function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;"
     "var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\\s+$/,'')+'\\n\\n':'';"
-    "navigator.clipboard.writeText(pre+s).then(function(){_vflash(b);});}"
+    "_vwrite(pre+s,b);}"
     "</script>"
 )
 
@@ -1132,6 +1139,7 @@ cards = "".join(gcard(it) for it in GAL)
 index_html = f'''<!DOCTYPE html>
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>오픈 API 라이브 대시보드 갤러리</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">

@@ -7,6 +7,10 @@ from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
 
 gas_sensor = ADC(Pin(26))
 
+# ── 임계값: 우리 교실에 맞게 이 두 숫자만 바꾸세요 (웹 화면 색도 함께 바뀜) ──
+SAFE_MAX = 20000   # 이 아래 = 안전(초록)
+WARN_MAX = 45000   # 이 아래 = 주의(노랑), 넘으면 위험(빨강)
+
 
 def read_average(sensor, count=10):
     total = 0
@@ -169,16 +173,18 @@ const chart = new Chart(ctx, {
   }
 });
 
+let TH = { safe: 20000, warn: 45000 };   // /data 가 코드 상단 임계값을 알려주면 갱신됨
 function levelOf(v) {
-  if (v < 20000) return { label: 'SAFE',    color: '#22d3a6' };
-  if (v < 45000) return { label: 'WARNING', color: '#f59e0b' };
-  return               { label: 'DANGER',   color: '#ef4444' };
+  if (v < TH.safe) return { label: 'SAFE',    color: '#22d3a6' };
+  if (v < TH.warn) return { label: 'WARNING', color: '#f59e0b' };
+  return                 { label: 'DANGER',   color: '#ef4444' };
 }
 
 async function poll() {
   try {
     const res  = await fetch('/data');
     const json = await res.json();
+    if (json.safe != null) { TH.safe = json.safe; TH.warn = json.warn; }
     const v    = json.value;
     const now  = new Date().toLocaleTimeString('ko-KR', { hour12: false });
     const lv   = levelOf(v);
@@ -243,7 +249,7 @@ def run_server():
             req = conn.recv(512).decode("utf-8", "ignore")
             if "GET /data" in req:
                 value = read_average(gas_sensor, 10)
-                body  = json.dumps({"value": value}).encode()
+                body  = json.dumps({"value": value, "safe": SAFE_MAX, "warn": WARN_MAX}).encode()
                 send_response(conn, "200 OK", "application/json", body)
             else:
                 send_response(conn, "200 OK", "text/html; charset=utf-8", HTML)

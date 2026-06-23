@@ -13,11 +13,11 @@ def fill(c):
         np[i] = c
     np.write()
 
-def pulse(c, times=3):          # 숨쉬듯 밝아졌다 어두워지기
+def pulse(c, times=3, delay=0.02):     # 숨쉬듯 밝아졌다 어두워지기 (delay 작을수록 빠름)
     for _ in range(times):
         for b in list(range(0, 60, 4)) + list(range(60, 0, -4)):
             fill((c[0] * b // 60, c[1] * b // 60, c[2] * b // 60))
-            time.sleep(0.02)
+            time.sleep(delay)
 
 def blink(c, times=6):          # 깜빡깜빡
     for _ in range(times):
@@ -32,8 +32,8 @@ def sparkle(c, times=40):       # 반짝반짝 (랜덤 칸)
         time.sleep(0.05)
 
 # 감정 프리셋: 색 + 움직임을 골라 함수로 묶었어요
-def joy():     pulse((50, 40, 0))     # 기쁨: 따뜻한 노랑, 두근두근
-def calm():    pulse((0, 20, 40))     # 평온: 파랑, 천천히 숨쉬기
+def joy():     pulse((50, 40, 0), delay=0.012)   # 기쁨: 따뜻한 노랑, 두근두근(빠르게)
+def calm():    pulse((0, 20, 40), delay=0.05)    # 평온: 파랑, 천천히 숨쉬기
 def anger():   blink((60, 0, 0))      # 화남: 빨강 깜빡
 def excited(): sparkle((0, 50, 30))   # 신남: 청록 반짝
 

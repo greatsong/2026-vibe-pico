@@ -291,14 +291,15 @@ CHAPTERS = [
     ]},
     {"title": "0.5 · Thonny와 피코 연결 + 첫 코드", "items": [
       {"type": "steps", "items": [
-        {"t": "인터프리터 선택", "d": "Thonny 오른쪽 <b>아래 구석</b>을 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. 포트는 보통 자동으로 잡혀요."},
+        {"t": "인터프리터 선택", "d": "Thonny 창 <b>맨 아래 오른쪽 상태바</b>(‘Local Python 3…’이라고 적힌 곳)를 클릭 → <b>‘MicroPython (Raspberry Pi Pico)’</b>를 고릅니다. (안 보이면 메뉴 <b>실행(Run) → 인터프리터 설정</b>) 포트는 보통 자동으로 잡혀요."},
         {"t": "셸에서 인사해 보기", "d": "아래 Shell 칸에 다음을 한 줄 입력하고 Enter."},
       ]},
       {"type": "code", "label": "셸에 직접 입력", "lang": "python", "file": "snippets/ch0_hello.py"},
       {"type": "text", "html": "<code>안녕, 피코!</code>가 셸에 찍히면, 컴퓨터와 피코가 <b>대화에 성공</b>한 거예요. 🎉 이제 보드 위 작은 LED를 깜빡여 봅시다."},
-      {"type": "code", "label": "보드 LED 깜빡이기", "lang": "python", "file": "snippets/ch0_blink.py"},
-      {"type": "callout", "kind": "tip", "title": "main.py로 저장하면 자동 실행",
-       "html": "이 코드를 피코에 <b>main.py</b>라는 이름으로 저장하면(파일 → 저장 → Raspberry Pi Pico), 다음부터 전원만 넣어도 코드가 저절로 돌아갑니다. 멈추려면 Thonny에서 ⏹(정지) 또는 Ctrl+C."},
+      {"type": "step_head", "html": "이번엔 여러 줄 코드라, 셸이 아니라 <b>위쪽 편집기 칸</b>에 붙여넣고 실행해요."},
+      {"type": "code", "label": "보드 LED 깜빡이기 (편집기에 쓰고 ▶ 실행)", "lang": "python", "file": "snippets/ch0_blink.py"},
+      {"type": "callout", "kind": "key", "title": "버튼 3개만 기억하세요 — ▶ 실행 · ⏹ 정지 · 💾 저장",
+       "html": "① <b>▶ 실행(Run)</b> — 편집기에 쓴 코드를 피코에서 돌립니다.<br>② <b>⏹ 정지(Stop)</b> — <code>while True</code>처럼 계속 도는 코드를 멈춰요. <b>코드를 고쳐 다시 실행할 땐 먼저 ⏹로 멈춘 뒤 ▶</b>를 누르세요(안 멈추면 ‘사용 중’이라 새로 안 돌아요).<br>③ <b>💾 저장</b> — 저장하면 ‘<b>This computer</b>(내 컴퓨터)’와 ‘<b>Raspberry Pi Pico</b>’ 중 어디에 저장할지 물어봐요. 꼭 <b>Raspberry Pi Pico</b>를 고르고 파일 이름은 <b><code>main.py</code></b>로 하세요. (그래야 전원만 넣어도 자동 실행되고, 뒤 장의 코드들이 서로(예: wifi_config.py)를 찾을 수 있어요.)"},
       {"type": "mistakes", "items": [
         {"sym": "포트/장치가 목록에 안 보임", "cause": "펌웨어 미설치, 또는 케이블 문제.", "fix": "0.4를 다시 확인하고, 케이블을 데이터용으로 바꾸세요. Thonny를 재시작하면 잡히기도 합니다."},
         {"sym": "코드를 멈출 수 없음 (무한 반복)", "cause": "<code>while True</code>는 일부러 무한 반복합니다.", "fix": "Thonny의 ⏹ 정지 버튼을 누르거나 셸에서 Ctrl+C."},
@@ -308,6 +309,8 @@ CHAPTERS = [
         {"q": "펌웨어는 매번 설치해야 하나요?", "a": "아니요. 처음 한 번만 설치하면 계속 유지됩니다."},
         {"q": "보드 LED를 코드에서 어떻게 가리켰나요?", "a": "<code>Pin(\"LED\", Pin.OUT)</code> — 피코 보드에 내장된 LED를 출력 모드로 잡았습니다."},
       ]},
+      {"type": "callout", "kind": "info", "title": "다음 장부터 — AI에게 시키는 ‘바이브코딩’",
+       "html": "이 연수에서는 긴 코드를 손으로 다 치지 않고, <b>AI에게 우리말로 설명해 코드를 받습니다.</b> AI 도구가 처음이라면: <b>claude.ai</b>(또는 쓰는 AI)에 접속 → 로그인 → <b>새 대화</b> → 교재의 ‘<b>AI에게 이렇게 설명하세요</b>’ 프롬프트를 복사해 붙여넣고 Enter. 받은 코드를 Thonny 편집기에 붙여넣어 <b>▶ 실행</b>하면 돼요."},
     ]},
   ],
 },
@@ -337,9 +340,11 @@ CHAPTERS = [
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
       {"type": "code", "label": "Step 1 · 와이파이 스캔", "lang": "python", "file": "snippets/ch1_scan.py"},
-      {"type": "step_head", "html": "<b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b>라는 별도 파일로 저장합니다. (피코에 새 파일로 저장!) 와이파이를 쓰는 코드는 모두 이 파일을 함께 씁니다."},
+      {"type": "step_head", "html": "<b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b> 파일에 따로 저장해요. Thonny <b>파일 → 새 파일</b> → 아래 두 줄 입력 → <b>💾 저장 → ‘Raspberry Pi Pico’</b> 선택 → 파일 이름을 정확히 <b><code>wifi_config.py</code></b>로. (와이파이를 쓰는 코드는 모두 이 파일을 함께 씁니다.)"},
       {"type": "code", "label": "Step 2 · wifi_config.py (따로 저장)", "lang": "python", "file": "snippets/wifi_config.py"},
-      {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결하고 신호 세기를 1초마다 출력합니다. (손코딩으로 원리 확인)"},
+      {"type": "callout", "kind": "warn", "title": "두 줄 적을 때 주의",
+       "html": "<b>따옴표 <code>\"</code> 는 그대로 두고 그 안의 글자만</b> 내 와이파이 이름·비밀번호로 바꾸세요(대소문자 정확히). 피코는 <b>2.4GHz</b> 와이파이만 됩니다 — 이름이 <code>…5G</code>로 끝나면 안 돼요."},
+      {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결해 신호 세기를 1초마다 출력합니다. <b>편집기 칸에 붙여넣고 ▶ 실행</b>해 원리를 확인하세요. (셸에 RSSI 값이 1초마다 찍혀요.)"},
       {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 대시보드 코드를 만들어 줍니다."},
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
@@ -470,11 +475,14 @@ CHAPTERS = [
 "라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] MQ-2 가스센서를 ADC(Pin 26, 그로브 A0)로 읽고 있어. read_u16()으로 0~65535 값이 나오고, 여러 번 읽어 이동평균으로 안정시키고 있어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[만들 것] 피코가 외부 라이브러리 없이 소켓 기반 웹서버(80번 포트)가 되게 해 줘. 브라우저가 /data 주소에서 JSON으로 최신 값을 받아 자동 갱신하고, Chart.js로 실시간 그래프를 그리게 해 줘. 임계값으로 SAFE/WARNING/DANGER를 나눠 색으로 표시하고(임계값은 코드 위에서 바꿀 수 있게), 다크 테마로 만들어 줘.\n[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)"},
       {"type": "code", "label": "전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py", "fold": True},
+      {"type": "callout", "kind": "key", "title": "대시보드 열기 · 임계값 바꾸기",
+       "html": "실행하면 Thonny <b>셸에 <code>http://...</code> 주소</b>가 찍혀요. 그 주소를 <b>같은 와이파이의 폰/PC 브라우저</b>에 입력하면 화면이 열립니다(<code>http://</code>로, https 아님).<br>안전·주의 기준을 바꾸려면 코드 <b>맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code></b> 두 숫자만 고치세요 — 웹 화면 색도 함께 바뀝니다. (다음 장 LED도 <b>같은 숫자</b>를 씁니다.)"},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
         {"sym": "값이 늘 0이거나 65535에 붙어 있음", "cause": "센서를 A0가 아닌 다른 포트에 꽂음.", "fix": "그로브 <b>A0(=GP26)</b>에 꽂았는지 확인하세요. D포트에 꽂으면 아날로그 값을 못 읽습니다."},
-        {"sym": "켜자마자 ‘위험’으로 뜸", "cause": "예열 전이라 값이 큼.", "fix": "1~2분 기다리세요. 그래도 항상 위험이면 임계값(SAFE/WARNING/DANGER 숫자)을 우리 환경에 맞게 올리세요."},
+        {"sym": "켜자마자 ‘위험’으로 뜸", "cause": "예열 전이라 값이 큼.", "fix": "1~2분 기다리세요. 그래도 항상 위험이면 코드 맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code> 숫자를 우리 환경에 맞게 올리세요."},
+        {"sym": "‘❌ Wi-Fi 연결 실패’만 뜨고 멈춤", "cause": "SSID·비밀번호 오타 또는 5GHz 망.", "fix": "<code>wifi_config.py</code>의 따옴표 안 이름·비밀번호를 정확히(대소문자) 확인하고 <b>2.4GHz</b> 망인지 보세요. 고친 뒤 ⏹ 정지 → 다시 ▶ 실행."},
         {"sym": "ImportError: wifi_config", "cause": "<code>wifi_config.py</code>가 피코에 없음.", "fix": "main.py와 같은 위치에 <code>wifi_config.py</code> 파일을 새로 만들어 두 줄만 적으세요. <code>WIFI_SSID = \"와이파이이름\"</code> / <code>WIFI_PASSWORD = \"비밀번호\"</code> (위 핵심 개념의 안내 참고)."},
       ]},
     ]},
@@ -571,6 +579,8 @@ CHAPTERS = [
 "라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[만들 것] Open-Meteo API(키 불필요)에서 우리 지역의 오늘 시간별 강수확률을 받아, 6시~23시를 셸에 ‘N시 강수확률: M%’ 형식으로 출력해 줘. 데이터가 어떻게 생겼는지 먼저 확인하려는 거야.\n[조건] requests 같은 외부 라이브러리는 설치하지 말고, 피코에 기본 내장된 socket+ssl만 써. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 위도/경도(LAT/LON)는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도 아래 <b>완성본</b>을 복사해 실행하면 됩니다. (긴 <code>http_get_json</code>은 뒤 단계에서도 그대로 재사용해요.)"},
       {"type": "code", "label": "전체 코드 · 강수확률 받아오기", "lang": "python", "file": "snippets/ch5_fetch.py"},
+      {"type": "callout", "kind": "info", "title": "코드가 여러 개죠? — 최종은 하나만",
+       "html": "아래로 가면서 코드가 여러 번 나와요. <b>피코에 저장(main.py)할 최종 코드는 딱 하나</b>면 됩니다:<br>· Step 2(강수확률 출력) = <b>확인용</b>(잠깐 실행만)<br>· Step 3(날씨 시계) = LED만 버전<br>· <b>Step 5(LED + 웹) = 가장 완성본 ← 이거 하나면 충분</b><br>새 코드를 쓸 땐 <b>이전 코드를 지우고</b> 붙여넣으세요(피코는 한 번에 main.py 하나만 돌려요)."},
       {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿔 ‘날씨 시계’를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>설명</b>하면 만들어 줍니다."},
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
 "라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] Open-Meteo API(키 불필요)에서 오늘의 시간별 강수확률을 받고 있어. 인터넷 접속은 피코 기본 내장 socket+ssl만 써(추가 설치 없이). 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[만들 것] 오전 6시~밤 11시(18시간)를 WS2813 LED 10칸에 고르게 나눠, 각 시각의 강수확률을 색으로 표시하는 ‘날씨 시계’를 만들어 줘. LED는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어(없으면 색 깨짐), 밝기는 낮게. 강수확률 구간별 색(예: 맑음=초록·흐림=노랑·비 가능=파랑·비 확실=보라)은 코드 위에서 바꿀 수 있게 둬. 날씨 데이터는 10분에 한 번만 새로 받아와 줘.\n[조건] 위도/경도(LAT/LON)와 timing은 코드 맨 위에 두고, 복사해서 바로 도는 완결형 main.py로 줘."},
@@ -627,7 +637,7 @@ CHAPTERS = [
     ]},
     {"title": "과학 수업에 쓸 만한 다른 오픈 API", "items": [
       {"type": "text", "html": "Open-Meteo 말고도 <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많아요 — 지진·ISS·일출몰·우주날씨·물질(화학)·생물 등. 과목별로 <b>어떤 데이터를 주고 무엇을 탐구할 수 있는지</b>를 <b>부록 A</b>에 한눈에 정리했고, 브라우저에서 바로 받아 그려 보는 <b>라이브 대시보드(지도·그래프)</b>로도 만들어 뒀습니다(국내 적용 여부도 표시). 키 없이 동작하는 것만 골랐고, 2026년 기준 응답을 확인했어요."},
-      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종)"},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종 · 5장 날씨 포함)"},
       {"type": "callout", "kind": "key", "title": "🇰🇷 국내 공식 데이터가 필요하면 — 공공데이터포털",
        "html": "‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <b>공공데이터포털(data.go.kr)</b>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <b>에어코리아(한국환경공단) 미세먼지</b> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span>"},
       {"type": "callout", "kind": "info", "title": "피코로 가져올 때 한 가지",
@@ -651,6 +661,7 @@ CHAPTERS = [
         {"t": "🌬️ 스마트 환기등", "d": "가스센서(3·4장) 값이 WARNING을 넘으면 LED를 노랑→빨강으로, 웹에 ‘환기하세요’ 알림."},
         {"t": "📶 와이파이 약한 자리 찾기", "d": "RSSI 대시보드(1장)를 들고 다니며 집에서 신호가 약한 곳을 LED 게이지로 탐색."},
         {"t": "🌡️ 오늘 날씨 무드등", "d": "강수확률 대신 기온을 받아(Open-Meteo) 더우면 빨강, 추우면 파랑으로 방 전체 분위기 표현."},
+        {"t": "🔭 과학 데이터 작품", "d": "<b>부록 A</b> 갤러리에서 API 하나 골라(지진·낮 길이·CO₂…) 값을 10칸 LED 게이지로. 각 페이지에 ‘AI에게 설명’ 프롬프트가 있어요."},
       ]},
     ]},
     {"title": "AI에게 잘 설명하는 틀", "items": [
@@ -674,7 +685,7 @@ CHAPTERS = [
     {"title": "이 부록 쓰는 법", "items": [
       {"type": "callout", "kind": "key", "title": "🌐 라이브 대시보드로 데이터를 ‘직접’ 만나 보기",
        "html": "각 API 카드의 <b>‘라이브 대시보드 열기’</b>를 누르면, 브라우저에서 <b>지금 데이터를 받아 지도·그래프로 그려 주는 페이지</b>가 열려요(설치·피코 없이 클릭만). 위치·물질·종을 바꿔 가며 탐구하고, 페이지마다 ‘🔎 탐구 질문’도 있습니다."},
-      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종)"},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종 · 5장 날씨 포함)"},
       {"type": "callout", "kind": "info", "title": "국내 적용 여부 한눈에",
        "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS·우주날씨) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 국내 공식 데이터는 공공데이터포털(키 필요)을 쓰세요."},
     ]},
@@ -710,6 +721,14 @@ CHAPTERS = [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 api.nasa.gov에서 무료 키를 받아 넣으면 돼요.</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
+    {"title": "9) 태양·바람 에너지 — 에너지·물리·지구 🌍", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 지역별 월평균 일사량·풍속(NASA POWER, 키 불필요).<br><b>🔎 어떤 탐구</b> — 우리 지역 태양광 발전 잠재력 · 적도·사막·극지방 일사량 비교 · 계절(여름↑ 겨울↓) 차이."},
+      {"type": "linkbtn", "href": "dashboards/energy.html", "label": "이 API 라이브 대시보드 열기"},
+    ]},
+    {"title": "10) 나라별 CO₂·에너지 — 환경·에너지 🌍", "items": [
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 나라별 1인당 CO₂ 배출·재생에너지 비중 등(World Bank, 키 불필요).<br><b>🔎 어떤 탐구</b> — 한국 vs 주요국 비교 · 세계지도/버블로 대륙별 패턴 · 우리나라 순위 확인."},
+      {"type": "linkbtn", "href": "dashboards/worldbank.html", "label": "이 API 라이브 대시보드 열기"},
+    ]},
   ],
 },
 # ----------------------------------------------------------------- 부록 B (심화)
@@ -729,25 +748,33 @@ CHAPTERS = [
     ]},
     {"title": "1단계 · 구글 쪽 설정 (한 번만)", "items": [
       {"type": "steps", "items": [
-        {"t": "새 구글 시트 만들기", "d": "주소창에 <code>sheets.new</code>를 쳐서 새 시트를 만들고, 첫 행(1행)에 <b>시각 · 값</b>처럼 헤더를 적어 둡니다."},
-        {"t": "Apps Script 열기", "d": "메뉴 <b>확장 프로그램 → Apps Script</b>. 코드 편집기가 새 탭으로 열려요."},
-        {"t": "코드 붙여넣기 → 저장", "d": "기본 <code>myFunction</code>을 지우고 아래 코드를 붙여넣은 뒤 저장(💾)."},
+        {"t": "새 구글 시트 만들기", "d": "주소창에 <code>sheets.new</code>를 입력하면 새 시트가 열려요. (구글 계정이 필요해요 — 로그인 안 돼 있으면 <b>로그인 화면이 먼저</b> 뜹니다.) 첫 행(1행)에 <b>시각</b>·<b>값</b>이라고 적어 둡니다."},
+        {"t": "Apps Script 열기", "d": "메뉴 <b>확장 프로그램 → Apps Script</b>를 누르면 코드 편집기가 새 탭으로 열려요."},
+        {"t": "코드 붙여넣기 → 저장", "d": "편집기에 이미 적힌 <code>function myFunction()…</code>을 <b>전부 선택(Ctrl+A·맥은 ⌘A)해 지우고</b>, 아래 코드를 통째로 붙여넣으세요. 파일 이름은 <code>Code.gs</code> 그대로 두고 저장(💾)."},
       ]},
-      {"type": "code", "label": "Apps Script 코드 (Code.gs)", "lang": "javascript", "code":
+      {"type": "code", "label": "Apps Script 코드 (Code.gs 에 붙여넣기)", "lang": "javascript", "code":
 "function doGet(e) {\n  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];\n  sh.appendRow([new Date(), e.parameter.value]);   // [시각, 값] 한 줄 추가\n  return ContentService.createTextOutput(\"OK\");\n}"},
       {"type": "steps", "items": [
-        {"t": "웹앱으로 배포", "d": "오른쪽 위 <b>배포 → 새 배포 → 유형: 웹 앱</b>."},
-        {"t": "권한 설정", "d": "실행: <b>나</b> · 액세스 권한: <b>모든 사용자</b>. (피코는 로그인을 못 하니 꼭 ‘모든 사용자’)"},
-        {"t": "주소 복사", "d": "배포가 끝나면 <code>...로 끝나는 긴 주소</code>(<code>/exec</code>로 끝나요)가 나와요. 그 <b>주소 전체를 복사</b>해 두세요. 다음 단계에서 그대로 붙여넣습니다."},
+        {"t": "웹 앱으로 배포 시작", "d": "오른쪽 위 파란 <b>배포 → 새 배포</b>를 누르고, ‘유형 선택’ 옆 <b>톱니바퀴(⚙️)</b>를 눌러 <b>웹 앱</b>을 고릅니다."},
+        {"t": "권한 설정 후 배포", "d": "실행: <b>나</b> · 액세스 권한: <b>모든 사용자</b>로 두고 <b>배포</b>를 누르세요. (피코는 로그인을 못 하니 꼭 ‘모든 사용자’!)"},
+        {"t": "권한 승인 (처음 한 번만)", "d": "‘액세스 승인’ → 내 구글 <b>계정 선택</b> → <b>‘확인되지 않은 앱’ 경고</b>가 떠도 정상 → 왼쪽 아래 <b>고급</b> → <b>‘…(으)로 이동’</b> → <b>허용</b>."},
+        {"t": "웹 앱 주소 복사", "d": "마지막에 나오는 <b>‘웹 앱 URL’</b>(<code>/exec</code>로 끝나는 긴 주소)의 <b>복사</b>를 누르세요. (디플로이 ID가 아니라 <b>URL</b>이에요!) 다음 단계에서 그대로 붙여넣습니다."},
       ]},
-      {"type": "callout", "kind": "warn", "title": "권한 승인 팝업 + 재배포",
-       "html": "처음 배포할 때 ‘권한 검토 → 고급 → 이동(안전하지 않음)’ 단계를 거칩니다. 내가 만든 스크립트라 안전해요. 또 코드를 고치면 <b>배포 관리 → 편집(연필) → 버전: 새 버전</b>으로 다시 배포해야 반영됩니다."},
+      {"type": "callout", "kind": "tip", "title": "겁먹지 마세요 — ‘확인되지 않은 앱’ 경고",
+       "html": "빨간/노란 경고 화면은 ‘구글이 아직 검토하지 않은 앱’이라는 뜻일 뿐이에요. <b>내가 방금 만든 스크립트라 안전</b>합니다. <b>왼쪽 아래 ‘고급’ → ‘…(으)로 이동(안전하지 않음)’ → ‘허용’</b> 순서로 넘어가면 됩니다."},
+      {"type": "callout", "kind": "info", "title": "나중에 코드를 고치면 — 새 버전으로 재배포",
+       "html": "Apps Script 코드를 수정했다면 <b>배포 → 배포 관리 → 편집(연필) → 버전: 새 버전 → 배포</b>로 다시 배포해야 반영됩니다. (주소는 그대로예요.)"},
     ]},
     {"title": "2단계 · 피코에 붙여넣고 실행", "items": [
-      {"type": "text", "html": "아까 <b>복사한 주소를 그대로</b> 코드 맨 위 <code>WEB_APP_URL</code> 자리에 붙여넣고 실행하면 끝이에요. 피코가 1분에 한 번씩 센서값을 시트로 보냅니다. (따로 설치할 건 없어요. 와이파이만 <code>wifi_config.py</code>에 적혀 있으면 됩니다.)"},
+      {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 (wifi_config.py)",
+       "html": "이 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(1장에서 이미 만들었다면 그대로 두면 돼요. 피코는 <b>2.4GHz</b> 와이파이만 됩니다.)"},
+      {"type": "text", "html": "아래 코드를 펼쳐(▶) 복사해 Thonny에 붙여넣고, 위쪽의 <code>WEB_APP_URL = \"…\"</code> 줄에서 <b>따옴표 안 주소 전체를</b> 아까 복사한 주소로 바꾸세요. (양쪽 따옴표 <code>\"</code> 는 지우지 말고 남겨 두세요.)"},
       {"type": "code", "label": "전체 코드 · 센서값 → 구글 시트 (main.py)", "lang": "python", "file": "snippets/apxb_sheets.py", "fold": True},
+      {"type": "step_head", "html": "그리고 <b>▶ 실행</b>하면 끝! (피코에 <b>main.py</b>로 저장하면 전원만 넣어도 자동 실행돼요. 실행·저장이 낯설면 <b>0장</b>을 참고하세요.) 이 코드는 <b>가스센서(MQ-2)</b> 기준이라, 다른 센서를 쓰면 코드에서 센서 읽는 줄만 바꾸면 됩니다."},
+      {"type": "callout", "kind": "key", "title": "둘은 ‘value’라는 이름으로 짝이에요",
+       "html": "피코는 주소 뒤에 <code>?value=42</code>처럼 값을 붙여 보내고, Apps Script(1단계 코드)는 그 <code>value</code>를 꺼내 시트 ‘값’ 칸에 적습니다. <b>양쪽 이름이 같아서</b> 짝이 맞는 거예요."},
       {"type": "callout", "kind": "tip", "title": "잘 되는지 확인하는 법",
-       "html": "코드를 실행한 채 <b>구글 시트를 열어 두세요.</b> 1분마다 줄이 하나씩 <b>스르륵 늘어나면</b> 성공이에요! 안 늘어나면 아래 ‘자주 막히는 곳’을 보세요."},
+       "html": "코드를 실행한 채 <b>구글 시트를 열어 두세요.</b> 1분마다 줄이 하나씩 <b>스르륵 늘어나면</b> 성공! Thonny 아래 <b>셸(Shell) 칸</b>에 <code>시트로 보냄: 42</code> 같은 메시지가 1분마다 찍혀도 잘 가는 거예요. 안 되면 아래 ‘자주 막히는 곳’을 보세요."},
     ]},
     {"title": "쌓인 데이터로 탐구하기", "items": [
       {"type": "text", "html": "시트에 줄이 쌓이면, 값 열을 선택하고 <b>삽입 → 차트</b>로 추세 그래프를 바로 그릴 수 있어요. ‘하루 중 공기질이 가장 나쁜 시간’, ‘환기 전후 변화’, ‘요일별 비교’ 같은 탐구로 이어집니다."},
@@ -755,6 +782,7 @@ CHAPTERS = [
     {"title": "자주 막히는 곳", "items": [
       {"type": "mistakes", "items": [
         {"sym": "시트에 아무것도 안 쌓임", "cause": "웹앱 액세스 권한이 ‘모든 사용자’가 아님.", "fix": "배포를 <b>모든 사용자</b>로 다시 하세요. 코드 수정 후엔 <b>배포 관리 → 편집 → 새 버전</b>으로 재배포해야 반영됩니다."},
+        {"sym": "ImportError: no module named 'wifi_config'", "cause": "<code>wifi_config.py</code>가 피코에 없음.", "fix": "위 2단계 안내대로 <code>wifi_config.py</code>를 main.py와 같은 위치에 만들고 와이파이 두 줄(<code>WIFI_SSID</code>, <code>WIFI_PASSWORD</code>)을 적으세요."},
         {"sym": "셸에 ‘실패’라고 떠요", "cause": "잠깐 인터넷이 끊겼을 때 그래요.", "fix": "한두 번은 괜찮아요 — 다음 차례에 다시 보냅니다. 계속 그러면 보내는 간격(<code>INTERVAL</code>)을 늘려 보세요."},
         {"sym": "시각이 한국시간과 다름", "cause": "Apps Script 프로젝트 시간대가 기본(미국).", "fix": "Apps Script <b>프로젝트 설정(⚙️) → 시간대 → (GMT+09:00) 서울</b>로 바꾸세요."},
         {"sym": "문자열 값이 깨짐", "cause": "공백·특수문자를 URL에 그대로 넣음.", "fix": "숫자 센서값은 문제없어요. 문자열은 공백 등을 <code>%20</code>처럼 URL 인코딩하거나 단순 텍스트/숫자만 보내세요."},
@@ -762,7 +790,7 @@ CHAPTERS = [
     ]},
     {"title": "바이브코딩 프롬프트", "items": [
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py를 만들어 줘.\n[하는 일] MQ-2 가스센서를 ADC(Pin 26)로 읽어 60초마다 구글 시트에 한 줄씩 기록하고 싶어.\n[전송 방법] 구글 Apps Script 웹앱 URL(https://script.google.com/macros/s/<배포ID>/exec)에 ?value=값 형태로 GET 요청을 보내. 외부 라이브러리 없이 피코 기본 socket+ssl만 쓰고(requests 설치 금지, https는 CERT_NONE), Apps Script가 주는 302 리다이렉트는 따라가서 완료해 줘.\n[설정] 와이파이는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 배포ID와 전송 주기는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
+"라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py를 만들어 줘.\n[하는 일] MQ-2 가스센서를 ADC(Pin 26)로 읽어 60초마다 구글 시트에 한 줄씩 기록하고 싶어.\n[전송 방법] 구글 Apps Script 웹 앱 URL(.../exec 로 끝나는 전체 주소)에 ?value=값 형태로 GET 요청을 보내. 외부 라이브러리 없이 피코 기본 socket+ssl만 쓰고(requests 설치 금지, https는 CERT_NONE), Apps Script가 주는 302 리다이렉트는 따라가서 완료해 줘.\n[설정] 와이파이는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 웹 앱 URL과 전송 주기는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
     ]},
     {"title": "스스로 점검하기", "items": [
       {"type": "check", "items": [
@@ -905,6 +933,7 @@ TEMPLATE = r'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">

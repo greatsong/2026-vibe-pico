@@ -39,10 +39,9 @@ while True:
     v = read_avg()
     show(v)
     print("ADC:", v)
-    if v >= WARN_MAX:               # 위험하면 깜빡여서 눈에 띄게
-        time.sleep(0.3)
-        np.fill((0, 0, 0))
-        np.write()
-        time.sleep(0.3)
+    if v >= WARN_MAX:               # 위험하면 빠르게 3번 깜빡여 눈에 띄게
+        for _ in range(3):
+            np.fill((0, 0, 0)); np.write(); time.sleep(0.12)   # 껐다
+            show(v); time.sleep(0.12)                          # 켰다
     else:
         time.sleep(0.6)

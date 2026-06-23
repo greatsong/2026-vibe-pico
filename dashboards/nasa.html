@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>NASA 우주 데이터 · 라이브 대시보드</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -58,7 +59,7 @@
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
-<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function vcopypre(b){var p=document.getElementById('vibepre');navigator.clipboard.writeText(p?p.textContent:'').then(function(){_vflash(b);});}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';navigator.clipboard.writeText(pre+s).then(function(){_vflash(b);});}</script>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}</script>
 <script>
 const MOON=384400; // 달까지 평균거리(km)
 async function loadApod(key){
