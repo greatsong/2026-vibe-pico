@@ -186,6 +186,48 @@ API_ANALOGY_SVG = '''<p style="margin:0 0 12px">API는 <b>‘정해진 양식을
 # ===================================================================
 #  콘텐츠 정의
 # ===================================================================
+SHEETS_FLOW_SVG = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 760 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코가 센서값을 구글 시트에 보내 한 줄씩 쌓이는 과정">
+  <!-- 피코 + 센서 카드 -->
+  <rect x="24" y="78" width="186" height="104" rx="14" fill="#eef0ff" stroke="#c9d0fb"/>
+  <text x="117" y="108" text-anchor="middle" font-size="14" font-weight="800" fill="#3b47c2">🔌 피코 + 센서</text>
+  <text x="117" y="130" text-anchor="middle" font-size="11" fill="#7a7f95">지금 잰 값</text>
+  <rect x="73" y="138" width="88" height="34" rx="8" fill="#fff" stroke="#c9d0fb"/>
+  <text x="117" y="161" text-anchor="middle" font-size="19" font-weight="800" fill="#3b47c2">42</text>
+
+  <!-- 인터넷 화살표 -->
+  <line x1="216" y1="130" x2="470" y2="130" stroke="#cbd2e6" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="343" y="116" text-anchor="middle" font-size="11" fill="#8a8fa6">인터넷으로 전송</text>
+  <polygon points="472,130 461,124 461,136" fill="#cbd2e6"/>
+
+  <!-- 날아가는 값(엽서) -->
+  <g>
+    <rect x="196" y="114" width="48" height="32" rx="8" fill="#5B6CF0"/>
+    <text x="220" y="136" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">42</text>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 252,0; 252,0" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.45;0.52;1" dur="3s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- 구글 시트 카드 -->
+  <rect x="486" y="36" width="250" height="186" rx="14" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="611" y="62" text-anchor="middle" font-size="14" font-weight="800" fill="#15803d">📊 구글 시트</text>
+  <rect x="506" y="76" width="210" height="26" rx="6" fill="#dcfce7"/>
+  <text x="556" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">시각</text>
+  <text x="666" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">값</text>
+  <line x1="611" y1="76" x2="611" y2="208" stroke="#bbf7d0"/>
+  <text x="556" y="122" text-anchor="middle" font-size="11" fill="#555">09:58</text><text x="666" y="122" text-anchor="middle" font-size="11" fill="#555">39</text>
+  <text x="556" y="144" text-anchor="middle" font-size="11" fill="#555">09:59</text><text x="666" y="144" text-anchor="middle" font-size="11" fill="#555">45</text>
+  <text x="556" y="166" text-anchor="middle" font-size="11" fill="#555">10:00</text><text x="666" y="166" text-anchor="middle" font-size="11" fill="#555">41</text>
+  <!-- 새로 추가되는 줄 -->
+  <g>
+    <rect x="506" y="178" width="210" height="24" rx="5" fill="#bbf7d0"/>
+    <text x="556" y="195" text-anchor="middle" font-size="11" font-weight="800" fill="#15803d">10:01</text>
+    <text x="666" y="195" text-anchor="middle" font-size="11" font-weight="800" fill="#15803d">42</text>
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.5;0.62;1" dur="3s" repeatCount="indefinite"/>
+  </g>
+
+  <text x="380" y="242" text-anchor="middle" font-size="11.5" fill="#7a7f95">보낼 때마다 시트에 <tspan font-weight="800" fill="#15803d">새 줄이 하나씩</tspan> 쌓여요</text>
+</svg></div>'''
+
 CHAPTERS = [
 # ----------------------------------------------------------------- CH0
 {
@@ -667,6 +709,67 @@ CHAPTERS = [
     {"title": "8) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 api.nasa.gov에서 무료 키를 받아 넣으면 돼요.</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- 부록 B (심화)
+{
+  "id": "apxb", "num": "B", "title": "부록 · 심화: 센서 데이터를 구글 시트에 쌓기", "accent": "#16A34A",
+  "subtitle": "피코가 잰 값을 구글 시트에 한 줄씩 자동으로 기록합니다. 며칠치 데이터를 모아 그래프·통계로 탐구할 수 있어요. (설치할 것 없이 바로 됩니다)",
+  "goals": [
+    "Google Apps Script로 시트에 데이터를 받는 웹앱을 만들 수 있다",
+    "피코에서 센서값을 HTTPS로 시트에 전송할 수 있다",
+    "쌓인 데이터를 시트의 차트로 탐구할 수 있다",
+  ],
+  "why": "지금까지는 값을 LED·웹으로 ‘그 순간’만 봤어요. 하지만 <b>시간에 따라 쌓아 두면</b> 훨씬 강력해집니다 — 하루 공기질 변화, 며칠치 신호 추세, 일주일 데이터를 그래프로 볼 수 있죠. 구글 시트는 무료이고, <b>Apps Script 웹앱</b>을 거치면 피코가 복잡한 로그인 없이 <b>URL 하나로</b> 데이터를 보낼 수 있어요.",
+  "sections": [
+    {"title": "그림으로 보기 — 데이터가 어떻게 쌓일까", "items": [
+      {"type": "text", "html": "마치 <b>엽서</b>를 보내는 것과 같아요. 피코가 지금 잰 숫자를 엽서에 적어 ‘구글 시트’라는 <b>우편함</b>으로 보내면, 시트에 <b>새 줄이 하나씩</b> 차곡차곡 쌓입니다. 👇"},
+      {"type": "raw", "html": SHEETS_FLOW_SVG},
+    ]},
+    {"title": "1단계 · 구글 쪽 설정 (한 번만)", "items": [
+      {"type": "steps", "items": [
+        {"t": "새 구글 시트 만들기", "d": "주소창에 <code>sheets.new</code>를 쳐서 새 시트를 만들고, 첫 행(1행)에 <b>시각 · 값</b>처럼 헤더를 적어 둡니다."},
+        {"t": "Apps Script 열기", "d": "메뉴 <b>확장 프로그램 → Apps Script</b>. 코드 편집기가 새 탭으로 열려요."},
+        {"t": "코드 붙여넣기 → 저장", "d": "기본 <code>myFunction</code>을 지우고 아래 코드를 붙여넣은 뒤 저장(💾)."},
+      ]},
+      {"type": "code", "label": "Apps Script 코드 (Code.gs)", "lang": "javascript", "code":
+"function doGet(e) {\n  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];\n  sh.appendRow([new Date(), e.parameter.value]);   // [시각, 값] 한 줄 추가\n  return ContentService.createTextOutput(\"OK\");\n}"},
+      {"type": "steps", "items": [
+        {"t": "웹앱으로 배포", "d": "오른쪽 위 <b>배포 → 새 배포 → 유형: 웹 앱</b>."},
+        {"t": "권한 설정", "d": "실행: <b>나</b> · 액세스 권한: <b>모든 사용자</b>. (피코는 로그인을 못 하니 꼭 ‘모든 사용자’)"},
+        {"t": "주소 복사", "d": "배포가 끝나면 <code>...로 끝나는 긴 주소</code>(<code>/exec</code>로 끝나요)가 나와요. 그 <b>주소 전체를 복사</b>해 두세요. 다음 단계에서 그대로 붙여넣습니다."},
+      ]},
+      {"type": "callout", "kind": "warn", "title": "권한 승인 팝업 + 재배포",
+       "html": "처음 배포할 때 ‘권한 검토 → 고급 → 이동(안전하지 않음)’ 단계를 거칩니다. 내가 만든 스크립트라 안전해요. 또 코드를 고치면 <b>배포 관리 → 편집(연필) → 버전: 새 버전</b>으로 다시 배포해야 반영됩니다."},
+    ]},
+    {"title": "2단계 · 피코에 붙여넣고 실행", "items": [
+      {"type": "text", "html": "아까 <b>복사한 주소를 그대로</b> 코드 맨 위 <code>WEB_APP_URL</code> 자리에 붙여넣고 실행하면 끝이에요. 피코가 1분에 한 번씩 센서값을 시트로 보냅니다. (따로 설치할 건 없어요. 와이파이만 <code>wifi_config.py</code>에 적혀 있으면 됩니다.)"},
+      {"type": "code", "label": "전체 코드 · 센서값 → 구글 시트 (main.py)", "lang": "python", "file": "snippets/apxb_sheets.py", "fold": True},
+      {"type": "callout", "kind": "tip", "title": "잘 되는지 확인하는 법",
+       "html": "코드를 실행한 채 <b>구글 시트를 열어 두세요.</b> 1분마다 줄이 하나씩 <b>스르륵 늘어나면</b> 성공이에요! 안 늘어나면 아래 ‘자주 막히는 곳’을 보세요."},
+    ]},
+    {"title": "쌓인 데이터로 탐구하기", "items": [
+      {"type": "text", "html": "시트에 줄이 쌓이면, 값 열을 선택하고 <b>삽입 → 차트</b>로 추세 그래프를 바로 그릴 수 있어요. ‘하루 중 공기질이 가장 나쁜 시간’, ‘환기 전후 변화’, ‘요일별 비교’ 같은 탐구로 이어집니다."},
+    ]},
+    {"title": "자주 막히는 곳", "items": [
+      {"type": "mistakes", "items": [
+        {"sym": "시트에 아무것도 안 쌓임", "cause": "웹앱 액세스 권한이 ‘모든 사용자’가 아님.", "fix": "배포를 <b>모든 사용자</b>로 다시 하세요. 코드 수정 후엔 <b>배포 관리 → 편집 → 새 버전</b>으로 재배포해야 반영됩니다."},
+        {"sym": "셸에 ‘실패’라고 떠요", "cause": "잠깐 인터넷이 끊겼을 때 그래요.", "fix": "한두 번은 괜찮아요 — 다음 차례에 다시 보냅니다. 계속 그러면 보내는 간격(<code>INTERVAL</code>)을 늘려 보세요."},
+        {"sym": "시각이 한국시간과 다름", "cause": "Apps Script 프로젝트 시간대가 기본(미국).", "fix": "Apps Script <b>프로젝트 설정(⚙️) → 시간대 → (GMT+09:00) 서울</b>로 바꾸세요."},
+        {"sym": "문자열 값이 깨짐", "cause": "공백·특수문자를 URL에 그대로 넣음.", "fix": "숫자 센서값은 문제없어요. 문자열은 공백 등을 <code>%20</code>처럼 URL 인코딩하거나 단순 텍스트/숫자만 보내세요."},
+      ]},
+    ]},
+    {"title": "바이브코딩 프롬프트", "items": [
+      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py를 만들어 줘.\n[하는 일] MQ-2 가스센서를 ADC(Pin 26)로 읽어 60초마다 구글 시트에 한 줄씩 기록하고 싶어.\n[전송 방법] 구글 Apps Script 웹앱 URL(https://script.google.com/macros/s/<배포ID>/exec)에 ?value=값 형태로 GET 요청을 보내. 외부 라이브러리 없이 피코 기본 socket+ssl만 쓰고(requests 설치 금지, https는 CERT_NONE), Apps Script가 주는 302 리다이렉트는 따라가서 완료해 줘.\n[설정] 와이파이는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 배포ID와 전송 주기는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
+    ]},
+    {"title": "스스로 점검하기", "items": [
+      {"type": "check", "items": [
+        {"q": "피코가 구글 로그인 없이 시트에 쓸 수 있는 이유는?", "a": "Apps Script 웹앱을 ‘모든 사용자’로 배포해, URL만 알면 누구나(피코도) 호출할 수 있게 했기 때문입니다."},
+        {"q": "보내는 간격을 바꾸려면?", "a": "코드 맨 위 <code>INTERVAL</code> 숫자를 바꾸면 됩니다. 60이면 1분마다, 300이면 5분마다 보내요."},
+        {"q": "쌓인 데이터로 무엇을 할 수 있나요?", "a": "시트의 ‘삽입 → 차트’로 추세 그래프를 그리거나 통계·탐구 활동에 쓸 수 있습니다."},
+      ]},
     ]},
   ],
 },
