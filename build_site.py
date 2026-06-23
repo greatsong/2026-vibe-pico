@@ -310,7 +310,7 @@ CHAPTERS = [
         {"q": "보드 LED를 코드에서 어떻게 가리켰나요?", "a": "<code>Pin(\"LED\", Pin.OUT)</code> — 피코 보드에 내장된 LED를 출력 모드로 잡았습니다."},
       ]},
       {"type": "callout", "kind": "info", "title": "다음 장부터 — AI에게 시키는 ‘바이브코딩’",
-       "html": "이 연수에서는 긴 코드를 손으로 다 치지 않고, <b>AI에게 우리말로 설명해 코드를 받습니다.</b> AI 도구가 처음이라면: <b>claude.ai</b>(또는 쓰는 AI)에 접속 → 로그인 → <b>새 대화</b> → 교재의 ‘<b>AI에게 이렇게 설명하세요</b>’ 프롬프트를 복사해 붙여넣고 Enter. 받은 코드를 Thonny 편집기에 붙여넣어 <b>▶ 실행</b>하면 돼요."},
+       "html": "이 연수에서는 긴 코드를 손으로 다 치지 않고, <b>AI에게 우리말로 설명해 코드를 받습니다.</b> AI 도구가 처음이라면: <a class=\"ilink\" href=\"https://claude.ai\" target=\"_blank\" rel=\"noopener\"><b>claude.ai</b></a>(또는 쓰는 AI)에 접속 → 로그인 → <b>새 대화</b> → 교재의 ‘<b>AI에게 이렇게 설명하세요</b>’ 프롬프트를 복사해 붙여넣고 Enter. 받은 코드를 Thonny 편집기에 붙여넣어 <b>▶ 실행</b>하면 돼요."},
     ]},
   ],
 },
@@ -639,7 +639,7 @@ CHAPTERS = [
       {"type": "text", "html": "Open-Meteo 말고도 <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많아요 — 지진·ISS·일출몰·우주날씨·물질(화학)·생물 등. 과목별로 <b>어떤 데이터를 주고 무엇을 탐구할 수 있는지</b>를 <b>부록 A</b>에 한눈에 정리했고, 브라우저에서 바로 받아 그려 보는 <b>라이브 대시보드(지도·그래프)</b>로도 만들어 뒀습니다(국내 적용 여부도 표시). 키 없이 동작하는 것만 골랐고, 2026년 기준 응답을 확인했어요."},
       {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종 · 5장 날씨 포함)"},
       {"type": "callout", "kind": "key", "title": "🇰🇷 국내 공식 데이터가 필요하면 — 공공데이터포털",
-       "html": "‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <b>공공데이터포털(data.go.kr)</b>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <b>에어코리아(한국환경공단) 미세먼지</b> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span>"},
+       "html": "‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <a class=\"ilink\" href=\"https://www.data.go.kr\" target=\"_blank\" rel=\"noopener\"><b>공공데이터포털(data.go.kr)</b></a>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <b>에어코리아(한국환경공단) 미세먼지</b> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span>"},
       {"type": "callout", "kind": "info", "title": "피코로 가져올 때 한 가지",
        "html": "대부분 <b>https + JSON</b>이라, 이 장의 <code>http_get_json()</code>(소켓+ssl) 함수를 그대로 써서 받을 수 있어요. 다만 응답이 큰 API(지진 전체 목록, NASA 이미지 등)는 피코 메모리에 부담이 될 수 있으니, <b>필요한 항목만 요청</b>하거나 수업에서는 컴퓨터(파이썬·브라우저)로 보여 주는 방법도 좋습니다."},
     ]},
@@ -718,7 +718,7 @@ CHAPTERS = [
       {"type": "linkbtn", "href": "dashboards/gbif.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "8) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
-      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 api.nasa.gov에서 무료 키를 받아 넣으면 돼요.</span>"},
+      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 <a class=\"ilink\" href=\"https://api.nasa.gov\" target=\"_blank\" rel=\"noopener\">api.nasa.gov</a>에서 무료 키를 받아 넣으면 돼요.</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
     {"title": "9) 태양·바람 에너지 — 에너지·물리·지구 🌍", "items": [
@@ -748,7 +748,7 @@ CHAPTERS = [
     ]},
     {"title": "1단계 · 구글 쪽 설정 (한 번만)", "items": [
       {"type": "steps", "items": [
-        {"t": "새 구글 시트 만들기", "d": "주소창에 <code>sheets.new</code>를 입력하면 새 시트가 열려요. (구글 계정이 필요해요 — 로그인 안 돼 있으면 <b>로그인 화면이 먼저</b> 뜹니다.) 첫 행(1행)에 <b>시각</b>·<b>값</b>이라고 적어 둡니다."},
+        {"t": "새 구글 시트 만들기", "d": "주소창에 <a class=\"ilink\" href=\"https://sheets.new\" target=\"_blank\" rel=\"noopener\"><code>sheets.new</code></a>를 입력하면 새 시트가 열려요. (구글 계정이 필요해요 — 로그인 안 돼 있으면 <b>로그인 화면이 먼저</b> 뜹니다.) 첫 행(1행)에 <b>시각</b>·<b>값</b>이라고 적어 둡니다."},
         {"t": "Apps Script 열기", "d": "메뉴 <b>확장 프로그램 → Apps Script</b>를 누르면 코드 편집기가 새 탭으로 열려요."},
         {"t": "코드 붙여넣기 → 저장", "d": "편집기에 이미 적힌 <code>function myFunction()…</code>을 <b>전부 선택(Ctrl+A·맥은 ⌘A)해 지우고</b>, 아래 코드를 통째로 붙여넣으세요. 파일 이름은 <code>Code.gs</code> 그대로 두고 저장(💾)."},
       ]},
@@ -950,6 +950,8 @@ TEMPLATE = r'''<!DOCTYPE html>
 html{scroll-behavior:smooth;}
 body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
 a{color:inherit;text-decoration:none;}
+.ilink{color:#3b47c2;text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:#5b6cf0;}
 .layout{display:flex;max-width:1180px;margin:0 auto;}
 .sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
   background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
