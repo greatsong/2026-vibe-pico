@@ -47,8 +47,20 @@
   </ul>
   </section>
 
+  <section class="card vibe"><h2>🤖 바이브코딩 프롬프트 <span class="hint">— 복사해 AI(Claude 등)에 붙여넣기</span></h2><p class="vibeintro">이 데이터를 받아 <b>라즈베리파이 피코·LED</b>로 만드는 코드를 받을 수 있어요. 각 프롬프트의 <b>[복사]</b>를 누르면 위 <b>공통 조건</b>(피코·와이파이·LED 설정)까지 함께 복사돼, <b>아무 맥락 없는 새 대화</b>에 그대로 붙여넣을 수 있어요.</p><details class="vibecommon"><summary>🔧 공통 조건 — 아래 모든 프롬프트에 자동 포함 (펼쳐 보기)</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">공통 조건 · 피코·와이파이·LED</span><button class="vibecopy" onclick="vcopypre(this)">복사</button></div><pre id="vibepre" class="vibetext">[공통 조건]
+- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.
+- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
+- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
+- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">강수확률 → LED 날씨 시계</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&amp;longitude=LON&amp;hourly=precipitation_probability&amp;timezone=Asia%2FSeoul&amp;forecast_days=1 → 응답 JSON의 hourly.precipitation_probability는 0~23시 24개 강수확률(%).
+[만들 것] 오전 6시~밤 11시(18시간)를 LED 10칸에 고르게 나눠 각 시각 강수확률을 색으로 표시하는 ‘날씨 시계’. 맑음=초록·흐림=노랑·비가능=파랑·비확실=보라(임계값은 코드 위에서 조정), 10분마다 갱신.
+[설정] LAT/LON은 코드 맨 위(서울 37.5665 / 126.9780).</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">현재 기온 → 무드등 색</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&amp;longitude=LON&amp;current=temperature_2m → 응답 JSON의 current.temperature_2m가 현재 기온(℃).
+[만들 것] 현재 기온에 따라 LED 색이 바뀌는 무드등: 더우면(28℃ 이상) 빨강, 적당하면 초록, 추우면(10℃ 이하) 파랑. 10분마다 갱신.
+[설정] LAT/LON은 코드 위.</pre></div></section>
+
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function vcopypre(b){var p=document.getElementById('vibepre');navigator.clipboard.writeText(p?p.textContent:'').then(function(){_vflash(b);});}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';navigator.clipboard.writeText(pre+s).then(function(){_vflash(b);});}</script>
 <script>
 let chart;
 async function run(){

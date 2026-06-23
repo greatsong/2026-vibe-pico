@@ -22,6 +22,29 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
     if refs:
         chips = "".join(f'<a class="refchip" href="{u}" target="_blank" rel="noopener">{l}</a>' for l, u in refs)
         refhtml = f'<div class="refs"><span class="refs-t">📺 더 보기</span>{chips}</div>'
+    promptshtml = ""
+    _pr = PROMPTS.get(slug, ())
+    if _pr:
+        import html as _h
+        common = (
+            '<details class="vibecommon"><summary>🔧 공통 조건 — 아래 모든 프롬프트에 자동 포함 (펼쳐 보기)</summary>'
+            '<div class="vibebox"><div class="vibehead"><span class="vibelabel">공통 조건 · 피코·와이파이·LED</span>'
+            '<button class="vibecopy" onclick="vcopypre(this)">복사</button></div>'
+            f'<pre id="vibepre" class="vibetext">{_h.escape(PICO_PRE)}</pre></div></details>')
+        boxes = []
+        for label, text in _pr:
+            boxes.append(
+                '<div class="vibebox"><div class="vibehead">'
+                f'<span class="vibelabel">{label}</span>'
+                '<button class="vibecopy" onclick="vcopy(this)">복사</button></div>'
+                f'<pre class="vibetext">{_h.escape(text)}</pre></div>')
+        promptshtml = (
+            '<section class="card vibe"><h2>🤖 바이브코딩 프롬프트 '
+            '<span class="hint">— 복사해 AI(Claude 등)에 붙여넣기</span></h2>'
+            '<p class="vibeintro">이 데이터를 받아 <b>라즈베리파이 피코·LED</b>로 만드는 코드를 받을 수 있어요. '
+            '각 프롬프트의 <b>[복사]</b>를 누르면 위 <b>공통 조건</b>(피코·와이파이·LED 설정)까지 함께 복사돼, '
+            '<b>아무 맥락 없는 새 대화</b>에 그대로 붙여넣을 수 있어요.</p>'
+            + common + "".join(boxes) + '</section>')
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -62,8 +85,11 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
     {apply_html}
   </section>
 
+  {promptshtml}
+
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
+{COPY_JS}
 <script>
 {js}
 </script>
@@ -126,6 +152,24 @@ a{text-decoration:none;color:inherit;}
 .earthpulse{animation:twinkle 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
 .apply ul{margin:0;padding-left:18px;}
 .apply li{font-size:14px;margin:7px 0;}
+.vibe .vibeintro{font-size:13.5px;color:#3a3d4d;margin-bottom:12px;}
+.vibecommon{margin:0 0 14px;border:1px dashed #cfd5ef;border-radius:12px;background:#fafbff;}
+.vibecommon summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#3b47c2;padding:10px 13px;list-style:none;}
+.vibecommon summary::-webkit-details-marker{display:none;}
+.vibecommon summary:before{content:'▸ ';}
+.vibecommon[open] summary:before{content:'▾ ';}
+.vibecommon[open] summary{border-bottom:1px solid var(--line);}
+.vibecommon .vibebox{margin:10px;}
+.vibebox{border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden;background:#fbfbfe;}
+.vibehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;
+  background:#f3f4fa;border-bottom:1px solid var(--line);}
+.vibelabel{font-size:12.5px;font-weight:700;color:#3b47c2;}
+.vibecopy{font-family:var(--font);font-size:12px;font-weight:700;color:#fff;cursor:pointer;border:none;
+  border-radius:8px;padding:5px 12px;background:linear-gradient(120deg,var(--pico1),var(--pico2));white-space:nowrap;}
+.vibecopy:hover{filter:brightness(1.05);}
+.vibecopy.done{background:#22b07d;}
+.vibetext{font-family:var(--mono);font-size:12px;line-height:1.6;color:#2b2d3a;white-space:pre-wrap;
+  word-break:break-word;padding:12px 14px;margin:0;}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
 .controls input,.controls select{font-family:var(--font);font-size:14px;border:1px solid var(--line);
   border-radius:10px;padding:9px 12px;background:#fff;min-width:0;}
@@ -195,6 +239,100 @@ SEOUL = ('<div class="controls">'
          '<label>위도</label><input id="lat" value="37.5665">'
          '<label>경도</label><input id="lon" value="126.9780">'
          '<button onclick="run()">불러오기</button></div>')
+
+# ===================================================================
+# 바이브코딩 프롬프트 (각 대시보드 하단에 표시 · [복사] 시 공통 조건이 함께 붙음)
+PICO_PRE = (
+    "[공통 조건]\n"
+    "- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.\n"
+    "- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).\n"
+    "- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.\n"
+    "- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).\n"
+    "- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘."
+)
+
+COPY_JS = (
+    "<script>"
+    "function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');"
+    "setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}"
+    "function vcopypre(b){var p=document.getElementById('vibepre');"
+    "navigator.clipboard.writeText(p?p.textContent:'').then(function(){_vflash(b);});}"
+    "function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;"
+    "var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\\s+$/,'')+'\\n\\n':'';"
+    "navigator.clipboard.writeText(pre+s).then(function(){_vflash(b);});}"
+    "</script>"
+)
+
+PROMPTS = {
+  "weather": [
+    ("강수확률 → LED 날씨 시계",
+     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&hourly=precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1 → 응답 JSON의 hourly.precipitation_probability는 0~23시 24개 강수확률(%).\n"
+     "[만들 것] 오전 6시~밤 11시(18시간)를 LED 10칸에 고르게 나눠 각 시각 강수확률을 색으로 표시하는 ‘날씨 시계’. 맑음=초록·흐림=노랑·비가능=파랑·비확실=보라(임계값은 코드 위에서 조정), 10분마다 갱신.\n"
+     "[설정] LAT/LON은 코드 맨 위(서울 37.5665 / 126.9780)."),
+    ("현재 기온 → 무드등 색",
+     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m → 응답 JSON의 current.temperature_2m가 현재 기온(℃).\n"
+     "[만들 것] 현재 기온에 따라 LED 색이 바뀌는 무드등: 더우면(28℃ 이상) 빨강, 적당하면 초록, 추우면(10℃ 이하) 파랑. 10분마다 갱신.\n"
+     "[설정] LAT/LON은 코드 위."),
+  ],
+  "airquality": [
+    ("미세먼지 등급 → LED 신호등",
+     "[API] Open-Meteo 대기질(키 불필요): GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5,pm10&timezone=Asia%2FSeoul → 응답 JSON의 current.pm2_5가 초미세먼지 농도(㎍/㎥).\n"
+     "[만들 것] PM2.5 등급을 LED 신호등으로: 좋음(0~15)=초록·보통(~35)=노랑·나쁨(~75)=주황·매우나쁨(75 초과)=빨강 깜빡. 켜지는 칸 수는 농도에 비례. 10분마다 갱신.\n"
+     "[설정] LAT/LON은 코드 위(서울 37.5665 / 126.9780)."),
+  ],
+  "earthquake": [
+    ("최근 최대 지진 → LED 게이지",
+     "[API] USGS(키 불필요): GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 응답 JSON의 features 배열에서 각 properties.mag이 규모. (응답이 크니 mag만 훑어 최댓값만 구해 메모리 절약)\n"
+     "[만들 것] 최근 하루 규모 4.5+ 지진 중 가장 큰 규모를 LED 게이지로(규모 0~9 → 0~10칸), 규모 6 이상이면 빨강 깜빡. 10분마다 갱신."),
+  ],
+  "iss": [
+    ("ISS 거리 → 머리 위 통과 알림",
+     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 latitude, longitude가 ISS 현재 위치.\n"
+     "[만들 것] 내 위치(MY_LAT/MY_LON)와 ISS 사이 거리를 구해, 가까울수록 LED를 많이 켜고, 아주 가까우면(머리 위 통과) 초록으로 깜빡 알림. 30초마다 갱신.\n"
+     "[설정] MY_LAT/MY_LON은 코드 위(서울 37.5665 / 126.9780)."),
+  ],
+  "sunrise": [
+    ("낮 길이 → LED 게이지",
+     "[API] sunrise-sunset(키 불필요): GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → 응답 JSON의 results.day_length가 낮 길이(초).\n"
+     "[만들 것] 오늘 낮 길이를 LED 게이지로(예: 8시간~16시간을 0~10칸에 매핑), 길수록 노란빛을 더 밝게. 하루 1~2회 갱신.\n"
+     "[설정] LAT/LON은 코드 위."),
+  ],
+  "spaceweather": [
+    ("Kp 지수 → 오로라 경보등",
+     "[API] NOAA SWPC(키 불필요): GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 첫 줄은 헤더, 마지막 줄의 두 번째 값이 최신 Kp(0~9).\n"
+     "[만들 것] 최신 Kp를 LED로: 값이 클수록 칸을 많이 켜고, Kp 5 이상이면 보라색으로 깜빡(오로라 경보). 30분마다 갱신."),
+  ],
+  "pubchem": [
+    ("분자량 비교 → LED 게이지",
+     "[API] PubChem(키 불필요): GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/NAME/property/MolecularWeight/JSON → 응답 JSON의 PropertyTable.Properties[0].MolecularWeight가 분자량.\n"
+     "[만들 것] 물질 이름 목록(예: water, glucose, caffeine)을 코드 위에 두고, 각 물질의 분자량을 차례로 LED 게이지로 보여 줘(0~400 → 0~10칸). 물질이 바뀔 때 색도 달리. (와이파이만 필요, 센서 없이 LED 출력)\n"
+     "[설정] 물질 이름 목록은 코드 위."),
+  ],
+  "gbif": [
+    ("관찰 기록 수 → 자릿수 LED",
+     "[API] GBIF(키 불필요): GET https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 → 응답 JSON의 count가 국내 관찰 기록 수.\n"
+     "[만들 것] 어떤 생물 종의 국내 관찰 수를 받아, 그 수의 자릿수만큼 LED를 켜(흔한 종=많이, 희귀종=조금). 흔할수록 초록, 적을수록 빨강.\n"
+     "[설정] SCI_NAME(학명, 예: Pica pica)은 코드 위."),
+  ],
+  "nasa": [
+    ("근접 소행성 → 위험 알림 LED",
+     "[API] NASA NeoWs: GET https://api.nasa.gov/neo/rest/v1/feed?start_date=TODAY&end_date=TODAY&api_key=DEMO_KEY → 응답 JSON의 near_earth_objects[TODAY] 배열에 각 천체의 is_potentially_hazardous_asteroid(위험 여부)와 지름 정보가 있어. (무료 키는 api.nasa.gov에서 발급, 우선 DEMO_KEY로 테스트)\n"
+     "[만들 것] 오늘 지구 근접 천체 중 위험(PHA)이 하나라도 있으면 LED 빨강 깜빡, 없으면 초록. 천체 개수만큼 칸을 켜. 하루 1회 갱신.\n"
+     "[설정] api_key와 날짜(YYYY-MM-DD)는 코드 위."),
+  ],
+  "energy": [
+    ("월별 일사량 → 태양광 게이지",
+     "[API] NASA POWER(키 불필요): GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude=LON&latitude=LAT&format=JSON → 응답 JSON의 properties.parameter.ALLSKY_SFC_SW_DWN에 1~12월 월평균 일사량이 들어 있어.\n"
+     "[만들 것] 이번 달(MONTH)의 일사량을 LED 게이지로(여름↑ 겨울↓), 값이 클수록 칸을 많이·노랗게.\n"
+     "[설정] LAT/LON/MONTH는 코드 위(서울 37.5665 / 126.9780)."),
+  ],
+  "worldbank": [
+    ("나라별 CO₂ → LED 게이지",
+     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.ATM.CO2E.PC?format=json&per_page=5&mrnev=1 → 응답의 두 번째 배열 [0].value가 1인당 CO₂ 배출량(t).\n"
+     "[만들 것] 한 나라의 1인당 CO₂ 배출량을 받아 LED 게이지로(0~20t → 0~10칸), 세계 평균(약 4.5t)보다 높으면 빨강·낮으면 초록.\n"
+     "[설정] 나라 코드(KOR 등)는 코드 위."),
+  ],
+}
 
 # ===================================================================
 # 1) 날씨 (Open-Meteo)

@@ -47,8 +47,18 @@
   </ul>
   </section>
 
+  <section class="card vibe"><h2>🤖 바이브코딩 프롬프트 <span class="hint">— 복사해 AI(Claude 등)에 붙여넣기</span></h2><p class="vibeintro">이 데이터를 받아 <b>라즈베리파이 피코·LED</b>로 만드는 코드를 받을 수 있어요. 각 프롬프트의 <b>[복사]</b>를 누르면 위 <b>공통 조건</b>(피코·와이파이·LED 설정)까지 함께 복사돼, <b>아무 맥락 없는 새 대화</b>에 그대로 붙여넣을 수 있어요.</p><details class="vibecommon"><summary>🔧 공통 조건 — 아래 모든 프롬프트에 자동 포함 (펼쳐 보기)</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">공통 조건 · 피코·와이파이·LED</span><button class="vibecopy" onclick="vcopypre(this)">복사</button></div><pre id="vibepre" class="vibetext">[공통 조건]
+- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.
+- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
+- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
+- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">월별 일사량 → 태양광 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] NASA POWER(키 불필요): GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&amp;community=RE&amp;longitude=LON&amp;latitude=LAT&amp;format=JSON → 응답 JSON의 properties.parameter.ALLSKY_SFC_SW_DWN에 1~12월 월평균 일사량이 들어 있어.
+[만들 것] 이번 달(MONTH)의 일사량을 LED 게이지로(여름↑ 겨울↓), 값이 클수록 칸을 많이·노랗게.
+[설정] LAT/LON/MONTH는 코드 위(서울 37.5665 / 126.9780).</pre></div></section>
+
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function vcopypre(b){var p=document.getElementById('vibepre');navigator.clipboard.writeText(p?p.textContent:'').then(function(){_vflash(b);});}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';navigator.clipboard.writeText(pre+s).then(function(){_vflash(b);});}</script>
 <script>
 let chart, seoulCache=null, cur=null, curName='';
 const M=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
