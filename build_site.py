@@ -1020,7 +1020,7 @@ a{color:inherit;text-decoration:none;}
 .steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
 .steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
   background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
-.steps li b{display:block;margin-bottom:2px;}
+.steps li>b{display:block;margin-bottom:2px;}
 .steps li span{color:#55524c;font-size:13.5px;}
 /* 자주 하는 실수 */
 .mistakes{margin:12px 0;max-width:720px;}
