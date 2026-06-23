@@ -1,4 +1,4 @@
-# 게이지처럼 켜진 칸 수 조절하기 (다음 장 날씨 대시보드의 기초!)
+# 게이지처럼 켜진 칸 수 조절하기 (뒤의 공기질·날씨 LED의 기초!)
 from machine import Pin
 from neopixel import NeoPixel
 import time

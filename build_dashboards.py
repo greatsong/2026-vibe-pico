@@ -210,7 +210,7 @@ page("weather", "🌤️", "오늘의 날씨", "지구과학·환경", "🇰🇷
   </table>''',
   apply_html='''<ul>
     <li>하루 <b>기온 곡선</b>으로 일교차·최고/최저 시각 찾기</li>
-    <li>강수확률을 <b>10칸 LED</b>로(3장 ‘날씨 시계’)</li>
+    <li>강수확률을 <b>10칸 LED</b>로(5장 ‘날씨 시계’)</li>
     <li>과거 데이터(archive)로 <b>10년 전과 올해 기온 비교</b> → 기후변화 탐구</li>
   </ul>''',
   body=SEOUL + '<div id="status" class="status">불러오는 중…</div>'
@@ -1020,7 +1020,7 @@ index_html = f'''<!DOCTYPE html>
   <div class="card" style="margin-top:18px">
     <h2 style="font-size:14px;font-weight:800;margin-bottom:8px">💡 API가 뭐예요? — 한 줄 요약</h2>
     <p style="font-size:13.5px;color:#44464f;line-height:1.8">관공서에서 <b>등본</b>을 떼듯, ‘데이터를 가진 기관에 정해진 양식으로 신청(요청)하면 정해진 형식으로 발급(응답)해 주는 창구’가 <b>API</b>예요.
-    위 대시보드는 모두 <b>무료</b>로 브라우저에서 바로 호출해요(NASA만 키 필요, 페이지에 포함). 더 자세한 설명은 교재 3장과 부록에 있어요.</p>
+    위 대시보드는 모두 <b>무료</b>로 브라우저에서 바로 호출해요(NASA만 키 필요, 페이지에 포함). 더 자세한 설명은 교재 5장과 부록에 있어요.</p>
     <p style="font-size:12.5px;color:#7a7f95;line-height:1.7;margin-top:10px">🇰🇷 <b>국내 공식 데이터</b>가 필요하면 <a href="https://www.data.go.kr" target="_blank" rel="noopener" style="color:#3b47c2;font-weight:600">공공데이터포털 ↗</a>에서 무료 키를 받아 쓰세요 — 기상청(날씨·지진), 에어코리아(미세먼지), 전력거래소(전력수급) 등 국내 정확도가 높습니다.</p>
   </div>
 
