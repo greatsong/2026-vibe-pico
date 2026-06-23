@@ -232,6 +232,7 @@ def run_server():
             conn, _ = srv.accept()
         except OSError:            # accept 타임아웃 → 위로 올라가 날씨 갱신
             continue
+        conn.settimeout(10)        # 받은 연결은 블로킹으로! (서버 타임아웃이 상속되면 요청을 못 읽어 페이지가 안 열림)
         try:
             req = conn.recv(512).decode("utf-8", "ignore")
             if "GET /data" in req:
@@ -239,7 +240,12 @@ def run_server():
             else:
                 send_response(conn, "200 OK", "text/html; charset=utf-8", HTML)
         except Exception as e:
-            print("요청 처리 오류:", e)
+            code = e.args[0] if e.args else None
+            tip = {104: "브라우저가 연결을 먼저 끊음 (정상, 무시 OK)",
+                   32:  "응답 도중 연결이 끊김 (정상)",
+                   110: "응답 대기 시간 초과",
+                   11:  "데이터가 아직 안 옴 (일시적)"}.get(code)
+            print("요청 처리:", ("[%s] %s" % (code, tip)) if tip else ("오류 " + str(e)))
         finally:
             conn.close()
 

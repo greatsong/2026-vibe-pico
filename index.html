@@ -343,7 +343,7 @@ while True:
     time.sleep(1)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 대시보드 코드를 만들어 줍니다.</p><div class="block prompt-block" style="--accent:#E0568A"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.
 [지금 하는 일] 와이파이(STA 모드)에 연결해 신호 세기(RSSI, dBm 단위 음수값)를 1초마다 읽고 있어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.
 [만들 것] 피코가 외부 라이브러리 없이 소켓 기반 웹서버(80번 포트)가 되게 해 줘. 브라우저가 /data 주소에서 JSON으로 최신 RSSI를 받아 1초마다 자동 갱신하고, Chart.js로 실시간 꺾은선 그래프를 그리게 해 줘.
-[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 바로 돕니다. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요.</p><details class="codefold"><summary>전체 코드 · RSSI 실시간 대시보드 (main.py) <span class="fold-hint">· 146줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · RSSI 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 와이파이 신호 세기(RSSI) 실시간 대시보드 ===
+[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 바로 돕니다. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요.</p><details class="codefold"><summary>전체 코드 · RSSI 실시간 대시보드 (main.py) <span class="fold-hint">· 151줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · RSSI 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 와이파이 신호 세기(RSSI) 실시간 대시보드 ===
 # 피코가 작은 웹서버가 되어, 같은 와이파이의 스마트폰/PC 브라우저에서
 # 신호 세기를 실시간 그래프로 볼 수 있게 합니다.
 import network
@@ -481,7 +481,12 @@ def run_server():
             else:
                 send_response(conn, &quot;text/html; charset=utf-8&quot;, HTML)
         except Exception as e:
-            print(&quot;요청 처리 오류:&quot;, e)
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
         finally:
             conn.close()
 
@@ -641,7 +646,7 @@ while True:
     time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 완성형 대시보드를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 만들어 줍니다.</p><div class="block prompt-block" style="--accent:#F59E0B"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.
 [지금 하는 일] MQ-2 가스센서를 ADC(Pin 26, 그로브 A0)로 읽고 있어. read_u16()으로 0~65535 값이 나오고, 여러 번 읽어 이동평균으로 안정시키고 있어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.
 [만들 것] 피코가 외부 라이브러리 없이 소켓 기반 웹서버(80번 포트)가 되게 해 줘. 브라우저가 /data 주소에서 JSON으로 최신 값을 받아 자동 갱신하고, Chart.js로 실시간 그래프를 그리게 해 줘. 임계값으로 SAFE/WARNING/DANGER를 나눠 색으로 표시하고(임계값은 코드 위에서 바꿀 수 있게), 다크 테마로 만들어 줘.
-[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)</p><details class="codefold"><summary>전체 코드 · MQ-2 실시간 대시보드 (main.py) <span class="fold-hint">· 258줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · MQ-2 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">import network
+[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)</p><details class="codefold"><summary>전체 코드 · MQ-2 실시간 대시보드 (main.py) <span class="fold-hint">· 263줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · MQ-2 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">import network
 import socket
 import json
 from machine import ADC, Pin
@@ -891,7 +896,12 @@ def run_server():
             else:
                 send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
         except Exception as e:
-            print(&quot;요청 처리 오류:&quot;, e)
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
         finally:
             conn.close()
 
@@ -1257,7 +1267,7 @@ if ip:
 - 브라우저가 /data 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해 줘.
 - 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 주고, 색의 의미(범례)도 함께 표시해 줘.
 - LED와 웹이 같은 데이터를 쓰고, 날씨 데이터는 10분에 한 번만 새로 받아와 줘(피코가 버겁지 않게).
-[조건] 복사해서 바로 실행되는 완결형 main.py로 주고, 위도/경도(LAT/LON)와 timing 값은 내가 바꿔 쓸 수 있게 코드 맨 위에 둬 줘.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 설명 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div><p class="step-head"><b>Step 5.</b> 직접 설명하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)</p><details class="codefold"><summary>전체 코드 · 날씨 LED + 웹 대시보드 (main.py) <span class="fold-hint">· 251줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 LED + 웹 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보: 10개 LED + 웹 대시보드 (설치 불필요) ===
+[조건] 복사해서 바로 실행되는 완결형 main.py로 주고, 위도/경도(LAT/LON)와 timing 값은 내가 바꿔 쓸 수 있게 코드 맨 위에 둬 줘.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 설명 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div><p class="step-head"><b>Step 5.</b> 직접 설명하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)</p><details class="codefold"><summary>전체 코드 · 날씨 LED + 웹 대시보드 (main.py) <span class="fold-hint">· 257줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 LED + 웹 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보: 10개 LED + 웹 대시보드 (설치 불필요) ===
 # 피코가 LED 날씨 시계이면서 동시에 웹서버가 됩니다.
 # 같은 와이파이의 스마트폰/PC에서 접속하면:
 #   · 피코 10칸 LED와 똑같은 색의 칸 (이 시각에 비가 오는지)
@@ -1491,6 +1501,7 @@ def run_server():
             conn, _ = srv.accept()
         except OSError:            # accept 타임아웃 → 위로 올라가 날씨 갱신
             continue
+        conn.settimeout(10)        # 받은 연결은 블로킹으로! (서버 타임아웃이 상속되면 요청을 못 읽어 페이지가 안 열림)
         try:
             req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
             if &quot;GET /data&quot; in req:
@@ -1498,7 +1509,12 @@ def run_server():
             else:
                 send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
         except Exception as e:
-            print(&quot;요청 처리 오류:&quot;, e)
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
         finally:
             conn.close()
 
