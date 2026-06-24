@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>연수용 키 배포</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#273449; --line:#334155;
+    --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; --accent2:#0ea5e9;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;-webkit-text-size-adjust:100%}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px 60px}
+  h1{font-size:1.35rem;margin:.2em 0 .1em}
+  h2{font-size:1.05rem;margin:1.4em 0 .5em;color:var(--accent)}
+  .sub{color:var(--muted);font-size:.9rem;margin-top:0}
+  .tabs{display:flex;gap:6px;margin:14px 0 18px;background:var(--card);padding:6px;border-radius:var(--radius);position:sticky;top:8px;z-index:5}
+  .tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;cursor:pointer;font-weight:600;
+    color:var(--muted);user-select:none;font-size:.92rem}
+  .tab.active{background:var(--accent2);color:#02121f}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0}
+  label{display:block;font-weight:600;margin:.9em 0 .35em;font-size:.92rem}
+  input,textarea{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:12px;font-size:1rem;font-family:inherit}
+  input:focus,textarea:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  textarea{min-height:96px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>*{flex:1;min-width:140px}
+  button{cursor:pointer;border:none;border-radius:10px;padding:12px 16px;font-size:1rem;font-weight:700;
+    background:var(--accent2);color:#02121f;transition:filter .15s}
+  button:hover{filter:brightness(1.08)}
+  button.ghost{background:var(--card2);color:var(--text);border:1px solid var(--line);font-weight:600}
+  button.danger{background:transparent;color:var(--danger);border:1px solid var(--danger);font-weight:600}
+  button.sm{padding:7px 12px;font-size:.82rem}
+  .hint{color:var(--muted);font-size:.82rem;margin:.4em 0}
+  .big-code{font-size:1.6rem;font-weight:800;letter-spacing:.06em;text-align:center;
+    background:var(--card2);border:1px dashed var(--accent);border-radius:12px;padding:14px;color:#fff}
+  .keybox{background:#020617;border:1px solid var(--line);border-radius:10px;padding:12px;
+    font-family:ui-monospace,Menlo,monospace;font-size:.9rem;word-break:break-all;color:#7dd3fc}
+  .urlbox{background:#020617;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-family:ui-monospace,Menlo,monospace;font-size:.78rem;word-break:break-all;color:var(--muted)}
+  #qrcode{display:flex;justify-content:center;background:#fff;padding:14px;border-radius:12px;margin:10px auto;width:fit-content}
+  #qrcode img,#qrcode canvas{display:block}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:999px;
+    padding:3px 10px;font-size:.75rem;color:var(--muted);margin-left:6px}
+  .alert{border-radius:10px;padding:10px 12px;font-size:.86rem;margin:.6em 0}
+  .alert.warn{background:rgba(245,158,11,.12);border:1px solid var(--warn);color:#fcd34d}
+  .alert.ok{background:rgba(34,197,94,.12);border:1px solid var(--ok);color:#86efac}
+  .alert.err{background:rgba(239,68,68,.12);border:1px solid var(--danger);color:#fca5a5}
+  .snippet{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+  .snippet .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+  .snippet pre{margin:0;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:.8rem;
+    background:#020617;border-radius:8px;padding:10px;color:#cbd5e1;white-space:pre}
+  .snippet .title{font-weight:700;font-size:.9rem}
+  .hidden{display:none!important}
+  .center{text-align:center}
+  footer{color:var(--muted);font-size:.78rem;text-align:center;margin-top:30px}
+  .copybtn.done{background:var(--ok);color:#02121f}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔑 연수용 키 배포</h1>
+  <p class="sub">강사가 키를 입력 → 연수생은 QR·링크로 접속 후 접근 코드 입력 → 키·코드 복사. 키는 서버에 저장되지 않습니다.</p>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="teacher">👩‍🏫 강사</div>
+    <div class="tab" data-tab="student">🧑‍🎓 연수생</div>
+    <div class="tab" data-tab="code">📋 코드</div>
+  </div>
+
+  <!-- ===================== 강사 ===================== -->
+  <section id="tab-teacher">
+    <div class="card">
+      <h2 style="margin-top:0">1) 키 입력</h2>
+      <p class="hint">입력값은 <b>이 브라우저(localStorage)에만</b> 저장됩니다. 서버로 가지 않습니다.</p>
+      <label>API 키</label>
+      <input id="t-key" type="text" placeholder="여기에 키 붙여넣기" autocomplete="off" spellcheck="false">
+      <div class="row">
+        <div>
+          <label>키 이름(라벨)</label>
+          <input id="t-label" type="text" placeholder="예: YouTube Data API v3">
+        </div>
+        <div>
+          <label>접근 코드 <span class="pill">암호 해제용</span></label>
+          <input id="t-code" type="text" placeholder="예: pico0624" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <p class="hint">접근 코드는 연수생에게 <b>입으로</b> 알려주세요. 이 코드로 링크 안의 키가 암호화됩니다.</p>
+      <div class="row" style="margin-top:12px">
+        <button id="t-gen">🔗 연수생 링크 · QR 생성</button>
+        <button class="ghost" id="t-clear">🧹 이 기기에서 저장 삭제</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="t-result">
+      <h2 style="margin-top:0">2) 이 화면을 공유하세요</h2>
+      <div class="alert ok">연수생: 아래 QR을 스캔하거나 링크로 접속 → <b>접근 코드</b> 입력 → 키 복사</div>
+
+      <div class="center">접근 코드</div>
+      <div class="big-code" id="t-bigcode">—</div>
+
+      <div id="qrcode"></div>
+      <p class="hint center" id="qr-note"></p>
+
+      <label>연수생 접속 링크</label>
+      <div class="urlbox" id="t-url"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost copybtn" data-copy="#t-url">📎 링크 복사</button>
+        <button class="ghost copybtn" data-copy="#t-payload-only">🔢 링크 코드만 복사</button>
+      </div>
+      <div class="urlbox hidden" id="t-payload-only"></div>
+      <p class="hint">키보드로 빠른 환경: 연수생은 <b>베이스 주소</b>만 접속한 뒤, [연수생] 탭의 “링크 붙여넣기”에 위 링크/코드를 붙여넣어도 됩니다.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">코드 스니펫 관리 <span class="pill">선택</span></h2>
+      <p class="hint">여기서 만든 스니펫은 링크에 함께 담겨 연수생 [코드] 탭에 표시됩니다. <code>{{API_KEY}}</code>는 각자 키로 자동 치환됩니다.</p>
+      <div id="t-snip-list"></div>
+      <label>제목</label>
+      <input id="t-snip-title" type="text" placeholder="예: 유튜브 검색 (Python)">
+      <label>코드</label>
+      <textarea id="t-snip-body" placeholder='API_KEY = "{{API_KEY}}"'></textarea>
+      <div style="margin-top:10px"><button class="ghost sm" id="t-snip-add">➕ 스니펫 추가</button></div>
+    </div>
+  </section>
+
+  <!-- ===================== 연수생 ===================== -->
+  <section id="tab-student" class="hidden">
+    <div class="card">
+      <h2 style="margin-top:0">키 받기</h2>
+      <div id="s-needpaste" class="hidden">
+        <div class="alert warn">접속 링크가 감지되지 않았습니다. 강사가 준 <b>링크 또는 링크 코드</b>를 붙여넣으세요.</div>
+        <label>링크 붙여넣기</label>
+        <input id="s-paste" type="text" placeholder="https://.../#k=... 또는 코드만" autocomplete="off" spellcheck="false">
+      </div>
+      <label>접근 코드</label>
+      <input id="s-code" type="text" placeholder="강사가 알려준 코드" autocomplete="off" spellcheck="false">
+      <div style="margin-top:12px"><button id="s-unlock">🔓 키 보기</button></div>
+      <div id="s-msg"></div>
+
+      <div id="s-result" class="hidden" style="margin-top:14px">
+        <div class="alert ok">인증 완료 — 아래 키를 복사하세요. <b>외부 공유 금지</b>, 연수 후 폐기됩니다.</div>
+        <label id="s-keylabel">API 키</label>
+        <div class="keybox" id="s-key"></div>
+        <div style="margin-top:8px"><button class="copybtn" data-copy="#s-key">📋 키 복사</button></div>
+        <p class="hint">코드 예제는 상단 [코드] 탭에서 키가 채워진 상태로 복사할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 코드 ===================== -->
+  <section id="tab-code" class="hidden">
+    <div class="card">
+      <h2 style="margin-top:0">코드 스니펫</h2>
+      <p class="hint" id="code-status"></p>
+      <div id="code-list"></div>
+    </div>
+  </section>
+
+  <footer>
+    키는 URL의 <code>#</code> 뒤에 <b>암호화</b>되어 담기며 서버로 전송되지 않습니다 · noindex<br>
+    한 번 복사된 키는 회수 불가 — 연수 후 키 폐기(revoke)를 잊지 마세요.
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script>
+"use strict";
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+
+/* ---------- 기본 스니펫 ---------- */
+const DEFAULT_SNIPPETS = [
+  {title:"유튜브 검색 (Python)", body:
+`import requests
+
+API_KEY = "{{API_KEY}}"
+url = "https://www.googleapis.com/youtube/v3/search"
+params = {"key": API_KEY, "q": "고양이", "part": "snippet", "maxResults": 5}
+
+r = requests.get(url, params=params)
+for item in r.json()["items"]:
+    print(item["snippet"]["title"])`},
+  {title:"유튜브 인기 영상 (Python)", body:
+`import requests
+
+API_KEY = "{{API_KEY}}"
+url = "https://www.googleapis.com/youtube/v3/videos"
+params = {"key": API_KEY, "part": "snippet",
+          "chart": "mostPopular", "regionCode": "KR", "maxResults": 5}
+
+r = requests.get(url, params=params)
+for item in r.json()["items"]:
+    print(item["snippet"]["title"])`},
+];
+
+/* ---------- localStorage (강사용) ---------- */
+const LS = "keyshare.teacher.v1";
+function loadTeacher(){
+  try{ return JSON.parse(localStorage.getItem(LS)) || {}; }catch(e){ return {}; }
+}
+function saveTeacher(){
+  const data = {
+    key: $("#t-key").value,
+    label: $("#t-label").value,
+    code: $("#t-code").value,
+    snippets: teacherSnippets,
+  };
+  localStorage.setItem(LS, JSON.stringify(data));
+}
+let teacherSnippets = [];
+
+/* ---------- 탭 ---------- */
+function showTab(name){
+  $$(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+  ["teacher","student","code"].forEach(n=>
+    $("#tab-"+n).classList.toggle("hidden", n!==name));
+  if(name==="code") renderCodeTab();
+}
+$$(".tab").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+
+/* ---------- 복사 버튼 ---------- */
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    const ta=document.createElement("textarea"); ta.value=text;
+    ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta);
+    ta.select(); let ok=false; try{ ok=document.execCommand("copy"); }catch(_){}
+    document.body.removeChild(ta); return ok;
+  }
+}
+document.addEventListener("click", async (e)=>{
+  const btn = e.target.closest(".copybtn"); if(!btn) return;
+  const sel = btn.dataset.copy;
+  const text = sel ? ($(sel)?.dataset.raw ?? $(sel)?.textContent ?? "") : (btn.dataset.text||"");
+  if(await copyText(text)){
+    const old = btn.textContent; btn.textContent="✅ 복사됨"; btn.classList.add("done");
+    setTimeout(()=>{ btn.textContent=old; btn.classList.remove("done"); },1400);
+  }
+});
+
+/* ---------- 암호화 (WebCrypto: PBKDF2 + AES-GCM) ---------- */
+const enc=new TextEncoder(), dec=new TextDecoder();
+function b64urlFromBytes(bytes){
+  let s=btoa(String.fromCharCode(...bytes));
+  return s.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function bytesFromB64url(str){
+  str=str.replace(/-/g,"+").replace(/_/g,"/"); while(str.length%4)str+="=";
+  const bin=atob(str); const b=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i); return b;
+}
+async function deriveKey(code, salt){
+  const base=await crypto.subtle.importKey("raw",enc.encode(code),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    {name:"PBKDF2",salt,iterations:150000,hash:"SHA-256"},
+    base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function encryptPayload(obj, code){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await deriveKey(code,salt);
+  const ct=new Uint8Array(await crypto.subtle.encrypt(
+    {name:"AES-GCM",iv}, key, enc.encode(JSON.stringify(obj))));
+  const out=new Uint8Array(salt.length+iv.length+ct.length);
+  out.set(salt,0); out.set(iv,salt.length); out.set(ct,salt.length+iv.length);
+  return b64urlFromBytes(out);
+}
+async function decryptPayload(payload, code){
+  const raw=bytesFromB64url(payload);
+  const salt=raw.slice(0,16), iv=raw.slice(16,28), ct=raw.slice(28);
+  const key=await deriveKey(code,salt);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv}, key, ct);
+  return JSON.parse(dec.decode(pt));
+}
+
+/* ---------- 강사: 스니펫 렌더 ---------- */
+function renderTeacherSnippets(){
+  const wrap=$("#t-snip-list"); wrap.innerHTML="";
+  if(!teacherSnippets.length){ wrap.innerHTML='<p class="hint">기본 스니펫 2개가 자동 포함됩니다. 필요하면 아래에서 추가하세요.</p>'; return; }
+  teacherSnippets.forEach((s,i)=>{
+    const d=document.createElement("div"); d.className="snippet";
+    d.innerHTML=`<div class="top"><span class="title"></span>
+      <button class="danger sm" data-i="${i}">삭제</button></div><pre></pre>`;
+    $(".title",d).textContent=s.title||"(제목 없음)";
+    $("pre",d).textContent=s.body;
+    $("button",d).addEventListener("click",()=>{ teacherSnippets.splice(i,1); saveTeacher(); renderTeacherSnippets(); });
+    wrap.appendChild(d);
+  });
+}
+$("#t-snip-add").addEventListener("click",()=>{
+  const title=$("#t-snip-title").value.trim(), body=$("#t-snip-body").value;
+  if(!body.trim()){ alert("코드를 입력하세요."); return; }
+  teacherSnippets.push({title,body}); saveTeacher(); renderTeacherSnippets();
+  $("#t-snip-title").value=""; $("#t-snip-body").value="";
+});
+
+/* ---------- 강사: 링크 생성 ---------- */
+let QR=null;
+$("#t-gen").addEventListener("click", async ()=>{
+  const key=$("#t-key").value.trim();
+  const code=$("#t-code").value.trim();
+  const label=$("#t-label").value.trim()||"API KEY";
+  if(!key){ alert("API 키를 입력하세요."); return; }
+  if(code.length<4){ alert("접근 코드는 4자 이상으로 정하세요."); return; }
+  saveTeacher();
+  const snippets = teacherSnippets.length ? teacherSnippets : DEFAULT_SNIPPETS;
+  const payload = await encryptPayload({key,label,snippets}, code);
+  const base = location.origin + location.pathname;
+  const url = base + "#k=" + payload;
+
+  $("#t-result").classList.remove("hidden");
+  $("#t-bigcode").textContent = code;
+  const urlBox=$("#t-url"); urlBox.textContent=url; urlBox.dataset.raw=url;
+  const pBox=$("#t-payload-only"); pBox.textContent=payload; pBox.dataset.raw=payload;
+
+  // QR
+  const qel=$("#qrcode"); qel.innerHTML="";
+  if(window.QRCode){
+    try{
+      QR=new QRCode(qel,{text:url,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});
+      $("#qr-note").textContent="폰 카메라로 스캔하세요";
+    }catch(e){
+      $("#qr-note").textContent="QR 생성 실패 — 위 링크를 공유하세요";
+    }
+  }else{
+    qel.innerHTML='<div style="color:#333;padding:20px">QR 라이브러리 로드 실패<br>(오프라인) 아래 링크를 공유하세요</div>';
+  }
+  $("#t-result").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+/* ---------- 강사: 저장 삭제 ---------- */
+$("#t-clear").addEventListener("click",()=>{
+  if(!confirm("이 기기에 저장된 키·접근코드·스니펫을 삭제할까요?")) return;
+  localStorage.removeItem(LS);
+  $("#t-key").value=""; $("#t-label").value=""; $("#t-code").value="";
+  teacherSnippets=[]; renderTeacherSnippets();
+  $("#t-result").classList.add("hidden");
+});
+["#t-key","#t-label","#t-code"].forEach(s=>$(s).addEventListener("input",saveTeacher));
+
+/* ---------- 연수생 ---------- */
+let unlocked=null; // {key,label,snippets}
+function getPayloadFromInput(){
+  // 1) URL fragment, 2) 붙여넣기 칸
+  let p = (location.hash.match(/[#&]k=([^&]+)/)||[])[1];
+  if(!p){
+    const raw=$("#s-paste").value.trim();
+    if(raw){ p = (raw.match(/[#&]k=([^&]+)/)||[])[1] || raw; }
+  }
+  return p ? p.trim() : "";
+}
+$("#s-unlock").addEventListener("click", async ()=>{
+  const msg=$("#s-msg"); msg.innerHTML="";
+  const payload=getPayloadFromInput();
+  const code=$("#s-code").value.trim();
+  if(!payload){ msg.innerHTML='<div class="alert err">링크/코드가 없습니다. 강사가 준 링크를 붙여넣으세요.</div>'; return; }
+  if(!code){ msg.innerHTML='<div class="alert err">접근 코드를 입력하세요.</div>'; return; }
+  try{
+    const data=await decryptPayload(payload, code);
+    unlocked=data;
+    $("#s-keylabel").textContent=data.label||"API 키";
+    const kb=$("#s-key"); kb.textContent=data.key; kb.dataset.raw=data.key;
+    $("#s-result").classList.remove("hidden");
+    $("#code-status").textContent="";
+  }catch(e){
+    unlocked=null;
+    msg.innerHTML='<div class="alert err">복호화 실패 — 접근 코드가 틀렸거나 링크가 손상됐습니다.</div>';
+  }
+});
+
+/* ---------- 코드 탭 ---------- */
+function activeSnippets(){
+  if(unlocked) return unlocked.snippets||DEFAULT_SNIPPETS;
+  // 강사 본인이 보는 경우: 입력한 키로 미리보기
+  const tk=$("#t-key").value.trim();
+  if(tk) return (teacherSnippets.length?teacherSnippets:DEFAULT_SNIPPETS);
+  return DEFAULT_SNIPPETS;
+}
+function activeKey(){
+  if(unlocked) return unlocked.key;
+  return $("#t-key").value.trim();
+}
+function renderCodeTab(){
+  const list=$("#code-list"); list.innerHTML="";
+  const key=activeKey();
+  const status=$("#code-status");
+  status.textContent = key
+    ? "✓ 키가 채워진 상태입니다. 복사하면 그대로 실행할 수 있습니다."
+    : "⚠ 아직 키가 없습니다. [연수생] 탭에서 키를 먼저 받으세요. (지금은 자리표시자로 표시)";
+  const snips=activeSnippets();
+  snips.forEach(s=>{
+    const filled=(s.body||"").replaceAll("{{API_KEY}}", key||"여기에_키_입력");
+    const d=document.createElement("div"); d.className="snippet";
+    d.innerHTML=`<div class="top"><span class="title"></span>
+      <button class="sm copybtn">📋 복사</button></div><pre></pre>`;
+    $(".title",d).textContent=s.title||"코드";
+    $("pre",d).textContent=filled;
+    $(".copybtn",d).dataset.text=filled;
+    list.appendChild(d);
+  });
+}
+
+/* ---------- 초기화 ---------- */
+(function init(){
+  const t=loadTeacher();
+  if(t.key) $("#t-key").value=t.key;
+  if(t.label) $("#t-label").value=t.label;
+  if(t.code) $("#t-code").value=t.code;
+  teacherSnippets = Array.isArray(t.snippets)? t.snippets : [];
+  renderTeacherSnippets();
+
+  // 링크로 들어왔으면 연수생 모드 자동
+  if(/[#&]k=/.test(location.hash)){
+    showTab("student");
+    $("#s-needpaste").classList.add("hidden");
+  }else{
+    $("#s-needpaste").classList.remove("hidden");
+  }
+  if(!window.isSecureContext){
+    // file:// 일부 환경에서 crypto.subtle 제한 안내
+    const w=document.createElement("div"); w.className="alert warn";
+    w.innerHTML="⚠ 보안 컨텍스트가 아니어서 암호화가 안 될 수 있습니다. <b>https</b> 또는 <b>localhost</b>로 여세요.";
+    $(".wrap").insertBefore(w, $(".tabs").nextSibling);
+  }
+})();
+</script>
+</body>
+</html>
