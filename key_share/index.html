@@ -18,6 +18,10 @@
   h1{font-size:1.35rem;margin:.2em 0 .1em}
   h2{font-size:1.05rem;margin:1.4em 0 .5em;color:var(--accent)}
   .sub{color:var(--muted);font-size:.9rem;margin-top:0}
+  .pagenav{display:flex;gap:8px;margin:12px 0 2px}
+  .pagenav a{flex:1;text-align:center;padding:9px;border-radius:10px;background:var(--card2);
+    color:var(--muted);text-decoration:none;font-weight:600;font-size:.88rem;border:1px solid var(--line)}
+  .pagenav a.active{background:var(--accent2);color:#02121f;border-color:var(--accent2)}
   .tabs{display:flex;gap:6px;margin:14px 0 18px;background:var(--card);padding:6px;border-radius:var(--radius);position:sticky;top:8px;z-index:5}
   .tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;cursor:pointer;font-weight:600;
     color:var(--muted);user-select:none;font-size:.92rem}
@@ -66,6 +70,12 @@
 <div class="wrap">
   <h1>🔑 연수용 키 배포</h1>
   <p class="sub">강사가 키를 입력 → 연수생은 QR·링크로 접속 후 접근 코드 입력 → 키·코드 복사. 키는 서버에 저장되지 않습니다.</p>
+
+  <div class="pagenav">
+    <a href="index.html" class="active">🔑 키 받기</a>
+    <a href="guide.html">📖 안내</a>
+    <a href="codes.html">📋 코드 라이브러리</a>
+  </div>
 
   <div class="tabs">
     <div class="tab active" data-tab="teacher">👩‍🏫 강사</div>
