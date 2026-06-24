@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>음성 녹음 도구 프로토타입 — 폰 마이크 → MP3/WAV</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{ --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec; --code-bg:#f7f6f3; --radius:10px;
+  --font:'Pretendard',-apple-system,sans-serif; --mono:'SFMono-Regular',Consolas,monospace; }
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;padding:40px;max-width:860px;margin:0 auto;}
+h1{font-size:20px;}
+.demo-label{color:var(--muted);font-size:13px;margin:30px 0 8px;font-weight:700;}
+/* ============================================================
+   음성 녹음 도구 — 폰/PC 브라우저 마이크로 녹음 → MP3(lamejs)/WAV 다운로드.
+   SD카드 음성 파일(0001.mp3 등)을 직접 목소리로 만들 때. self-contained. 밝은 테마.
+   ============================================================ */
+.recorder{border:1px solid var(--line);border-radius:12px;background:#fff;margin:16px 0;max-width:760px;--ac:#7C3AED;}
+.rec-top{padding:13px 16px;background:var(--code-bg);border-bottom:1px solid var(--line);font-size:13px;font-weight:800;}
+.rec-top small{font-weight:500;color:var(--muted);}
+.rec-body{padding:12px 16px;}
+.rec-slot{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin:9px 0;}
+.rec-h{font-size:13.5px;margin-bottom:8px;}
+.rec-h b{font-family:var(--mono);color:var(--ac);}
+.rec-h span{color:var(--muted);}
+.rec-go{appearance:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--ac);background:#fff;color:var(--ac);border-radius:99px;padding:7px 15px;}
+.rec-go.on{background:var(--ac);color:#fff;}
+.rec-st{font-size:12px;color:var(--muted);margin-left:8px;}
+.rec-au{display:block;margin:9px 0;width:100%;height:34px;}
+.rec-dl button{appearance:none;font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin-right:6px;background:#fff;color:var(--fg);}
+.rec-warn{font-size:11.5px;color:var(--muted);padding:6px 16px 14px;}
+</style>
+</head>
+<body>
+<h1>🎙️ 음성 녹음 도구 프로토타입 — 폰 마이크 → MP3/WAV</h1>
+<p style="color:var(--muted);font-size:13.5px;">버튼을 눌러 2초 녹음 → 미리듣기 → <b>MP3</b> 또는 <b>WAV</b>로 다운로드. 파일명은 자동(<code>0001.mp3</code>…).</p>
+
+<div class="demo-label">SD카드용 음성 파일 만들기</div>
+<div class="recorder" data-ac="#7C3AED"></div>
+
+<script>
+function buildRecorder(el){
+  var ac = el.dataset.ac || "#7C3AED";
+  el.style.setProperty("--ac", ac);
+  if(!window.lamejs && !window.__lameLoading){          // MP3 인코더(lamejs) 비동기 로드
+    window.__lameLoading = 1;
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js";
+    document.head.appendChild(s);
+  }
+  var SLOTS = [
+    {f:"0001", m:"휘파람이에요"}, {f:"0002", m:"박수네요"},
+    {f:"0003", m:"말소리예요"}, {f:"0004", m:"노크 소리예요"}
+  ];
+  var stream = null, ctx = null, data = {};
+
+  el.innerHTML =
+    '<div class="rec-top">🎙️ SD카드 음성 파일 만들기<small>버튼 누르고 2초간 또박또박</small></div>' +
+    '<div class="rec-body">' +
+    SLOTS.map(function(s, i){ return (
+      '<div class="rec-slot"><div class="rec-h"><b>'+s.f+'.mp3</b> <span>— "'+s.m+'" 라고 녹음</span></div>' +
+      '<button class="rec-go" data-go="'+i+'">● 녹음 (2초)</button><span class="rec-st" data-st="'+i+'"></span>' +
+      '<audio class="rec-au" data-au="'+i+'" controls style="display:none"></audio>' +
+      '<span class="rec-dl" data-dl="'+i+'" style="display:none">' +
+      '<button data-mp3="'+i+'">⬇ MP3</button><button data-wav="'+i+'">⬇ WAV</button></span></div>'
+    ); }).join("") +
+    '</div><div class="rec-warn">⚠ 마이크 권한이 필요해요. https로 배포된 사이트에서 동작합니다(로컬 파일은 막힐 수 있어요). 4개를 받아 SD에 0001→0004 순서로 넣으세요.</div>';
+
+  function st(i, t){ el.querySelector('[data-st="'+i+'"]').textContent = t; }
+
+  function encodeWav(pcm, sr){
+    var n = pcm.length, buf = new ArrayBuffer(44 + n*2), v = new DataView(buf), o = 0;
+    function str(x){ for(var k=0;k<x.length;k++) v.setUint8(o++, x.charCodeAt(k)); }
+    function u32(x){ v.setUint32(o, x, true); o+=4; } function u16(x){ v.setUint16(o, x, true); o+=2; }
+    str("RIFF"); u32(36+n*2); str("WAVE"); str("fmt "); u32(16); u16(1); u16(1); u32(sr); u32(sr*2); u16(2); u16(16); str("data"); u32(n*2);
+    for(var i=0;i<n;i++){ var x=Math.max(-1,Math.min(1,pcm[i])); v.setInt16(o, x<0?x*0x8000:x*0x7FFF, true); o+=2; }
+    return new Blob([buf], {type:"audio/wav"});
+  }
+  function encodeMp3(pcm, sr){
+    if(!window.lamejs) return null;
+    var enc = new lamejs.Mp3Encoder(1, sr, 128), n = pcm.length, i16 = new Int16Array(n);
+    for(var i=0;i<n;i++){ var x=Math.max(-1,Math.min(1,pcm[i])); i16[i]= x<0?x*0x8000:x*0x7FFF; }
+    var out=[], bs=1152;
+    for(var p=0;p<n;p+=bs){ var b=enc.encodeBuffer(i16.subarray(p,p+bs)); if(b.length) out.push(b); }
+    var e=enc.flush(); if(e.length) out.push(e);
+    return new Blob(out, {type:"audio/mpeg"});
+  }
+  function dl(blob, name){ var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+
+  async function record(i){
+    try{
+      if(!stream) stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      if(!ctx) ctx = new (window.AudioContext||window.webkitAudioContext)();
+      var go = el.querySelector('[data-go="'+i+'"]'); go.classList.add("on");
+      st(i, "녹음 중… 말하세요");
+      var mr = new MediaRecorder(stream), parts = [];
+      mr.ondataavailable = function(e){ parts.push(e.data); };
+      mr.onstop = async function(){
+        go.classList.remove("on"); st(i, "변환 중…");
+        var ab = await (new Blob(parts)).arrayBuffer();
+        var audio = await ctx.decodeAudioData(ab);
+        var pcm = audio.getChannelData(0), sr = audio.sampleRate;
+        data[i] = {pcm:pcm, sr:sr};
+        var au = el.querySelector('[data-au="'+i+'"]');
+        au.src = URL.createObjectURL(encodeWav(pcm, sr)); au.style.display = "block";
+        el.querySelector('[data-dl="'+i+'"]').style.display = "inline";
+        st(i, "완료! 미리듣고 다운로드");
+      };
+      mr.start(); setTimeout(function(){ if(mr.state!=="inactive") mr.stop(); }, 2000);
+    }catch(e){ st(i, "마이크 오류 — https 사이트에서, 권한 허용 필요"); }
+  }
+
+  el.querySelectorAll("[data-go]").forEach(function(b){ b.onclick=function(){ record(+b.dataset.go); }; });
+  el.querySelectorAll("[data-wav]").forEach(function(b){ b.onclick=function(){ var i=+b.dataset.wav,d=data[i]; if(d) dl(encodeWav(d.pcm,d.sr), SLOTS[i].f+".wav"); }; });
+  el.querySelectorAll("[data-mp3]").forEach(function(b){ b.onclick=function(){
+    var i=+b.dataset.mp3, d=data[i]; if(!d) return;
+    var blob=encodeMp3(d.pcm,d.sr);
+    if(blob) dl(blob, SLOTS[i].f+".mp3");
+    else st(i, "MP3 인코더 로딩 중… 잠시 후 다시(또는 WAV 받기)");
+  }; });
+}
+document.querySelectorAll(".recorder").forEach(buildRecorder);
+</script>
+</body>
+</html>

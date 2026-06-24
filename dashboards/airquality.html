@@ -36,8 +36,21 @@
 
   <section class="card live">
     <h2>📡 라이브 대시보드 <span class="hint">— 지금 데이터를 받아옵니다</span></h2>
-    <div class="controls"><label>위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat" id="g25"><div class="lab">PM2.5 (초미세)</div><div class="val" id="v25">--</div><div class="unit" id="t25">µg/m³</div></div><div class="stat"><div class="lab">PM10 (미세)</div><div class="val" id="v10">--</div><div class="unit">µg/m³</div></div></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div>
+    <div class="controls"><label>위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div class="grid"><div class="stat" id="g25"><div class="lab">PM2.5 (초미세)</div><div class="val" id="v25">--</div><div class="unit" id="t25">µg/m³</div></div><div class="stat" id="g10"><div class="lab">PM10 (미세)</div><div class="val" id="v10">--</div><div class="unit" id="t10">µg/m³</div></div></div><div class="controls"><label>그래프</label><select id="metric" onchange="draw()"><option value="pm2_5">PM2.5 (초미세먼지)</option><option value="pm10">PM10 (미세먼지)</option></select></div><div class="chartbox"><canvas id="ch" height="120"></canvas></div>
   </section>
+
+  <section class="card core"><h2>🐍 API 핵심 코드 <span class="hint">— 복사해 내 프로젝트·AI에 응용</span></h2><p class="coreintro">이 데이터를 받아오는 <b>핵심만</b> 추린 파이썬 코드예요(<code>requests</code> 사용). <b>Streamlit</b> 앱에 바로 쓰거나, 복사해서 AI(Claude 등)에게 “이 데이터로 ___ 만들어 줘”처럼 넘기면 됩니다.</p><p class="corenote">📦 <b>Streamlit Cloud에 배포</b>한다면 <code>requirements.txt</code>에 <code>requests</code>를 한 줄 적어 주세요 (없으면 <code>ModuleNotFoundError</code>).</p><details class="corefold"><summary>💻 파이썬 코드 보기 · 복사</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">미세먼지 (대기질) · Python (requests)</span><button class="vibecopy" onclick="corecopy(this)">복사</button></div><pre class="vibetext">import requests
+
+LAT, LON = 37.5665, 126.9780  # 서울
+
+data = requests.get(&quot;https://air-quality-api.open-meteo.com/v1/air-quality&quot;, params={
+    &quot;latitude&quot;: LAT, &quot;longitude&quot;: LON,
+    &quot;current&quot;: &quot;pm2_5,pm10&quot;, &quot;timezone&quot;: &quot;Asia/Seoul&quot;,
+}).json()
+
+pm25 = data[&quot;current&quot;][&quot;pm2_5&quot;]  # 초미세먼지 PM2.5 (㎍/㎥)
+pm10 = data[&quot;current&quot;][&quot;pm10&quot;]   # 미세먼지 PM10
+print(pm25, pm10)</pre></div></details></section>
 
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
@@ -59,25 +72,36 @@
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
-<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}</script>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}function corecopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;_vwrite(s,b);}</script>
 <script>
-let chart;
+let chart, HOURLY=null;
 function grade(pm){ if(pm<=15)return['좋음','#22c55e']; if(pm<=35)return['보통','#3b82f6']; if(pm<=75)return['나쁨','#f59e0b']; return['매우나쁨','#ef4444']; }
+function grade10(pm){ if(pm<=30)return['좋음','#22c55e']; if(pm<=80)return['보통','#3b82f6']; if(pm<=150)return['나쁨','#f59e0b']; return['매우나쁨','#ef4444']; }
+function gradeOf(metric, v){ return metric==='pm10'?grade10(v):grade(v); }
+function draw(){
+  if(!HOURLY) return;
+  const metric=document.getElementById('metric').value;
+  const series=HOURLY[metric], labels=HOURLY.time.map(x=>x.slice(11,16));
+  const cur=series.find(v=>v!=null) ?? 0, color=gradeOf(metric,cur)[1];
+  const name=metric==='pm10'?'PM10':'PM2.5';
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('ch'),{type:'line',data:{labels,datasets:[{label:name,data:series,borderColor:color,backgroundColor:color+'22',fill:true,tension:.3,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+}
 async function run(){
   const lat=document.getElementById('lat').value, lon=document.getElementById('lon').value;
   const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
   try{
-    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,pm10&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1`;
+    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,pm10&hourly=pm2_5,pm10&timezone=Asia%2FSeoul&forecast_days=1`;
     const j=await (await fetch(u)).json();
-    const pm=j.current.pm2_5, [name,color]=grade(pm);
-    document.getElementById('v25').textContent=pm; document.getElementById('v25').style.color=color;
-    document.getElementById('t25').textContent='µg/m³ · '+name;
-    document.getElementById('g25').style.borderColor=color;
-    document.getElementById('v10').textContent=j.current.pm10;
-    s.textContent='✓ 현재 기준 · 등급: '+name;
-    const labels=j.hourly.time.map(x=>x.slice(11,16)), data=j.hourly.pm2_5;
-    if(chart) chart.destroy();
-    chart=new Chart(document.getElementById('ch'),{type:'line',data:{labels,datasets:[{label:'PM2.5',data,borderColor:color,backgroundColor:color+'22',fill:true,tension:.3,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+    const pm=j.current.pm2_5, [n25,c25]=grade(pm);
+    document.getElementById('v25').textContent=pm; document.getElementById('v25').style.color=c25;
+    document.getElementById('t25').textContent='µg/m³ · '+n25; document.getElementById('g25').style.borderColor=c25;
+    const p10=j.current.pm10, [n10,c10]=grade10(p10);
+    document.getElementById('v10').textContent=p10; document.getElementById('v10').style.color=c10;
+    document.getElementById('t10').textContent='µg/m³ · '+n10; document.getElementById('g10').style.borderColor=c10;
+    s.textContent='✓ 현재 기준 · PM2.5 '+n25+' / PM10 '+n10;
+    HOURLY={time:j.hourly.time, pm2_5:j.hourly.pm2_5, pm10:j.hourly.pm10};
+    draw();
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 run();

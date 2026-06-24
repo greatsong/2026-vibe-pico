@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+<style>
+:root{
+  --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
+  --sidebar:#fbfbfa; --code-bg:#f7f6f3; --radius:10px;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,'D2Coding',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.ilink{color:#3b47c2;text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:#5b6cf0;}
+.layout{display:flex;max-width:1180px;margin:0 auto;}
+.sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
+  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
+.brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.nav-ch{margin-top:10px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}
+.nav-ch-link:hover{background:#efefee;}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}
+.nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
+.nav-sec:hover{color:var(--fg);}
+.nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
+.main{flex:1;min-width:0;padding:0 56px 120px;}
+.hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+.hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
+.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:660px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
+.stat b{font-size:15px;color:var(--fg);font-weight:800;}
+.chapter{padding-top:30px;}
+.ch-head{margin:40px 0 8px;}
+.ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
+.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:14px;}
+.sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code,.dig-body code{
+  font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:4px;padding:1px 6px;}
+.step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
+/* 챕터 인트로 */
+.goals{background:#f8f9ff;border:1px solid #e6e8fb;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fffdf5;border:1px solid #f1e9cf;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;}
+.why p{margin:0;font-size:14px;}
+/* 콜아웃 */
+.callout{border-radius:10px;padding:14px 18px;margin:14px 0;max-width:720px;border:1px solid var(--line);border-left-width:4px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{background:#f0faf4;border-left-color:#22c55e;}
+.callout.warn{background:#fff6f0;border-left-color:#f97316;}
+.callout.info{background:#f0f7ff;border-left-color:#3b82f6;}
+.callout.key{background:#f7f0ff;border-left-color:#8b5cf6;}
+/* 링크 버튼 */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6d5d2;
+  border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;margin:8px 8px 8px 0;transition:.15s;}
+.linkbtn:hover{border-color:#9b9b97;background:var(--code-bg);}
+/* 체크리스트(준비물) */
+.check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);}
+.check-list li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:16px;color:var(--muted);}
+/* 핵심 개념 그리드 */
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:#55524c;}
+.idea-d code,.concept-d code{word-break:break-all;}
+.idea-d{line-height:1.7;}
+/* 스텝 */
+.steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
+  background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
+.steps li>b{display:block;margin-bottom:2px;}
+.steps li span{color:#55524c;font-size:13.5px;}
+/* 자주 하는 실수 */
+.mistakes{margin:12px 0;max-width:720px;}
+.mistake{border:1px solid #f0d9d9;border-radius:10px;padding:12px 15px;margin:10px 0;background:#fffafa;}
+.m-sym{font-weight:700;font-size:13.5px;color:#c0392b;margin-bottom:7px;}
+.m-row{font-size:13px;margin:4px 0;padding-left:2px;}
+.m-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#bbb;border-radius:5px;
+  padding:1px 7px;margin-right:7px;}
+.m-tag.fix{background:#22a06b;}
+/* 스스로 점검 */
+.checks{margin:12px 0;max-width:720px;}
+.qa{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:600;list-style:none;}
+.qa summary:before{content:"❓ ";}
+.qa[open] summary{border-bottom:1px solid var(--line);}
+.qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
+.qa-a:before{content:"✅ ";}
+/* 더 알아보기 (심화 이론) */
+.dig{border:1px solid #dde2f2;border-left:4px solid #6b7cff;border-radius:10px;margin:14px 0;max-width:760px;
+  background:linear-gradient(180deg,#fafbff,#fff);}
+.dig summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:13.5px;color:#3a45a8;list-style:none;}
+.dig summary::-webkit-details-marker{display:none;}
+.dig summary:after{content:"▾";float:right;color:#9aa1cf;transition:.2s;}
+.dig[open] summary:after{transform:rotate(180deg);}
+.dig[open] summary{border-bottom:1px solid #e7eaf7;}
+.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:#44464f;}
+.dig-body b{color:#2f3a96;}
+/* 코드 접기 */
+.codefold{margin:12px 0;max-width:840px;}
+.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #cfd3e6;border-radius:10px;
+  background:#f7f8fd;font-size:13px;font-weight:700;color:#4a4f74;}
+.codefold>summary::-webkit-details-marker{display:none;}
+.codefold>summary:before{content:"📄 ";}
+.codefold>summary:after{content:"  ▾";color:#aab;}
+.codefold[open]>summary:after{content:"  ▴";}
+.codefold[open]>summary{border-style:solid;border-color:var(--line);border-bottom:none;
+  border-radius:10px 10px 0 0;background:var(--code-bg);}
+.codefold .fold-hint{font-weight:500;color:#9aa;}
+.codefold .block{margin:0;border-radius:0 0 10px 10px;}
+/* 귀여운 브랜딩 강조 */
+.pico-accent{background:linear-gradient(120deg,#5B6CF0,#E0568A);-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-weight:900;}
+.brand-emoji{font-size:17px;}
+/* '피지컬 코딩'의 [피][코] 글자 강조 — 피코 워드플레이 */
+.pk{background:linear-gradient(120deg,#5B6CF0,#E0568A);color:#fff;font-weight:900;
+  border-radius:7px;padding:0 .26em;margin:0 .02em;}
+/* 하드웨어 다이어그램 */
+.figure{margin:14px 0;max-width:760px;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
+.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--font);}
+.api-svg{width:100%;height:auto;background:#fbfcff;border:1px solid #e6e8f5;border-radius:14px;padding:8px;font-family:var(--font);}
+/* 코드/프롬프트 블록 */
+.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
+.block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
+.copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#282c34;}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:#abb2bf;}
+.code-block .block-head{background:#21252b;border-bottom-color:#181b20;}
+.code-block .block-label{color:#c7cdd6;}
+.code-block .lang-tag{color:#9aa3b2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn{color:#aeb6c2;background:#2c313a;border-color:#3a4150;}
+.code-block .copy-btn:hover{color:#fff;border-color:#5a6275;}
+.code-block .copy-btn.done{color:#79e3b4;border-color:#2f6b4f;background:#1f3a2c;}
+.prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
+.prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
+  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
+.prompt-block .block-label{color:color-mix(in srgb,var(--accent) 55%,#37352f);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;
+  background:color-mix(in srgb,var(--accent) 4%,#fff);}
+/* 펌웨어 카드 */
+.fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
+  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);padding:22px 24px;margin:12px 0 18px;max-width:840px;}
+.fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
+  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.fw-meta{margin:0;color:var(--muted);font-size:13px;}
+.fw-meta b{color:var(--fg);}
+.dl-btn{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+  font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
+  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}
+.dl-btn:hover{background:#4a5ae0;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}
+.fw-steps li{padding-left:3px;}
+.fw-dim{color:var(--muted);}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}
+.fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+.fw-note a{color:#3B47C2;text-decoration:underline;}
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
+.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
+  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.scrim{display:none;}
+@media(max-width:920px){
+  .main{padding:0 22px 100px;}
+  .hero{padding-top:74px;}
+  .hero h1{font-size:30px;}
+  .menu-btn{display:block;}
+  .sidebar{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}
+  .sidebar.open{transform:none;}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}
+}
+</style>
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+<div class="scrim" id="scrim"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
+    <div class="nav-ch"><a href="#chsay" class="nav-ch-link" data-target="chsay"><span class="nav-dot" style="background:#7C3AED"></span>ML+. 피코가 말을 한다 — 소리의 주인공을 목소리로</a><div class="nav-secs"><a href="#chsay-0" class="nav-sec" data-target="chsay-0">0단계 · 시작하기 전에 (준비물 점검)</a><a href="#chsay-1" class="nav-sec" data-target="chsay-1">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</a><a href="#chsay-2" class="nav-sec" data-target="chsay-2">1단계 · 모듈 연결하기 (배선)</a><a href="#chsay-3" class="nav-sec" data-target="chsay-3">2단계 · 음성 파일 만들어 SD카드에 넣기</a><a href="#chsay-4" class="nav-sec" data-target="chsay-4">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</a><a href="#chsay-5" class="nav-sec" data-target="chsay-5">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</a><a href="#chsay-6" class="nav-sec" data-target="chsay-6">★ 더 해보기 — 입에 성격을 입히자</a><a href="#chsay-7" class="nav-sec" data-target="chsay-7">자주 하는 실수</a><a href="#chsay-8" class="nav-sec" data-target="chsay-8">스스로 점검하기</a><a href="#chsay-9" class="nav-sec" data-target="chsay-9">수업/학습 시나리오</a></div></div>
+  </aside>
+  <main class="main">
+    <header class="hero">
+      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
+      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
+      <div class="stats">
+        <div class="stat"><b>1</b>개 챕터</div>
+        <div class="stat"><b>2</b>개 코드 블록</div>
+        <div class="stat"><b>3</b>개 AI 프롬프트</div>
+      </div>
+    </header>
+    <div class="chapter" id="chsay"><div class="ch-head"><span class="ch-num" style="color:#7C3AED">CHAPTER ML+</span><h2 class="ch-title"><span class="ch-bar" style="background:#7C3AED"></span>피코가 말을 한다 — 소리의 주인공을 목소리로</h2><p class="ch-sub">k-NN이 알아맞힌 소리에게 ‘이름’을 붙여 목소리로 말해주는 출력기. Grove MP3 v4로 듣기→생각→말하기 한 사이클을 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>출력 모듈(Grove MP3 v4)에 UART로 ‘명령’을 보내 소리를 낸다</li><li>분류 결과(라벨)를 음성 트랙 번호로 잇는 ‘룩업 테이블’을 이해한다</li><li>‘자기 소리 되먹임’과 ‘모듈 부팅’ 같은 현실 문제를 코드로 다스린다</li><li>확신이 낮으면 ‘모르겠어요’ 하고 침묵하는 규칙을 넣는다</li><li>입력(마이크)→처리(k-NN)→출력(음성)의 AI 한 바퀴를 직접 잇는다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>소리 분류 챕터에서 피코는 ‘이건 휘파람!’이라고 <b>속으로만</b> 알았어요(콘솔 글자·LED 색). 그런데 음성비서·새 찾기 앱은 거기서 한 발 더 나아가 <b>사람의 말로 대답</b>합니다. 오늘은 그 마지막 한 칸을 채워요. 분류 결과라는 <b>추상적인 라벨</b>을, Grove MP3 v4를 통해 <b>들리는 목소리</b>로 되돌려줍니다. 그러면 ‘기계가 듣고·생각하고·말한다’는 AI의 한 사이클이 눈앞에서 완성돼요. <b>아래 순서대로 한 칸씩만 따라오면</b> 됩니다.</p></div><section class="sec" id="chsay-0"><h3 class="sec-title">0단계 · 시작하기 전에 (준비물 점검)</h3><p class="prose">이 챕터는 <b>소리 분류 챕터의 ‘다음 편’</b>이에요. 시작 전에 아래 세 가지가 준비됐는지 먼저 확인하세요. 하나라도 비면 그 챕터를 먼저 끝내고 오면 됩니다.</p><ul class="check-list"><li>소리 분류 챕터에서 만든 <b><code>sounds.csv</code></b>가 피코 안에 들어 있다 (이게 ‘모델’이에요)</li><li>마이크가 연결돼 있고, 휘파람·박수가 <b>이미 잘 구분</b>됐다</li><li>새로 준비한 <b>Grove MP3 v4 모듈</b>과 <b>작은 스피커(또는 이어폰)</b>가 손에 있다</li></ul><div class="callout info"><div class="callout-head">ℹ️ 완성하면 이런 모습이에요 (미리 그려보기)</div><div class="callout-body">마이크에 대고 <b>휘파람</b>을 붑니다 → 피코가 0.5초 생각하더니 → 스피커에서 <b>“휘파람이에요!”</b> 하고 말합니다. 박수를 치면 <b>“박수네요!”</b>. 애매한 소리엔 <b>조용히</b> 있어요. 이 한 장면을 만드는 게 오늘의 목표예요.</div></div><div class="callout key"><div class="callout-head">🔑 오늘 추가되는 건 ‘입’ 하나뿐</div><div class="callout-body">듣기(마이크)·생각하기(k-NN)는 <b>이미 다 만들었어요.</b> 오늘은 거기에 <b>말하는 입(MP3 모듈)</b>만 답니다. 그래서 새로 배우는 코드는 생각보다 적어요.</div></div></section><section class="sec" id="chsay-1"><h3 class="sec-title">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</h3><p class="prose">코드를 짜기 전에, 오늘 쓰는 부품과 개념을 천천히 짚어요. 딱 네 가지만 이해하면 됩니다.</p><div class="concept-grid"><div class="concept"><div class="concept-t">입력 vs 출력</div><div class="concept-d">마이크는 소리를 <b>듣는</b> 입력, Grove MP3 v4는 소리를 <b>내는</b> 출력이에요. 방향이 정반대. 둘을 이으면 ‘듣고 대답하는 기계’가 됩니다.</div></div><div class="concept"><div class="concept-t">MP3 v4 = ‘똑똑한 부하 직원’</div><div class="concept-d">피코는 <b>“3번 곡 틀어”라는 명령만</b> 보내요. 파일 찾기·소리 키우기·스피커 울리기는 모듈이 알아서 해요. 피코는 소리를 직접 안 만듭니다.</div></div><div class="concept"><div class="concept-t">UART(시리얼)</div><div class="concept-d">두 기계가 <b>전선 한 줄로 글자를 주고받는</b> 약속이에요. 마치 두 사람이 실 전화기로 속닥이는 것. 피코의 <b>TX</b>(말하는 핀)와 모듈의 <b>RX</b>(듣는 핀)를 잇습니다.</div></div><div class="concept"><div class="concept-t">룩업 테이블</div><div class="concept-d"><b>라벨 → 트랙 번호</b> 표예요. ‘휘파람’이면 1번, ‘박수’면 2번… 분류 결과를 음성에 잇는 <b>짧은 사전</b> 하나가 오늘의 핵심 코드입니다.</div></div></div><div class="callout key"><div class="callout-head">🔑 오늘의 한 문장 — ‘라벨을 목소리로 바꾸는 사전’</div><div class="callout-body">k-NN이 내놓는 답은 <code>"휘파람"</code> 같은 <b>글자(라벨)</b>예요. 이걸 <code>TRACK = {"휘파람":1, "박수":2}</code>라는 <b>사전 한 줄</b>로 음성 트랙 번호에 연결합니다. 그게 전부예요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 확신이 낮으면 — 침묵이 정답</div><div class="callout-body">분류가 흔들릴 때(이웃이 갈릴 때) 자신 있게 <b>틀린 답</b>을 말하면 더 나빠요. 그래서 <b>확신도가 기준(60%) 아래면 아무 말도 안 합니다.</b> ‘<b>모를 땐 모른다고 하는 것</b>’ — 좋은 AI의 태도이고, 한 줄(<code>if conf &gt;= CONF_MIN</code>)로 가르칠 수 있어요.</div></div></section><section class="sec" id="chsay-2"><h3 class="sec-title">1단계 · 모듈 연결하기 (배선)</h3><p class="step-head">Grove MP3 v4는 <b>그로브 4핀 케이블 하나</b>면 연결 끝이에요. 마이크는 앞 챕터 그대로 두고, MP3 모듈만 새로 답니다.</p><ol class="steps"><li><b>MP3 모듈 꽂기</b><span>그로브 케이블로 쉴드의 <b>UART 포트</b>에 ‘톡’ 꽂기 (피코 핀 TX=GP0, RX=GP1에 연결돼요)</span></li><li><b>스피커 달기</b><span>모듈의 <b>스피커 단자</b>에 작은 스피커, 또는 <b>3.5mm 잭</b>에 이어폰을 꽂기</span></li><li><b>SD카드 꽂기</b><span>음성 MP3를 넣은 microSD를 모듈에 삽입 (만드는 법은 2단계)</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 점퍼로 직접 연결한다면 — TX와 RX는 ‘엇갈려’ 꽂아요</div><div class="callout-body">그로브 포트로 꽂으면 보통 알아서 맞아요. 하지만 점퍼선으로 직접 연결한다면, 내가 <b>말하는 선(TX)</b>은 상대가 <b>듣는 선(RX)</b>에 닿아야 합니다.<br>• <b>피코 TX(GP0) → 모듈 RX</b><br>• <b>피코 RX(GP1) → 모듈 TX</b><br>• <b>모듈 VCC → 5V</b>, <b>GND → GND</b><br>소리가 안 나면 <b>이 두 신호선을 서로 바꿔 끼우는 게 1순위 점검</b>이에요.</div></div><ul class="check-list"><li>MP3 모듈의 전원 LED에 <b>불이 들어오나요</b>?</li><li>스피커(또는 이어폰)가 모듈에 <b>단단히</b> 꽂혔나요?</li><li>SD카드가 <b>딸깍</b> 소리 나게 끝까지 들어갔나요?</li></ul></section><section class="sec" id="chsay-3"><h3 class="sec-title">2단계 · 음성 파일 만들어 SD카드에 넣기</h3><p class="step-head">소리 이름마다 <b>한 마디 음성</b>을 만들어 <code>0001.mp3</code>, <code>0002.mp3</code>… 순서대로 SD카드에 넣습니다. 여기서 <b>파일 이름의 숫자 = 트랙 번호</b>가 돼요.</p><ol class="steps"><li><b>멘트 정하기</b><span>라벨마다 한 마디. 예) 1번=“휘파람이에요” / 2번=“박수네요” / 3번=“말소리예요” / 4번=“조용하네요”</span></li><li><b>음성 만들기</b><span>직접 <b>녹음</b>하거나, <b>TTS(읽어주기)</b> 사이트·앱으로 mp3를 생성</span></li><li><b>이름 붙이기</b><span><code>0001.mp3</code>=1번 라벨, <code>0002.mp3</code>=2번… <b>룩업 테이블 순서대로</b> 정확히</span></li><li><b>SD카드에 복사</b><span>SD카드 <b>맨 위 폴더(루트)</b>에 <b>0001부터 순서대로</b> 하나씩 복사 → 모듈에 삽입</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ ★ 꼭! — ‘번호 순서대로 하나씩’ 복사하기</div><div class="callout-body">이 모듈(KT403A)은 파일 이름이 아니라 <b>복사된 순서</b>로 트랙 번호를 매기는 경우가 많아요. 그래서 여러 파일을 한꺼번에 끌어다 놓으면 순서가 뒤죽박죽이 될 수 있습니다. 안전하게 하려면 <b>SD카드를 FAT32로 포맷한 뒤, 0001.mp3 → 0002.mp3 … 순서로 한 개씩</b> 복사하세요. (엉뚱한 곡이 나오면 거의 이 문제예요.)</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 TTS 음성 만들기 시키기 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">휘파람·박수·말소리·정적, 이 네 가지에 대해 한국어로 한 마디씩 멘트(예: &#x27;휘파람이에요&#x27;, &#x27;박수네요&#x27;, &#x27;말소리예요&#x27;, &#x27;조용하네요&#x27;)를 읽어주는 mp3 파일을 만들고 싶어. 무료 TTS로 만드는 구체적인 방법(사이트나 앱 추천 포함)을 알려주고, 파일 이름을 0001.mp3~0004.mp3로 붙이는 순서까지 정리해줘. 음성은 너무 길지 않게 1~2초로.</div></div><div class="callout tip"><div class="callout-head">💡 음성 대신 효과음도 좋아요</div><div class="callout-body">꼭 말일 필요는 없어요. <b>“딩동”·“삐빅”·동물 울음</b> 같은 효과음을 넣어도 재밌습니다. 중요한 건 <b>라벨마다 다른 트랙</b>이라는 점뿐이에요.</div></div></section><section class="sec" id="chsay-4"><h3 class="sec-title">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</h3><p class="step-head">분류와 합치기 <b>전에</b>, MP3 모듈이 혼자서도 소리를 잘 내는지부터 확인해요. 여기서 소리가 나야 다음 단계가 의미 있어요. <b>제일 먼저 넘어야 할 관문</b>이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ① · MP3 모듈 단독 테스트 (1·2번 곡 재생)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ① — Grove MP3 v4 단독 테스트
+# 피코는 &quot;몇 번 곡 틀어/볼륨 얼마로&quot; 같은 &#x27;명령&#x27;만 보냅니다.
+# 그러면 모듈이 알아서 SD카드의 MP3를 재생해요. (피코는 소리를 직접 안 만듭니다)
+from machine import UART, Pin
+import time
+
+# Grove 케이블 → 쉴드의 UART 포트. 피코 TX=GP0, RX=GP1
+uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))
+
+def cmd(c, param=0):
+    # Grove MP3 v4(KT403A)·DFPlayer 공통 명령 프레임:
+    #   7E  FF 06  CMD  00  PH PL  CKH CKL  EF
+    body = bytes([0xFF, 0x06, c, 0x00, (param &gt;&gt; 8) &amp; 0xFF, param &amp; 0xFF])
+    chk = 0xFFFF - sum(body) + 1                       # 체크섬(보낸 게 안 깨졌는지 검사용)
+    uart.write(bytes([0x7E]) + body + bytes([(chk &gt;&gt; 8) &amp; 0xFF, chk &amp; 0xFF, 0xEF]))
+    time.sleep(0.1)         # 명령 사이 간격 — 너무 빨리 보내면 모듈이 씹어요
+
+# 모듈은 전원 직후 &#x27;부팅 시간&#x27;이 필요해요. 안 기다리면 첫 명령이 무시됩니다.
+time.sleep(0.5)
+cmd(0x0C)                # 리셋
+time.sleep(1.2)          # 재부팅 대기 (소리가 안 나면 이 값을 늘려보세요)
+cmd(0x09, 0x0002)        # 재생 소스 = microSD 카드
+cmd(0x06, 20)            # 볼륨 0~30 중 20 (시끄러우면 낮추세요)
+
+print(&quot;1번 곡(0001.mp3)을 재생합니다… 스피커에서 소리가 나나요?&quot;)
+cmd(0x03, 1)             # SD카드 1번 트랙 재생
+
+# 잠깐 기다렸다 다음 곡도 테스트
+time.sleep(3)
+print(&quot;2번 곡(0002.mp3)도 재생해볼게요&quot;)
+cmd(0x03, 2)</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">이렇게 나오면 성공! (셸 출력 + 스피커)</span><span class="lang-tag">TEXT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-text">1번 곡(0001.mp3)을 재생합니다… 스피커에서 소리가 나나요?
+  🔊 &quot;휘파람이에요&quot;
+2번 곡(0002.mp3)도 재생해볼게요
+  🔊 &quot;박수네요&quot;</code></pre></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 코드가 하는 일</div><div class="callout-body">맨 위에서 <code>cmd(0x0C)</code>로 모듈을 <b>리셋</b>하고 <b>1.2초 기다려요</b>. 모듈도 켜지면 ‘부팅’하는데, 안 기다리고 명령을 보내면 <b>첫 곡이 씹혀요</b>. 그다음 <code>cmd(0x06, 20)</code>으로 <b>볼륨(0~30)</b>을, <code>cmd(0x03, 1)</code>로 <b>1번 곡</b>을 재생합니다.</div></div><div class="callout warn"><div class="callout-head">⚠️ 소리가 안 나면 — 이 순서로 점검</div><div class="callout-body">① 스피커·이어폰이 잘 꽂혔나? ② 볼륨이 너무 작나?(<code>20</code>→<code>28</code>) ③ <b>TX↔RX</b>가 엇갈려 꽂혔나?(1순위) ④ SD카드에 <code>0001.mp3</code>가 진짜 있나? ⑤ 부팅 대기를 늘려보기(<code>1.2</code>→<code>2.0</code>). 대부분 ③·④에서 해결돼요.</div></div><ul class="check-list"><li>스피커에서 <b>1번 곡</b> 소리가 나나요?</li><li>약 3초 뒤 <b>2번 곡</b>으로 바뀌나요?</li><li><code>cmd(0x06, 20)</code>의 숫자를 5·30으로 바꾸면 <b>음량</b>이 변하나요?</li></ul></section><section class="sec" id="chsay-5"><h3 class="sec-title">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</h3><p class="step-head">이제 마지막! 마이크로 들은 소리를 k-NN으로 알아맞히고, 그 <b>라벨에 맞는 트랙</b>을 재생합니다. 코드의 <code>TRACK</code> 사전만 내 라벨에 맞추면 끝이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ② · k-NN 예측 → 음성 출력 (+LED)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ⑤ — k-NN이 알아맞힌 소리의 &#x27;주인공&#x27;을 목소리로 말해주기
+# 듣기(마이크) → 생각(k-NN) → 말하기(MP3).  AI의 한 사이클이 &#x27;무한 반복&#x27;됩니다.
+# ※ 소리 분류 챕터에서 만든 sounds.csv가 피코에 들어 있어야 해요.
+import time, math
+from machine import ADC, Pin, UART
+from neopixel import NeoPixel
+
+# ── 마이크 (아날로그 A1) — 소리 챕터와 똑같이 &#x27;듣기&#x27; ──
+mic = ADC(Pin(27)); N = 1600
+def grab(): return [mic.read_u16() for _ in range(N)]
+def features(buf):
+    n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; prev = buf[0] - m
+    for v in buf:
+        d = v - m; ss += d * d
+        if (d &gt;= 0) != (prev &gt;= 0): zc += 1
+        prev = d
+    return math.sqrt(ss / n), zc
+def level(n=120):
+    b = [mic.read_u16() for _ in range(n)]; m = sum(b) / n
+    return math.sqrt(sum((v - m) ** 2 for v in b) / n)
+
+# ── MP3 출력기 (Grove MP3 v4 · UART) — &#x27;말하기&#x27; ──
+uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))
+def cmd(c, p=0):
+    body = bytes([0xFF, 0x06, c, 0x00, (p &gt;&gt; 8) &amp; 0xFF, p &amp; 0xFF])
+    chk = 0xFFFF - sum(body) + 1
+    uart.write(bytes([0x7E]) + body + bytes([(chk &gt;&gt; 8) &amp; 0xFF, chk &amp; 0xFF, 0xEF]))
+    time.sleep(0.1)                  # ★ 명령 사이 간격 — 너무 빨리 보내면 모듈이 씹어요
+
+# ★ 모듈은 전원 직후 &#x27;부팅 시간&#x27;이 필요해요. 안 기다리면 첫 명령이 무시됩니다.
+time.sleep(0.5); cmd(0x0C); time.sleep(1.2)   # 0x0C=리셋 → 재부팅 대기
+cmd(0x09, 2)                                   # 재생 소스 = microSD
+cmd(0x06, 22)                                  # 볼륨 0~30
+
+# ── ★ 라벨 → 트랙 번호 (룩업 테이블) ──
+# SD카드에 0001.mp3=&quot;휘파람이에요&quot;, 0002.mp3=&quot;박수네요&quot; … 미리 녹음해 넣어두세요.
+# 소리 이름(왼쪽)은 sounds.csv의 라벨과 &#x27;글자까지 똑같이&#x27; 맞춰야 합니다.
+TRACK = {&quot;휘파람&quot;: 1, &quot;박수&quot;: 2, &quot;말소리&quot;: 3, &quot;정적&quot;: 4}
+
+# ── LED (소리마다 색) ──
+TIMING = (280, 515, 515, 745); NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+PALETTE = [(40, 0, 0), (0, 40, 0), (0, 0, 40), (40, 40, 0), (40, 0, 40), (0, 40, 40)]
+def paint(c, lv):
+    for i in range(NUM): np[i] = c if i &lt; lv else (0, 0, 0)
+    np.write()
+
+# ── sounds.csv 불러오기 + 정규화 + k-NN (소리 챕터와 완전히 동일) ──
+rows = []
+for ln in open(&quot;sounds.csv&quot;):
+    ln = ln.strip()
+    if ln == &quot;&quot; or ln.startswith(&quot;rms&quot;): continue
+    r, z, nm = ln.split(&quot;,&quot;); rows.append((float(r), float(z), nm))
+names = sorted(set(r[2] for r in rows)); cidx = {nm: i for i, nm in enumerate(names)}
+rmin = min(r[0] for r in rows); rmax = max(r[0] for r in rows)
+zmin = min(r[1] for r in rows); zmax = max(r[1] for r in rows)
+def norm(r, z): return (r - rmin) / (rmax - rmin + 1e-9), (z - zmin) / (zmax - zmin + 1e-9)
+ex = [(*norm(r[0], r[1]), r[2]) for r in rows]
+def predict(rms, zcr, k=5):
+    nr, nz = norm(rms, zcr)
+    near = sorted(ex, key=lambda e: (e[0] - nr) ** 2 + (e[1] - nz) ** 2)[:k]
+    vote = {}
+    for e in near: vote[e[2]] = vote.get(e[2], 0) + 1
+    best = max(vote, key=vote.get); return best, vote[best] / k
+
+# ── 배경소음 → 임계값 ──
+print(&quot;조용히… 배경소음 측정 중&quot;)
+base = max(level() for _ in range(20)); THRESH = base * 3 + 150
+
+# ── ★ &#x27;말하기&#x27; 함수 — 자기 소리 되먹임을 막는 핵심 ──
+# 스피커가 내는 소리를 마이크가 다시 듣고 또 트리거하면 무한 반복이 돼요.
+# 그래서 ① 말하는 동안 + ② 잔향이 빠질 때까지는 &#x27;귀를 닫습니다&#x27;.
+SPEAK_SEC = 2.5      # 한 마디 음성 길이(넉넉히). 멘트가 길면 늘리세요.
+def say(track):
+    cmd(0x03, track)                 # ← 그 소리의 &#x27;이름&#x27;을 목소리로!
+    time.sleep(SPEAK_SEC)            # ① 말하는 동안은 듣지 않기
+    t0 = time.ticks_ms()             # ② 스피커 잔향이 THRESH 아래로 빠질 때까지(최대 2초)
+    while level(120) &gt; THRESH and time.ticks_diff(time.ticks_ms(), t0) &lt; 2000:
+        time.sleep(0.05)
+
+CONF_MIN = 0.6       # ★ 확신이 이보다 낮으면 &#x27;모르겠어요&#x27; → 말하지 않는다(침묵)
+
+print(&quot;준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)&quot;)
+while True:                          # ★ 여기가 &#x27;무한히 입력받는&#x27; 부분입니다
+    if level(120) &gt; THRESH:
+        rms, zcr = features(grab())
+        name, conf = predict(rms, zcr)
+        if conf &gt;= CONF_MIN and name in TRACK:
+            print(&quot;이건… %s!  (확신 %d%%)&quot; % (name, conf * 100))
+            paint(PALETTE[cidx[name] % len(PALETTE)], max(1, int(conf * NUM)))
+            say(TRACK[name])         # 말하기(+되먹임 방지) — 끝나면 다시 듣기로 돌아옴
+        else:
+            print(&quot;음… 잘 모르겠어요 (확신 %d%%) — 조용히 있을게요&quot; % (conf * 100))
+            paint((8, 8, 8), NUM)    # 흐린 흰빛 = 망설임
+            time.sleep(0.8)
+        paint((0, 0, 0), 0)
+    time.sleep(0.005)</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">이렇게 나오면 성공! (셸 출력 + 스피커)</span><span class="lang-tag">TEXT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-text">조용히… 배경소음 측정 중
+준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)
+이건… 휘파람!  (확신 80%)
+  🔊 &quot;휘파람이에요&quot;
+이건… 박수!  (확신 100%)
+  🔊 &quot;박수네요&quot;
+음… 잘 모르겠어요 (확신 40%) — 조용히 있을게요</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 여기가 핵심! 🔁 — ‘말하는 동안 귀를 닫는’ 이유</div><div class="callout-body">스피커가 “휘파람이에요”라고 말하면 <b>그 소리를 마이크가 다시 듣고</b> 또 판단해버려요 → 끝없이 자기 말을 따라 하는 <b>무한 반복</b>! 그래서 <code>say()</code>는 ① 말하는 동안 + ② 잔향이 빠질 때까지 <b>입력을 잠시 무시</b>합니다(<code>SPEAK_SEC</code>). 음성이 길어 끝까지 안 나오면 이 값을 늘리세요. <b>이게 이 챕터가 실제로 돌아가게 하는 장치예요.</b></div></div><div class="callout key"><div class="callout-head">🔑 TRACK 사전 = sounds.csv 라벨과 ‘글자까지’ 똑같이</div><div class="callout-body"><code>TRACK = {"휘파람":1, ...}</code>의 왼쪽 이름은 데이터를 모을 때 쓴 라벨과 <b>한 글자도 다르면 안 됩니다.</b> ‘휘파람’과 ‘휘파람소리’는 다른 이름이라 음성이 안 나와요. 라벨을 바꿨다면 여기도 같이 고치세요.</div></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 침묵도 잘 되나요?</div><div class="callout-body">일부러 <b>가르치지 않은 애매한 소리</b>(헛기침 등)를 내보세요. 확신이 60% 아래면 “잘 모르겠어요”만 뜨고 <b>말을 안 할</b> 거예요. 이게 정상이고, 똑똑한 동작이에요.</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">막히면 AI에게 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">이 MicroPython 코드는 마이크로 소리를 k-NN으로 분류한 뒤 Grove MP3 v4(UART, 7E FF 06 ... EF 프레임)로 라벨에 맞는 트랙을 재생해. 소리가 안 나오거나 엉뚱한 곡이 나오면 어디를 점검해야 하는지, TRACK 사전과 SD카드 파일 번호를 맞추는 법, 자기 소리 되먹임을 막는 SPEAK_SEC 값을 어떻게 조절할지 알려줘.</div></div></section><section class="sec" id="chsay-6"><h3 class="sec-title">★ 더 해보기 — 입에 성격을 입히자</h3><p class="prose">‘대답하는 입’이 생기면 놀이가 확 넓어져요. 난이도 순으로 골라보세요.</p><div class="concept-grid"><div class="concept"><div class="concept-t">🟢 칭찬/리액션</div><div class="concept-d">맞힐 때마다 <b>“정답!”</b> 트랙을 먼저 깔고 이어서 이름을 말하기. 짧은 추임새가 생기를 줘요.</div></div><div class="concept"><div class="concept-t">🟡 확신도 말하기</div><div class="concept-d">확신 90%↑면 <b>단호한 멘트</b>, 60~90%는 <b>“아마…”</b> 멘트. 트랙을 두 벌 준비해 골라 재생.</div></div><div class="concept"><div class="concept-t">🔵 침묵의 소리</div><div class="concept-d">‘모르겠어요’일 때 <b>고개 갸웃 효과음</b>(예: 0009.mp3)을 재생. 침묵 대신 ‘망설임’을 표현.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — 왜 ‘말하는 출력’이 교육적으로 강할까?</summary><div class="dig-body">LED 색은 <b>약속을 외워야</b> 뜻을 알아요(‘초록=박수였지?’). 하지만 <b>목소리</b>는 약속이 필요 없어요 — 처음 보는 사람도 즉시 이해합니다. 분류 결과를 <b>사람의 언어로 되돌리는</b> 순간, AI가 ‘내 안의 숫자’에서 ‘남과 나누는 대화’로 바뀌어요. 이게 음성비서·낙상 알림·점자 안내기가 모두 ‘출력’에 공들이는 이유랍니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ 교재 다른 부품과도 잇기</div><div class="callout-body">이 ‘출력 사고방식’은 어디든 통해요. <b>IMU 플립 성공 → 효과음</b>, <b>밝기 임계값 → 안내 멘트</b>처럼, ‘판단 결과를 사람이 알아듣게 내보낸다’는 한 패턴입니다.</div></div></section><section class="sec" id="chsay-7"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 아무 소리도 안 남</div><div class="m-row"><span class="m-tag">원인</span>TX·RX가 같은 방향으로 꽂힘(안 엇갈림).</div><div class="m-row"><span class="m-tag fix">해결</span><b>피코 TX↔모듈 RX</b>로 두 신호선을 바꿔 끼우세요.</div></div><div class="mistake"><div class="m-sym">❌ 첫 곡만 안 나옴</div><div class="m-row"><span class="m-tag">원인</span>모듈 부팅 전에 명령이 감.</div><div class="m-row"><span class="m-tag fix">해결</span>리셋 뒤 <b>대기시간(1.2초)을 2초로</b> 늘려 보세요.</div></div><div class="mistake"><div class="m-sym">❌ 엉뚱한 곡이 나옴</div><div class="m-row"><span class="m-tag">원인</span>파일 복사 순서와 <code>TRACK</code> 값이 어긋남.</div><div class="m-row"><span class="m-tag fix">해결</span>SD카드를 포맷하고 <b>0001.mp3부터 순서대로</b> 다시 복사.</div></div><div class="mistake"><div class="m-sym">❌ 특정 라벨만 침묵</div><div class="m-row"><span class="m-tag">원인</span><code>TRACK</code> 이름이 라벨과 글자가 다름.</div><div class="m-row"><span class="m-tag fix">해결</span>sounds.csv 라벨과 <b>똑같이</b> 적으세요.</div></div><div class="mistake"><div class="m-sym">❌ 자기 말을 무한 반복</div><div class="m-row"><span class="m-tag">원인</span>스피커 소리를 마이크가 또 들음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>SPEAK_SEC</code>를 음성 길이만큼 <b>넉넉히</b>, 또는 스피커를 마이크에서 떼기.</div></div><div class="mistake"><div class="m-sym">❌ 맞혔는데 말을 안 함</div><div class="m-row"><span class="m-tag">원인</span>확신이 <code>CONF_MIN</code>보다 낮음.</div><div class="m-row"><span class="m-tag fix">해결</span>정상이에요. 데이터를 더 모으거나 기준값을 낮춰보세요.</div></div><div class="mistake"><div class="m-sym">❌ 소리가 너무 크거나 작음</div><div class="m-row"><span class="m-tag">원인</span>볼륨 설정값.</div><div class="m-row"><span class="m-tag fix">해결</span><code>cmd(0x06, 22)</code>의 숫자(0~30)를 조절하세요.</div></div></div></section><section class="sec" id="chsay-8"><h3 class="sec-title">스스로 점검하기</h3><p class="prose">다음 질문에 답할 수 있으면 이 장을 이해한 거예요. (먼저 스스로 답해보고 펼치세요)</p><div class="checks"><details class="qa"><summary>마이크와 MP3 모듈은 뭐가 다른가요?</summary><div class="qa-a">마이크는 소리를 <b>듣는 입력</b>, MP3 v4는 소리를 <b>내는 출력</b>. 방향이 반대예요.</div></details><details class="qa"><summary>피코가 MP3 모듈에 보내는 건 무엇인가요?</summary><div class="qa-a">소리가 아니라 <b>“몇 번 곡 틀어”라는 명령</b>(UART). 재생은 모듈이 해요.</div></details><details class="qa"><summary>룩업 테이블(TRACK)은 무슨 일을 하나요?</summary><div class="qa-a">분류 결과인 <b>라벨을 트랙 번호로</b> 이어줍니다. 오늘의 핵심 한 줄.</div></details><details class="qa"><summary>말하는 동안 마이크 입력을 왜 무시하나요?</summary><div class="qa-a">스피커 소리를 마이크가 다시 듣고 <b>무한 반복</b>하는 ‘되먹임’을 막기 위해서예요.</div></details><details class="qa"><summary>확신이 낮으면 왜 말을 안 하나요?</summary><div class="qa-a">자신 있게 <b>틀린 답</b>을 하는 것보다 ‘모른다’가 낫기 때문. 좋은 AI의 태도예요.</div></details><details class="qa"><summary>소리가 아예 안 날 때 1순위 점검은?</summary><div class="qa-a"><b>TX↔RX</b>가 엇갈려 꽂혔는지, 그리고 SD에 <code>0001.mp3</code>가 있는지.</div></details></div></section><section class="sec" id="chsay-9"><h3 class="sec-title">수업/학습 시나리오</h3><p class="prose">소리 분류 챕터를 끝낸 직후 이어 붙이는 짧은 ‘출력’ 편입니다. 무게는 <b>장면 ③ — 기계가 처음으로 ‘입을 여는’ 순간</b>에 싣습니다.</p><details class="dig"><summary>🔬 더 알아보기 — 장면별 흐름과 와우 포인트</summary><div class="dig-body"><b>① 되돌아보기</b> — “지난 시간엔 LED로만 알려줬지? 말로 하면 어떨까?” 출력의 빈칸을 의식시킨다.<br><b>② 입을 단다</b> — MP3 모듈 연결 + 단독 테스트. ‘피코는 명령만 보낸다’를 체감.<br><b>③ 첫 한마디</b> ⭐ <b>메인 와우</b> — 휘파람을 불자 피코가 <b>“휘파람이에요”</b>라고 말함. 라벨이 목소리가 되는 순간.<br><b>④ 모를 땐 침묵</b> 🌟 — 애매한 소리엔 입을 다묾 → ‘모른다고 말하는 AI’를 토론.<br><b>⑤ 내 멘트 만들기</b> 🌟 — 칭찬·효과음·말투를 학습자가 직접 녹음(주도성).<br><b>⑥ 정리</b> — 입력→처리→출력. 음성비서가 다 이 한 바퀴임을 명명.</div></details><div class="callout info"><div class="callout-head">ℹ️ 한 줄 마무리</div><div class="callout-body">“<b>듣고·생각하고·말한다</b> — 오늘 너희가 만든 게 바로 작은 음성비서야.” 입력·처리·출력 세 단어를 남기며 끝냅니다.</div></div></section></div>
+    <footer>
+      라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
+    </footer>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백 (둘 다 처리)
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
+document.querySelectorAll('.block').forEach(block=>{
+  const btn=block.querySelector('.copy-btn'); if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const code=block.querySelector('code');
+    const body=block.querySelector('.prompt-body');
+    const text=code?code.textContent:(body?body.textContent:'');
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
+  });
+});
+const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
+function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
+mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
+scrim.addEventListener('click',()=>toggle(false));
+sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
+const secs=[...document.querySelectorAll('.sec, .chapter')];
+const links=new Map();
+document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.nav-sec.active').forEach(x=>x.classList.remove('active'));
+    const l=links.get(e.target.id); if(l&&l.classList.contains('nav-sec'))l.classList.add('active');
+  }});
+},{rootMargin:'-10% 0px -80% 0px',threshold:0});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

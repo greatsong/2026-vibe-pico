@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>배선 위젯 프로토타입</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* === 교재 디자인 토큰 (build_site.py :root와 동일) === */
+:root{
+  --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
+  --code-bg:#f7f6f3; --radius:10px;
+  --font:'Pretendard',-apple-system,sans-serif;
+  --mono:'SFMono-Regular',Consolas,monospace;
+}
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);
+  line-height:1.65;-webkit-font-smoothing:antialiased;padding:40px;max-width:860px;margin:0 auto;}
+h1{font-size:20px;} .demo-label{color:var(--muted);font-size:13px;margin:30px 0 8px;font-weight:700;}
+
+/* ============================================================
+   배선 위젯 — 교재 밝은 테마에 맞춘 인터랙티브 배선 안내
+   self-contained: 이 <style>과 아래 <script>만 있으면 동작.
+   교재 통합 시 build_site.py 무수정으로 raw item에 삽입 가능.
+   ============================================================ */
+.wire{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:16px 0;
+  max-width:760px;background:#fff;--ac:#7C3AED;}
+/* 탭 */
+.wire-tabs{display:flex;gap:2px;padding:8px 8px 0;background:var(--code-bg);border-bottom:1px solid var(--line);}
+.wire-tab{appearance:none;border:none;background:transparent;font-family:var(--font);
+  font-size:13px;font-weight:700;color:var(--muted);padding:9px 16px;cursor:pointer;
+  border-radius:8px 8px 0 0;display:flex;align-items:center;gap:6px;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.wire-tab[aria-selected="true"]{color:var(--ac);background:#fff;border-bottom-color:var(--ac);}
+.wire-panel{padding:16px;display:none;} .wire-panel.on{display:block;}
+
+/* 포트 다이어그램 */
+.wsh{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--code-bg);}
+.wsh-t{font-size:12.5px;font-weight:800;color:var(--fg);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.wsh-grid{display:flex;justify-content:center;align-items:center;gap:14px;}
+.wsh-col{display:flex;flex-direction:column;gap:7px;}
+.wsh-board{width:98px;align-self:stretch;background:#0f5132;border:1px solid #0b3d27;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;
+  position:relative;min-height:150px;color:#d1fae5;}
+.wsh-board b{font-size:10px;font-weight:800;line-height:1.35;color:#fff;}
+.wsh-board small{font-size:8px;color:#9fe1cb;}
+.wsh-usb{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:24px;height:7px;border-radius:2px;background:#94a3b8;}
+.wsh-usbl{position:absolute;top:6px;font-size:7px;color:#9fe1cb;letter-spacing:.06em;}
+.wport{display:flex;align-items:center;gap:6px;height:24px;}
+.wport.r{flex-direction:row-reverse;}
+.wport-n{font-family:var(--mono);font-size:9.5px;width:42px;color:#bdb9b2;font-weight:600;}
+.wport.r .wport-n{text-align:left;} .wport:not(.r) .wport-n{text-align:right;}
+.wport-dot{width:30px;height:16px;border-radius:4px;border:1px solid var(--line);background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:9px;transition:.2s;}
+.wport.used .wport-n{color:var(--fg);}
+.wport.used .wport-dot{border-color:transparent;color:#fff;font-size:10px;}
+.wport-name{font-size:9.5px;color:var(--muted);max-width:66px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wsh-hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:10px;}
+
+/* 준비물 체크리스트 */
+.wprep{border:1px solid var(--line);border-radius:10px;margin-top:12px;overflow:hidden;transition:.2s;}
+.wprep.done{border-color:#22c55e;background:#f0faf4;}
+.wprep-h{width:100%;appearance:none;border:none;background:transparent;cursor:pointer;
+  font-family:var(--font);font-size:12.5px;font-weight:700;color:var(--fg);
+  padding:11px 13px;display:flex;align-items:center;gap:7px;}
+.wprep-h .cnt{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600;font-family:var(--mono);}
+.wprep-h .chev{transition:.2s;color:var(--muted);}
+.wprep.shut .wprep-h .chev{transform:rotate(-90deg);}
+.wbar{height:3px;background:var(--line);}
+.wbar-f{height:100%;background:var(--ac);width:0;transition:width .3s;}
+.wprep.done .wbar-f{background:#22c55e;}
+.wprep-body{padding:4px 11px 11px;display:flex;flex-direction:column;gap:4px;}
+.wprep.shut .wprep-body{display:none;}
+.witem{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;cursor:pointer;
+  font-size:13px;background:#fbfbfa;transition:.15s;user-select:none;}
+.witem:hover{background:var(--code-bg);}
+.witem.ck{background:#f0faf4;opacity:.62;}
+.witem.ck .witem-n{text-decoration:line-through;color:var(--muted);}
+.witem.hl{background:#fff6f0;box-shadow:inset 0 0 0 1px #fdba74;}
+.witem.hl .witem-n{color:#ea580c;font-weight:700;}
+.wcb{width:17px;height:17px;border-radius:5px;border:1.5px solid #d8d4cc;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:.15s;}
+.witem.ck .wcb{background:#22c55e;border-color:#22c55e;}
+.witem-i{font-size:15px;flex-shrink:0;} .witem-n{flex:1;}
+.witem-q{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.wwire{display:flex;gap:2px;margin-left:4px;}
+.wwire i{width:13px;height:5px;border-radius:3px;display:block;}
+
+/* 부품 배선 카드 */
+.wcard{border:1px solid var(--line);border-radius:10px;margin-top:12px;overflow:hidden;transition:.2s;}
+.wcard.done{border-color:#22c55e;}
+.wcard-h{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;user-select:none;}
+.wcard-i{font-size:19px;} .wcard-tt{font-weight:700;font-size:14px;}
+.wcard-meta{font-size:10.5px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.wtag{display:inline-block;padding:1px 6px;border-radius:5px;font-size:9.5px;font-weight:800;
+  color:#fff;margin-right:5px;vertical-align:middle;}
+.wgrove{color:#16a34a;font-weight:700;}
+.wcard-h .chev{margin-left:auto;color:var(--muted);transition:.2s;}
+.wcard.shut .wcard-h .chev{transform:rotate(-90deg);}
+.wcard-body{padding:0 13px 13px;border-top:1px solid var(--line);}
+.wcard.shut .wcard-body{display:none;}
+.wgport{background:#f0faf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;margin:11px 0;}
+.wgport-t{font-size:12.5px;font-weight:700;color:#16a34a;margin-bottom:3px;}
+.wgport-d{font-size:11.5px;color:#55524c;}
+.wnote{font-size:11.5px;color:var(--muted);margin:10px 0;}
+.wpins-lbl{font-size:10.5px;color:var(--muted);margin:10px 0 5px;}
+.wpin{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;
+  font-size:12.5px;transition:.15s;user-select:none;}
+.wpin:hover{background:var(--code-bg);} .wpin.ck{background:#f0faf4;}
+.wpin .wcb{width:16px;height:16px;}
+.wpin-wire{width:22px;height:7px;border-radius:4px;flex-shrink:0;}
+.wpin-wl{font-size:9px;color:var(--muted);width:22px;}
+.wpin-sig{font-family:var(--mono);font-weight:700;width:40px;}
+.wpin-ar{color:#bdb9b2;}
+.wpin-pico{font-family:var(--mono);font-weight:700;color:var(--ac);}
+.wpin-desc{font-size:10.5px;color:var(--muted);margin-left:auto;text-align:right;max-width:46%;}
+.wcard-bar{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.wcard-bar .t{flex:1;height:4px;background:var(--line);border-radius:99px;overflow:hidden;}
+.wcard-bar .t i{display:block;height:100%;background:#22c55e;width:0;transition:width .3s;}
+.wcard-bar .n{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.wwarn{display:flex;gap:7px;font-size:11.5px;color:#c2410c;background:#fff6f0;
+  border-left:3px solid #f97316;border-radius:0 8px 8px 0;padding:9px 11px;margin-top:11px;line-height:1.5;}
+.wdone-msg{font-size:11.5px;color:#16a34a;background:#f0faf4;border-radius:8px;
+  padding:9px;margin-top:11px;text-align:center;font-weight:700;}
+
+/* 핀맵 탭 */
+.wmap-t{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.wmap{display:flex;flex-direction:column;gap:6px;}
+.wmrow{display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:8px;font-size:13px;}
+.wmrow .gp{font-family:var(--mono);font-weight:800;color:var(--ac);min-width:54px;}
+.wmrow .ic{font-size:15px;} .wmrow .nm{flex:1;}
+.wmrow .sig{font-family:var(--mono);font-size:11px;color:var(--muted);}
+</style>
+</head>
+<body>
+<h1>🔌 배선 위젯 프로토타입</h1>
+<p style="color:var(--muted);font-size:13.5px;">우리 교재 밝은 테마 + pico-makers의 “상세 인터랙티브 안내”. 체크박스를 클릭하며 따라가면 됩니다.</p>
+
+<div class="demo-label">① 소리 챕터용 — 마이크 (아날로그 A1 + INMP441 두 경로)</div>
+<div class="wire" data-ac="#0891B2" data-parts="mic_a,inmp441"></div>
+
+<div class="demo-label">② MP3 챕터용 — Grove MP3 v4 (출력)</div>
+<div class="wire" data-ac="#7C3AED" data-parts="mp3"></div>
+
+<script>
+/* ── 부품 데이터베이스 (pico-makers sensors.js 스키마 참고, 우리 부품으로) ── */
+const PARTS = {
+  mic_a: {
+    icon:"🎤", name:"그로브 아날로그 마이크", proto:"아날로그", pc:"#f59e0b",
+    grove:true, port:"A1",
+    note:"쉴드의 A1 포트에 그로브 케이블로 ‘톡’ 꽂으면 끝! (A0은 가스센서가 쓰니 A1)",
+    pins:[
+      {sig:"SIG", pico:"GP27", n:32, wire:"#facc15", label:"노랑", desc:"소리 신호(아날로그)"},
+      {sig:"VCC", pico:"3.3V", n:36, wire:"#ef4444", label:"빨강", desc:"전원"},
+      {sig:"GND", pico:"GND",  n:38, wire:"#64748b", label:"검정", desc:"접지"},
+    ],
+    warn:null,
+  },
+  inmp441: {
+    icon:"🎙️", name:"INMP441 마이크 (음질↑)", proto:"I2S", pc:"#06b6d4",
+    grove:false, port:null,
+    note:"음질이 더 좋아요. 쉴드가 뽑아준 헤더에 점퍼 5선으로 연결합니다.",
+    pins:[
+      {sig:"VDD", pico:"3.3V", n:36, wire:"#ef4444", label:"빨강", desc:"⚠ 5V 금지!"},
+      {sig:"GND", pico:"GND",  n:38, wire:"#64748b", label:"검정", desc:"접지"},
+      {sig:"SCK", pico:"GP18", n:24, wire:"#f59e0b", label:"주황", desc:"클록"},
+      {sig:"WS",  pico:"GP19", n:25, wire:"#22c55e", label:"초록", desc:"반드시 SCK 다음 핀"},
+      {sig:"SD",  pico:"GP20", n:26, wire:"#3b82f6", label:"파랑", desc:"데이터"},
+      {sig:"L/R", pico:"GND",  n:38, wire:"#a855f7", label:"보라", desc:"GND에 연결"},
+    ],
+    warn:"INMP441은 3.3V 전용 — VDD에 5V를 꽂으면 망가져요!",
+  },
+  mp3: {
+    icon:"🔊", name:"Grove MP3 v4 (출력)", proto:"UART", pc:"#ec4899",
+    grove:true, port:"UART0",
+    note:"그로브 케이블 하나로 UART 포트에 연결. 모듈에 스피커나 이어폰을 꽂으세요.",
+    pins:[
+      {sig:"TX",  pico:"GP0", n:1,  wire:"#22c55e", label:"초록", desc:"피코 TX → 모듈 RX (엇갈림!)"},
+      {sig:"RX",  pico:"GP1", n:2,  wire:"#eab308", label:"노랑", desc:"피코 RX → 모듈 TX (엇갈림!)"},
+      {sig:"VCC", pico:"5V",  n:40, wire:"#ef4444", label:"빨강", desc:"전원(5V)"},
+      {sig:"GND", pico:"GND", n:38, wire:"#64748b", label:"검정", desc:"접지"},
+    ],
+    warn:"점퍼로 직접 연결 시 TX↔RX를 엇갈려 꽂으세요. 소리가 안 나면 1순위 점검!",
+  },
+  led: {
+    icon:"💡", name:"WS2813 LED (10칸)", proto:"디지털", pc:"#0ea5e9",
+    grove:true, port:"D16",
+    note:"2장에서 쓰던 LED 그대로예요! 쉴드의 D16 포트에 그로브 케이블로 꽂으면 끝. 분류 결과를 색과 칸 수(확신도)로 보여줘요.",
+    pins:[
+      {sig:"DIN", pico:"GP16", n:21, wire:"#0ea5e9", label:"신호", desc:"LED 신호선(데이터)"},
+      {sig:"VCC", pico:"5V",  n:40, wire:"#ef4444", label:"빨강", desc:"전원(5V)"},
+      {sig:"GND", pico:"GND", n:38, wire:"#64748b", label:"검정", desc:"접지"},
+    ],
+    warn:null,
+  },
+};
+const PROTO_C = {"I2C":"#10b981","아날로그":"#f59e0b","디지털":"#0ea5e9","UART":"#ec4899","I2S":"#06b6d4","PWM":"#8b5cf6"};
+const PORTS = [
+  {name:"D16",type:"디지털",side:"l"},{name:"D18",type:"디지털",side:"l"},{name:"D20",type:"디지털",side:"l"},
+  {name:"A0",type:"아날로그",side:"l"},{name:"A1",type:"아날로그",side:"l"},
+  {name:"A2",type:"아날로그",side:"r"},{name:"I2C0",type:"I2C",side:"r"},{name:"I2C1",type:"I2C",side:"r"},
+  {name:"UART0",type:"UART",side:"r"},{name:"UART1",type:"UART",side:"r"},
+];
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function buildWidget(el){
+  const ac = el.dataset.ac || "#7C3AED";
+  el.style.setProperty("--ac", ac);
+  const ids = el.dataset.parts.split(",").map(s=>s.trim()).filter(Boolean);
+  const parts = ids.map(id=>({id,...PARTS[id]})).filter(p=>p.name);
+
+  // 포트 사용 맵 (그로브 부품만)
+  const usage = {};
+  parts.forEach(p=>{ if(p.grove && p.port) usage[p.port]={p}; });
+
+  // 준비물 목록
+  const prep = [{i:"🔋",n:"USB 케이블",q:"1개"},{i:"🛡️",n:"Grove Shield (장착 확인)",q:"1개"}];
+  const groveN = parts.filter(p=>p.grove).length;
+  if(groveN) prep.push({i:"🔌",n:"Grove 4핀 케이블",q:groveN+"개"});
+  let jumpers=0, wcols=[];
+  parts.filter(p=>!p.grove).forEach(p=>{ jumpers+=p.pins.length; p.pins.forEach(pin=>wcols.push(pin.wire)); });
+  if(jumpers) prep.push({i:"🔗",n:"점퍼선 (암-수)",q:jumpers+"개",cols:wcols});
+  parts.forEach(p=>prep.push({i:p.icon,n:p.name.replace(/\s*\(.*\)/,"")+" 모듈",q:"1개"}));
+  if(parts.some(p=>p.id==="mp3")) prep.push({i:"🔈",n:"스피커 또는 이어폰",q:"1개"});
+
+  // ── 포트 다이어그램 HTML ──
+  const portRow = (pt)=>{
+    const u = usage[pt.name];
+    const c = PROTO_C[pt.type]||"#999";
+    const dot = u
+      ? `<div class="wport-dot" style="background:${c}">${u.p.icon}</div>`
+      : `<div class="wport-dot"></div>`;
+    const nm = u ? `<span class="wport-name">${esc(u.p.name.replace(/\s*\(.*\)/,""))}</span>` : "";
+    return `<div class="wport ${pt.side==="r"?"r":""} ${u?"used":""}">
+      <span class="wport-n" style="${u?`color:${c}`:""}">${pt.name}</span>${dot}${nm}</div>`;
+  };
+  const L = PORTS.filter(p=>p.side==="l").map(portRow).join("");
+  const R = PORTS.filter(p=>p.side==="r").map(portRow).join("");
+  const hasGrove = parts.some(p=>p.grove);
+  const shieldHTML = hasGrove ? `<div class="wsh">
+    <div class="wsh-t">🛡️ 그로브 쉴드 — 어디에 꽂을까?</div>
+    <div class="wsh-grid"><div class="wsh-col">${L}</div>
+      <div class="wsh-board"><span class="wsh-usb"></span><span class="wsh-usbl">USB</span>
+        <b>Raspberry Pi<br>Pico 2 W</b><small>+ Grove Shield</small></div>
+      <div class="wsh-col">${R}</div></div>
+    <div class="wsh-hint">🟢 <b>색이 들어온 포트</b>에만 부품을 꽂으면 돼요. 회색 포트는 이 챕터에서 안 씁니다.</div></div>` : "";
+
+  // ── 준비물 체크리스트 HTML ──
+  const prepItems = prep.map((it,i)=>`<div class="witem" data-ck="0" data-prep="${i}">
+    <div class="wcb">✓</div><span class="witem-i">${it.i}</span>
+    <span class="witem-n">${esc(it.n)}</span>
+    ${it.cols?`<span class="wwire">${it.cols.slice(0,8).map(c=>`<i style="background:${c}"></i>`).join("")}</span>`:""}
+    <span class="witem-q">×${it.q}</span></div>`).join("");
+  const prepHTML = `<div class="wprep" data-total="${prep.length}">
+    <button class="wprep-h"><span class="ic">📋</span><span class="lbl">준비물 체크리스트</span>
+      <span class="cnt">0/${prep.length}</span><span class="chev">▾</span></button>
+    <div class="wbar"><div class="wbar-f"></div></div>
+    <div class="wprep-body">${prepItems}</div></div>`;
+
+  // ── 부품 배선 카드 HTML ──
+  const cardHTML = parts.map(p=>{
+    const pc = p.pc;
+    const pins = p.pins.map((pin,i)=>`<div class="wpin" data-ck="0" data-pin="${i}">
+      <div class="wcb">✓</div>
+      <div class="wpin-wire" style="background:${pin.wire}"></div><span class="wpin-wl">${pin.label}</span>
+      <span class="wpin-sig">${esc(pin.sig)}</span><span class="wpin-ar">→</span>
+      <span class="wpin-pico">${esc(pin.pico)}</span>
+      <span class="wpin-desc">${esc(pin.desc)}</span></div>`).join("");
+    const groveBox = p.grove
+      ? `<div class="wgport"><div class="wgport-t">🔌 ${p.port} 포트에 연결</div>
+         <div class="wgport-d">Grove 4핀 케이블로 모듈과 쉴드의 <b style="color:${ac}">${p.port}</b> 포트를 연결하세요. 딸깍 소리가 나면 제대로 끼워진 거예요!</div></div>`
+      : "";
+    return `<div class="wcard" data-total="${p.pins.length}">
+      <div class="wcard-h">
+        <span class="wcard-i">${p.icon}</span>
+        <div><div class="wcard-tt">${esc(p.name)}</div>
+          <div class="wcard-meta"><span class="wtag" style="background:${pc}">${p.proto}</span>${p.grove?'<span class="wgrove">Grove</span>':"점퍼 직결"}</div></div>
+        <span class="chev">▾</span></div>
+      <div class="wcard-body">
+        ${groveBox}
+        <div class="wnote">${esc(p.note)}</div>
+        <div class="wpins-lbl">${p.grove?"실제 핀 매핑 (참고용)":"배선 순서 — 체크하며 하나씩 연결하세요"}</div>
+        ${pins}
+        <div class="wcard-bar"><div class="t"><i></i></div><div class="n">0/${p.pins.length}</div></div>
+        ${p.warn?`<div class="wwarn"><span>⚠️</span><span>${esc(p.warn)}</span></div>`:""}
+      </div></div>`;
+  }).join("");
+
+  // ── 핀맵 탭 HTML ──
+  const mapRows = [];
+  parts.forEach(p=>p.pins.forEach(pin=>{
+    if(pin.pico.startsWith("GP")) mapRows.push(
+      `<div class="wmrow"><span class="gp">${pin.pico}</span><span class="ic">${p.icon}</span>
+       <span class="nm">${esc(p.name.replace(/\s*\(.*\)/,""))}</span><span class="sig">${esc(pin.sig)}</span></div>`);
+  }));
+  const mapHTML = `<div class="wmap-t">이 챕터에서 피코의 어떤 핀을 쓰는지 한눈에 보기</div>
+    <div class="wmap">${mapRows.join("")}</div>`;
+
+  // ── 전체 조립 ──
+  el.innerHTML = `
+    <div class="wire-tabs" role="tablist">
+      <button class="wire-tab" role="tab" aria-selected="true" data-tab="wire">🔧 배선</button>
+      <button class="wire-tab" role="tab" aria-selected="false" data-tab="map">📍 핀맵</button>
+    </div>
+    <div class="wire-panel on" data-panel="wire">${shieldHTML}${prepHTML}${cardHTML}</div>
+    <div class="wire-panel" data-panel="map">${mapHTML}</div>`;
+
+  // ── 인터랙션 ──
+  // 탭
+  el.querySelectorAll(".wire-tab").forEach(tab=>tab.onclick=()=>{
+    el.querySelectorAll(".wire-tab").forEach(t=>t.setAttribute("aria-selected", t===tab));
+    el.querySelectorAll(".wire-panel").forEach(pn=>pn.classList.toggle("on", pn.dataset.panel===tab.dataset.tab));
+  });
+  // 준비물 체크
+  const prepEl = el.querySelector(".wprep");
+  const refreshPrep=()=>{
+    const items=prepEl.querySelectorAll(".witem"), tot=items.length;
+    const done=[...items].filter(i=>i.dataset.ck==="1").length;
+    prepEl.querySelector(".cnt").textContent=`${done}/${tot}`;
+    prepEl.querySelector(".wbar-f").style.width=`${done/tot*100}%`;
+    prepEl.classList.toggle("done", done===tot);
+    prepEl.querySelector(".lbl").textContent = done===tot ? "준비물 완료!" : "준비물 체크리스트";
+    prepEl.querySelector(".ic").textContent = done===tot ? "✅" : "📋";
+  };
+  prepEl.querySelectorAll(".witem").forEach(it=>it.onclick=()=>{
+    it.dataset.ck = it.dataset.ck==="1"?"0":"1"; it.classList.toggle("ck", it.dataset.ck==="1"); refreshPrep();
+  });
+  prepEl.querySelector(".wprep-h").onclick=()=>prepEl.classList.toggle("shut");
+  // 카드 핀 체크 + 아코디언
+  el.querySelectorAll(".wcard").forEach(card=>{
+    const tot=+card.dataset.total;
+    const refresh=()=>{
+      const done=[...card.querySelectorAll(".wpin")].filter(p=>p.dataset.ck==="1").length;
+      card.querySelector(".wcard-bar .t i").style.width=`${done/tot*100}%`;
+      card.querySelector(".wcard-bar .n").textContent=`${done}/${tot}`;
+      card.classList.toggle("done", done===tot);
+      let msg=card.querySelector(".wdone-msg");
+      if(done===tot && !msg){ msg=document.createElement("div"); msg.className="wdone-msg";
+        msg.textContent="✅ 배선 완료! USB를 연결하고 코드를 올리세요."; card.querySelector(".wcard-body").appendChild(msg);}
+      if(done!==tot && msg) msg.remove();
+    };
+    card.querySelectorAll(".wpin").forEach(pin=>pin.onclick=()=>{
+      pin.dataset.ck=pin.dataset.ck==="1"?"0":"1"; pin.classList.toggle("ck",pin.dataset.ck==="1"); refresh();
+    });
+    card.querySelector(".wcard-h").onclick=(e)=>{ if(!e.target.closest(".wpin")) card.classList.toggle("shut"); };
+  });
+}
+document.querySelectorAll(".wire").forEach(buildWidget);
+</script>
+</body>
+</html>

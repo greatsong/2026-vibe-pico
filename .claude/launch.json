@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "pico-site", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8765"], "port": 8765 }
+    { "name": "pico-site", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8765"], "port": 8765 },
+    { "name": "arm-lab", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8131", "--directory", "/Users/greatsong/2026-pico-arm-lab"], "port": 8131 }
   ]
 }

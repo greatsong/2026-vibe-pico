@@ -39,6 +39,19 @@
     <div class="controls"><label>지표</label><select id="ind" onchange="run()"><option value="EN.GHG.CO2.PC.CE.AR5|1인당 CO₂ 배출량 (톤)|Reds">1인당 CO₂ 배출량 (톤)</option><option value="EG.FEC.RNEW.ZS|재생에너지 비중 (%)|Greens">재생에너지 비중 (%)</option></select><button onclick="run()">불러오기</button></div><div id="status" class="status">불러오는 중…</div><div id="wmap" style="height:400px;border-radius:14px;overflow:hidden;border:1px solid var(--line);"></div><div style="font-size:11.5px;color:#7a7f95;margin:8px 2px;text-align:center"><b id="yr">--</b> · 색이 진할수록 값이 큰 나라 · 나라에 마우스를 올리면 값이 보여요</div><div class="grid"><div class="stat" style="border-color:#E0568A"><div class="lab">🇰🇷 한국 값</div><div class="val" id="kr">--</div><div class="unit" id="kru"></div></div><div class="stat"><div class="lab">세계 중앙값</div><div class="val" id="med" style="font-size:24px">--</div><div class="unit" id="medu"></div></div><div class="stat"><div class="lab">한국 순위 (값 큰 순)</div><div class="val" id="rank" style="font-size:22px">--</div><div class="unit" id="ranku"></div></div></div><h3 style="margin:18px 0 2px;font-size:14px">📊 주요국 비교</h3><div class="chartbox"><canvas id="ch" height="150"></canvas></div><h3 style="margin:22px 0 2px;font-size:14px">🫧 CO₂ vs 재생에너지 — 한국은 어디에?</h3><div class="chartbox"><canvas id="scatter" height="150"></canvas></div><div style="font-size:11.5px;color:#7a7f95;margin:6px 2px;text-align:center">가로=1인당 CO₂(톤) · 세로=재생에너지 비중(%) · 원 크기=인구 · <b style="color:#E0568A">🇰🇷 한국은 분홍 큰 원</b> · <i>각국 최신 자료 기준</i></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>지도에서 색이 진한(값이 큰) 나라들은 주로 어느 대륙에 있나요? 어떤 공통점이 있을까요?</li><li>버블 차트에서 한국은 어느 구역에 있나요? (오른쪽 아래 = CO₂ 많고 재생E 적음)</li><li>우리나라의 세계 순위는 몇 위인가요? 생각보다 높나요, 낮나요?</li><li>지표를 CO₂ ↔ 재생에너지로 바꿔 보세요. 두 지도의 색 분포는 반대인가요, 비슷한가요?</li></ul></div>
   </section>
 
+  <section class="card core"><h2>🐍 API 핵심 코드 <span class="hint">— 복사해 내 프로젝트·AI에 응용</span></h2><p class="coreintro">이 데이터를 받아오는 <b>핵심만</b> 추린 파이썬 코드예요(<code>requests</code> 사용). <b>Streamlit</b> 앱에 바로 쓰거나, 복사해서 AI(Claude 등)에게 “이 데이터로 ___ 만들어 줘”처럼 넘기면 됩니다.</p><p class="corenote">📦 <b>Streamlit Cloud에 배포</b>한다면 <code>requirements.txt</code>에 <code>requests</code>를 한 줄 적어 주세요 (없으면 <code>ModuleNotFoundError</code>).</p><details class="corefold"><summary>💻 파이썬 코드 보기 · 복사</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라별 CO₂·에너지 · Python (requests)</span><button class="vibecopy" onclick="corecopy(this)">복사</button></div><pre class="vibetext">import requests
+
+country = &quot;KOR&quot;  # 나라 코드 (KOR, USA, JPN ...)
+indicator = &quot;EN.GHG.CO2.PC.CE.AR5&quot;  # 1인당 CO₂ 배출량(톤)
+
+url = f&quot;https://api.worldbank.org/v2/country/{country}/indicator/{indicator}&quot;
+arr = requests.get(url, params={&quot;format&quot;: &quot;json&quot;, &quot;per_page&quot;: 5, &quot;mrnev&quot;: 1}).json()
+
+latest = arr[1][0]            # 응답은 [메타데이터, 데이터배열] 구조
+co2 = latest[&quot;value&quot;]         # 1인당 CO₂ 배출량(t)
+year = latest[&quot;date&quot;]         # 연도
+print(year, co2)</pre></div></details></section>
+
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
@@ -53,13 +66,13 @@
 - 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
 - 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
 - WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라별 CO₂ → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.ATM.CO2E.PC?format=json&amp;per_page=5&amp;mrnev=1 → 응답의 두 번째 배열 [0].value가 1인당 CO₂ 배출량(t).
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라별 CO₂ → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&amp;per_page=5&amp;mrnev=1 → 응답의 두 번째 배열 [0].value가 1인당 CO₂ 배출량(t).
 [만들 것] 한 나라의 1인당 CO₂ 배출량을 받아 LED 게이지로(0~20t → 0~10칸), 세계 평균(약 4.5t)보다 높으면 빨강·낮으면 초록.
 [설정] 나라 코드(KOR 등)는 코드 위.</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
-<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}</script>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}function corecopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;_vwrite(s,b);}</script>
 <script>
 let chart, META=null;
 const MAJ=[['KOR','한국'],['JPN','일본'],['USA','미국'],['DEU','독일'],['FRA','프랑스'],['CHN','중국'],['IND','인도'],['BRA','브라질']];

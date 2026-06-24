@@ -39,6 +39,15 @@
     <div class="controls"><label>내 위도</label><input id="lat" value="37.5665"><label>경도</label><input id="lon" value="126.9780"></div><div id="status" class="status">불러오는 중…</div><div id="map" class="map"></div><div style="font-size:11px;color:#7a7f95;margin:8px 2px;text-align:center">🛰️ = 현재 ISS · 노란 선 = 방금 지나온 경로 · 📍 = 내 위치 · 5초마다 자동 갱신</div><div class="grid"><div class="stat"><div class="lab">ISS 위도</div><div class="val" id="ilat" style="font-size:24px">--</div></div><div class="stat"><div class="lab">ISS 경도</div><div class="val" id="ilon" style="font-size:24px">--</div></div><div class="stat"><div class="lab">고도</div><div class="val" id="alt" style="font-size:24px">--</div><div class="unit">km</div></div><div class="stat"><div class="lab">속도</div><div class="val" id="vel" style="font-size:20px">--</div><div class="unit">km/h</div></div></div><div class="stat" id="distbox" style="margin-top:12px"><div class="lab">내 위치에서 거리</div><div class="val" id="dist">--</div><div class="unit" id="overhead">km</div></div><div class="qbox"><div class="qbox-t">🔎 탐구 질문</div><ul><li>ISS 경로가 <b>위아래로 물결치며</b> 동쪽으로 가요. 왜 직선이 아닐까요?(궤도 경사각)</li><li>약 90분에 지구 한 바퀴! 하루에 몇 번 돌까요? 직접 계산해 보세요.</li><li>고도 약 420km는 서울~부산(약 325km)보다 조금 멀어요. ‘우주’는 생각보다 가깝죠?</li></ul></div>
   </section>
 
+  <section class="card core"><h2>🐍 API 핵심 코드 <span class="hint">— 복사해 내 프로젝트·AI에 응용</span></h2><p class="coreintro">이 데이터를 받아오는 <b>핵심만</b> 추린 파이썬 코드예요(<code>requests</code> 사용). <b>Streamlit</b> 앱에 바로 쓰거나, 복사해서 AI(Claude 등)에게 “이 데이터로 ___ 만들어 줘”처럼 넘기면 됩니다.</p><p class="corenote">📦 <b>Streamlit Cloud에 배포</b>한다면 <code>requirements.txt</code>에 <code>requests</code>를 한 줄 적어 주세요 (없으면 <code>ModuleNotFoundError</code>).</p><details class="corefold"><summary>💻 파이썬 코드 보기 · 복사</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">국제우주정거장 ISS · Python (requests)</span><button class="vibecopy" onclick="corecopy(this)">복사</button></div><pre class="vibetext">import requests
+
+# 국제우주정거장(ISS)의 현재 위치 (키 불필요)
+iss = requests.get(&quot;https://api.wheretheiss.at/v1/satellites/25544&quot;).json()
+
+lat, lon = iss[&quot;latitude&quot;], iss[&quot;longitude&quot;]  # 현재 위도/경도
+alt = iss[&quot;altitude&quot;]                          # 고도(km)
+print(lat, lon, alt)</pre></div></details></section>
+
   <section class="card apply">
     <h2>💡 이렇게 응용해 보세요</h2>
     <ul>
@@ -59,7 +68,7 @@
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
-<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}</script>
+<script>function _vflash(b){var o=b.textContent;b.textContent='복사됨!';b.classList.add('done');setTimeout(function(){b.textContent=o;b.classList.remove('done');},1200);}function _vfallback(t,b){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);_vflash(b);}catch(e){window.prompt('아래 내용을 복사하세요 (Ctrl/\u2318+C):',t);}}function _vwrite(t,b){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){_vflash(b);},function(){_vfallback(t,b);});}else{_vfallback(t,b);}}function vcopypre(b){var p=document.getElementById('vibepre');_vwrite(p?p.textContent:'',b);}function vcopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;var p=document.getElementById('vibepre');var pre=p?p.textContent.replace(/\s+$/,'')+'\n\n':'';_vwrite(pre+s,b);}function corecopy(b){var s=b.closest('.vibebox').querySelector('.vibetext').textContent;_vwrite(s,b);}</script>
 <script>
 let map, iss, ring, me, path=[];
 function dkm(la1,lo1,la2,lo2){const R=6371,r=Math.PI/180;

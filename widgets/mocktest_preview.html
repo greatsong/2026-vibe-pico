@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모의 테스트 위젯 프로토타입 — 버튼 + 마이크</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{ --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec; --code-bg:#f7f6f3; --radius:10px;
+  --font:'Pretendard',-apple-system,sans-serif; --mono:'SFMono-Regular',Consolas,monospace; }
+body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;padding:40px;max-width:860px;margin:0 auto;}
+h1{font-size:20px;}
+.demo-label{color:var(--muted);font-size:13px;margin:30px 0 8px;font-weight:700;}
+/* ============================================================
+   모의 테스트 위젯 — 하드웨어 없이 브라우저에서 분류+음성출력 체험.
+   버튼 모드(예시) + 마이크 모드(직접 가르치고 테스트). self-contained vanilla JS. 밝은 테마.
+   ============================================================ */
+.mt{border:1px solid var(--line);border-radius:12px;background:#fff;margin:16px 0;max-width:760px;overflow:hidden;--ac:#0891B2;}
+.mt-top{padding:12px 16px;background:var(--code-bg);border-bottom:1px solid var(--line);display:flex;gap:6px;}
+.mt-tab{appearance:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--fg);border-radius:99px;padding:6px 14px;display:flex;align-items:center;gap:6px;}
+.mt-tab[aria-selected="true"]{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,#fff);color:var(--ac);}
+.mt-body{padding:16px;}
+.mt-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.mt-btn{appearance:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--fg);border-radius:99px;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+.mt-btn:hover{border-color:var(--ac);}
+.mt-btn.dash{border-style:dashed;}
+.mt-card{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:16px;}
+.mt-verdict{font-size:23px;font-weight:800;margin:2px 0 1px;}
+.mt-say{font-size:14px;font-weight:700;color:#16a34a;min-height:20px;}
+.mt-row{display:flex;align-items:center;gap:10px;margin:11px 0;}
+.mt-lab{font-size:12px;color:var(--muted);width:40px;flex-shrink:0;}
+.mt-gauge{flex:1;height:10px;border-radius:99px;background:var(--line);overflow:hidden;}
+.mt-gauge i{display:block;height:100%;border-radius:99px;transition:width .35s;}
+.mt-leds{display:flex;gap:5px;}
+.mt-led{width:18px;height:18px;border-radius:4px;background:var(--line);}
+.mt-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+.mt-chip{font-size:12px;font-family:var(--mono);background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 8px;}
+.mt-chip b{color:var(--ac);}
+.mt-hint{color:var(--muted);font-size:12px;margin-top:11px;}
+.mt-warn{background:#fff7ed;border:1px solid #fed7aa;color:#c2410c;border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.6;}
+.mt-status{font-size:13px;color:var(--muted);margin:0 0 10px;min-height:18px;}
+.mt-rec{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.mt-go{appearance:none;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;border:0;border-radius:99px;padding:9px 18px;color:#fff;background:var(--ac);}
+.mt-go[disabled]{opacity:.4;cursor:not-allowed;}
+.mt-mini{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);font-weight:700;}
+</style>
+</head>
+<body>
+<h1>🎮 모의 테스트 위젯 — 하드웨어 없이 체험</h1>
+<p style="color:var(--muted);font-size:13.5px;">소리를 고르면 3특징 k-NN이 맞히고 <b>목소리로 말해줘요(MP3 흉내)</b>. ‘마이크’ 탭에선 진짜 마이크로 직접 가르치고 테스트할 수 있어요(https 사이트에서).</p>
+
+<div class="demo-label">소리 분류기 — 브라우저 모의 테스트</div>
+<div class="mocktest" data-ac="#0891B2"></div>
+
+<script>
+function buildMock(el){
+  var ac = el.dataset.ac || "#0891B2";
+  el.style.setProperty("--ac", ac);
+  var DEF=[
+    {n:'휘파람',say:'휘파람이에요',c:'#1D9E75',rms:300,zcr:180,cr:3,s:[40,25,0.4]},
+    {n:'박수',say:'박수네요',c:'#D85A30',rms:520,zcr:95,cr:9,s:[60,20,1.2]},
+    {n:'말소리',say:'말소리네요',c:'#378ADD',rms:240,zcr:72,cr:3.5,s:[40,16,0.5]},
+    {n:'노크',say:'노크 소리예요',c:'#7F77DD',rms:250,zcr:42,cr:8,s:[40,12,1.0]}
+  ];
+  var SAY={},COL={}; DEF.forEach(function(d){SAY[d.n]=d.say;COL[d.n]=d.c;});
+  function g(c,s){return c+(Math.random()+Math.random()+Math.random()-1.5)*s;}
+  function buildModel(samples){
+    var mn=[0,1,2].map(function(i){return Math.min.apply(0,samples.map(function(s){return s.f[i];}));});
+    var mx=[0,1,2].map(function(i){return Math.max.apply(0,samples.map(function(s){return s.f[i];}));});
+    return {ex:samples,mn:mn,mx:mx};
+  }
+  function classify(model,feat){
+    var mn=model.mn,mx=model.mx;
+    var q=feat.map(function(v,i){return (v-mn[i])/(mx[i]-mn[i]+1e-9);});
+    var sc=model.ex.map(function(e){
+      var d2=0; for(var i=0;i<3;i++){var nf=(e.f[i]-mn[i])/(mx[i]-mn[i]+1e-9);d2+=(nf-q[i])*(nf-q[i]);}
+      return {n:e.n,d2:d2};
+    }).sort(function(a,b){return a.d2-b.d2;}).slice(0,5);
+    var vote={},tot=0; sc.forEach(function(e){var w=1/(e.d2+1e-6);vote[e.n]=(vote[e.n]||0)+w;tot+=w;});
+    var best=null,bv=0; for(var k in vote)if(vote[k]>bv){bv=vote[k];best=k;}
+    return {name:best,conf:bv/tot};
+  }
+  function micFeatures(buf){
+    var n=buf.length,m=0,i; for(i=0;i<n;i++)m+=buf[i]; m/=n;
+    var ss=0,zc=0,peak=0,prev=buf[0]-m;
+    for(i=0;i<n;i++){var d=buf[i]-m,ad=d<0?-d:d; ss+=d*d; if(ad>peak)peak=ad; if((d>=0)!==(prev>=0))zc++; prev=d;}
+    var rms=Math.sqrt(ss/n); return [rms, zc, peak/(rms+1e-9)];
+  }
+  function speak(t){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=1;
+    var vs=speechSynthesis.getVoices()||[];var ko=vs.filter(function(v){return /ko/i.test(v.lang);})[0];
+    if(ko)u.voice=ko;speechSynthesis.speak(u);}catch(e){}}
+  function showResult(box,feat,r){
+    var ok=r.conf>=0.6,pct=Math.round(r.conf*100),lit=Math.round(r.conf*10);
+    var col=ok?(COL[r.name]||ac):'var(--line)';
+    var leds=''; for(var i=0;i<10;i++)leds+='<span class="mt-led" style="background:'+((ok&&i<lit)?col:'var(--line)')+'"></span>';
+    var c0=feat[0]<5?Math.round(feat[0]*1000):Math.round(feat[0]);
+    box.innerHTML=
+      '<div class="mt-verdict">'+(ok?'이건… '+r.name+'!':'음… 잘 모르겠어요')+'</div>'+
+      '<div class="mt-say">'+(ok?'🔊 말하기: “'+(SAY[r.name]||r.name)+'”':'확신이 낮아 조용히 있어요')+'</div>'+
+      '<div class="mt-row"><span class="mt-lab">확신</span><div class="mt-gauge"><i style="width:'+pct+'%;background:'+(ok?'#22c55e':'#f97316')+'"></i></div><b>'+pct+'%</b></div>'+
+      '<div class="mt-row"><span class="mt-lab">LED</span><div class="mt-leds">'+leds+'</div></div>'+
+      '<div class="mt-chips"><span class="mt-chip">크기 <b>'+c0+'</b></span><span class="mt-chip">높낮이 <b>'+Math.round(feat[1])+'</b></span><span class="mt-chip">들쭉날쭉 <b>'+feat[2].toFixed(1)+'</b></span></div>';
+    if(ok)speak(SAY[r.name]||r.name);
+  }
+
+  el.innerHTML=
+    '<div class="mt-top">'+
+      '<button class="mt-tab" data-tab="demo" aria-selected="true">🎚️ 예시 버튼</button>'+
+      '<button class="mt-tab" data-tab="mic" aria-selected="false">🎤 내 마이크</button>'+
+    '</div><div class="mt-body"></div>';
+  var body=el.querySelector(".mt-body");
+  var btnModel=buildModel((function(){var t=[];DEF.forEach(function(d){for(var i=0;i<8;i++)t.push({f:[g(d.rms,d.s[0]),g(d.zcr,d.s[1]),g(d.cr,d.s[2])],n:d.n});});return t;})());
+
+  function renderDemo(){
+    body.innerHTML=
+      '<div class="mt-pick">'+
+        DEF.map(function(d){return '<button class="mt-btn" data-k="'+d.n+'">'+d.n+'</button>';}).join('')+
+        '<button class="mt-btn dash" data-k="애매">애매한 소리</button>'+
+      '</div><div class="mt-card" id="mtres"><div style="color:var(--muted);font-size:13px;">소리를 하나 눌러 보세요 👆</div></div>'+
+      '<div class="mt-hint">확신 60% 미만이면 MP3 모듈처럼 말하지 않고 침묵해요.</div>';
+    var resBox=body.querySelector("#mtres");
+    body.querySelectorAll(".mt-btn").forEach(function(b){b.onclick=function(){
+      var k=b.dataset.k,feat;
+      if(k==='애매'){var a=DEF[2],c=DEF[3];feat=[(a.rms+c.rms)/2+g(0,15),(a.zcr+c.zcr)/2+g(0,8),(a.cr+c.cr)/2+g(0,0.4)];}
+      else{var d=DEF.filter(function(x){return x.n===k;})[0];feat=[g(d.rms,d.s[0]),g(d.zcr,d.s[1]),g(d.cr,d.s[2])];}
+      showResult(resBox,feat,classify(btnModel,feat));
+    };});
+  }
+
+  var M={on:false,an:null,buf:null,rec:{},model:null,thresh:0.015,loop:null};
+  var MLAB=['휘파람','박수','말소리','노크'];
+  function samples(){M.an.getFloatTimeDomainData(M.buf);return M.buf;}
+  function rebuild(){var s=[];for(var L in M.rec)M.rec[L].forEach(function(f){s.push({f:f,n:L});});M.model=s.length>=2?buildModel(s):null;}
+  function renderMic(){
+    if(!M.on){
+      body.innerHTML='<div class="mt-card"><div style="font-size:14px;font-weight:700;margin-bottom:6px;">🎤 진짜 마이크로 직접 테스트</div>'+
+        '<div style="color:var(--muted);font-size:13px;margin-bottom:12px;">소리 4가지를 직접 가르친 뒤(각 2번+) 테스트해요. 내 노트북/폰 마이크를 씁니다.</div>'+
+        '<button class="mt-go" id="mtmicon">마이크 켜기</button>'+
+        '<div class="mt-hint">권한 허용이 필요해요. <b>https로 배포된 사이트</b>에서 가장 잘 됩니다(로컬 파일은 막힐 수 있어요).</div></div>';
+      var on=body.querySelector("#mtmicon"); if(on)on.onclick=startMic; return;
+    }
+    var recBtns=MLAB.map(function(L){return '<button class="mt-btn" data-rl="'+L+'">'+L+' <b style="color:var(--ac)">('+M.rec[L].length+')</b></button>';}).join('');
+    var ready=MLAB.every(function(L){return M.rec[L].length>=2;});
+    body.innerHTML='<div class="mt-status" id="mtst">소리를 골라 누르고, 그 소리를 내세요 (각 2번+).</div>'+
+      '<div class="mt-rec">'+recBtns+'</div>'+
+      '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;"><button class="mt-go" id="mtgo"'+(ready?'':' disabled')+'>테스트 시작</button>'+
+      (M.loop?'<button class="mt-mini" id="mtstop">■ 중지</button>':'')+'<button class="mt-mini" id="mtreset">초기화</button></div>'+
+      '<div class="mt-card" id="mtres"><div style="color:var(--muted);font-size:13px;">'+(ready?'‘테스트 시작’을 누르고 소리를 내보세요.':'4가지 소리를 각각 2번+ 가르쳐 주세요.')+'</div></div>';
+    var resBox=body.querySelector("#mtres"), st=body.querySelector("#mtst");
+    body.querySelectorAll("[data-rl]").forEach(function(b){b.onclick=function(){record(b.dataset.rl,st);};});
+    var go=body.querySelector("#mtgo"); if(go)go.onclick=function(){startTest(resBox,st);};
+    var stop=body.querySelector("#mtstop"); if(stop)stop.onclick=function(){if(M.loop){clearInterval(M.loop);M.loop=null;}renderMic();};
+    var rs=body.querySelector("#mtreset"); if(rs)rs.onclick=function(){MLAB.forEach(function(L){M.rec[L]=[];});M.model=null;if(M.loop){clearInterval(M.loop);M.loop=null;}renderMic();};
+  }
+  function record(label,st){
+    if(!M.on)return; st.textContent="‘"+label+"’ 소리를 지금 내세요…";
+    var best=null,bestR=-1,t0=performance.now();
+    var iv=setInterval(function(){
+      var f=micFeatures(samples()); if(f[0]>bestR){bestR=f[0];best=f;}
+      if(performance.now()-t0>1200){clearInterval(iv); if(best)M.rec[label].push(best); rebuild(); renderMic();}
+    },60);
+  }
+  function startTest(resBox,st){
+    if(!M.model){st.textContent="먼저 4가지를 각 2번+ 가르쳐 주세요.";return;}
+    if(M.loop)clearInterval(M.loop);
+    var cool=0;
+    M.loop=setInterval(function(){
+      var f=micFeatures(samples());
+      if(f[0]>M.thresh && performance.now()>cool){ showResult(resBox,f,classify(M.model,f)); cool=performance.now()+1400; }
+    },90);
+    renderMic();
+  }
+  function startMic(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){micWarn();return;}
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      var Ctx=window.AudioContext||window.webkitAudioContext; var ctx=new Ctx();
+      var src=ctx.createMediaStreamSource(stream); var an=ctx.createAnalyser(); an.fftSize=4096;
+      src.connect(an); M.an=an; M.buf=new Float32Array(an.fftSize); M.on=true;
+      MLAB.forEach(function(L){M.rec[L]=[];});
+      var arr=[],t0=performance.now();
+      var bi=setInterval(function(){arr.push(micFeatures(samples())[0]);
+        if(performance.now()-t0>400){clearInterval(bi); M.thresh=Math.max(0.012, Math.max.apply(0,arr)*3); renderMic();}},40);
+      renderMic();
+    }).catch(function(){micWarn();});
+  }
+  function micWarn(){
+    body.innerHTML='<div class="mt-warn">🎤 마이크를 열 수 없어요. 권한을 거부했거나, <b>로컬 파일(file://)</b>에서 열어 막혔을 수 있어요. '+
+      '<b>https로 배포된 사이트</b>에서 다시 시도해 주세요. 그동안 ‘예시 버튼’ 모드로 체험할 수 있어요.</div>'+
+      '<button class="mt-mini" id="mtback" style="margin-top:10px;">← 예시 버튼으로</button>';
+    var b=body.querySelector("#mtback"); if(b)b.onclick=function(){setTab("demo");};
+  }
+
+  function setTab(t){
+    el.querySelectorAll(".mt-tab").forEach(function(b){b.setAttribute("aria-selected", b.dataset.tab===t);});
+    if(M.loop){clearInterval(M.loop);M.loop=null;}
+    if(t==="demo")renderDemo(); else renderMic();
+  }
+  el.querySelectorAll(".mt-tab").forEach(function(b){b.onclick=function(){setTab(b.dataset.tab);};});
+  renderDemo();
+}
+document.querySelectorAll(".mocktest").forEach(buildMock);
+</script>
+</body>
+</html>
