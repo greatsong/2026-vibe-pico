@@ -636,8 +636,8 @@ CHAPTERS = [
       {"type": "linkbtn", "href": "https://open-meteo.com/en/docs", "label": "open-meteo.com/en/docs — 변수·파라미터 전체 문서"},
     ]},
     {"title": "과학 수업에 쓸 만한 다른 오픈 API", "items": [
-      {"type": "text", "html": "Open-Meteo 말고도 <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많아요 — 지진·ISS·일출몰·우주날씨·물질(화학)·생물 등. 과목별로 <b>어떤 데이터를 주고 무엇을 탐구할 수 있는지</b>를 <b>부록 A</b>에 한눈에 정리했고, 브라우저에서 바로 받아 그려 보는 <b>라이브 대시보드(지도·그래프)</b>로도 만들어 뒀습니다(국내 적용 여부도 표시). 키 없이 동작하는 것만 골랐고, 2026년 기준 응답을 확인했어요."},
-      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종 · 5장 날씨 포함)"},
+      {"type": "text", "html": "Open-Meteo 말고도 <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많아요 — 지진·ISS·일출몰·물질(화학)·생물 등. 과목별로 <b>어떤 데이터를 주고 무엇을 탐구할 수 있는지</b>를 <b>부록 A</b>에 한눈에 정리했고, 브라우저에서 바로 받아 그려 보는 <b>라이브 대시보드(지도·그래프)</b>로도 만들어 뒀습니다(국내 적용 여부도 표시). 키 없이 동작하는 것만 골랐고, 2026년 기준 응답을 확인했어요."},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (10종 · 5장 날씨 포함)"},
       {"type": "callout", "kind": "key", "title": "🇰🇷 국내 공식 데이터가 필요하면 — 공공데이터포털",
        "html": "‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <a class=\"ilink\" href=\"https://www.data.go.kr\" target=\"_blank\" rel=\"noopener\"><b>공공데이터포털(data.go.kr)</b></a>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <a class=\"ilink\" href=\"https://www.airkorea.or.kr\" target=\"_blank\" rel=\"noopener\"><b>에어코리아(한국환경공단) 미세먼지</b></a> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span>"},
       {"type": "callout", "kind": "info", "title": "피코로 가져올 때 한 가지",
@@ -685,9 +685,9 @@ CHAPTERS = [
     {"title": "이 부록 쓰는 법", "items": [
       {"type": "callout", "kind": "key", "title": "🌐 라이브 대시보드로 데이터를 ‘직접’ 만나 보기",
        "html": "각 API 카드의 <b>‘라이브 대시보드 열기’</b>를 누르면, 브라우저에서 <b>지금 데이터를 받아 지도·그래프로 그려 주는 페이지</b>가 열려요(설치·피코 없이 클릭만). 위치·물질·종을 바꿔 가며 탐구하고, 페이지마다 ‘🔎 탐구 질문’도 있습니다."},
-      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (11종 · 5장 날씨 포함)"},
+      {"type": "linkbtn", "href": "dashboards/index.html", "label": "오픈 API 라이브 대시보드 갤러리 열기 (10종 · 5장 날씨 포함)"},
       {"type": "callout", "kind": "info", "title": "국내 적용 여부 한눈에",
-       "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS·우주날씨) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 국내 공식 데이터는 공공데이터포털(키 필요)을 쓰세요."},
+       "html": "🇰🇷 국내 OK(일출몰·생물) · 🌍 전 지구라 국내도 포함(대기질·ISS) · 🌐 국적 무관(화학·천문) · 🌎 해외 위주(지진은 국내 드묾 → 기상청 권장). 국내 공식 데이터는 공공데이터포털(키 필요)을 쓰세요."},
     ]},
     {"title": "1) 미세먼지 (대기질) — 환경 🌍", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — PM2.5·PM10·오존 등 시간별 대기질(<a class=\"ilink\" href=\"https://open-meteo.com/en/docs/air-quality-api\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a>, 키 불필요).<br><b>🔎 어떤 탐구</b> — 지금 등급(좋음~매우나쁨) 판정 · 하루 중 미세먼지가 높은 시간대 찾기 · 우리 동네와 다른 지역 공기질 비교."},
@@ -705,23 +705,19 @@ CHAPTERS = [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 일출·일몰·남중시각·낮 길이(<a class=\"ilink\" href=\"https://sunrise-sunset.org\" target=\"_blank\" rel=\"noopener\">sunrise-sunset</a>, 키 불필요).<br><b>🔎 어떤 탐구</b> — 계절별 낮 길이 변화 · 위도를 바꿔 적도 vs 극지방(백야·극야) 비교."},
       {"type": "linkbtn", "href": "dashboards/sunrise.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "5) 우주날씨 Kp 지수 — 천문·지구과학 🌍", "items": [
-      {"type": "text", "html": "<b>📊 어떤 데이터</b> — 지자기 폭풍 정도 Kp 지수(0~9, <a class=\"ilink\" href=\"https://www.swpc.noaa.gov\" target=\"_blank\" rel=\"noopener\">NOAA</a>, 키 불필요).<br><b>🔎 어떤 탐구</b> — 최근 며칠 Kp 변화로 태양 활동 관찰 · 값이 높을 때 고위도 오로라 가능성 토론."},
-      {"type": "linkbtn", "href": "dashboards/spaceweather.html", "label": "이 API 라이브 대시보드 열기"},
-    ]},
-    {"title": "6) 물질 정보 — 화학 🌐", "items": [
+    {"title": "5) 물질 정보 — 화학 🌐", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 물질 이름 → 화학식·분자량·2D/3D 구조(<a class=\"ilink\" href=\"https://pubchem.ncbi.nlm.nih.gov\" target=\"_blank\" rel=\"noopener\">PubChem</a>, 키 불필요).<br><b>🔎 어떤 탐구</b> — 여러 물질 분자량 비교 · 3D 구조를 돌려 보며 모양 이해 · 화학식만 보고 물질 맞히기."},
       {"type": "linkbtn", "href": "dashboards/pubchem.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "7) 우리나라 생물 관찰 — 생물 🇰🇷", "items": [
+    {"title": "6) 우리나라 생물 관찰 — 생물 🇰🇷", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 생물 종별 관찰 기록·위치·날짜(<a class=\"ilink\" href=\"https://www.gbif.org\" target=\"_blank\" rel=\"noopener\">GBIF</a>, 한국 약 880만 건, 키 불필요).<br><b>🔎 어떤 탐구</b> — 관찰 지점을 지도에 찍어 분포(도시 vs 산) · 월별(계절) 분포 · 철새 vs 텃새 비교."},
       {"type": "linkbtn", "href": "dashboards/gbif.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "8) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
+    {"title": "7) NASA 우주 데이터 — 천문 🌐 (키 필요)", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 오늘의 천문사진(APOD)과 오늘 지구 곁을 지나는 소행성(NeoWs, NASA).<br><b>🔎 어떤 탐구</b> — 매일 우주사진 감상 · 오늘 가까운 소행성의 거리(달까지 거리의 몇 배)·크기·위험 여부 비교.<br><span style='color:#a55'>※ NASA만 API 키가 필요해요. 대시보드는 공용 <code>DEMO_KEY</code>로 동작하고(횟수 제한), 막히면 <a class=\"ilink\" href=\"https://api.nasa.gov\" target=\"_blank\" rel=\"noopener\">api.nasa.gov</a>에서 무료 키를 받아 넣으면 돼요.</span>"},
       {"type": "linkbtn", "href": "dashboards/nasa.html", "label": "이 API 라이브 대시보드 열기"},
     ]},
-    {"title": "9) 태양·바람 에너지 — 에너지·물리·지구 🌍", "items": [
+    {"title": "8) 태양·바람 에너지 — 에너지·물리·지구 🌍", "items": [
       {"type": "text", "html": "<b>📊 어떤 데이터</b> — 지역별 월평균 일사량·풍속(<a class=\"ilink\" href=\"https://power.larc.nasa.gov\" target=\"_blank\" rel=\"noopener\">NASA POWER</a>, 키 불필요).<br><b>🔎 어떤 탐구</b> — 우리 지역 태양광 발전 잠재력 · 적도·사막·극지방 일사량 비교 · 계절(여름↑ 겨울↓) 차이."},
       {"type": "linkbtn", "href": "dashboards/energy.html", "label": "이 API 라이브 대시보드 열기"},
     ]},

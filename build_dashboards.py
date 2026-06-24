@@ -340,12 +340,6 @@ PROMPTS = {
     ("일출·일몰 → 시각 LED",
      "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.\n[만들 것] 일출·일몰 시각의 '시(hour)'를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
   ],
-  "spaceweather": [
-    ("Kp 지수 → 오로라 경보등",
-     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열, 배열의 마지막 항목에서 \"Kp\"(0~9, 최신 지자기 교란값)와 \"time_tag\"(측정 시각, 3시간 간격)를 꺼내 써.\n[만들 것] 최신 Kp를 LED 10칸에 막대로 표시(Kp 1당 약 1칸, Kp9면 9~10칸 켜짐). Kp가 클수록 색을 초록→노랑→빨강으로 바꾸고, Kp 5 이상이면 보라색으로 전체를 천천히 깜빡여 오로라 경보를 알려 줘. 30분마다 갱신.\n[설정] 오로라 경보 기준값(KP_ALERT)과 갱신 주기(분)는 코드 맨 위 변수로 빼서 쉽게 바꿀 수 있게 해 줘. 기본값은 KP_ALERT=5, 갱신 30분으로 해 줘."),
-    ("최근 3회 Kp → 상승·하강 추이 표시등",
-     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열. 배열 끝에서 최근 항목 3개의 \"Kp\" 값(3시간 간격)을 꺼내 비교에 써.\n[만들 것] 가장 최신 Kp를 LED 10칸 막대로 표시하고, 직전 값과 비교해 추이를 색으로 알려 줘: 오르면 빨강, 내리면 파랑, 변화 없으면 초록. 지자기 폭풍이 커지는지(상승) 잦아드는지(하강)를 한눈에 보이게 해. 30분마다 갱신.\n[설정] 비교에 쓸 최근 항목 개수(N_RECENT)와 갱신 주기(분)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 N_RECENT=3, 갱신 30분으로 해 줘."),
-  ],
   "pubchem": [
     ("물질 이름 목록 → 분자량 LED 게이지",
      "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).\n[만들 것] 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(<100)은 초록, 보통(100~250)은 노랑, 무거운 물질(>250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.\n[설정] 비교할 물질 목록은 코드 맨 위에 MATERIALS = [\"water\", \"glucose\", \"caffeine\"] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로."),
@@ -451,19 +445,6 @@ day_length = r["day_length"]            # 낮 길이(초)
 sunrise, sunset = r["sunrise"], r["sunset"]  # 일출·일몰 (UTC, ISO 시각)
 print(sunrise, sunset, day_length)""",
 
-  "spaceweather":
-"""import requests
-
-# 우주날씨 Kp 지수 (지자기 교란·오로라 지표, 키 불필요)
-rows = requests.get(
-    "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
-).json()
-
-# 각 행은 딕셔너리: {"time_tag": .., "Kp": .., ...}
-latest = rows[-1]
-kp = float(latest["Kp"])        # 가장 최근 Kp 지수 (0~9)
-when = latest["time_tag"]       # 측정 시각(3시간 간격)
-print(when, kp)""",
 
   "pubchem":
 """import requests
@@ -795,46 +776,6 @@ async function run(){
     const h=Math.floor(r.day_length/3600), m=Math.round(r.day_length%3600/60);
     document.getElementById('dl').textContent=h+'시간 '+m+'분';
     s.textContent='✓ 오늘 · 한국 시간 기준';
-  }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
-}
-run();''')
-
-# 6) 우주날씨 Kp
-page("spaceweather", "🌞", "우주날씨 (Kp 지수)", "천문·지구과학", "🌍 전 지구 공통",
-  lead="미국 해양대기청(NOAA) <b>우주기상예보센터(SWPC)</b>가 태양 폭풍이 지구 자기장을 흔드는 정도(<b>Kp 지수</b>)를 3시간마다 발표해요. 뉴스에 나오는 ‘오로라 예보’가 바로 이 데이터랍니다.",
-  src_name="NOAA 우주기상예보센터(SWPC)", src_url="https://www.swpc.noaa.gov",
-  refs=[("NOAA 오로라 예보", "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"), ("SpaceWeatherLive(한국어)", "https://www.spaceweatherlive.com/ko.html")],
-  info='''<table>
-    <tr><td class="k">무엇</td><td>지자기 폭풍 정도 Kp 지수(0~9)·태양 활동 (NOAA SWPC)</td></tr>
-    <tr><td class="k">API 키</td><td><b>필요 없음</b> · 무료</td></tr>
-    <tr><td class="k">요청 예</td><td><code>services.swpc.noaa.gov/products/noaa-planetary-k-index.json</code></td></tr>
-    <tr><td class="k">의미</td><td>Kp가 클수록 지자기 교란 ↑ · 고위도 <b>오로라</b> 가능성 ↑</td></tr>
-  </table>''',
-  apply_html='''<ul>
-    <li>Kp가 높으면 LED를 <b>보라색</b>으로(오로라 경보)</li>
-    <li>며칠치 Kp <b>변화 그래프</b>로 태양 활동 관찰</li>
-    <li>뉴스의 ‘태양 폭풍’ 기사와 <b>데이터로 비교</b></li>
-  </ul>''',
-  body='<div id="status" class="status">불러오는 중…</div>'
-       '<div class="grid"><div class="stat" id="kbox"><div class="lab">현재 Kp 지수</div><div class="val" id="kp">--</div><div class="unit" id="kstate">0~9</div></div></div>'
-       '<div class="chartbox"><canvas id="ch" height="120"></canvas></div>',
-  chart=True,
-  js='''let chart;
-function kcolor(k){ return k<4?'#22c55e':k<6?'#f59e0b':'#8b5cf6'; }
-async function run(){
-  const s=document.getElementById('status'); s.className='status'; s.textContent='불러오는 중…';
-  try{
-    const arr=await (await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json')).json();
-    const last=arr.slice(-24);
-    const kp=arr[arr.length-1].Kp, c=kcolor(kp);
-    document.getElementById('kp').textContent=kp.toFixed(1); document.getElementById('kp').style.color=c;
-    document.getElementById('kstate').textContent=kp<4?'조용함':kp<6?'활동적':'폭풍! 오로라 가능';
-    document.getElementById('kbox').style.borderColor=c;
-    s.textContent='✓ 최근 '+last.length+'개 측정값(3시간 간격)';
-    if(chart) chart.destroy();
-    chart=new Chart(document.getElementById('ch'),{type:'bar',data:{labels:last.map(r=>r.time_tag.slice(5,16).replace('T',' ')),
-      datasets:[{label:'Kp',data:last.map(r=>r.Kp),backgroundColor:last.map(r=>kcolor(r.Kp))}]},
-      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:9}}}});
   }catch(e){ s.className='status err'; s.textContent='데이터를 받지 못했어요: '+e; }
 }
 run();''')
@@ -1329,7 +1270,6 @@ GAL = [
  ("earthquake","🌍","전 세계 지진","지구과학","지진은 왜 특정 띠(불의 고리)에 몰릴까?","map"),
  ("iss","🛰️","ISS 위치","천문·물리","우주정거장은 지금 어디를? 경로는 왜 물결칠까?","map"),
  ("sunrise","🌅","일출·일몰","천문·지구과학","계절마다 낮 길이는 왜 달라질까? 극지방은?"),
- ("spaceweather","🌞","우주날씨 Kp","천문·지구과학","태양 폭풍이 세지면 오로라가 보일까?"),
  ("pubchem","⚗️","물질 정보","화학","물·카페인·포도당… 분자량은 얼마나 다를까?"),
  ("gbif","🐦","생물 관찰","생물","이 생물은 어디에 사나? 도시 vs 산?","map"),
  ("nasa","🔭","NASA 우주 데이터","천문","오늘의 우주 사진은? 지구 곁 소행성은 몇 개?"),
