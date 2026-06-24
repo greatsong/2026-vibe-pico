@@ -65,8 +65,13 @@ for q in data[&quot;features&quot;]:
 - 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
 - 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
 - WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">최근 최대 지진 → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] USGS(키 불필요): GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 응답 JSON의 features 배열에서 각 properties.mag이 규모. (응답이 크니 mag만 훑어 최댓값만 구해 메모리 절약)
-[만들 것] 최근 하루 규모 4.5+ 지진 중 가장 큰 규모를 LED 게이지로(규모 0~9 → 0~10칸), 규모 6 이상이면 빨강 깜빡. 10분마다 갱신.</pre></div></section>
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">최근 최대 지진 → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → features 배열에서 각 features[i].properties.mag(규모)만 꺼내 최댓값을 구해 줘.
+[만들 것] 최근 하루 M4.5+ 중 최대 규모를 10칸 LED 게이지로(규모 0~9를 0~10칸에 비례, 가득 차면 10칸). 평소 초록, M6+이면 빨강으로 1초 간격 깜빡, 10분마다 다시 불러와 갱신.
+[설정] 감시할 피드는 코드 맨 위 FEED 변수로 두고 쉽게 바꿀 수 있게 해 줘(선택지: 2.5_day, 4.5_day, significant_week, all_day). 기본값은 &quot;4.5_day&quot;. 깜빡 시작 규모도 ALERT_MAG 변수로 두고 기본값 6.0.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">하루 지진 건수 → 활동 막대</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson → features 배열의 길이(len)가 최근 하루 M2.5+ 발생 건수야. mag·place는 안 써도 돼.
+[만들 것] 발생 건수를 10칸 LED 막대로 표시(0건=모두 꺼짐, 건수가 늘수록 한 칸씩 채움). 적으면 초록, 중간이면 노랑, 가득 차면 빨강으로 채워 지구가 얼마나 들썩였는지 보여 줘. 10분마다 갱신.
+[설정] 막대가 가득 차는 기준 건수를 코드 맨 위 FULL_COUNT 변수로 두고 쉽게 바꿀 수 있게 해 줘(건수÷FULL_COUNT×10을 칸 수로). 기본값은 50. 피드는 FEED 변수로 두고 기본값 &quot;2.5_day&quot;.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">우리 동네 근접 경보 → 거리 LED</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 각 features[i]의 geometry.coordinates([경도, 위도, 깊이])와 properties.mag을 꺼내 줘.
+[만들 것] 내 위치에서 가장 가까운 지진까지의 거리를 10칸 LED로(가까울수록 많이 켜짐: 0km=10칸, 멀수록 줄어 0칸). 평소 파랑, 가장 가까운 지진이 M6+이면 빨강으로 강조. 위경도 거리는 간단한 유클리드 근사로 계산, 10분마다 갱신.
+[설정] 내 위도·경도(MY_LAT/MY_LON)와 LED가 0칸이 되는 경보 반경(RANGE_KM)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665, MY_LON=126.9780), RANGE_KM=3000.</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>

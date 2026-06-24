@@ -306,133 +306,79 @@ COPY_JS = (
 PROMPTS = {
   "weather": [
     ("강수확률 → LED 날씨 시계",
-     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&hourly=precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1 → 응답의 hourly.precipitation_probability 는 0~23시 24개 강수확률(%) 배열, hourly.time 은 같은 길이의 시각 배열.
-[만들 것] 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 강수확률로 색칠해 줘. 0~20% 초록(맑음)·21~50% 노랑(흐림)·51~80% 파랑(비 가능)·81~100% 보라(비 확실). 10분마다 다시 받아 갱신.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&hourly=precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1 → 응답의 hourly.precipitation_probability 는 0~23시 24개 강수확률(%) 배열, hourly.time 은 같은 길이의 시각 배열.\n[만들 것] 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 강수확률로 색칠해 줘. 0~20% 초록(맑음)·21~50% 노랑(흐림)·51~80% 파랑(비 가능)·81~100% 보라(비 확실). 10분마다 다시 받아 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
     ("현재 기온 → 무드등 색",
-     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m&timezone=Asia%2FSeoul → 응답의 current.temperature_2m 가 현재 기온(℃) 숫자 하나.
-[만들 것] LED 10칸을 모두 같은 색 무드등으로 켜 줘. 28℃ 이상 빨강(더움)·16~27℃ 초록(적당)·15℃ 이하 파랑(추움). 10분마다 다시 받아 색을 갱신.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m&timezone=Asia%2FSeoul → 응답의 current.temperature_2m 가 현재 기온(℃) 숫자 하나.\n[만들 것] LED 10칸을 모두 같은 색 무드등으로 켜 줘. 28℃ 이상 빨강(더움)·16~27℃ 초록(적당)·15℃ 이하 파랑(추움). 10분마다 다시 받아 색을 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
   ],
   "airquality": [
     ("초미세먼지(PM2.5) → LED 신호등",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5(초미세먼지 현재 농도 ㎍/㎥)를 사용해 줘.
-[만들 것] PM2.5 등급을 LED 10칸 신호등으로: 좋음(0~15) 초록·보통(16~35) 노랑·나쁨(36~75) 주황·매우나쁨(76+) 빨강 깜빡. 농도가 높을수록 켜는 칸 수를 늘려(0~150㎍/㎥를 10칸에 비례 매핑) 0칸~10칸으로 표시하고, 10분마다 갱신해 줘.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5(초미세먼지 현재 농도 ㎍/㎥)를 사용해 줘.\n[만들 것] PM2.5 등급을 LED 10칸 신호등으로: 좋음(0~15) 초록·보통(16~35) 노랑·나쁨(36~75) 주황·매우나쁨(76+) 빨강 깜빡. 농도가 높을수록 켜는 칸 수를 늘려(0~150㎍/㎥를 10칸에 비례 매핑) 0칸~10칸으로 표시하고, 10분마다 갱신해 줘.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
     ("PM2.5+PM10 → 앞5칸·뒤5칸 동시 표시",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5,pm10&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5와 current.pm10(둘 다 현재 농도 ㎍/㎥)를 함께 사용해 줘.
-[만들 것] LED 10칸을 반으로 나눠 앞 5칸은 PM2.5, 뒤 5칸은 PM10 막대그래프로. 각 막대는 등급별 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강). PM2.5는 0~75㎍/㎥를 5칸에, PM10은 0~150㎍/㎥를 5칸에 비례 매핑하고, 둘 중 하나라도 매우나쁨이면 해당 막대를 깜빡여 줘. 10분마다 갱신.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5,pm10&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5와 current.pm10(둘 다 현재 농도 ㎍/㎥)를 함께 사용해 줘.\n[만들 것] LED 10칸을 반으로 나눠 앞 5칸은 PM2.5, 뒤 5칸은 PM10 막대그래프로. 각 막대는 등급별 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강). PM2.5는 0~75㎍/㎥를 5칸에, PM10은 0~150㎍/㎥를 5칸에 비례 매핑하고, 둘 중 하나라도 매우나쁨이면 해당 막대를 깜빡여 줘. 10분마다 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
     ("시간별 PM2.5 추이 → 흐름 막대",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → hourly.pm2_5(시간별 농도 배열)와 hourly.time(시각 배열)을 사용해 줘.
-[만들 것] hourly.time에서 지금 시각 이후 시각을 찾아, 그때부터 최대 10시간의 PM2.5를 LED 10칸에 시간순으로 한 칸씩 매핑해 각 칸을 그 시각 등급 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강)으로 켜서 '대기질 흐름'을 보여 줘. 남은 데이터가 10개보다 적으면 있는 만큼만 켜고 나머지 칸은 꺼 줘. 30분마다 갱신.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → hourly.pm2_5(시간별 농도 배열)와 hourly.time(시각 배열)을 사용해 줘.\n[만들 것] hourly.time에서 지금 시각 이후 시각을 찾아, 그때부터 최대 10시간의 PM2.5를 LED 10칸에 시간순으로 한 칸씩 매핑해 각 칸을 그 시각 등급 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강)으로 켜서 '대기질 흐름'을 보여 줘. 남은 데이터가 10개보다 적으면 있는 만큼만 켜고 나머지 칸은 꺼 줘. 30분마다 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
   ],
   "earthquake": [
     ("최근 최대 지진 → LED 게이지",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → features 배열에서 각 features[i].properties.mag(규모)만 꺼내 최댓값을 구해 줘.
-[만들 것] 최근 하루 M4.5+ 중 최대 규모를 10칸 LED 게이지로(규모 0~9를 0~10칸에 비례, 가득 차면 10칸). 평소 초록, M6+이면 빨강으로 1초 간격 깜빡, 10분마다 다시 불러와 갱신.
-[설정] 감시할 피드는 코드 맨 위 FEED 변수로 두고 쉽게 바꿀 수 있게 해 줘(선택지: 2.5_day, 4.5_day, significant_week, all_day). 기본값은 \"4.5_day\". 깜빡 시작 규모도 ALERT_MAG 변수로 두고 기본값 6.0."),
+     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → features 배열에서 각 features[i].properties.mag(규모)만 꺼내 최댓값을 구해 줘.\n[만들 것] 최근 하루 M4.5+ 중 최대 규모를 10칸 LED 게이지로(규모 0~9를 0~10칸에 비례, 가득 차면 10칸). 평소 초록, M6+이면 빨강으로 1초 간격 깜빡, 10분마다 다시 불러와 갱신.\n[설정] 감시할 피드는 코드 맨 위 FEED 변수로 두고 쉽게 바꿀 수 있게 해 줘(선택지: 2.5_day, 4.5_day, significant_week, all_day). 기본값은 \"4.5_day\". 깜빡 시작 규모도 ALERT_MAG 변수로 두고 기본값 6.0."),
     ("하루 지진 건수 → 활동 막대",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson → features 배열의 길이(len)가 최근 하루 M2.5+ 발생 건수야. mag·place는 안 써도 돼.
-[만들 것] 발생 건수를 10칸 LED 막대로 표시(0건=모두 꺼짐, 건수가 늘수록 한 칸씩 채움). 적으면 초록, 중간이면 노랑, 가득 차면 빨강으로 채워 지구가 얼마나 들썩였는지 보여 줘. 10분마다 갱신.
-[설정] 막대가 가득 차는 기준 건수를 코드 맨 위 FULL_COUNT 변수로 두고 쉽게 바꿀 수 있게 해 줘(건수÷FULL_COUNT×10을 칸 수로). 기본값은 50. 피드는 FEED 변수로 두고 기본값 \"2.5_day\"."),
+     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson → features 배열의 길이(len)가 최근 하루 M2.5+ 발생 건수야. mag·place는 안 써도 돼.\n[만들 것] 발생 건수를 10칸 LED 막대로 표시(0건=모두 꺼짐, 건수가 늘수록 한 칸씩 채움). 적으면 초록, 중간이면 노랑, 가득 차면 빨강으로 채워 지구가 얼마나 들썩였는지 보여 줘. 10분마다 갱신.\n[설정] 막대가 가득 차는 기준 건수를 코드 맨 위 FULL_COUNT 변수로 두고 쉽게 바꿀 수 있게 해 줘(건수÷FULL_COUNT×10을 칸 수로). 기본값은 50. 피드는 FEED 변수로 두고 기본값 \"2.5_day\"."),
     ("우리 동네 근접 경보 → 거리 LED",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 각 features[i]의 geometry.coordinates([경도, 위도, 깊이])와 properties.mag을 꺼내 줘.
-[만들 것] 내 위치에서 가장 가까운 지진까지의 거리를 10칸 LED로(가까울수록 많이 켜짐: 0km=10칸, 멀수록 줄어 0칸). 평소 파랑, 가장 가까운 지진이 M6+이면 빨강으로 강조. 위경도 거리는 간단한 유클리드 근사로 계산, 10분마다 갱신.
-[설정] 내 위도·경도(MY_LAT/MY_LON)와 LED가 0칸이 되는 경보 반경(RANGE_KM)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665, MY_LON=126.9780), RANGE_KM=3000."),
+     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 각 features[i]의 geometry.coordinates([경도, 위도, 깊이])와 properties.mag을 꺼내 줘.\n[만들 것] 내 위치에서 가장 가까운 지진까지의 거리를 10칸 LED로(가까울수록 많이 켜짐: 0km=10칸, 멀수록 줄어 0칸). 평소 파랑, 가장 가까운 지진이 M6+이면 빨강으로 강조. 위경도 거리는 간단한 유클리드 근사로 계산, 10분마다 갱신.\n[설정] 내 위도·경도(MY_LAT/MY_LON)와 LED가 0칸이 되는 경보 반경(RANGE_KM)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665, MY_LON=126.9780), RANGE_KM=3000."),
   ],
   "iss": [
     ("내 위치 → ISS 머리 위 통과 알림",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON(딕셔너리)의 latitude, longitude가 ISS 현재 위치.
-[만들 것] 내 위치(MY_LAT/MY_LON)와 ISS 사이 거리를 구해, 5000km 이상이면 LED 1칸, 가까워질수록 칸을 늘려 500km 이하면 10칸 모두 켜. 200km 이내(머리 위 통과)면 초록으로 0.3초 간격 깜빡 알림. 30초마다 갱신.
-[설정] 내 위도·경도는 코드 맨 위에 MY_LAT/MY_LON 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665 / MY_LON=126.9780)."),
+     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON(딕셔너리)의 latitude, longitude가 ISS 현재 위치.\n[만들 것] 내 위치(MY_LAT/MY_LON)와 ISS 사이 거리를 구해, 5000km 이상이면 LED 1칸, 가까워질수록 칸을 늘려 500km 이하면 10칸 모두 켜. 200km 이내(머리 위 통과)면 초록으로 0.3초 간격 깜빡 알림. 30초마다 갱신.\n[설정] 내 위도·경도는 코드 맨 위에 MY_LAT/MY_LON 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665 / MY_LON=126.9780)."),
     ("ISS 고도 → 고도 게이지",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 altitude(고도 km)를 꺼내.
-[만들 것] ISS 고도(보통 400~430km)를 LED 10칸 게이지로 표시: 400km 이하면 1칸, 430km 이상이면 10칸으로 선형 매핑하고, 낮을수록 노랑·높을수록 파랑으로 칸 색을 채워. 30초마다 갱신.
-[설정] 게이지의 최소·최대 고도는 코드 맨 위에 ALT_MIN/ALT_MAX 변수로 두고 바꿀 수 있게 해 줘. 기본값은 ALT_MIN=400, ALT_MAX=430(km)."),
+     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 altitude(고도 km)를 꺼내.\n[만들 것] ISS 고도(보통 400~430km)를 LED 10칸 게이지로 표시: 400km 이하면 1칸, 430km 이상이면 10칸으로 선형 매핑하고, 낮을수록 노랑·높을수록 파랑으로 칸 색을 채워. 30초마다 갱신.\n[설정] 게이지의 최소·최대 고도는 코드 맨 위에 ALT_MIN/ALT_MAX 변수로 두고 바꿀 수 있게 해 줘. 기본값은 ALT_MIN=400, ALT_MAX=430(km)."),
     ("ISS 속도 → 속도 표시등",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 velocity(속도 km/h)를 꺼내.
-[만들 것] ISS 속도(보통 약 27,500km/h)를 LED 10칸으로 표시: 27000km/h를 기준으로 빠를수록 칸 수를 늘리고, 기준 초과면 빨강·기준 이하면 초록으로 채워. 30초마다 갱신해 속도 변화를 한눈에 보이게.
-[설정] 기준 속도는 코드 맨 위에 SPEED_REF 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 SPEED_REF=27000(km/h)."),
+     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 velocity(속도 km/h)를 꺼내.\n[만들 것] ISS 속도(보통 약 27,500km/h)를 LED 10칸으로 표시: 27000km/h를 기준으로 빠를수록 칸 수를 늘리고, 기준 초과면 빨강·기준 이하면 초록으로 채워. 30초마다 갱신해 속도 변화를 한눈에 보이게.\n[설정] 기준 속도는 코드 맨 위에 SPEED_REF 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 SPEED_REF=27000(km/h)."),
   ],
   "sunrise": [
     ("낮 길이 → LED 게이지",
-     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.day_length(낮 길이, 초 단위 정수)만 사용해.
-[만들 것] 낮 길이를 LED 10칸 게이지로 표시해 줘. 8시간(28800초)이면 0칸, 16시간(57600초)이면 10칸으로 비례 환산하고, 길수록 노란색을 더 밝게(밝기는 60 이하). 하루에 1~2번만 갱신하면 되니 갱신 사이에는 길게 sleep.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.day_length(낮 길이, 초 단위 정수)만 사용해.\n[만들 것] 낮 길이를 LED 10칸 게이지로 표시해 줘. 8시간(28800초)이면 0칸, 16시간(57600초)이면 10칸으로 비례 환산하고, 길수록 노란색을 더 밝게(밝기는 60 이하). 하루에 1~2번만 갱신하면 되니 갱신 사이에는 길게 sleep.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
     ("일출·일몰 → 시각 LED",
-     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.
-[만들 것] 일출·일몰 시각의 '시(hour)'를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.
-[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.\n[만들 것] 일출·일몰 시각의 '시(hour)'를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
   ],
   "spaceweather": [
     ("Kp 지수 → 오로라 경보등",
-     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열, 배열의 마지막 항목에서 \"Kp\"(0~9, 최신 지자기 교란값)와 \"time_tag\"(측정 시각, 3시간 간격)를 꺼내 써.
-[만들 것] 최신 Kp를 LED 10칸에 막대로 표시(Kp 1당 약 1칸, Kp9면 9~10칸 켜짐). Kp가 클수록 색을 초록→노랑→빨강으로 바꾸고, Kp 5 이상이면 보라색으로 전체를 천천히 깜빡여 오로라 경보를 알려 줘. 30분마다 갱신.
-[설정] 오로라 경보 기준값(KP_ALERT)과 갱신 주기(분)는 코드 맨 위 변수로 빼서 쉽게 바꿀 수 있게 해 줘. 기본값은 KP_ALERT=5, 갱신 30분으로 해 줘."),
-    ("최근 3회 Kp → 상승·하강 추이등",
-     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열. 배열 끝에서 최근 항목 3개의 \"Kp\" 값(3시간 간격)을 꺼내 비교에 써.
-[만들 것] 가장 최신 Kp를 LED 10칸 막대로 표시하고, 직전 값과 비교해 추이를 색으로 알려 줘: 오르면 빨강, 내리면 파랑, 변화 없으면 초록. 지자기 폭풍이 커지는지(상승) 잦아드는지(하강)를 한눈에 보이게 해. 30분마다 갱신.
-[설정] 비교에 쓸 최근 항목 개수(N_RECENT)와 갱신 주기(분)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 N_RECENT=3, 갱신 30분으로 해 줘."),
+     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열, 배열의 마지막 항목에서 \"Kp\"(0~9, 최신 지자기 교란값)와 \"time_tag\"(측정 시각, 3시간 간격)를 꺼내 써.\n[만들 것] 최신 Kp를 LED 10칸에 막대로 표시(Kp 1당 약 1칸, Kp9면 9~10칸 켜짐). Kp가 클수록 색을 초록→노랑→빨강으로 바꾸고, Kp 5 이상이면 보라색으로 전체를 천천히 깜빡여 오로라 경보를 알려 줘. 30분마다 갱신.\n[설정] 오로라 경보 기준값(KP_ALERT)과 갱신 주기(분)는 코드 맨 위 변수로 빼서 쉽게 바꿀 수 있게 해 줘. 기본값은 KP_ALERT=5, 갱신 30분으로 해 줘."),
+    ("최근 3회 Kp → 상승·하강 추이 표시등",
+     "[API] 키 불필요. GET https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json → 딕셔너리 배열. 배열 끝에서 최근 항목 3개의 \"Kp\" 값(3시간 간격)을 꺼내 비교에 써.\n[만들 것] 가장 최신 Kp를 LED 10칸 막대로 표시하고, 직전 값과 비교해 추이를 색으로 알려 줘: 오르면 빨강, 내리면 파랑, 변화 없으면 초록. 지자기 폭풍이 커지는지(상승) 잦아드는지(하강)를 한눈에 보이게 해. 30분마다 갱신.\n[설정] 비교에 쓸 최근 항목 개수(N_RECENT)와 갱신 주기(분)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 N_RECENT=3, 갱신 30분으로 해 줘."),
   ],
   "pubchem": [
     ("물질 이름 목록 → 분자량 LED 게이지",
-     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).
-[만들 것] 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(<100)은 초록, 보통(100~250)은 노랑, 무거운 물질(>250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.
-[설정] 비교할 물질 목록은 코드 맨 위에 MATERIALS = [\"water\", \"glucose\", \"caffeine\"] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로."),
+     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).\n[만들 것] 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(<100)은 초록, 보통(100~250)은 노랑, 무거운 물질(>250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.\n[설정] 비교할 물질 목록은 코드 맨 위에 MATERIALS = [\"water\", \"glucose\", \"caffeine\"] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로."),
     ("두 물질 분자량·분자식 → 무거운 쪽 색으로 비교",
-     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.
-[만들 것] 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 '비슷함' 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.
-[설정] 비교할 두 물질은 코드 맨 위에 MAT_A = \"caffeine\", MAT_B = \"glucose\" 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로."),
+     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.\n[만들 것] 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 '비슷함' 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.\n[설정] 비교할 두 물질은 코드 맨 위에 MAT_A = \"caffeine\", MAT_B = \"glucose\" 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로."),
   ],
   "gbif": [
     ("종 학명 → 관찰 수 자릿수 LED",
-     "[API] GBIF(키 불필요): GET https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 → 응답 JSON의 최상위 count가 그 종의 국내(한국) 관찰 기록 수.
-[만들 것] count의 자릿수만큼 LED를 채워 줘. 국내 기록 수는 보통 1~6자리라 1자리=1칸 ~ 7자리 이상=10칸으로 매핑하고(예: 40,631 → 5자리 → 5칸), 자릿수가 적을수록(1~2칸) 빨강, 중간(3~4칸)은 노랑, 많을수록(5칸 이상) 초록으로 색을 정해 흔할수록 초록이 길게 보이게 해 줘. 시작할 때 한 번만 불러오고 그 상태로 유지해.
-[설정] 학명 SCI_NAME은 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 까치(\"Pica pica\")로 하고, 집비둘기는 \"Columba livia\"처럼 바꾸면 된다고 주석으로 적어 줘."),
+     "[API] GBIF(키 불필요): GET https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 → 응답 JSON의 최상위 count가 그 종의 국내(한국) 관찰 기록 수.\n[만들 것] count의 자릿수만큼 LED를 채워 줘. 국내 기록 수는 보통 1~6자리라 1자리=1칸 ~ 7자리 이상=10칸으로 매핑하고(예: 40,631 → 5자리 → 5칸), 자릿수가 적을수록(1~2칸) 빨강, 중간(3~4칸)은 노랑, 많을수록(5칸 이상) 초록으로 색을 정해 흔할수록 초록이 길게 보이게 해 줘. 시작할 때 한 번만 불러오고 그 상태로 유지해.\n[설정] 학명 SCI_NAME은 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 까치(\"Pica pica\")로 하고, 집비둘기는 \"Columba livia\"처럼 바꾸면 된다고 주석으로 적어 줘."),
     ("두 종 학명 → 누가 더 흔한가 LED",
-     "[API] GBIF(키 불필요): 같은 엔드포인트 .../occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 를 두 종에 대해 각각 호출해, 응답 JSON의 최상위 count(국내 관찰 기록 수) 두 개를 비교.
-[만들 것] LED 10칸을 두 종이 count 비율대로 나눠 가져 줘(예: A가 40,000, B가 15,000이면 약 7칸 초록 + 약 3칸 파랑). 더 흔한 쪽 색이 더 길게 켜져 한눈에 승자가 보이게 하고, 두 count의 합이 0이면 전체를 빨강으로 켜서 데이터 없음을 표시해. 시작할 때 한 번만 불러와.
-[설정] 비교할 두 학명을 코드 맨 위 변수 SCI_A, SCI_B로 두고 쉽게 바꾸게 해 줘. 기본값은 까치(\"Pica pica\")와 집비둘기(\"Columba livia\")로 해 줘."),
+     "[API] GBIF(키 불필요): 같은 엔드포인트 .../occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 를 두 종에 대해 각각 호출해, 응답 JSON의 최상위 count(국내 관찰 기록 수) 두 개를 비교.\n[만들 것] LED 10칸을 두 종이 count 비율대로 나눠 가져 줘(예: A가 40,000, B가 15,000이면 약 7칸 초록 + 약 3칸 파랑). 더 흔한 쪽 색이 더 길게 켜져 한눈에 승자가 보이게 하고, 두 count의 합이 0이면 전체를 빨강으로 켜서 데이터 없음을 표시해. 시작할 때 한 번만 불러와.\n[설정] 비교할 두 학명을 코드 맨 위 변수 SCI_A, SCI_B로 두고 쉽게 바꾸게 해 줘. 기본값은 까치(\"Pica pica\")와 집비둘기(\"Columba livia\")로 해 줘."),
   ],
   "nasa": [
     ("근접 소행성 → 위험 알림 LED",
-     "[API] NASA NeoWs(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/neo/rest/v1/feed?start_date=DATE&end_date=DATE&api_key=KEY → start_date와 end_date에 같은 날짜를 넣어 하루치만 조회해. 응답 JSON의 near_earth_objects[DATE] 배열에서 각 항목의 is_potentially_hazardous_asteroid(위험 PHA 여부, true/false)와 estimated_diameter.meters.estimated_diameter_max(최대 지름 m)를 꺼내 써.
-[만들 것] 그날 지구 근접 천체 개수만큼 LED 칸을 켜고(10개 초과면 10칸까지), 위험(PHA) 천체가 하나라도 있으면 빨강 깜빡·없으면 초록 고정. 천체 중 가장 큰 지름이 200m를 넘으면 그 칸만 주황으로 강조해. 하루 1회 갱신.
-[설정] api_key와 조회 날짜는 코드 맨 위 변수(API_KEY/DATE)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\", DATE=\"2026-06-25\"(YYYY-MM-DD 형식의 고정 문자열). 다른 날을 보려면 DATE만 바꾸면 되게."),
+     "[API] NASA NeoWs(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/neo/rest/v1/feed?start_date=DATE&end_date=DATE&api_key=KEY → start_date와 end_date에 같은 날짜를 넣어 하루치만 조회해. 응답 JSON의 near_earth_objects[DATE] 배열에서 각 항목의 is_potentially_hazardous_asteroid(위험 PHA 여부, true/false)와 estimated_diameter.meters.estimated_diameter_max(최대 지름 m)를 꺼내 써.\n[만들 것] 그날 지구 근접 천체 개수만큼 LED 칸을 켜고(10개 초과면 10칸까지), 위험(PHA) 천체가 하나라도 있으면 빨강 깜빡·없으면 초록 고정. 천체 중 가장 큰 지름이 200m를 넘으면 그 칸만 주황으로 강조해. 하루 1회 갱신.\n[설정] api_key와 조회 날짜는 코드 맨 위 변수(API_KEY/DATE)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\", DATE=\"2026-06-25\"(YYYY-MM-DD 형식의 고정 문자열). 다른 날을 보려면 DATE만 바꾸면 되게."),
     ("오늘의 천문사진 → 사진 도착 신호등",
-     "[API] NASA APOD(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/planetary/apod?api_key=KEY → 응답 JSON의 title(제목), media_type(\"image\" 또는 \"video\"), url(사진·영상 주소). explanation(설명)도 함께 옴.
-[만들 것] 오늘의 천문사진이 잘 도착했는지 알리는 신호등: media_type이 \"image\"면 LED 10칸을 은은한 파랑으로 차오르듯 켜고, \"video\"면 보라로 켜. 응답에 title이 비어 있거나 요청 실패면 빨강 1칸으로 표시. 받은 title과 url은 print로 한 번 출력해 줘(LED는 도착 여부만 표현). 하루 1회 갱신.
-[설정] api_key는 코드 맨 위 변수(API_KEY)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\"."),
+     "[API] NASA APOD(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/planetary/apod?api_key=KEY → 응답 JSON의 title(제목), media_type(\"image\" 또는 \"video\"), url(사진·영상 주소). explanation(설명)도 함께 옴.\n[만들 것] 오늘의 천문사진이 잘 도착했는지 알리는 신호등: media_type이 \"image\"면 LED 10칸을 은은한 파랑으로 차오르듯 켜고, \"video\"면 보라로 켜. 응답에 title이 비어 있거나 요청 실패면 빨강 1칸으로 표시. 받은 title과 url은 print로 한 번 출력해 줘(LED는 도착 여부만 표현). 하루 1회 갱신.\n[설정] api_key는 코드 맨 위 변수(API_KEY)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\"."),
   ],
   "energy": [
     ("이번 달 일사량 → 태양광 LED 게이지",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(월평균 일사량 kWh/m²/day).
-[만들 것] 선택한 달(MONTH)의 일사량을 LED 10칸 막대 게이지로. 0~8 kWh/m²/day를 10칸에 매핑(약 0.8당 1칸), 채운 칸은 노란색·빈 칸은 꺼짐. 값이 클수록(여름) 더 많이·노랗게 차오르게. 1시간마다 한 번만 갱신.
-[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(월평균 일사량 kWh/m²/day).\n[만들 것] 선택한 달(MONTH)의 일사량을 LED 10칸 막대 게이지로. 0~8 kWh/m²/day를 10칸에 매핑(약 0.8당 1칸), 채운 칸은 노란색·빈 칸은 꺼짐. 값이 클수록(여름) 더 많이·노랗게 차오르게. 1시간마다 한 번만 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
     ("이번 달 풍속 → 풍력 LED 게이지",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.WS10M는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(10m 높이 월평균 풍속 m/s).
-[만들 것] 선택한 달(MONTH)의 풍속을 LED 10칸 게이지로. 0~10 m/s를 10칸에 매핑(1 m/s당 1칸), 채운 칸은 하늘색. 3 m/s 미만이면 1~2칸만 켜고, 6 m/s 이상이면 끝 2칸을 흰색으로 깜빡여 '강풍'을 표시. 1시간마다 갱신.
-[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.WS10M는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(10m 높이 월평균 풍속 m/s).\n[만들 것] 선택한 달(MONTH)의 풍속을 LED 10칸 게이지로. 0~10 m/s를 10칸에 매핑(1 m/s당 1칸), 채운 칸은 하늘색. 3 m/s 미만이면 1~2칸만 켜고, 6 m/s 이상이면 끝 2칸을 흰색으로 깜빡여 '강풍'을 표시. 1시간마다 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
     ("태양 vs 바람 → 어느 쪽이 셀까 비교등",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN(일사량 kWh/m²/day)와 properties.parameter.WS10M(풍속 m/s) 둘 다 {\"JAN\":..,..,\"DEC\":..,\"ANN\":..} 딕셔너리.
-[만들 것] 선택한 달(MONTH)에서 태양과 바람 중 어느 자원이 상대적으로 강한지 비교. 일사량은 8로, 풍속은 10으로 각각 나눠 0~1 비율로 환산한 뒤, LED 10칸을 절반씩 나눠 왼쪽 5칸은 태양 비율만큼 노랗게·오른쪽 5칸은 바람 비율만큼 하늘색으로 채워. 더 높은 쪽 끝 칸을 1초 간격으로 천천히 깜빡여 '오늘의 승자'를 표시. 1시간마다 갱신.
-[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN(일사량 kWh/m²/day)와 properties.parameter.WS10M(풍속 m/s) 둘 다 {\"JAN\":..,..,\"DEC\":..,\"ANN\":..} 딕셔너리.\n[만들 것] 선택한 달(MONTH)에서 태양과 바람 중 어느 자원이 상대적으로 강한지 비교. 일사량은 8로, 풍속은 10으로 각각 나눠 0~1 비율로 환산한 뒤, LED 10칸을 절반씩 나눠 왼쪽 5칸은 태양 비율만큼 노랗게·오른쪽 5칸은 바람 비율만큼 하늘색으로 채워. 더 높은 쪽 끝 칸을 1초 간격으로 천천히 깜빡여 '오늘의 승자'를 표시. 1시간마다 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
   ],
   "worldbank": [
     ("나라 코드 → 1인당 CO₂ LED 게이지",
-     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 1인당 CO₂ 배출량(톤), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)
-[만들 것] 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.
-[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게."),
+     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 1인당 CO₂ 배출량(톤), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)\n[만들 것] 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.\n[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게."),
     ("나라 코드 → 재생에너지 비중 게이지",
-     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 최종에너지 중 재생에너지 비중(%), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터.)
-[만들 것] 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.
-[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게."),
+     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 최종에너지 중 재생에너지 비중(%), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터.)\n[만들 것] 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.\n[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게."),
     ("두 나라 → CO₂ 좌우 비교 막대",
-     "[API] World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0]['value']가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)
-[만들 것] LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.
-[설정] 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA)."),
+     "[API] World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0]['value']가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)\n[만들 것] LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.\n[설정] 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA)."),
   ],
 }
 

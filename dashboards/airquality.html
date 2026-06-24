@@ -66,9 +66,13 @@ print(pm25, pm10)</pre></div></details></section>
 - 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
 - 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
 - WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">미세먼지 등급 → LED 신호등</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] Open-Meteo 대기질(키 불필요): GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&amp;longitude=LON&amp;current=pm2_5,pm10&amp;timezone=Asia%2FSeoul → 응답 JSON의 current.pm2_5가 초미세먼지 농도(㎍/㎥).
-[만들 것] PM2.5 등급을 LED 신호등으로: 좋음(0~15)=초록·보통(~35)=노랑·나쁨(~75)=주황·매우나쁨(75 초과)=빨강 깜빡. 켜지는 칸 수는 농도에 비례. 10분마다 갱신.
-[설정] LAT/LON은 코드 위(서울 37.5665 / 126.9780).</pre></div></section>
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">초미세먼지(PM2.5) → LED 신호등</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&amp;longitude=LON&amp;current=pm2_5&amp;timezone=Asia%2FSeoul&amp;forecast_days=1 → current.pm2_5(초미세먼지 현재 농도 ㎍/㎥)를 사용해 줘.
+[만들 것] PM2.5 등급을 LED 10칸 신호등으로: 좋음(0~15) 초록·보통(16~35) 노랑·나쁨(36~75) 주황·매우나쁨(76+) 빨강 깜빡. 농도가 높을수록 켜는 칸 수를 늘려(0~150㎍/㎥를 10칸에 비례 매핑) 0칸~10칸으로 표시하고, 10분마다 갱신해 줘.
+[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780).</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">PM2.5+PM10 → 앞5칸·뒤5칸 동시 표시</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&amp;longitude=LON&amp;current=pm2_5,pm10&amp;timezone=Asia%2FSeoul&amp;forecast_days=1 → current.pm2_5와 current.pm10(둘 다 현재 농도 ㎍/㎥)를 함께 사용해 줘.
+[만들 것] LED 10칸을 반으로 나눠 앞 5칸은 PM2.5, 뒤 5칸은 PM10 막대그래프로. 각 막대는 등급별 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강). PM2.5는 0~75㎍/㎥를 5칸에, PM10은 0~150㎍/㎥를 5칸에 비례 매핑하고, 둘 중 하나라도 매우나쁨이면 해당 막대를 깜빡여 줘. 10분마다 갱신.
+[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780).</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">시간별 PM2.5 추이 → 흐름 막대</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&amp;longitude=LON&amp;hourly=pm2_5&amp;timezone=Asia%2FSeoul&amp;forecast_days=1 → hourly.pm2_5(시간별 농도 배열)와 hourly.time(시각 배열)을 사용해 줘.
+[만들 것] hourly.time에서 지금 시각 이후 시각을 찾아, 그때부터 최대 10시간의 PM2.5를 LED 10칸에 시간순으로 한 칸씩 매핑해 각 칸을 그 시각 등급 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강)으로 켜서 &#x27;대기질 흐름&#x27;을 보여 줘. 남은 데이터가 10개보다 적으면 있는 만큼만 켜고 나머지 칸은 꺼 줘. 30분마다 갱신.
+[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780).</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>

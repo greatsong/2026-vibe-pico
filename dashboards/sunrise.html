@@ -65,9 +65,11 @@ print(sunrise, sunset, day_length)</pre></div></details></section>
 - 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
 - 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
 - WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">낮 길이 → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] sunrise-sunset(키 불필요): GET https://api.sunrise-sunset.org/json?lat=LAT&amp;lng=LON&amp;formatted=0 → 응답 JSON의 results.day_length가 낮 길이(초).
-[만들 것] 오늘 낮 길이를 LED 게이지로(예: 8시간~16시간을 0~10칸에 매핑), 길수록 노란빛을 더 밝게. 하루 1~2회 갱신.
-[설정] LAT/LON은 코드 위.</pre></div></section>
+- 응답이 크면 필요한 항목만 받아 메모리를 아끼고, 무한 루프엔 sleep으로 쉬어 줘.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">낮 길이 → LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&amp;lng=LON&amp;formatted=0 → results.day_length(낮 길이, 초 단위 정수)만 사용해.
+[만들 것] 낮 길이를 LED 10칸 게이지로 표시해 줘. 8시간(28800초)이면 0칸, 16시간(57600초)이면 10칸으로 비례 환산하고, 길수록 노란색을 더 밝게(밝기는 60 이하). 하루에 1~2번만 갱신하면 되니 갱신 사이에는 길게 sleep.
+[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780).</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">일출·일몰 → 시각 LED</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&amp;lng=LON&amp;formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.
+[만들 것] 일출·일몰 시각의 &#x27;시(hour)&#x27;를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.
+[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780).</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
