@@ -41,7 +41,9 @@ def show(ci, lv):
 LABELS = {"1": "휘파람", "2": "말소리", "3": "노크", "4": "박수"}
 D = len(BANDS)
 print("조용히… 배경소음 측정 중")
-base = max(level() for _ in range(20)); THRESH = base * 3 + 30
+for _ in range(8): level()                              # I2S는 켜진 직후 값이 튀어요 → 워밍업으로 버림
+bg = sorted(level() for _ in range(25)); base = bg[len(bg) // 2]   # 중앙값(튀는 값에 안 휘둘림)
+THRESH = base * 2.5 + 25   # 예측이 안 뜨면 ↓, 너무 잦으면 ↑
 
 data = []
 print("\n[수집] 숫자키 누르고 소리내기 · go=예측 시작")

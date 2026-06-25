@@ -214,7 +214,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
 <div class="layout">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
-    <div class="nav-ch"><a href="#chsay" class="nav-ch-link" data-target="chsay"><span class="nav-dot" style="background:#7C3AED"></span>ML+. 피코가 말을 한다 — 소리의 주인공을 목소리로</a><div class="nav-secs"><a href="#chsay-0" class="nav-sec" data-target="chsay-0">0단계 · 시작하기 전에 (준비물 점검)</a><a href="#chsay-1" class="nav-sec" data-target="chsay-1">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</a><a href="#chsay-2" class="nav-sec" data-target="chsay-2">1단계 · 모듈 연결하기 (배선)</a><a href="#chsay-3" class="nav-sec" data-target="chsay-3">2단계 · 음성 파일 만들어 SD카드에 넣기</a><a href="#chsay-4" class="nav-sec" data-target="chsay-4">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</a><a href="#chsay-5" class="nav-sec" data-target="chsay-5">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</a><a href="#chsay-6" class="nav-sec" data-target="chsay-6">★ 더 해보기 — 입에 성격을 입히자</a><a href="#chsay-7" class="nav-sec" data-target="chsay-7">자주 하는 실수</a><a href="#chsay-8" class="nav-sec" data-target="chsay-8">스스로 점검하기</a><a href="#chsay-9" class="nav-sec" data-target="chsay-9">수업/학습 시나리오</a></div></div>
+    <div class="nav-ch"><a href="#chsay" class="nav-ch-link" data-target="chsay"><span class="nav-dot" style="background:#7C3AED"></span>ML+. 피코가 말을 한다 — 소리의 주인공을 목소리로</a><div class="nav-secs"><a href="#chsay-0" class="nav-sec" data-target="chsay-0">0단계 · 시작하기 전에 (준비물 점검)</a><a href="#chsay-1" class="nav-sec" data-target="chsay-1">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</a><a href="#chsay-2" class="nav-sec" data-target="chsay-2">1단계 · 모듈 연결하기 (배선)</a><a href="#chsay-3" class="nav-sec" data-target="chsay-3">2단계 · 음성 파일 만들어 SD카드에 넣기</a><a href="#chsay-4" class="nav-sec" data-target="chsay-4">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</a><a href="#chsay-5" class="nav-sec" data-target="chsay-5">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</a><a href="#chsay-6" class="nav-sec" data-target="chsay-6">★ 더 해보기 — 입에 성격을 입히자</a><a href="#chsay-7" class="nav-sec" data-target="chsay-7">자주 하는 실수</a><a href="#chsay-8" class="nav-sec" data-target="chsay-8">스스로 점검하기</a><a href="#chsay-9" class="nav-sec" data-target="chsay-9">수업/학습 시나리오</a><a href="#chsay-10" class="nav-sec" data-target="chsay-10">🎛️ 피날레 — 소리 ML 컨트롤 센터 (모든 걸 한 화면에서)</a></div></div>
   </aside>
   <main class="main">
     <header class="hero">
@@ -226,77 +226,75 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
         <div class="stat"><b>3</b>개 AI 프롬프트</div>
       </div>
     </header>
-    <div class="chapter" id="chsay"><div class="ch-head"><span class="ch-num" style="color:#7C3AED">CHAPTER ML+</span><h2 class="ch-title"><span class="ch-bar" style="background:#7C3AED"></span>피코가 말을 한다 — 소리의 주인공을 목소리로</h2><p class="ch-sub">k-NN이 알아맞힌 소리에게 ‘이름’을 붙여 목소리로 말해주는 출력기. Grove MP3 v4로 듣기→생각→말하기 한 사이클을 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>출력 모듈(Grove MP3 v4)에 UART로 ‘명령’을 보내 소리를 낸다</li><li>분류 결과(라벨)를 음성 트랙 번호로 잇는 ‘룩업 테이블’을 이해한다</li><li>‘자기 소리 되먹임’과 ‘모듈 부팅’ 같은 현실 문제를 코드로 다스린다</li><li>확신이 낮으면 ‘모르겠어요’ 하고 침묵하는 규칙을 넣는다</li><li>입력(마이크)→처리(k-NN)→출력(음성)의 AI 한 바퀴를 직접 잇는다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>소리 분류 챕터에서 피코는 ‘이건 휘파람!’이라고 <b>속으로만</b> 알았어요(콘솔 글자·LED 색). 그런데 음성비서·새 찾기 앱은 거기서 한 발 더 나아가 <b>사람의 말로 대답</b>합니다. 오늘은 그 마지막 한 칸을 채워요. 분류 결과라는 <b>추상적인 라벨</b>을, Grove MP3 v4를 통해 <b>들리는 목소리</b>로 되돌려줍니다. 그러면 ‘기계가 듣고·생각하고·말한다’는 AI의 한 사이클이 눈앞에서 완성돼요. <b>아래 순서대로 한 칸씩만 따라오면</b> 됩니다.</p></div><section class="sec" id="chsay-0"><h3 class="sec-title">0단계 · 시작하기 전에 (준비물 점검)</h3><p class="prose">이 챕터는 <b>소리 분류 챕터의 ‘다음 편’</b>이에요. 시작 전에 아래 세 가지가 준비됐는지 먼저 확인하세요. 하나라도 비면 그 챕터를 먼저 끝내고 오면 됩니다.</p><ul class="check-list"><li>소리 분류 챕터에서 만든 <b><code>sounds.csv</code></b>가 피코 안에 들어 있다 (이게 ‘모델’이에요)</li><li>마이크가 연결돼 있고, 휘파람·박수가 <b>이미 잘 구분</b>됐다</li><li>새로 준비한 <b>Grove MP3 v4 모듈</b>과 <b>작은 스피커(또는 이어폰)</b>가 손에 있다</li></ul><div class="callout info"><div class="callout-head">ℹ️ 완성하면 이런 모습이에요 (미리 그려보기)</div><div class="callout-body">마이크에 대고 <b>휘파람</b>을 붑니다 → 피코가 0.5초 생각하더니 → 스피커에서 <b>“휘파람이에요!”</b> 하고 말합니다. 박수를 치면 <b>“박수네요!”</b>. 애매한 소리엔 <b>조용히</b> 있어요. 이 한 장면을 만드는 게 오늘의 목표예요.</div></div><div class="callout key"><div class="callout-head">🔑 오늘 추가되는 건 ‘입’ 하나뿐</div><div class="callout-body">듣기(마이크)·생각하기(k-NN)는 <b>이미 다 만들었어요.</b> 오늘은 거기에 <b>말하는 입(MP3 모듈)</b>만 답니다. 그래서 새로 배우는 코드는 생각보다 적어요.</div></div></section><section class="sec" id="chsay-1"><h3 class="sec-title">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</h3><p class="prose">코드를 짜기 전에, 오늘 쓰는 부품과 개념을 천천히 짚어요. 딱 네 가지만 이해하면 됩니다.</p><div class="concept-grid"><div class="concept"><div class="concept-t">입력 vs 출력</div><div class="concept-d">마이크는 소리를 <b>듣는</b> 입력, Grove MP3 v4는 소리를 <b>내는</b> 출력이에요. 방향이 정반대. 둘을 이으면 ‘듣고 대답하는 기계’가 됩니다.</div></div><div class="concept"><div class="concept-t">MP3 v4 = ‘똑똑한 부하 직원’</div><div class="concept-d">피코는 <b>“3번 곡 틀어”라는 명령만</b> 보내요. 파일 찾기·소리 키우기·스피커 울리기는 모듈이 알아서 해요. 피코는 소리를 직접 안 만듭니다.</div></div><div class="concept"><div class="concept-t">UART(시리얼)</div><div class="concept-d">두 기계가 <b>전선 한 줄로 글자를 주고받는</b> 약속이에요. 마치 두 사람이 실 전화기로 속닥이는 것. 피코의 <b>TX</b>(말하는 핀)와 모듈의 <b>RX</b>(듣는 핀)를 잇습니다.</div></div><div class="concept"><div class="concept-t">룩업 테이블</div><div class="concept-d"><b>라벨 → 트랙 번호</b> 표예요. ‘휘파람’이면 1번, ‘박수’면 2번… 분류 결과를 음성에 잇는 <b>짧은 사전</b> 하나가 오늘의 핵심 코드입니다.</div></div></div><div class="callout key"><div class="callout-head">🔑 오늘의 한 문장 — ‘라벨을 목소리로 바꾸는 사전’</div><div class="callout-body">k-NN이 내놓는 답은 <code>"휘파람"</code> 같은 <b>글자(라벨)</b>예요. 이걸 <code>TRACK = {"휘파람":1, "박수":2}</code>라는 <b>사전 한 줄</b>로 음성 트랙 번호에 연결합니다. 그게 전부예요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 확신이 낮으면 — 침묵이 정답</div><div class="callout-body">분류가 흔들릴 때(이웃이 갈릴 때) 자신 있게 <b>틀린 답</b>을 말하면 더 나빠요. 그래서 <b>확신도가 기준(60%) 아래면 아무 말도 안 합니다.</b> ‘<b>모를 땐 모른다고 하는 것</b>’ — 좋은 AI의 태도이고, 한 줄(<code>if conf &gt;= CONF_MIN</code>)로 가르칠 수 있어요.</div></div></section><section class="sec" id="chsay-2"><h3 class="sec-title">1단계 · 모듈 연결하기 (배선)</h3><p class="step-head">Grove MP3 v4는 <b>그로브 4핀 케이블 하나</b>면 연결 끝이에요. 마이크는 앞 챕터 그대로 두고, MP3 모듈만 새로 답니다.</p><ol class="steps"><li><b>MP3 모듈 꽂기</b><span>그로브 케이블로 쉴드의 <b>UART 포트</b>에 ‘톡’ 꽂기 (피코 핀 TX=GP0, RX=GP1에 연결돼요)</span></li><li><b>스피커 달기</b><span>모듈의 <b>스피커 단자</b>에 작은 스피커, 또는 <b>3.5mm 잭</b>에 이어폰을 꽂기</span></li><li><b>SD카드 꽂기</b><span>음성 MP3를 넣은 microSD를 모듈에 삽입 (만드는 법은 2단계)</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 점퍼로 직접 연결한다면 — TX와 RX는 ‘엇갈려’ 꽂아요</div><div class="callout-body">그로브 포트로 꽂으면 보통 알아서 맞아요. 하지만 점퍼선으로 직접 연결한다면, 내가 <b>말하는 선(TX)</b>은 상대가 <b>듣는 선(RX)</b>에 닿아야 합니다.<br>• <b>피코 TX(GP0) → 모듈 RX</b><br>• <b>피코 RX(GP1) → 모듈 TX</b><br>• <b>모듈 VCC → 5V</b>, <b>GND → GND</b><br>소리가 안 나면 <b>이 두 신호선을 서로 바꿔 끼우는 게 1순위 점검</b>이에요.</div></div><ul class="check-list"><li>MP3 모듈의 전원 LED에 <b>불이 들어오나요</b>?</li><li>스피커(또는 이어폰)가 모듈에 <b>단단히</b> 꽂혔나요?</li><li>SD카드가 <b>딸깍</b> 소리 나게 끝까지 들어갔나요?</li></ul></section><section class="sec" id="chsay-3"><h3 class="sec-title">2단계 · 음성 파일 만들어 SD카드에 넣기</h3><p class="step-head">소리 이름마다 <b>한 마디 음성</b>을 만들어 <code>0001.mp3</code>, <code>0002.mp3</code>… 순서대로 SD카드에 넣습니다. 여기서 <b>파일 이름의 숫자 = 트랙 번호</b>가 돼요.</p><ol class="steps"><li><b>멘트 정하기</b><span>라벨마다 한 마디. 예) 1번=“휘파람이에요” / 2번=“박수네요” / 3번=“말소리예요” / 4번=“조용하네요”</span></li><li><b>음성 만들기</b><span>직접 <b>녹음</b>하거나, <b>TTS(읽어주기)</b> 사이트·앱으로 mp3를 생성</span></li><li><b>이름 붙이기</b><span><code>0001.mp3</code>=1번 라벨, <code>0002.mp3</code>=2번… <b>룩업 테이블 순서대로</b> 정확히</span></li><li><b>SD카드에 복사</b><span>SD카드 <b>맨 위 폴더(루트)</b>에 <b>0001부터 순서대로</b> 하나씩 복사 → 모듈에 삽입</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ ★ 꼭! — ‘번호 순서대로 하나씩’ 복사하기</div><div class="callout-body">이 모듈(KT403A)은 파일 이름이 아니라 <b>복사된 순서</b>로 트랙 번호를 매기는 경우가 많아요. 그래서 여러 파일을 한꺼번에 끌어다 놓으면 순서가 뒤죽박죽이 될 수 있습니다. 안전하게 하려면 <b>SD카드를 FAT32로 포맷한 뒤, 0001.mp3 → 0002.mp3 … 순서로 한 개씩</b> 복사하세요. (엉뚱한 곡이 나오면 거의 이 문제예요.)</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 TTS 음성 만들기 시키기 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">휘파람·박수·말소리·정적, 이 네 가지에 대해 한국어로 한 마디씩 멘트(예: &#x27;휘파람이에요&#x27;, &#x27;박수네요&#x27;, &#x27;말소리예요&#x27;, &#x27;조용하네요&#x27;)를 읽어주는 mp3 파일을 만들고 싶어. 무료 TTS로 만드는 구체적인 방법(사이트나 앱 추천 포함)을 알려주고, 파일 이름을 0001.mp3~0004.mp3로 붙이는 순서까지 정리해줘. 음성은 너무 길지 않게 1~2초로.</div></div><div class="callout tip"><div class="callout-head">💡 음성 대신 효과음도 좋아요</div><div class="callout-body">꼭 말일 필요는 없어요. <b>“딩동”·“삐빅”·동물 울음</b> 같은 효과음을 넣어도 재밌습니다. 중요한 건 <b>라벨마다 다른 트랙</b>이라는 점뿐이에요.</div></div></section><section class="sec" id="chsay-4"><h3 class="sec-title">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</h3><p class="step-head">분류와 합치기 <b>전에</b>, MP3 모듈이 혼자서도 소리를 잘 내는지부터 확인해요. 여기서 소리가 나야 다음 단계가 의미 있어요. <b>제일 먼저 넘어야 할 관문</b>이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ① · MP3 모듈 단독 테스트 (1·2번 곡 재생)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ① — Grove MP3 v4 단독 테스트
-# 피코는 &quot;몇 번 곡 틀어/볼륨 얼마로&quot; 같은 &#x27;명령&#x27;만 보냅니다.
-# 그러면 모듈이 알아서 SD카드의 MP3를 재생해요. (피코는 소리를 직접 안 만듭니다)
+    <div class="chapter" id="chsay"><div class="ch-head"><span class="ch-num" style="color:#7C3AED">CHAPTER ML+</span><h2 class="ch-title"><span class="ch-bar" style="background:#7C3AED"></span>피코가 말을 한다 — 소리의 주인공을 목소리로</h2><p class="ch-sub">k-NN이 알아맞힌 소리에게 ‘이름’을 붙여 목소리로 말해주는 출력기. Grove MP3 v4로 듣기→생각→말하기 한 사이클을 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>출력 모듈(Grove MP3 v4)에 UART로 ‘명령’을 보내 소리를 낸다</li><li>분류 결과(라벨)를 음성 트랙 번호로 잇는 ‘룩업 테이블’을 이해한다</li><li>‘자기 소리 되먹임’과 ‘모듈 부팅’ 같은 현실 문제를 코드로 다스린다</li><li>확신이 낮으면 ‘모르겠어요’ 하고 침묵하는 규칙을 넣는다</li><li>입력(마이크)→처리(k-NN)→출력(음성)의 AI 한 바퀴를 직접 잇는다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>소리 분류 챕터에서 피코는 ‘이건 휘파람!’이라고 <b>속으로만</b> 알았어요(콘솔 글자·LED 색). 그런데 음성비서·새 찾기 앱은 거기서 한 발 더 나아가 <b>사람의 말로 대답</b>합니다. 오늘은 그 마지막 한 칸을 채워요. 분류 결과라는 <b>추상적인 라벨</b>을, Grove MP3 v4를 통해 <b>들리는 목소리</b>로 되돌려줍니다. 그러면 ‘기계가 듣고·생각하고·말한다’는 AI의 한 사이클이 눈앞에서 완성돼요. <b>아래 순서대로 한 칸씩만 따라오면</b> 됩니다.</p></div><section class="sec" id="chsay-0"><h3 class="sec-title">0단계 · 시작하기 전에 (준비물 점검)</h3><p class="prose">이 챕터는 <b>소리 분류 챕터의 ‘다음 편’</b>이에요. 시작 전에 아래 세 가지가 준비됐는지 먼저 확인하세요. 하나라도 비면 그 챕터를 먼저 끝내고 오면 됩니다.</p><ul class="check-list"><li>소리 분류 챕터에서 만든 <b><code>sounds.csv</code></b>가 피코 안에 들어 있다 (이게 ‘모델’이에요)</li><li>마이크가 연결돼 있고, 휘파람·박수가 <b>이미 잘 구분</b>됐다</li><li>새로 준비한 <b>Grove MP3 v4 모듈</b>과 <b>작은 스피커(또는 이어폰)</b>가 손에 있다</li></ul><div class="callout info"><div class="callout-head">ℹ️ 완성하면 이런 모습이에요 (미리 그려보기)</div><div class="callout-body">마이크에 대고 <b>휘파람</b>을 붑니다 → 피코가 0.5초 생각하더니 → 스피커에서 <b>“휘파람이에요!”</b> 하고 말합니다. 박수를 치면 <b>“박수네요!”</b>. 애매한 소리엔 <b>조용히</b> 있어요. 이 한 장면을 만드는 게 오늘의 목표예요.</div></div><div class="callout key"><div class="callout-head">🔑 오늘 추가되는 건 ‘입’ 하나뿐</div><div class="callout-body">듣기(마이크)·생각하기(k-NN)는 <b>이미 다 만들었어요.</b> 오늘은 거기에 <b>말하는 입(MP3 모듈)</b>만 답니다. 그래서 새로 배우는 코드는 생각보다 적어요.</div></div></section><section class="sec" id="chsay-1"><h3 class="sec-title">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</h3><p class="prose">코드를 짜기 전에, 오늘 쓰는 부품과 개념을 천천히 짚어요. 딱 네 가지만 이해하면 됩니다.</p><div class="concept-grid"><div class="concept"><div class="concept-t">입력 vs 출력</div><div class="concept-d">마이크는 소리를 <b>듣는</b> 입력, Grove MP3 v4는 소리를 <b>내는</b> 출력이에요. 방향이 정반대. 둘을 이으면 ‘듣고 대답하는 기계’가 됩니다.</div></div><div class="concept"><div class="concept-t">MP3 v4 = ‘똑똑한 부하 직원’</div><div class="concept-d">피코는 <b>“3번 곡 틀어”라는 명령만</b> 보내요. 파일 찾기·소리 키우기·스피커 울리기는 모듈이 알아서 해요. 피코는 소리를 직접 안 만듭니다.</div></div><div class="concept"><div class="concept-t">UART(시리얼)</div><div class="concept-d">두 기계가 <b>전선 한 줄로 글자를 주고받는</b> 약속이에요. 마치 두 사람이 실 전화기로 속닥이는 것. 피코의 <b>TX</b>(말하는 핀)와 모듈의 <b>RX</b>(듣는 핀)를 잇습니다.</div></div><div class="concept"><div class="concept-t">룩업 테이블</div><div class="concept-d"><b>라벨 → 트랙 번호</b> 표예요. ‘휘파람’이면 1번, ‘박수’면 2번… 분류 결과를 음성에 잇는 <b>짧은 사전</b> 하나가 오늘의 핵심 코드입니다.</div></div></div><div class="callout key"><div class="callout-head">🔑 오늘의 한 문장 — ‘라벨을 목소리로 바꾸는 사전’</div><div class="callout-body">k-NN이 내놓는 답은 <code>"휘파람"</code> 같은 <b>글자(라벨)</b>예요. 이걸 <code>TRACK = {"휘파람":1, "박수":2}</code>라는 <b>사전 한 줄</b>로 음성 트랙 번호에 연결합니다. 그게 전부예요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 확신이 낮으면 — 침묵이 정답</div><div class="callout-body">분류가 흔들릴 때(이웃이 갈릴 때) 자신 있게 <b>틀린 답</b>을 말하면 더 나빠요. 그래서 <b>확신도가 기준(60%) 아래면 아무 말도 안 합니다.</b> ‘<b>모를 땐 모른다고 하는 것</b>’ — 좋은 AI의 태도이고, 한 줄(<code>if conf &gt;= CONF_MIN</code>)로 가르칠 수 있어요.</div></div></section><section class="sec" id="chsay-2"><h3 class="sec-title">1단계 · 모듈 연결하기 (배선)</h3><p class="step-head">Grove MP3 v4는 <b>그로브 4핀 케이블 하나</b>면 연결 끝이에요. 마이크는 앞 챕터 그대로 두고, MP3 모듈만 새로 답니다.</p><ol class="steps"><li><b>MP3 모듈 꽂기</b><span>그로브 케이블로 쉴드의 <b>UART 포트</b>에 ‘톡’ 꽂기 (피코 핀 TX=GP0, RX=GP1에 연결돼요)</span></li><li><b>스피커 달기</b><span>모듈의 <b>스피커 단자</b>에 작은 스피커, 또는 <b>3.5mm 잭</b>에 이어폰을 꽂기</span></li><li><b>SD카드 꽂기</b><span>음성 MP3를 넣은 microSD를 모듈에 삽입 (만드는 법은 2단계)</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 점퍼로 직접 연결한다면 — TX와 RX는 ‘엇갈려’ 꽂아요</div><div class="callout-body">그로브 포트로 꽂으면 보통 알아서 맞아요. 하지만 점퍼선으로 직접 연결한다면, 내가 <b>말하는 선(TX)</b>은 상대가 <b>듣는 선(RX)</b>에 닿아야 합니다.<br>• <b>피코 TX(GP0) → 모듈 RX</b><br>• <b>피코 RX(GP1) → 모듈 TX</b><br>• <b>모듈 VCC → 5V</b>, <b>GND → GND</b><br>소리가 안 나면 <b>이 두 신호선을 서로 바꿔 끼우는 게 1순위 점검</b>이에요.</div></div><ul class="check-list"><li>MP3 모듈의 전원 LED에 <b>불이 들어오나요</b>?</li><li>스피커(또는 이어폰)가 모듈에 <b>단단히</b> 꽂혔나요?</li><li>SD카드가 <b>딸깍</b> 소리 나게 끝까지 들어갔나요?</li></ul></section><section class="sec" id="chsay-3"><h3 class="sec-title">2단계 · 음성 파일 만들어 SD카드에 넣기</h3><p class="step-head">소리 이름마다 <b>한 마디 음성</b>을 만들어 <code>0001.mp3</code>, <code>0002.mp3</code>… 순서대로 SD카드에 넣습니다. 여기서 <b>파일 이름의 숫자 = 트랙 번호</b>가 돼요.</p><div class="callout info"><div class="callout-head">ℹ️ 샘플 음성 바로 받기 — 직접 안 만들어도 돼요</div><div class="callout-body">아래 4개를 받아 <b>FAT32 카드 루트에 0001→0004 순서대로 하나씩</b> 넣으면 끝이에요(멘트: 휘파람·박수·말소리·노크). 직접 만들고 싶으면 아래 단계대로 TTS로 만들어도 됩니다.<br><span style='display:inline-block;margin-top:8px'><a href='samples/0001.mp3' download style='display:inline-block;margin:3px 5px 3px 0;padding:6px 12px;border:1px solid #7C3AED;border-radius:8px;color:#7C3AED;text-decoration:none;font-weight:700;font-size:13px'>⬇ 0001 휘파람</a><a href='samples/0002.mp3' download style='display:inline-block;margin:3px 5px 3px 0;padding:6px 12px;border:1px solid #7C3AED;border-radius:8px;color:#7C3AED;text-decoration:none;font-weight:700;font-size:13px'>⬇ 0002 박수</a><a href='samples/0003.mp3' download style='display:inline-block;margin:3px 5px 3px 0;padding:6px 12px;border:1px solid #7C3AED;border-radius:8px;color:#7C3AED;text-decoration:none;font-weight:700;font-size:13px'>⬇ 0003 말소리</a><a href='samples/0004.mp3' download style='display:inline-block;margin:3px 5px 3px 0;padding:6px 12px;border:1px solid #7C3AED;border-radius:8px;color:#7C3AED;text-decoration:none;font-weight:700;font-size:13px'>⬇ 0004 노크</a><a href='samples/sd_voice_samples.zip' download style='display:inline-block;margin:3px 5px 3px 0;padding:6px 12px;border:1px solid #7C3AED;background:#7C3AED;border-radius:8px;color:#fff;text-decoration:none;font-weight:700;font-size:13px'>⬇ 전체 ZIP</a></span></div></div><div class="callout info"><div class="callout-head">ℹ️ 폰 마이크로 직접 녹음해 만들기 (MP3/WAV 다운로드)</div><div class="callout-body">TTS 대신 <b>내 목소리</b>로 만들고 싶으면 아래 도구로 녹음하세요. 버튼 누르고 2초간 또박또박 → 미리듣기 → <b>MP3 또는 WAV로 다운로드</b> → SD에 넣기. (https 사이트에서 마이크 권한 허용 필요. WAV도 v4.0이 재생합니다.)</div></div><div class="recorder" data-ac="#7C3AED"></div><ol class="steps"><li><b>멘트 정하기</b><span>라벨마다 한 마디. 예) 1번=“휘파람이에요” / 2번=“박수네요” / 3번=“말소리예요” / 4번=“노크 소리예요”</span></li><li><b>음성 만들기</b><span>직접 <b>녹음</b>하거나, <b>TTS(읽어주기)</b> 사이트·앱으로 mp3를 생성</span></li><li><b>이름 붙이기</b><span><code>0001.mp3</code>=1번 라벨, <code>0002.mp3</code>=2번… <b>룩업 테이블 순서대로</b> 정확히</span></li><li><b>SD카드에 복사</b><span>SD카드 <b>맨 위 폴더(루트)</b>에 <b>0001부터 순서대로</b> 하나씩 복사 → 모듈에 삽입</span></li></ol><div class="callout key"><div class="callout-head">🔑 SD카드는 ‘FAT32’로 포맷 — NTFS·exFAT는 안 돼요</div><div class="callout-body">이 모듈은 <b>FAT32(또는 FAT16)</b>만 읽어요. <b>NTFS·exFAT로 포맷하면 인식이 안 됩니다.</b> 카드는 <b>32GB 이하</b>를 권장해요(더 큰 카드는 FAT32 포맷이 까다로워요).<br>• <b>Windows</b>: 카드 우클릭 → <b>포맷</b> → 파일 시스템 <b>FAT32</b> → 시작. (FAT32가 안 보이면 32GB 이하 카드를 쓰거나 ‘guiformat’ 같은 도구 사용)<br>• <b>Mac</b>: <b>디스크 유틸리티</b> → 카드 선택 → <b>지우기</b> → 포맷 <b>MS-DOS(FAT)</b> → 지우기.</div></div><div class="callout warn"><div class="callout-head">⚠️ Mac이라면 — ‘숨김 파일’이 트랙 번호를 밀어요</div><div class="callout-body">맥에서 카드에 복사하면 <code>._0001.mp3</code>·<code>.Spotlight-V100</code>·<code>.Trashes</code> 같은 <b>숨김 파일</b>이 함께 생겨요. 이게 <b>트랙 번호를 한 칸씩 밀어버려</b> 엉뚱한 곡이 나옵니다. → 복사 후 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행하고 휴지통을 비우거나, <b>Windows PC에서 복사</b>하는 게 가장 깔끔해요.</div></div><div class="callout warn"><div class="callout-head">⚠️ ★ 꼭! — ‘번호 순서대로 하나씩’ 복사하기</div><div class="callout-body">이 모듈(WT2605CX)은 <code>AT+PLAY=sd0,N</code>의 N을, 파일 이름이 아니라 <b>복사된 순서</b>로 매기는 경우가 많아요. 그래서 여러 파일을 한꺼번에 끌어다 놓으면 순서가 뒤죽박죽이 될 수 있습니다. 안전하게 하려면 <b>SD카드를 FAT32로 포맷한 뒤, 0001.mp3 → 0002.mp3 … 순서로 한 개씩</b> 복사하세요. (엉뚱한 곡이 나오면 거의 이 문제예요.)</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 TTS 음성 만들기 시키기 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">휘파람·박수·말소리·노크, 이 네 가지에 대해 한국어로 한 마디씩 멘트(예: &#x27;휘파람이에요&#x27;, &#x27;박수네요&#x27;, &#x27;말소리예요&#x27;, &#x27;노크 소리예요&#x27;)를 읽어주는 mp3 파일을 만들고 싶어. 무료 TTS로 만드는 구체적인 방법(사이트나 앱 추천 포함)을 알려주고, 파일 이름을 0001.mp3~0004.mp3로 붙이는 순서까지 정리해줘. 음성은 너무 길지 않게 1~2초로.</div></div><div class="callout tip"><div class="callout-head">💡 음성 대신 효과음도 좋아요</div><div class="callout-body">꼭 말일 필요는 없어요. <b>“딩동”·“삐빅”·동물 울음</b> 같은 효과음을 넣어도 재밌습니다. 중요한 건 <b>라벨마다 다른 트랙</b>이라는 점뿐이에요.</div></div></section><section class="sec" id="chsay-4"><h3 class="sec-title">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</h3><p class="step-head">분류와 합치기 <b>전에</b>, MP3 모듈이 혼자서도 소리를 잘 내는지부터 확인해요. 여기서 소리가 나야 다음 단계가 의미 있어요. <b>제일 먼저 넘어야 할 관문</b>이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ① · MP3 모듈 단독 테스트 (1·2번 곡 재생)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ① — Grove MP3 v4.0 (WT2605CX) 모듈 단독 테스트
+# 피코는 &quot;몇 번 곡 틀어/볼륨 얼마로&quot; 같은 &#x27;명령&#x27;만 보냅니다. 재생은 모듈이 해요.
+# ⚠ v2.0(KT403A)과 명령이 &#x27;완전히&#x27; 다릅니다! v4.0은 7E..EF 바이너리가 아니라
+#    &#x27;AT+&#x27; 텍스트 명령을 \r\n 으로 끝맺어 115200 baud로 보냅니다.
 from machine import UART, Pin
 import time
 
 # Grove 케이블 → 쉴드의 UART 포트. 피코 TX=GP0, RX=GP1
-uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))
+uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1))   # ★ 115200! (v2.0은 9600)
+time.sleep(1.0)                                          # 모듈 부팅 대기
 
-def cmd(c, param=0):
-    # Grove MP3 v4(KT403A)·DFPlayer 공통 명령 프레임:
-    #   7E  FF 06  CMD  00  PH PL  CKH CKL  EF
-    body = bytes([0xFF, 0x06, c, 0x00, (param &gt;&gt; 8) &amp; 0xFF, param &amp; 0xFF])
-    chk = 0xFFFF - sum(body) + 1                       # 체크섬(보낸 게 안 깨졌는지 검사용)
-    uart.write(bytes([0x7E]) + body + bytes([(chk &gt;&gt; 8) &amp; 0xFF, chk &amp; 0xFF, 0xEF]))
-    time.sleep(0.1)         # 명령 사이 간격 — 너무 빨리 보내면 모듈이 씹어요
+def at(cmd, wait=0.4):
+    uart.write((cmd + &quot;\r\n&quot;).encode())                  # AT 텍스트 + 줄바꿈
+    print(&quot;&gt;&quot;, cmd)
+    time.sleep(wait)
+    if uart.any():
+        print(&quot;  &lt;&quot;, uart.read())                        # 모듈 응답(보통 &#x27;OK&#x27;)
 
-# 모듈은 전원 직후 &#x27;부팅 시간&#x27;이 필요해요. 안 기다리면 첫 명령이 무시됩니다.
-time.sleep(0.5)
-cmd(0x0C)                # 리셋
-time.sleep(1.2)          # 재부팅 대기 (소리가 안 나면 이 값을 늘려보세요)
-cmd(0x09, 0x0002)        # 재생 소스 = microSD 카드
-cmd(0x06, 20)            # 볼륨 0~30 중 20 (시끄러우면 낮추세요)
-
-print(&quot;1번 곡(0001.mp3)을 재생합니다… 스피커에서 소리가 나나요?&quot;)
-cmd(0x03, 1)             # SD카드 1번 트랙 재생
-
-# 잠깐 기다렸다 다음 곡도 테스트
+at(&quot;AT+VOL=22&quot;)                                          # 볼륨 0~31 (시끄러우면 낮추기)
+print(&quot;1번 곡(0001.mp3) 재생…&quot;)
+at(&quot;AT+PLAY=sd0,1&quot;)                                      # SD카드 루트의 1번 곡
 time.sleep(3)
-print(&quot;2번 곡(0002.mp3)도 재생해볼게요&quot;)
-cmd(0x03, 2)</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">이렇게 나오면 성공! (셸 출력 + 스피커)</span><span class="lang-tag">TEXT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-text">1번 곡(0001.mp3)을 재생합니다… 스피커에서 소리가 나나요?
+print(&quot;2번 곡(0002.mp3) 재생…&quot;)
+at(&quot;AT+PLAY=sd0,2&quot;)
+time.sleep(3)
+at(&quot;AT+STOP&quot;)
+print(&quot;끝! 소리가 났나요?&quot;)</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">이렇게 나오면 성공! (셸 출력 + 스피커)</span><span class="lang-tag">TEXT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-text">&gt; AT+VOL=22
+1번 곡(0001.mp3) 재생…
+&gt; AT+PLAY=sd0,1
   🔊 &quot;휘파람이에요&quot;
-2번 곡(0002.mp3)도 재생해볼게요
-  🔊 &quot;박수네요&quot;</code></pre></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 코드가 하는 일</div><div class="callout-body">맨 위에서 <code>cmd(0x0C)</code>로 모듈을 <b>리셋</b>하고 <b>1.2초 기다려요</b>. 모듈도 켜지면 ‘부팅’하는데, 안 기다리고 명령을 보내면 <b>첫 곡이 씹혀요</b>. 그다음 <code>cmd(0x06, 20)</code>으로 <b>볼륨(0~30)</b>을, <code>cmd(0x03, 1)</code>로 <b>1번 곡</b>을 재생합니다.</div></div><div class="callout warn"><div class="callout-head">⚠️ 소리가 안 나면 — 이 순서로 점검</div><div class="callout-body">① 스피커·이어폰이 잘 꽂혔나? ② 볼륨이 너무 작나?(<code>20</code>→<code>28</code>) ③ <b>TX↔RX</b>가 엇갈려 꽂혔나?(1순위) ④ SD카드에 <code>0001.mp3</code>가 진짜 있나? ⑤ 부팅 대기를 늘려보기(<code>1.2</code>→<code>2.0</code>). 대부분 ③·④에서 해결돼요.</div></div><ul class="check-list"><li>스피커에서 <b>1번 곡</b> 소리가 나나요?</li><li>약 3초 뒤 <b>2번 곡</b>으로 바뀌나요?</li><li><code>cmd(0x06, 20)</code>의 숫자를 5·30으로 바꾸면 <b>음량</b>이 변하나요?</li></ul></section><section class="sec" id="chsay-5"><h3 class="sec-title">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</h3><p class="step-head">이제 마지막! 마이크로 들은 소리를 k-NN으로 알아맞히고, 그 <b>라벨에 맞는 트랙</b>을 재생합니다. 코드의 <code>TRACK</code> 사전만 내 라벨에 맞추면 끝이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ② · k-NN 예측 → 음성 출력 (+LED)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ⑤ — k-NN이 알아맞힌 소리의 &#x27;주인공&#x27;을 목소리로 말해주기
-# 듣기(마이크) → 생각(k-NN) → 말하기(MP3).  AI의 한 사이클이 &#x27;무한 반복&#x27;됩니다.
-# ※ 소리 분류 챕터에서 만든 sounds.csv가 피코에 들어 있어야 해요.
+2번 곡(0002.mp3) 재생…
+&gt; AT+PLAY=sd0,2
+  🔊 &quot;박수네요&quot;</code></pre></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 코드가 하는 일</div><div class="callout-body"><b>Grove MP3 v4.0(WT2605CX)</b>은 <b>‘AT+’ 텍스트 명령</b>을 <b>115200 baud</b>로 받아요(v2.0의 <code>7E…EF</code> 바이너리와 완전 다름!). 맨 위에서 연결하고 모듈 <b>부팅을 1초 기다린 뒤</b>, <code>AT+VOL=22</code>로 <b>볼륨(0~31)</b>을, <code>AT+PLAY=sd0,1</code>로 <b>1번 곡</b>을 재생합니다. 명령 끝엔 항상 <code>\r\n</code>(줄바꿈)이 붙어요.</div></div><div class="callout warn"><div class="callout-head">⚠️ 소리가 안 나면 — 이 순서로 점검</div><div class="callout-body">① <b>보드레이트 115200</b> 맞나?(v4.0 필수) ② <b>TX↔RX</b>가 엇갈려 꽂혔나?(1순위) ③ 볼륨이 너무 작나?(<code>AT+VOL=22</code>→<code>28</code>) ④ SD가 <b>FAT32</b>이고 <code>0001.mp3</code>가 있나? ⑤ 부팅 대기(<code>1.0</code>→<code>2.0</code>초) 늘리기 ⑥ 응답(<code>&lt; OK</code>)이 오는지. 대부분 ①·②·④에서 해결돼요.</div></div><ul class="check-list"><li>스피커에서 <b>1번 곡</b> 소리가 나나요?</li><li>약 3초 뒤 <b>2번 곡</b>으로 바뀌나요?</li><li><code>AT+VOL=22</code>의 숫자를 5·31로 바꾸면 <b>음량</b>이 변하나요?</li></ul></section><section class="sec" id="chsay-5"><h3 class="sec-title">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</h3><p class="step-head">이제 마지막! 마이크로 들은 소리를 k-NN으로 알아맞히고, 그 <b>라벨에 맞는 트랙</b>을 재생합니다. 코드의 <code>TRACK</code> 사전만 내 라벨에 맞추면 끝이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ② · k-NN 예측 → 음성 출력 (+LED)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MP3 출력 ② — k-NN이 알아맞힌 소리의 &#x27;주인공&#x27;을 목소리로 (Grove MP3 v4.0 · WT2605CX)
+# 듣기(마이크) → 생각(k-NN) → 말하기(MP3).  ⚠ v4.0은 AT 명령 / 115200 baud!
+# ※ 소리 분류 챕터에서 만든 sounds.csv(rms,zcr,crest,label)가 피코에 들어 있어야 해요.
 import time, math
 from machine import ADC, Pin, UART
 from neopixel import NeoPixel
 
-# ── 마이크 (아날로그 A1) — 소리 챕터와 똑같이 &#x27;듣기&#x27; ──
-mic = ADC(Pin(27)); N = 1600
-def grab(): return [mic.read_u16() for _ in range(N)]
+# ── 마이크 (아날로그 A1) — 소리 챕터와 똑같이 &#x27;듣기&#x27; · 특징 3개 ──
+mic = ADC(Pin(27))
+WIN_MS = 200       # 한 번에 &#x27;0.2초&#x27;를 한 덩어리로 (소리 챕터와 동일한 길이!)
+def grab():
+    buf = []; t0 = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), t0) &lt; WIN_MS:
+        buf.append(mic.read_u16())
+    return buf
 def features(buf):
-    n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; prev = buf[0] - m
+    n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; peak = 0.0; prev = buf[0] - m
     for v in buf:
-        d = v - m; ss += d * d
+        d = v - m; ad = d if d &gt;= 0 else -d; ss += d * d
+        if ad &gt; peak: peak = ad
         if (d &gt;= 0) != (prev &gt;= 0): zc += 1
         prev = d
-    return math.sqrt(ss / n), zc
+    r = math.sqrt(ss / n); return r, zc, peak / (r + 1e-9)
 def level(n=120):
     b = [mic.read_u16() for _ in range(n)]; m = sum(b) / n
     return math.sqrt(sum((v - m) ** 2 for v in b) / n)
 
-# ── MP3 출력기 (Grove MP3 v4 · UART) — &#x27;말하기&#x27; ──
-uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))
-def cmd(c, p=0):
-    body = bytes([0xFF, 0x06, c, 0x00, (p &gt;&gt; 8) &amp; 0xFF, p &amp; 0xFF])
-    chk = 0xFFFF - sum(body) + 1
-    uart.write(bytes([0x7E]) + body + bytes([(chk &gt;&gt; 8) &amp; 0xFF, chk &amp; 0xFF, 0xEF]))
-    time.sleep(0.1)                  # ★ 명령 사이 간격 — 너무 빨리 보내면 모듈이 씹어요
-
-# ★ 모듈은 전원 직후 &#x27;부팅 시간&#x27;이 필요해요. 안 기다리면 첫 명령이 무시됩니다.
-time.sleep(0.5); cmd(0x0C); time.sleep(1.2)   # 0x0C=리셋 → 재부팅 대기
-cmd(0x09, 2)                                   # 재생 소스 = microSD
-cmd(0x06, 22)                                  # 볼륨 0~30
+# ── MP3 출력기 (Grove MP3 v4.0 · WT2605CX) — &#x27;말하기&#x27; : AT 명령 ──
+uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1))   # ★ v4.0 = 115200
+time.sleep(1.0)                                          # 모듈 부팅 대기
+def at(s):
+    uart.write((s + &quot;\r\n&quot;).encode()); time.sleep(0.1)
+at(&quot;AT+VOL=22&quot;)                                          # 볼륨 0~31
 
 # ── ★ 라벨 → 트랙 번호 (룩업 테이블) ──
-# SD카드에 0001.mp3=&quot;휘파람이에요&quot;, 0002.mp3=&quot;박수네요&quot; … 미리 녹음해 넣어두세요.
-# 소리 이름(왼쪽)은 sounds.csv의 라벨과 &#x27;글자까지 똑같이&#x27; 맞춰야 합니다.
-TRACK = {&quot;휘파람&quot;: 1, &quot;박수&quot;: 2, &quot;말소리&quot;: 3, &quot;정적&quot;: 4}
+# SD(FAT32)에 0001.mp3=&quot;휘파람이에요&quot;, 0002.mp3=&quot;박수네요&quot; … 순서대로 넣어두세요.
+TRACK = {&quot;휘파람&quot;: 1, &quot;박수&quot;: 2, &quot;말소리&quot;: 3, &quot;노크&quot;: 4}
 
 # ── LED (소리마다 색) ──
 TIMING = (280, 515, 515, 745); NUM = 10
@@ -306,54 +304,49 @@ def paint(c, lv):
     for i in range(NUM): np[i] = c if i &lt; lv else (0, 0, 0)
     np.write()
 
-# ── sounds.csv 불러오기 + 정규화 + k-NN (소리 챕터와 완전히 동일) ──
+# ── sounds.csv 불러오기 + 정규화 + 거리가중 k-NN (소리 챕터와 동일 · 특징 3개) ──
 rows = []
 for ln in open(&quot;sounds.csv&quot;):
     ln = ln.strip()
     if ln == &quot;&quot; or ln.startswith(&quot;rms&quot;): continue
-    r, z, nm = ln.split(&quot;,&quot;); rows.append((float(r), float(z), nm))
-names = sorted(set(r[2] for r in rows)); cidx = {nm: i for i, nm in enumerate(names)}
-rmin = min(r[0] for r in rows); rmax = max(r[0] for r in rows)
-zmin = min(r[1] for r in rows); zmax = max(r[1] for r in rows)
-def norm(r, z): return (r - rmin) / (rmax - rmin + 1e-9), (z - zmin) / (zmax - zmin + 1e-9)
-ex = [(*norm(r[0], r[1]), r[2]) for r in rows]
-def predict(rms, zcr, k=5):
-    nr, nz = norm(rms, zcr)
-    near = sorted(ex, key=lambda e: (e[0] - nr) ** 2 + (e[1] - nz) ** 2)[:k]
-    vote = {}
-    for e in near: vote[e[2]] = vote.get(e[2], 0) + 1
-    best = max(vote, key=vote.get); return best, vote[best] / k
+    r, z, c, nm = ln.split(&quot;,&quot;); rows.append((float(r), float(z), float(c), nm))
+names = sorted(set(r[3] for r in rows)); cidx = {nm: i for i, nm in enumerate(names)}
+mins = [min(r[i] for r in rows) for i in range(3)]
+maxs = [max(r[i] for r in rows) for i in range(3)]
+def norm(v): return [(v[i] - mins[i]) / (maxs[i] - mins[i] + 1e-9) for i in range(3)]
+ex = [(norm(r[:3]), r[3]) for r in rows]
+def predict(feat, k=5):
+    q = norm(feat)
+    def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
+    near = sorted(ex, key=d2)[:k]; vote = {}
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 # ── 배경소음 → 임계값 ──
 print(&quot;조용히… 배경소음 측정 중&quot;)
-base = max(level() for _ in range(20)); THRESH = base * 3 + 150
+base = max(level() for _ in range(20)); THRESH = base * 2   # 민감하게(작은 소리도)
 
-# ── ★ &#x27;말하기&#x27; 함수 — 자기 소리 되먹임을 막는 핵심 ──
-# 스피커가 내는 소리를 마이크가 다시 듣고 또 트리거하면 무한 반복이 돼요.
-# 그래서 ① 말하는 동안 + ② 잔향이 빠질 때까지는 &#x27;귀를 닫습니다&#x27;.
-SPEAK_SEC = 2.5      # 한 마디 음성 길이(넉넉히). 멘트가 길면 늘리세요.
+# ── ★ &#x27;말하기&#x27; — 자기 소리 되먹임 방지(말하는 동안 + 잔향까지 귀 닫기) ──
+SPEAK_SEC = 2.5      # 멘트 길이만큼. 음성이 잘리면 늘리세요.
 def say(track):
-    cmd(0x03, track)                 # ← 그 소리의 &#x27;이름&#x27;을 목소리로!
-    time.sleep(SPEAK_SEC)            # ① 말하는 동안은 듣지 않기
-    t0 = time.ticks_ms()             # ② 스피커 잔향이 THRESH 아래로 빠질 때까지(최대 2초)
+    at(&quot;AT+PLAY=sd0,%d&quot; % track)         # ← 그 소리의 &#x27;이름&#x27;을 목소리로!
+    time.sleep(SPEAK_SEC)
+    t0 = time.ticks_ms()
     while level(120) &gt; THRESH and time.ticks_diff(time.ticks_ms(), t0) &lt; 2000:
         time.sleep(0.05)
 
-CONF_MIN = 0.6       # ★ 확신이 이보다 낮으면 &#x27;모르겠어요&#x27; → 말하지 않는다(침묵)
-
+CONF_MIN = 0.6       # 확신이 이보다 낮으면 &#x27;모르겠어요&#x27; → 침묵
 print(&quot;준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)&quot;)
-while True:                          # ★ 여기가 &#x27;무한히 입력받는&#x27; 부분입니다
+while True:
     if level(120) &gt; THRESH:
-        rms, zcr = features(grab())
-        name, conf = predict(rms, zcr)
+        feat = features(grab()); name, conf = predict(feat)
         if conf &gt;= CONF_MIN and name in TRACK:
             print(&quot;이건… %s!  (확신 %d%%)&quot; % (name, conf * 100))
             paint(PALETTE[cidx[name] % len(PALETTE)], max(1, int(conf * NUM)))
-            say(TRACK[name])         # 말하기(+되먹임 방지) — 끝나면 다시 듣기로 돌아옴
+            say(TRACK[name])
         else:
             print(&quot;음… 잘 모르겠어요 (확신 %d%%) — 조용히 있을게요&quot; % (conf * 100))
-            paint((8, 8, 8), NUM)    # 흐린 흰빛 = 망설임
-            time.sleep(0.8)
+            paint((8, 8, 8), NUM); time.sleep(0.8)
         paint((0, 0, 0), 0)
     time.sleep(0.005)</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">이렇게 나오면 성공! (셸 출력 + 스피커)</span><span class="lang-tag">TEXT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-text">조용히… 배경소음 측정 중
 준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)
@@ -361,7 +354,375 @@ while True:                          # ★ 여기가 &#x27;무한히 입력받�
   🔊 &quot;휘파람이에요&quot;
 이건… 박수!  (확신 100%)
   🔊 &quot;박수네요&quot;
-음… 잘 모르겠어요 (확신 40%) — 조용히 있을게요</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 여기가 핵심! 🔁 — ‘말하는 동안 귀를 닫는’ 이유</div><div class="callout-body">스피커가 “휘파람이에요”라고 말하면 <b>그 소리를 마이크가 다시 듣고</b> 또 판단해버려요 → 끝없이 자기 말을 따라 하는 <b>무한 반복</b>! 그래서 <code>say()</code>는 ① 말하는 동안 + ② 잔향이 빠질 때까지 <b>입력을 잠시 무시</b>합니다(<code>SPEAK_SEC</code>). 음성이 길어 끝까지 안 나오면 이 값을 늘리세요. <b>이게 이 챕터가 실제로 돌아가게 하는 장치예요.</b></div></div><div class="callout key"><div class="callout-head">🔑 TRACK 사전 = sounds.csv 라벨과 ‘글자까지’ 똑같이</div><div class="callout-body"><code>TRACK = {"휘파람":1, ...}</code>의 왼쪽 이름은 데이터를 모을 때 쓴 라벨과 <b>한 글자도 다르면 안 됩니다.</b> ‘휘파람’과 ‘휘파람소리’는 다른 이름이라 음성이 안 나와요. 라벨을 바꿨다면 여기도 같이 고치세요.</div></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 침묵도 잘 되나요?</div><div class="callout-body">일부러 <b>가르치지 않은 애매한 소리</b>(헛기침 등)를 내보세요. 확신이 60% 아래면 “잘 모르겠어요”만 뜨고 <b>말을 안 할</b> 거예요. 이게 정상이고, 똑똑한 동작이에요.</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">막히면 AI에게 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">이 MicroPython 코드는 마이크로 소리를 k-NN으로 분류한 뒤 Grove MP3 v4(UART, 7E FF 06 ... EF 프레임)로 라벨에 맞는 트랙을 재생해. 소리가 안 나오거나 엉뚱한 곡이 나오면 어디를 점검해야 하는지, TRACK 사전과 SD카드 파일 번호를 맞추는 법, 자기 소리 되먹임을 막는 SPEAK_SEC 값을 어떻게 조절할지 알려줘.</div></div></section><section class="sec" id="chsay-6"><h3 class="sec-title">★ 더 해보기 — 입에 성격을 입히자</h3><p class="prose">‘대답하는 입’이 생기면 놀이가 확 넓어져요. 난이도 순으로 골라보세요.</p><div class="concept-grid"><div class="concept"><div class="concept-t">🟢 칭찬/리액션</div><div class="concept-d">맞힐 때마다 <b>“정답!”</b> 트랙을 먼저 깔고 이어서 이름을 말하기. 짧은 추임새가 생기를 줘요.</div></div><div class="concept"><div class="concept-t">🟡 확신도 말하기</div><div class="concept-d">확신 90%↑면 <b>단호한 멘트</b>, 60~90%는 <b>“아마…”</b> 멘트. 트랙을 두 벌 준비해 골라 재생.</div></div><div class="concept"><div class="concept-t">🔵 침묵의 소리</div><div class="concept-d">‘모르겠어요’일 때 <b>고개 갸웃 효과음</b>(예: 0009.mp3)을 재생. 침묵 대신 ‘망설임’을 표현.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — 왜 ‘말하는 출력’이 교육적으로 강할까?</summary><div class="dig-body">LED 색은 <b>약속을 외워야</b> 뜻을 알아요(‘초록=박수였지?’). 하지만 <b>목소리</b>는 약속이 필요 없어요 — 처음 보는 사람도 즉시 이해합니다. 분류 결과를 <b>사람의 언어로 되돌리는</b> 순간, AI가 ‘내 안의 숫자’에서 ‘남과 나누는 대화’로 바뀌어요. 이게 음성비서·낙상 알림·점자 안내기가 모두 ‘출력’에 공들이는 이유랍니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ 교재 다른 부품과도 잇기</div><div class="callout-body">이 ‘출력 사고방식’은 어디든 통해요. <b>IMU 플립 성공 → 효과음</b>, <b>밝기 임계값 → 안내 멘트</b>처럼, ‘판단 결과를 사람이 알아듣게 내보낸다’는 한 패턴입니다.</div></div></section><section class="sec" id="chsay-7"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 아무 소리도 안 남</div><div class="m-row"><span class="m-tag">원인</span>TX·RX가 같은 방향으로 꽂힘(안 엇갈림).</div><div class="m-row"><span class="m-tag fix">해결</span><b>피코 TX↔모듈 RX</b>로 두 신호선을 바꿔 끼우세요.</div></div><div class="mistake"><div class="m-sym">❌ 첫 곡만 안 나옴</div><div class="m-row"><span class="m-tag">원인</span>모듈 부팅 전에 명령이 감.</div><div class="m-row"><span class="m-tag fix">해결</span>리셋 뒤 <b>대기시간(1.2초)을 2초로</b> 늘려 보세요.</div></div><div class="mistake"><div class="m-sym">❌ 엉뚱한 곡이 나옴</div><div class="m-row"><span class="m-tag">원인</span>파일 복사 순서와 <code>TRACK</code> 값이 어긋남.</div><div class="m-row"><span class="m-tag fix">해결</span>SD카드를 포맷하고 <b>0001.mp3부터 순서대로</b> 다시 복사.</div></div><div class="mistake"><div class="m-sym">❌ 특정 라벨만 침묵</div><div class="m-row"><span class="m-tag">원인</span><code>TRACK</code> 이름이 라벨과 글자가 다름.</div><div class="m-row"><span class="m-tag fix">해결</span>sounds.csv 라벨과 <b>똑같이</b> 적으세요.</div></div><div class="mistake"><div class="m-sym">❌ 자기 말을 무한 반복</div><div class="m-row"><span class="m-tag">원인</span>스피커 소리를 마이크가 또 들음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>SPEAK_SEC</code>를 음성 길이만큼 <b>넉넉히</b>, 또는 스피커를 마이크에서 떼기.</div></div><div class="mistake"><div class="m-sym">❌ 맞혔는데 말을 안 함</div><div class="m-row"><span class="m-tag">원인</span>확신이 <code>CONF_MIN</code>보다 낮음.</div><div class="m-row"><span class="m-tag fix">해결</span>정상이에요. 데이터를 더 모으거나 기준값을 낮춰보세요.</div></div><div class="mistake"><div class="m-sym">❌ 소리가 너무 크거나 작음</div><div class="m-row"><span class="m-tag">원인</span>볼륨 설정값.</div><div class="m-row"><span class="m-tag fix">해결</span><code>cmd(0x06, 22)</code>의 숫자(0~30)를 조절하세요.</div></div></div></section><section class="sec" id="chsay-8"><h3 class="sec-title">스스로 점검하기</h3><p class="prose">다음 질문에 답할 수 있으면 이 장을 이해한 거예요. (먼저 스스로 답해보고 펼치세요)</p><div class="checks"><details class="qa"><summary>마이크와 MP3 모듈은 뭐가 다른가요?</summary><div class="qa-a">마이크는 소리를 <b>듣는 입력</b>, MP3 v4는 소리를 <b>내는 출력</b>. 방향이 반대예요.</div></details><details class="qa"><summary>피코가 MP3 모듈에 보내는 건 무엇인가요?</summary><div class="qa-a">소리가 아니라 <b>“몇 번 곡 틀어”라는 명령</b>(UART). 재생은 모듈이 해요.</div></details><details class="qa"><summary>룩업 테이블(TRACK)은 무슨 일을 하나요?</summary><div class="qa-a">분류 결과인 <b>라벨을 트랙 번호로</b> 이어줍니다. 오늘의 핵심 한 줄.</div></details><details class="qa"><summary>말하는 동안 마이크 입력을 왜 무시하나요?</summary><div class="qa-a">스피커 소리를 마이크가 다시 듣고 <b>무한 반복</b>하는 ‘되먹임’을 막기 위해서예요.</div></details><details class="qa"><summary>확신이 낮으면 왜 말을 안 하나요?</summary><div class="qa-a">자신 있게 <b>틀린 답</b>을 하는 것보다 ‘모른다’가 낫기 때문. 좋은 AI의 태도예요.</div></details><details class="qa"><summary>소리가 아예 안 날 때 1순위 점검은?</summary><div class="qa-a"><b>TX↔RX</b>가 엇갈려 꽂혔는지, 그리고 SD에 <code>0001.mp3</code>가 있는지.</div></details></div></section><section class="sec" id="chsay-9"><h3 class="sec-title">수업/학습 시나리오</h3><p class="prose">소리 분류 챕터를 끝낸 직후 이어 붙이는 짧은 ‘출력’ 편입니다. 무게는 <b>장면 ③ — 기계가 처음으로 ‘입을 여는’ 순간</b>에 싣습니다.</p><details class="dig"><summary>🔬 더 알아보기 — 장면별 흐름과 와우 포인트</summary><div class="dig-body"><b>① 되돌아보기</b> — “지난 시간엔 LED로만 알려줬지? 말로 하면 어떨까?” 출력의 빈칸을 의식시킨다.<br><b>② 입을 단다</b> — MP3 모듈 연결 + 단독 테스트. ‘피코는 명령만 보낸다’를 체감.<br><b>③ 첫 한마디</b> ⭐ <b>메인 와우</b> — 휘파람을 불자 피코가 <b>“휘파람이에요”</b>라고 말함. 라벨이 목소리가 되는 순간.<br><b>④ 모를 땐 침묵</b> 🌟 — 애매한 소리엔 입을 다묾 → ‘모른다고 말하는 AI’를 토론.<br><b>⑤ 내 멘트 만들기</b> 🌟 — 칭찬·효과음·말투를 학습자가 직접 녹음(주도성).<br><b>⑥ 정리</b> — 입력→처리→출력. 음성비서가 다 이 한 바퀴임을 명명.</div></details><div class="callout info"><div class="callout-head">ℹ️ 한 줄 마무리</div><div class="callout-body">“<b>듣고·생각하고·말한다</b> — 오늘 너희가 만든 게 바로 작은 음성비서야.” 입력·처리·출력 세 단어를 남기며 끝냅니다.</div></div></section></div>
+음… 잘 모르겠어요 (확신 40%) — 조용히 있을게요</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 여기가 핵심! 🔁 — ‘말하는 동안 귀를 닫는’ 이유</div><div class="callout-body">스피커가 “휘파람이에요”라고 말하면 <b>그 소리를 마이크가 다시 듣고</b> 또 판단해버려요 → 끝없이 자기 말을 따라 하는 <b>무한 반복</b>! 그래서 <code>say()</code>는 ① 말하는 동안 + ② 잔향이 빠질 때까지 <b>입력을 잠시 무시</b>합니다(<code>SPEAK_SEC</code>). 음성이 길어 끝까지 안 나오면 이 값을 늘리세요. <b>이게 이 챕터가 실제로 돌아가게 하는 장치예요.</b></div></div><div class="callout key"><div class="callout-head">🔑 TRACK 사전 = sounds.csv 라벨과 ‘글자까지’ 똑같이</div><div class="callout-body"><code>TRACK = {"휘파람":1, ...}</code>의 왼쪽 이름은 데이터를 모을 때 쓴 라벨과 <b>한 글자도 다르면 안 됩니다.</b> ‘휘파람’과 ‘휘파람소리’는 다른 이름이라 음성이 안 나와요. 라벨을 바꿨다면 여기도 같이 고치세요.</div></div><div class="callout tip"><div class="callout-head">💡 여기서 잠깐 🤔 — 침묵도 잘 되나요?</div><div class="callout-body">일부러 <b>가르치지 않은 애매한 소리</b>(헛기침 등)를 내보세요. 확신이 60% 아래면 “잘 모르겠어요”만 뜨고 <b>말을 안 할</b> 거예요. 이게 정상이고, 똑똑한 동작이에요.</div></div><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">막히면 AI에게 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">이 MicroPython 코드는 마이크로 소리를 k-NN으로 분류한 뒤 Grove MP3 v4.0(WT2605CX, AT 명령 &#x27;AT+PLAY=sd0,N&#x27;, 115200 baud)로 라벨에 맞는 트랙을 재생해. 소리가 안 나오거나 엉뚱한 곡이 나오면 어디를 점검해야 하는지, TRACK 사전과 SD카드 파일 번호를 맞추는 법, 자기 소리 되먹임을 막는 SPEAK_SEC 값을 어떻게 조절할지 알려줘.</div></div></section><section class="sec" id="chsay-6"><h3 class="sec-title">★ 더 해보기 — 입에 성격을 입히자</h3><p class="prose">‘대답하는 입’이 생기면 놀이가 확 넓어져요. 난이도 순으로 골라보세요.</p><div class="concept-grid"><div class="concept"><div class="concept-t">🟢 칭찬/리액션</div><div class="concept-d">맞힐 때마다 <b>“정답!”</b> 트랙을 먼저 깔고 이어서 이름을 말하기. 짧은 추임새가 생기를 줘요.</div></div><div class="concept"><div class="concept-t">🟡 확신도 말하기</div><div class="concept-d">확신 90%↑면 <b>단호한 멘트</b>, 60~90%는 <b>“아마…”</b> 멘트. 트랙을 두 벌 준비해 골라 재생.</div></div><div class="concept"><div class="concept-t">🔵 침묵의 소리</div><div class="concept-d">‘모르겠어요’일 때 <b>고개 갸웃 효과음</b>(예: 0009.mp3)을 재생. 침묵 대신 ‘망설임’을 표현.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — 왜 ‘말하는 출력’이 교육적으로 강할까?</summary><div class="dig-body">LED 색은 <b>약속을 외워야</b> 뜻을 알아요(‘초록=박수였지?’). 하지만 <b>목소리</b>는 약속이 필요 없어요 — 처음 보는 사람도 즉시 이해합니다. 분류 결과를 <b>사람의 언어로 되돌리는</b> 순간, AI가 ‘내 안의 숫자’에서 ‘남과 나누는 대화’로 바뀌어요. 이게 음성비서·낙상 알림·점자 안내기가 모두 ‘출력’에 공들이는 이유랍니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ 교재 다른 부품과도 잇기</div><div class="callout-body">이 ‘출력 사고방식’은 어디든 통해요. <b>IMU 플립 성공 → 효과음</b>, <b>밝기 임계값 → 안내 멘트</b>처럼, ‘판단 결과를 사람이 알아듣게 내보낸다’는 한 패턴입니다.</div></div></section><section class="sec" id="chsay-7"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 아무 소리도 안 남</div><div class="m-row"><span class="m-tag">원인</span>TX·RX가 같은 방향으로 꽂힘(안 엇갈림).</div><div class="m-row"><span class="m-tag fix">해결</span><b>피코 TX↔모듈 RX</b>로 두 신호선을 바꿔 끼우세요.</div></div><div class="mistake"><div class="m-sym">❌ 첫 곡만 안 나옴</div><div class="m-row"><span class="m-tag">원인</span>모듈 부팅 전에 명령이 감.</div><div class="m-row"><span class="m-tag fix">해결</span>맨 위 <b>부팅 대기(1초)를 2초로</b> 늘려 보세요.</div></div><div class="mistake"><div class="m-sym">❌ 엉뚱한 곡이 나옴</div><div class="m-row"><span class="m-tag">원인</span>파일 복사 순서와 <code>TRACK</code> 값이 어긋남.</div><div class="m-row"><span class="m-tag fix">해결</span>SD카드를 포맷하고 <b>0001.mp3부터 순서대로</b> 다시 복사.</div></div><div class="mistake"><div class="m-sym">❌ 특정 라벨만 침묵</div><div class="m-row"><span class="m-tag">원인</span><code>TRACK</code> 이름이 라벨과 글자가 다름.</div><div class="m-row"><span class="m-tag fix">해결</span>sounds.csv 라벨과 <b>똑같이</b> 적으세요.</div></div><div class="mistake"><div class="m-sym">❌ 자기 말을 무한 반복</div><div class="m-row"><span class="m-tag">원인</span>스피커 소리를 마이크가 또 들음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>SPEAK_SEC</code>를 음성 길이만큼 <b>넉넉히</b>, 또는 스피커를 마이크에서 떼기.</div></div><div class="mistake"><div class="m-sym">❌ 맞혔는데 말을 안 함</div><div class="m-row"><span class="m-tag">원인</span>확신이 <code>CONF_MIN</code>보다 낮음.</div><div class="m-row"><span class="m-tag fix">해결</span>정상이에요. 데이터를 더 모으거나 기준값을 낮춰보세요.</div></div><div class="mistake"><div class="m-sym">❌ 소리가 너무 크거나 작음</div><div class="m-row"><span class="m-tag">원인</span>볼륨 설정값.</div><div class="m-row"><span class="m-tag fix">해결</span><code>AT+VOL=22</code>의 숫자(0~31)를 조절하세요.</div></div></div></section><section class="sec" id="chsay-8"><h3 class="sec-title">스스로 점검하기</h3><p class="prose">다음 질문에 답할 수 있으면 이 장을 이해한 거예요. (먼저 스스로 답해보고 펼치세요)</p><div class="checks"><details class="qa"><summary>마이크와 MP3 모듈은 뭐가 다른가요?</summary><div class="qa-a">마이크는 소리를 <b>듣는 입력</b>, MP3 v4는 소리를 <b>내는 출력</b>. 방향이 반대예요.</div></details><details class="qa"><summary>피코가 MP3 모듈에 보내는 건 무엇인가요?</summary><div class="qa-a">소리가 아니라 <b>“몇 번 곡 틀어”라는 명령</b>(UART). 재생은 모듈이 해요.</div></details><details class="qa"><summary>룩업 테이블(TRACK)은 무슨 일을 하나요?</summary><div class="qa-a">분류 결과인 <b>라벨을 트랙 번호로</b> 이어줍니다. 오늘의 핵심 한 줄.</div></details><details class="qa"><summary>말하는 동안 마이크 입력을 왜 무시하나요?</summary><div class="qa-a">스피커 소리를 마이크가 다시 듣고 <b>무한 반복</b>하는 ‘되먹임’을 막기 위해서예요.</div></details><details class="qa"><summary>확신이 낮으면 왜 말을 안 하나요?</summary><div class="qa-a">자신 있게 <b>틀린 답</b>을 하는 것보다 ‘모른다’가 낫기 때문. 좋은 AI의 태도예요.</div></details><details class="qa"><summary>소리가 아예 안 날 때 1순위 점검은?</summary><div class="qa-a"><b>TX↔RX</b>가 엇갈려 꽂혔는지, 그리고 SD에 <code>0001.mp3</code>가 있는지.</div></details></div></section><section class="sec" id="chsay-9"><h3 class="sec-title">수업/학습 시나리오</h3><p class="prose">소리 분류 챕터를 끝낸 직후 이어 붙이는 짧은 ‘출력’ 편입니다. 무게는 <b>장면 ③ — 기계가 처음으로 ‘입을 여는’ 순간</b>에 싣습니다.</p><details class="dig"><summary>🔬 더 알아보기 — 장면별 흐름과 와우 포인트</summary><div class="dig-body"><b>① 되돌아보기</b> — “지난 시간엔 LED로만 알려줬지? 말로 하면 어떨까?” 출력의 빈칸을 의식시킨다.<br><b>② 입을 단다</b> — MP3 모듈 연결 + 단독 테스트. ‘피코는 명령만 보낸다’를 체감.<br><b>③ 첫 한마디</b> ⭐ <b>메인 와우</b> — 휘파람을 불자 피코가 <b>“휘파람이에요”</b>라고 말함. 라벨이 목소리가 되는 순간.<br><b>④ 모를 땐 침묵</b> 🌟 — 애매한 소리엔 입을 다묾 → ‘모른다고 말하는 AI’를 토론.<br><b>⑤ 내 멘트 만들기</b> 🌟 — 칭찬·효과음·말투를 학습자가 직접 녹음(주도성).<br><b>⑥ 정리</b> — 입력→처리→출력. 음성비서가 다 이 한 바퀴임을 명명.</div></details><div class="callout info"><div class="callout-head">ℹ️ 한 줄 마무리</div><div class="callout-body">“<b>듣고·생각하고·말한다</b> — 오늘 너희가 만든 게 바로 작은 음성비서야.” 입력·처리·출력 세 단어를 남기며 끝냅니다.</div></div></section><section class="sec" id="chsay-10"><h3 class="sec-title">🎛️ 피날레 — 소리 ML 컨트롤 센터 (모든 걸 한 화면에서)</h3><p class="prose">대망의 마지막! 듣기·분류·말하기까지 끝낸 지금, <b>소리 수집·학습·테스트를 전부 한 화면에 모읍니다.</b> 폰/PC 브라우저에서 — <b>🔊 지금 들리는 소리 보기 · 녹음(+즉시 분류) · 실시간 3D 지도 · 예측 · k 조절 · 지우기</b>까지 모두 컨트롤! 1·3·5장처럼 <b>피코가 웹서버</b>가 됩니다. (피코 2 WH의 와이파이)</p><div class="concept-grid"><div class="concept"><div class="concept-t">🔊 라이브 듣기</div><div class="concept-d">지금 마이크에 들리는 소리 크기를 막대로 <b>실시간</b> 표시.</div></div><div class="concept"><div class="concept-t">① 데이터 만들기</div><div class="concept-d">라벨 버튼 → 녹음·저장. <b>‘현재 모델은 이 소리를 어떻게 볼까’</b>까지 바로 알려줘요 — 모델이 자라는 게 보입니다.</div></div><div class="concept"><div class="concept-t">3D 지도</div><div class="concept-d">모은 소리가 Plotly <b>3D 산점도</b>로 실시간으로 그려져요(마우스로 빙글빙글).</div></div><div class="concept"><div class="concept-t">② 테스트</div><div class="concept-d">[예측]+<b>k 조절</b> → 새 소리 분류, 산점도에 ‘방금’ 점, LED 색.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 먼저 — 와이파이 정보 파일 (wifi_config.py)</div><div class="callout-body">1·3·5장에서 만든 <code>wifi_config.py</code>(<code>WIFI_SSID</code>·<code>WIFI_PASSWORD</code>)가 피코에 있어야 해요. 학교망이 기기 간 통신을 막으면 <b>폰 핫스팟</b>이 가장 확실합니다(폰·피코가 <b>같은 와이파이</b>).</div></div><details class="codefold"><summary>코드 · 소리 ML 컨트롤 센터 (아날로그 마이크 · 피코 2 WH) <span class="fold-hint">· 184줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 · 소리 ML 컨트롤 센터 (아날로그 마이크 · 피코 2 WH)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 ML 종합 컨트롤 대시보드 — 피코 2 WH = 웹서버, 폰/PC 브라우저 = 화면
+#  한 화면에서: 🔊 라이브 소리 듣기 + 녹음(+즉시 분류) + 실시간 3D 산점도 + 예측 + k조절 + 지우기.
+#  마이크=아날로그 A1(GP27).  sounds.csv(rms,zcr,crest,label) 호환.  (와이파이 필요)
+import network, socket, time, math, gc
+from machine import ADC, Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID, WIFI_PASSWORD     # 1·3·5장에서 만든 그 파일
+
+mic = ADC(Pin(27)); WIN_MS = 200
+def grab():
+    buf = []; t0 = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), t0) &lt; WIN_MS:
+        buf.append(mic.read_u16())
+    return buf
+def features(buf):
+    n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; peak = 0.0; prev = buf[0] - m
+    for v in buf:
+        d = v - m; ad = d if d &gt;= 0 else -d; ss += d * d
+        if ad &gt; peak: peak = ad
+        if (d &gt;= 0) != (prev &gt;= 0): zc += 1
+        prev = d
+    r = math.sqrt(ss / n); return r, zc, peak / (r + 1e-9)
+def level(n=120):                          # 빠른 &#x27;소리 크기&#x27;(라이브 미터용)
+    b = [mic.read_u16() for _ in range(n)]; m = sum(b) / n
+    return math.sqrt(sum((v - m) ** 2 for v in b) / n)
+def capture(sec=1.5):                      # sec초 중 &#x27;가장 또렷한&#x27; 0.2초(임계값 없음)
+    best = None; bestr = -1.0; t0 = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), t0) &lt; int(sec * 1000):
+        f = features(grab())
+        if f[0] &gt; bestr: bestr = f[0]; best = f
+    return best
+
+LABELS = [&quot;휘파람&quot;, &quot;박수&quot;, &quot;말소리&quot;, &quot;노크&quot;]
+COLORS = [&quot;#1D9E75&quot;, &quot;#D85A30&quot;, &quot;#378ADD&quot;, &quot;#7F77DD&quot;]
+
+TIMING = (280, 515, 515, 745); NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+def show(ci, lv):
+    c = [(40, 0, 0), (0, 40, 0), (0, 0, 40), (40, 40, 0)][ci % 4]
+    for i in range(NUM): np[i] = c if i &lt; lv else (0, 0, 0)
+    np.write()
+
+rows = []
+try:
+    for ln in open(&quot;sounds.csv&quot;):
+        ln = ln.strip()
+        if ln == &quot;&quot; or ln.startswith(&quot;rms&quot;): continue
+        r, z, c, nm = ln.split(&quot;,&quot;); rows.append((float(r), float(z), float(c), nm))
+except OSError:
+    pass
+def save_csv():
+    f = open(&quot;sounds.csv&quot;, &quot;w&quot;); f.write(&quot;rms,zcr,crest,label\n&quot;)
+    for r in rows: f.write(&quot;%.0f,%d,%.2f,%s\n&quot; % (r[0], r[1], r[2], r[3]))
+    f.close()
+
+def predict(feat, k=5):
+    if len(rows) &lt; 2: return None, 0.0
+    mins = [min(r[i] for r in rows) for i in range(3)]
+    maxs = [max(r[i] for r in rows) for i in range(3)]
+    def nz(v, i): return (v - mins[i]) / (maxs[i] - mins[i] + 1e-9)
+    q = [nz(feat[i], i) for i in range(3)]
+    def d2(r): return sum((nz(r[i], i) - q[i]) ** 2 for i in range(3))
+    near = sorted(rows, key=d2)[:k]; vote = {}
+    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1.0 / (d2(r) + 1e-6)
+    b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
+
+wlan = network.WLAN(network.STA_IF); wlan.active(True)
+wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+for _ in range(30):
+    if wlan.isconnected(): break
+    time.sleep(0.5)
+print(&quot;브라우저에서 여세요 →  http://%s&quot; % wlan.ifconfig()[0])
+
+PAGE = &quot;&quot;&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+&lt;title&gt;소리 ML 컨트롤 센터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.plot.ly/plotly-2.35.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;body{font-family:sans-serif;max-width:760px;margin:0 auto;padding:16px;color:#222}
+h2{margin:.2em 0}.sec{border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;margin:12px 0}
+.sec b.t{font-size:14px}button{font-size:15px;padding:9px 13px;margin:4px;border:1px solid #999;border-radius:10px;background:#fff;cursor:pointer}
+#meter{height:16px;border-radius:9px;background:#eee;overflow:hidden;margin:8px 0}#meter&gt;i{display:block;height:100%;width:0%;background:#0891B2;transition:width .12s}
+#plot{height:420px}#out{font-size:20px;font-weight:700;margin:8px 0}#rec{font-size:13px;color:#555;min-height:18px}
+.muted{color:#777;font-size:13px}input[type=range]{vertical-align:middle}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h2&gt;🎛️ 소리 ML 컨트롤 센터&lt;/h2&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;🔊 라이브 — 지금 들리는 소리&lt;/b&gt;&lt;div id=&quot;meter&quot;&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;&lt;div class=&quot;muted&quot; id=&quot;mtxt&quot;&gt;마이크가 듣고 있어요…&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;① 데이터 만들기&lt;/b&gt; &lt;span class=&quot;muted&quot;&gt;(버튼 누르고 1~2초 안에 소리)&lt;/span&gt;
+&lt;div id=&quot;btns&quot;&gt;&lt;/div&gt;&lt;div id=&quot;rec&quot;&gt;&lt;/div&gt;&lt;div class=&quot;muted&quot; id=&quot;cnt&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;② 한눈에 — 모은 소리 3D 지도&lt;/b&gt;&lt;div id=&quot;plot&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;② 테스트 — 새 소리 분류&lt;/b&gt;
+&lt;div&gt;&lt;button onclick=&quot;pred()&quot;&gt;🔮 예측 한 번&lt;/button&gt;
+이웃 k= &lt;input type=&quot;range&quot; id=&quot;k&quot; min=&quot;1&quot; max=&quot;9&quot; step=&quot;2&quot; value=&quot;5&quot; oninput=&quot;kv.textContent=this.value&quot;&gt;&lt;b id=&quot;kv&quot;&gt;5&lt;/b&gt;
+&lt;button onclick=&quot;clr()&quot;&gt;전체 지우기&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;out&quot;&gt;소리를 모은 뒤 예측해 보세요&lt;/div&gt;&lt;/div&gt;
+&lt;script&gt;
+const LAB=__LABELS__, COL=__COLORS__; let maxL=1, busy=false;
+let bh=&#x27;&#x27;; LAB.forEach((n,i)=&gt;bh+=`&lt;button onclick=&quot;rec(${i})&quot;&gt;${n}&lt;/button&gt;`);
+document.getElementById(&#x27;btns&#x27;).innerHTML=bh;
+function setMeter(p){document.getElementById(&#x27;meter&#x27;).firstChild.style.width=Math.min(100,p*100)+&#x27;%&#x27;;}
+async function poll(){
+  if(!busy){ try{ let r=await (await fetch(&#x27;/level&#x27;)).json(); maxL=Math.max(maxL,r.l,1); setMeter(r.l/maxL);
+    document.getElementById(&#x27;mtxt&#x27;).textContent = r.l&gt;maxL*0.35?&#x27;소리가 들려요! 🔊&#x27;:&#x27;조용… (마이크 대기 중)&#x27;; }catch(e){} }
+  setTimeout(poll,250);
+}
+poll();
+async function rec(i){ busy=true; document.getElementById(&#x27;rec&#x27;).textContent=&#x27;녹음 중… &quot;&#x27;+LAB[i]+&#x27;&quot; 소리를 내세요&#x27;;
+  let r=await (await fetch(&#x27;/rec?i=&#x27;+i)).json(); busy=false;
+  let pv = (r.pred&amp;&amp;r.pred!==&#x27;-&#x27;) ? (&#x27;현재 모델 판단: &#x27;+r.pred+&#x27; &#x27;+r.conf+&#x27;% &#x27;+(r.pred===r.saved?&#x27;✓ 잘 맞아요&#x27;:&#x27;— 더 모아보세요&#x27;)) : &#x27;(아직 예시가 적어요)&#x27;;
+  document.getElementById(&#x27;rec&#x27;).textContent=&#x27;저장됨: &#x27;+r.saved+&#x27;  ·  &#x27;+pv; draw();
+}
+async function pred(){ busy=true; document.getElementById(&#x27;out&#x27;).textContent=&#x27;예측 중… 소리를 내세요&#x27;;
+  let k=document.getElementById(&#x27;k&#x27;).value;
+  let r=await (await fetch(&#x27;/predict?k=&#x27;+k)).json(); busy=false;
+  document.getElementById(&#x27;out&#x27;).textContent = r.conf&gt;=60 ? &#x27;이건… &#x27;+r.label+&#x27;! (확신 &#x27;+r.conf+&#x27;%)&#x27; : &#x27;음… 잘 모르겠어요 (확신 &#x27;+r.conf+&#x27;%)&#x27;;
+  draw(r);
+}
+async function clr(){ busy=true; await fetch(&#x27;/clear&#x27;); busy=false; document.getElementById(&#x27;out&#x27;).textContent=&#x27;지웠어요&#x27;; draw(); }
+async function draw(pred){
+  let d=await (await fetch(&#x27;/data&#x27;)).json(), cnt={};
+  d.forEach(p=&gt;cnt[p.label]=(cnt[p.label]||0)+1);
+  document.getElementById(&#x27;cnt&#x27;).textContent=&#x27;모은 개수 — &#x27;+LAB.map(n=&gt;n+&#x27; &#x27;+(cnt[n]||0)).join(&#x27; · &#x27;);
+  let tr=LAB.map((n,i)=&gt;({type:&#x27;scatter3d&#x27;,mode:&#x27;markers&#x27;,name:n,
+    x:d.filter(p=&gt;p.label==n).map(p=&gt;p.rms),y:d.filter(p=&gt;p.label==n).map(p=&gt;p.zcr),z:d.filter(p=&gt;p.label==n).map(p=&gt;p.crest),
+    marker:{size:4,color:COL[i]}}));
+  if(pred&amp;&amp;pred.feat) tr.push({type:&#x27;scatter3d&#x27;,mode:&#x27;markers&#x27;,name:&#x27;방금&#x27;,
+    x:[pred.feat[0]],y:[pred.feat[1]],z:[pred.feat[2]],marker:{size:9,color:&#x27;#000&#x27;,symbol:&#x27;diamond&#x27;}});
+  Plotly.react(&#x27;plot&#x27;,tr,{margin:{l:0,r:0,t:0,b:0},
+    scene:{xaxis:{title:&#x27;크기&#x27;},yaxis:{title:&#x27;높낮이&#x27;},zaxis:{title:&#x27;들쭉날쭉&#x27;}}},{displayModeBar:false});
+}
+draw();
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;&quot;&quot;
+
+def send(cl, body, ctype=&quot;text/html&quot;):
+    if not isinstance(body, bytes): body = body.encode()
+    hdr = (&quot;HTTP/1.0 200 OK\r\nContent-Type: %s; charset=utf-8\r\nConnection: close\r\nContent-Length: %d\r\n\r\n&quot; % (ctype, len(body))).encode()
+    mv = memoryview(hdr + body)
+    while mv:
+        try:
+            sent = cl.send(mv); mv = mv[sent:]
+        except OSError:
+            time.sleep(0.005)
+
+srv = socket.socket(); srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+srv.bind((&quot;0.0.0.0&quot;, 80)); srv.listen(1); srv.setblocking(False)
+show(0, 0)
+while True:
+    try: cl, _ = srv.accept()
+    except OSError: cl = None
+    if cl:
+        try:
+            gc.collect()                          # 녹음/응답마다 큰 리스트가 쌓여 단편화 방지(5장 패턴)
+            cl.settimeout(5)
+            path = cl.recv(1024).split(b&quot; &quot;)[1]
+            if path.startswith(b&quot;/level&quot;):
+                send(cl, &#x27;{&quot;l&quot;:%.0f}&#x27; % level(), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/rec?i=&quot;):
+                i = int(path.split(b&quot;=&quot;)[1]); show(i, NUM)
+                f = capture()
+                pn, pc = predict(f)                       # 추가 &#x27;전&#x27; 현재 모델로 분류해 보기
+                rows.append((f[0], f[1], f[2], LABELS[i])); save_csv(); show(0, 0)
+                pj = &#x27;&quot;-&quot;&#x27; if pn is None else &#x27;&quot;%s&quot;&#x27; % pn
+                send(cl, &#x27;{&quot;saved&quot;:&quot;%s&quot;,&quot;pred&quot;:%s,&quot;conf&quot;:%d}&#x27; % (LABELS[i], pj, int((pc or 0) * 100)), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/predict&quot;):
+                k = 5
+                if b&quot;k=&quot; in path:
+                    try: k = int(path.split(b&quot;k=&quot;)[1].split(b&quot;&amp;&quot;)[0].split(b&quot; &quot;)[0])
+                    except Exception: k = 5
+                f = capture(); name, conf = predict(f, k)
+                if name is None:
+                    send(cl, &#x27;{&quot;label&quot;:&quot;-&quot;,&quot;conf&quot;:0,&quot;feat&quot;:[%.0f,%d,%.2f]}&#x27; % (f[0], f[1], f[2]), &quot;application/json&quot;)
+                else:
+                    ci = LABELS.index(name) if name in LABELS else 0
+                    show(ci, max(1, int(conf * NUM)))
+                    send(cl, &#x27;{&quot;label&quot;:&quot;%s&quot;,&quot;conf&quot;:%d,&quot;feat&quot;:[%.0f,%d,%.2f]}&#x27; % (name, int(conf * 100), f[0], f[1], f[2]), &quot;application/json&quot;)
+                    time.sleep(0.4); show(0, 0)
+            elif path.startswith(b&quot;/data&quot;):
+                pts = &quot;,&quot;.join(&#x27;{&quot;rms&quot;:%.0f,&quot;zcr&quot;:%d,&quot;crest&quot;:%.2f,&quot;label&quot;:&quot;%s&quot;}&#x27; % (r[0], r[1], r[2], r[3]) for r in rows)
+                send(cl, (&quot;[&quot; + pts + &quot;]&quot;).encode(), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/clear&quot;):
+                del rows[:]; save_csv(); send(cl, &#x27;{&quot;ok&quot;:1}&#x27;, &quot;application/json&quot;)
+            else:
+                send(cl, PAGE.replace(&quot;__LABELS__&quot;, str(LABELS)).replace(&quot;__COLORS__&quot;, str(COLORS)))
+        except Exception:
+            pass
+        cl.close()
+    time.sleep(0.01)</code></pre></div></details><div class="callout tip"><div class="callout-head">💡 INMP441로 한다면 — _i2s 대시보드</div><div class="callout-body">마이크가 INMP441이면 아래 <code>sound_dashboard_i2s.py</code>를 쓰세요. <b>화면·기능은 똑같고</b> 마이크 읽는 부분만 I2S(GP18/19/20)예요.</div></div><details class="codefold"><summary>코드 · 소리 ML 컨트롤 센터 (INMP441 · 피코 2 WH) <span class="fold-hint">· 186줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 · 소리 ML 컨트롤 센터 (INMP441 · 피코 2 WH)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 ML 종합 컨트롤 대시보드 (INMP441 · I2S판) — 피코 2 WH = 웹서버, 폰/PC 브라우저 = 화면
+#  한 화면에서: 🔊 라이브 소리 듣기 + 녹음(+즉시 분류) + 실시간 3D 산점도 + 예측 + k조절 + 지우기.
+#  마이크=INMP441(I2S, SCK=GP18·WS=GP19·SD=GP20).  sounds.csv(rms,zcr,crest,label) 호환.  (와이파이 필요)
+#  ⚠ 아날로그판과 숫자 크기(스케일)가 달라요 — 마이크를 바꿨다면 [전체 지우기]로 데이터를 새로 모으세요!
+import network, socket, time, math, gc, struct
+from machine import I2S, Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID, WIFI_PASSWORD     # 1·3·5장에서 만든 그 파일
+
+audio = I2S(0, sck=Pin(18), ws=Pin(19), sd=Pin(20),
+            mode=I2S.RX, bits=32, format=I2S.MONO, rate=16000, ibuf=40000)
+N = 2400; raw = bytearray(N * 4)
+def grab():
+    audio.readinto(raw)
+    return [x &gt;&gt; 16 for x in struct.unpack(&quot;&lt;%di&quot; % N, raw)]
+def features(buf):
+    n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; peak = 0.0; prev = buf[0] - m
+    for v in buf:
+        d = v - m; ad = d if d &gt;= 0 else -d; ss += d * d
+        if ad &gt; peak: peak = ad
+        if (d &gt;= 0) != (prev &gt;= 0): zc += 1
+        prev = d
+    r = math.sqrt(ss / n); return r, zc, peak / (r + 1e-9)
+small = bytearray(512 * 4)
+def level():                               # 빠른 &#x27;소리 크기&#x27;(라이브 미터용)
+    audio.readinto(small); v = [x &gt;&gt; 16 for x in struct.unpack(&quot;&lt;512i&quot;, small)]; m = sum(v) / 512
+    return math.sqrt(sum((x - m) ** 2 for x in v) / 512)
+def capture(sec=1.5):                      # sec초 중 &#x27;가장 또렷한&#x27; 0.15초(임계값 없음)
+    best = None; bestr = -1.0; t0 = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), t0) &lt; int(sec * 1000):
+        f = features(grab())
+        if f[0] &gt; bestr: bestr = f[0]; best = f
+    return best
+
+LABELS = [&quot;휘파람&quot;, &quot;박수&quot;, &quot;말소리&quot;, &quot;노크&quot;]
+COLORS = [&quot;#1D9E75&quot;, &quot;#D85A30&quot;, &quot;#378ADD&quot;, &quot;#7F77DD&quot;]
+
+TIMING = (280, 515, 515, 745); NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+def show(ci, lv):
+    c = [(40, 0, 0), (0, 40, 0), (0, 0, 40), (40, 40, 0)][ci % 4]
+    for i in range(NUM): np[i] = c if i &lt; lv else (0, 0, 0)
+    np.write()
+
+rows = []
+try:
+    for ln in open(&quot;sounds.csv&quot;):
+        ln = ln.strip()
+        if ln == &quot;&quot; or ln.startswith(&quot;rms&quot;): continue
+        r, z, c, nm = ln.split(&quot;,&quot;); rows.append((float(r), float(z), float(c), nm))
+except OSError:
+    pass
+def save_csv():
+    f = open(&quot;sounds.csv&quot;, &quot;w&quot;); f.write(&quot;rms,zcr,crest,label\n&quot;)
+    for r in rows: f.write(&quot;%.0f,%d,%.2f,%s\n&quot; % (r[0], r[1], r[2], r[3]))
+    f.close()
+
+def predict(feat, k=5):
+    if len(rows) &lt; 2: return None, 0.0
+    mins = [min(r[i] for r in rows) for i in range(3)]
+    maxs = [max(r[i] for r in rows) for i in range(3)]
+    def nz(v, i): return (v - mins[i]) / (maxs[i] - mins[i] + 1e-9)
+    q = [nz(feat[i], i) for i in range(3)]
+    def d2(r): return sum((nz(r[i], i) - q[i]) ** 2 for i in range(3))
+    near = sorted(rows, key=d2)[:k]; vote = {}
+    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1.0 / (d2(r) + 1e-6)
+    b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
+
+wlan = network.WLAN(network.STA_IF); wlan.active(True)
+wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+for _ in range(30):
+    if wlan.isconnected(): break
+    time.sleep(0.5)
+print(&quot;브라우저에서 여세요 →  http://%s&quot; % wlan.ifconfig()[0])
+
+PAGE = &quot;&quot;&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+&lt;title&gt;소리 ML 컨트롤 센터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.plot.ly/plotly-2.35.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;body{font-family:sans-serif;max-width:760px;margin:0 auto;padding:16px;color:#222}
+h2{margin:.2em 0}.sec{border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;margin:12px 0}
+.sec b.t{font-size:14px}button{font-size:15px;padding:9px 13px;margin:4px;border:1px solid #999;border-radius:10px;background:#fff;cursor:pointer}
+#meter{height:16px;border-radius:9px;background:#eee;overflow:hidden;margin:8px 0}#meter&gt;i{display:block;height:100%;width:0%;background:#0891B2;transition:width .12s}
+#plot{height:420px}#out{font-size:20px;font-weight:700;margin:8px 0}#rec{font-size:13px;color:#555;min-height:18px}
+.muted{color:#777;font-size:13px}input[type=range]{vertical-align:middle}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h2&gt;🎛️ 소리 ML 컨트롤 센터 &lt;span class=&quot;muted&quot;&gt;· INMP441&lt;/span&gt;&lt;/h2&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;🔊 라이브 — 지금 들리는 소리&lt;/b&gt;&lt;div id=&quot;meter&quot;&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;&lt;div class=&quot;muted&quot; id=&quot;mtxt&quot;&gt;마이크가 듣고 있어요…&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;① 데이터 만들기&lt;/b&gt; &lt;span class=&quot;muted&quot;&gt;(버튼 누르고 1~2초 안에 소리)&lt;/span&gt;
+&lt;div id=&quot;btns&quot;&gt;&lt;/div&gt;&lt;div id=&quot;rec&quot;&gt;&lt;/div&gt;&lt;div class=&quot;muted&quot; id=&quot;cnt&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;② 한눈에 — 모은 소리 3D 지도&lt;/b&gt;&lt;div id=&quot;plot&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;sec&quot;&gt;&lt;b class=&quot;t&quot;&gt;② 테스트 — 새 소리 분류&lt;/b&gt;
+&lt;div&gt;&lt;button onclick=&quot;pred()&quot;&gt;🔮 예측 한 번&lt;/button&gt;
+이웃 k= &lt;input type=&quot;range&quot; id=&quot;k&quot; min=&quot;1&quot; max=&quot;9&quot; step=&quot;2&quot; value=&quot;5&quot; oninput=&quot;kv.textContent=this.value&quot;&gt;&lt;b id=&quot;kv&quot;&gt;5&lt;/b&gt;
+&lt;button onclick=&quot;clr()&quot;&gt;전체 지우기&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;out&quot;&gt;소리를 모은 뒤 예측해 보세요&lt;/div&gt;&lt;/div&gt;
+&lt;script&gt;
+const LAB=__LABELS__, COL=__COLORS__; let maxL=1, busy=false;
+let bh=&#x27;&#x27;; LAB.forEach((n,i)=&gt;bh+=`&lt;button onclick=&quot;rec(${i})&quot;&gt;${n}&lt;/button&gt;`);
+document.getElementById(&#x27;btns&#x27;).innerHTML=bh;
+function setMeter(p){document.getElementById(&#x27;meter&#x27;).firstChild.style.width=Math.min(100,p*100)+&#x27;%&#x27;;}
+async function poll(){
+  if(!busy){ try{ let r=await (await fetch(&#x27;/level&#x27;)).json(); maxL=Math.max(maxL,r.l,1); setMeter(r.l/maxL);
+    document.getElementById(&#x27;mtxt&#x27;).textContent = r.l&gt;maxL*0.35?&#x27;소리가 들려요! 🔊&#x27;:&#x27;조용… (마이크 대기 중)&#x27;; }catch(e){} }
+  setTimeout(poll,250);
+}
+poll();
+async function rec(i){ busy=true; document.getElementById(&#x27;rec&#x27;).textContent=&#x27;녹음 중… &quot;&#x27;+LAB[i]+&#x27;&quot; 소리를 내세요&#x27;;
+  let r=await (await fetch(&#x27;/rec?i=&#x27;+i)).json(); busy=false;
+  let pv = (r.pred&amp;&amp;r.pred!==&#x27;-&#x27;) ? (&#x27;현재 모델 판단: &#x27;+r.pred+&#x27; &#x27;+r.conf+&#x27;% &#x27;+(r.pred===r.saved?&#x27;✓ 잘 맞아요&#x27;:&#x27;— 더 모아보세요&#x27;)) : &#x27;(아직 예시가 적어요)&#x27;;
+  document.getElementById(&#x27;rec&#x27;).textContent=&#x27;저장됨: &#x27;+r.saved+&#x27;  ·  &#x27;+pv; draw();
+}
+async function pred(){ busy=true; document.getElementById(&#x27;out&#x27;).textContent=&#x27;예측 중… 소리를 내세요&#x27;;
+  let k=document.getElementById(&#x27;k&#x27;).value;
+  let r=await (await fetch(&#x27;/predict?k=&#x27;+k)).json(); busy=false;
+  document.getElementById(&#x27;out&#x27;).textContent = r.conf&gt;=60 ? &#x27;이건… &#x27;+r.label+&#x27;! (확신 &#x27;+r.conf+&#x27;%)&#x27; : &#x27;음… 잘 모르겠어요 (확신 &#x27;+r.conf+&#x27;%)&#x27;;
+  draw(r);
+}
+async function clr(){ busy=true; await fetch(&#x27;/clear&#x27;); busy=false; document.getElementById(&#x27;out&#x27;).textContent=&#x27;지웠어요&#x27;; draw(); }
+async function draw(pred){
+  let d=await (await fetch(&#x27;/data&#x27;)).json(), cnt={};
+  d.forEach(p=&gt;cnt[p.label]=(cnt[p.label]||0)+1);
+  document.getElementById(&#x27;cnt&#x27;).textContent=&#x27;모은 개수 — &#x27;+LAB.map(n=&gt;n+&#x27; &#x27;+(cnt[n]||0)).join(&#x27; · &#x27;);
+  let tr=LAB.map((n,i)=&gt;({type:&#x27;scatter3d&#x27;,mode:&#x27;markers&#x27;,name:n,
+    x:d.filter(p=&gt;p.label==n).map(p=&gt;p.rms),y:d.filter(p=&gt;p.label==n).map(p=&gt;p.zcr),z:d.filter(p=&gt;p.label==n).map(p=&gt;p.crest),
+    marker:{size:4,color:COL[i]}}));
+  if(pred&amp;&amp;pred.feat) tr.push({type:&#x27;scatter3d&#x27;,mode:&#x27;markers&#x27;,name:&#x27;방금&#x27;,
+    x:[pred.feat[0]],y:[pred.feat[1]],z:[pred.feat[2]],marker:{size:9,color:&#x27;#000&#x27;,symbol:&#x27;diamond&#x27;}});
+  Plotly.react(&#x27;plot&#x27;,tr,{margin:{l:0,r:0,t:0,b:0},
+    scene:{xaxis:{title:&#x27;크기&#x27;},yaxis:{title:&#x27;높낮이&#x27;},zaxis:{title:&#x27;들쭉날쭉&#x27;}}},{displayModeBar:false});
+}
+draw();
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;&quot;&quot;
+
+def send(cl, body, ctype=&quot;text/html&quot;):
+    if not isinstance(body, bytes): body = body.encode()
+    hdr = (&quot;HTTP/1.0 200 OK\r\nContent-Type: %s; charset=utf-8\r\nConnection: close\r\nContent-Length: %d\r\n\r\n&quot; % (ctype, len(body))).encode()
+    mv = memoryview(hdr + body)
+    while mv:
+        try:
+            sent = cl.send(mv); mv = mv[sent:]
+        except OSError:
+            time.sleep(0.005)
+
+srv = socket.socket(); srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+srv.bind((&quot;0.0.0.0&quot;, 80)); srv.listen(1); srv.setblocking(False)
+show(0, 0)
+while True:
+    try: cl, _ = srv.accept()
+    except OSError: cl = None
+    if cl:
+        try:
+            gc.collect()                          # 녹음/응답마다 큰 리스트가 쌓여 단편화 방지(5장 패턴)
+            cl.settimeout(5)
+            path = cl.recv(1024).split(b&quot; &quot;)[1]
+            if path.startswith(b&quot;/level&quot;):
+                send(cl, &#x27;{&quot;l&quot;:%.0f}&#x27; % level(), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/rec?i=&quot;):
+                i = int(path.split(b&quot;=&quot;)[1]); show(i, NUM)
+                f = capture()
+                pn, pc = predict(f)                       # 추가 &#x27;전&#x27; 현재 모델로 분류해 보기
+                rows.append((f[0], f[1], f[2], LABELS[i])); save_csv(); show(0, 0)
+                pj = &#x27;&quot;-&quot;&#x27; if pn is None else &#x27;&quot;%s&quot;&#x27; % pn
+                send(cl, &#x27;{&quot;saved&quot;:&quot;%s&quot;,&quot;pred&quot;:%s,&quot;conf&quot;:%d}&#x27; % (LABELS[i], pj, int((pc or 0) * 100)), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/predict&quot;):
+                k = 5
+                if b&quot;k=&quot; in path:
+                    try: k = int(path.split(b&quot;k=&quot;)[1].split(b&quot;&amp;&quot;)[0].split(b&quot; &quot;)[0])
+                    except Exception: k = 5
+                f = capture(); name, conf = predict(f, k)
+                if name is None:
+                    send(cl, &#x27;{&quot;label&quot;:&quot;-&quot;,&quot;conf&quot;:0,&quot;feat&quot;:[%.0f,%d,%.2f]}&#x27; % (f[0], f[1], f[2]), &quot;application/json&quot;)
+                else:
+                    ci = LABELS.index(name) if name in LABELS else 0
+                    show(ci, max(1, int(conf * NUM)))
+                    send(cl, &#x27;{&quot;label&quot;:&quot;%s&quot;,&quot;conf&quot;:%d,&quot;feat&quot;:[%.0f,%d,%.2f]}&#x27; % (name, int(conf * 100), f[0], f[1], f[2]), &quot;application/json&quot;)
+                    time.sleep(0.4); show(0, 0)
+            elif path.startswith(b&quot;/data&quot;):
+                pts = &quot;,&quot;.join(&#x27;{&quot;rms&quot;:%.0f,&quot;zcr&quot;:%d,&quot;crest&quot;:%.2f,&quot;label&quot;:&quot;%s&quot;}&#x27; % (r[0], r[1], r[2], r[3]) for r in rows)
+                send(cl, (&quot;[&quot; + pts + &quot;]&quot;).encode(), &quot;application/json&quot;)
+            elif path.startswith(b&quot;/clear&quot;):
+                del rows[:]; save_csv(); send(cl, &#x27;{&quot;ok&quot;:1}&#x27;, &quot;application/json&quot;)
+            else:
+                send(cl, PAGE.replace(&quot;__LABELS__&quot;, str(LABELS)).replace(&quot;__COLORS__&quot;, str(COLORS)))
+        except Exception:
+            pass
+        cl.close()
+    time.sleep(0.01)</code></pre></div></details><div class="callout warn"><div class="callout-head">⚠️ 마이크를 바꾸면 — 데이터부터 새로!</div><div class="callout-body">아날로그와 INMP441은 <b>같은 소리라도 숫자 크기(스케일)가 완전히 달라요.</b> 그래서 한 마이크로 모은 <code>sounds.csv</code>로 다른 마이크를 예측하면 엉뚱하게 맞힙니다. 마이크를 바꿨다면 대시보드에서 <b>[전체 지우기]</b> 후 그 마이크로 다시 모으세요. (두 마이크를 <b>동시에</b> 꽂아도 핀이 달라 전기적 충돌은 없지만, 코드는 <b>한 번에 하나</b>만 읽어요.)</div></div><ol class="steps"><li><b>실행</b><span>코드를 ▶ 실행 → Thonny 셸에 <code>http://192.168.x.x</code> 주소가 떠요.</span></li><li><b>열기</b><span><b>같은 와이파이</b>의 폰/PC 브라우저에 그 주소를 입력.</span></li><li><b>한 화면에서</b><span>라이브 미터로 듣고 → 버튼으로 녹음(분류 피드백) → 3D 지도 확인 → [예측]으로 테스트. <b>전 과정을 폰으로!</b></span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 이 코드는 가장 복잡 — 실기 점검 1회 권장</div><div class="callout-body">마이크 + 와이파이 서버를 동시에 다뤄 <b>이 책에서 가장 복잡</b>해요. 안 되면: ① <code>wifi_config</code> 정보 ② 폰·피코가 같은 와이파이인지 ③ 그래프가 안 뜨면 <b>브라우저 인터넷</b>(Plotly CDN). 콘솔판(<code>sound_record.py</code>)은 와이파이 없이도 되는 안전한 대안이에요.</div></div></section></div>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.

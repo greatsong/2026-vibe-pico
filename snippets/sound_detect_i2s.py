@@ -28,7 +28,9 @@ np = NeoPixel(Pin(16), NUM, timing=TIMING)
 def flash(c, t=0.2): np.fill(c); np.write(); time.sleep(t); np.fill((0, 0, 0)); np.write()
 
 print("조용히… 배경소음 측정 중")
-base = max(level() for _ in range(20)); THRESH = base * 3 + 30
+for _ in range(8): level()                              # I2S는 켜진 직후 값이 튀어요 → 워밍업으로 버림
+bg = sorted(level() for _ in range(25)); base = bg[len(bg) // 2]   # 중앙값(튀는 값에 안 휘둘림)
+THRESH = base * 2.5 + 25   # 감지가 안 되면 ↓, 너무 잦으면 ↑
 print("준비! 소리를 내보세요.")
 while True:
     if level() > THRESH:

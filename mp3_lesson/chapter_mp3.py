@@ -184,7 +184,12 @@ CHAPTER_MP3 = {
       ]},
       {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 (wifi_config.py)",
        "html": "1·3·5장에서 만든 <code>wifi_config.py</code>(<code>WIFI_SSID</code>·<code>WIFI_PASSWORD</code>)가 피코에 있어야 해요. 학교망이 기기 간 통신을 막으면 <b>폰 핫스팟</b>이 가장 확실합니다(폰·피코가 <b>같은 와이파이</b>)."},
-      {"type": "code", "label": "코드 · 소리 ML 컨트롤 센터 (피코 2 WH)", "lang": "python", "file": "snippets/sound_dashboard.py", "fold": True},
+      {"type": "code", "label": "코드 · 소리 ML 컨트롤 센터 (아날로그 마이크 · 피코 2 WH)", "lang": "python", "file": "snippets/sound_dashboard.py", "fold": True},
+      {"type": "callout", "kind": "tip", "title": "INMP441로 한다면 — _i2s 대시보드",
+       "html": "마이크가 INMP441이면 아래 <code>sound_dashboard_i2s.py</code>를 쓰세요. <b>화면·기능은 똑같고</b> 마이크 읽는 부분만 I2S(GP18/19/20)예요."},
+      {"type": "code", "label": "코드 · 소리 ML 컨트롤 센터 (INMP441 · 피코 2 WH)", "lang": "python", "file": "snippets/sound_dashboard_i2s.py", "fold": True},
+      {"type": "callout", "kind": "warn", "title": "마이크를 바꾸면 — 데이터부터 새로!",
+       "html": "아날로그와 INMP441은 <b>같은 소리라도 숫자 크기(스케일)가 완전히 달라요.</b> 그래서 한 마이크로 모은 <code>sounds.csv</code>로 다른 마이크를 예측하면 엉뚱하게 맞힙니다. 마이크를 바꿨다면 대시보드에서 <b>[전체 지우기]</b> 후 그 마이크로 다시 모으세요. (두 마이크를 <b>동시에</b> 꽂아도 핀이 달라 전기적 충돌은 없지만, 코드는 <b>한 번에 하나</b>만 읽어요.)"},
       {"type": "steps", "items": [
         {"t": "실행", "d": "코드를 ▶ 실행 → Thonny 셸에 <code>http://192.168.x.x</code> 주소가 떠요."},
         {"t": "열기", "d": "<b>같은 와이파이</b>의 폰/PC 브라우저에 그 주소를 입력."},

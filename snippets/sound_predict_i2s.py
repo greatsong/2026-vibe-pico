@@ -49,7 +49,9 @@ def predict(feat, k=5):
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 print("조용히… 배경소음 측정 중")
-base = max(level() for _ in range(20)); THRESH = base * 2   # 민감하게(작은 소리도). 잦으면 ↑
+for _ in range(8): level()                              # I2S는 켜진 직후 값이 튀어요 → 워밍업으로 버림
+bg = sorted(level() for _ in range(25)); base = bg[len(bg) // 2]   # 중앙값(튀는 값에 안 휘둘림)
+THRESH = base * 2 + 20   # 예측이 안 뜨면 2→1.5로↓, 너무 잦으면 ↑ (max()는 한 번 튀면 영영 안 떠요)
 print("준비! 소리를 내면 알아맞힐게요.")
 while True:
     if level() > THRESH:
