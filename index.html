@@ -43,6 +43,15 @@ a{color:inherit;text-decoration:none;}
 .stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
   border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
 .stat b{font-size:15px;color:var(--fg);font-weight:800;}
+.ml-cta{display:flex;align-items:center;gap:14px;margin:24px 0 2px;padding:16px 18px;border:1px solid var(--line);
+  border-radius:14px;background:linear-gradient(100deg,#f0f9ff,#eef2ff);transition:border-color .15s,box-shadow .15s;}
+.ml-cta:hover{border-color:#3B47C2;box-shadow:0 4px 18px rgba(59,71,194,.13);}
+.ml-cta-emoji{font-size:30px;flex:0 0 auto;line-height:1;}
+.ml-cta-txt{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
+.ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
+.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:#3B47C2;white-space:nowrap;}
+@media(max-width:640px){.ml-cta{flex-wrap:wrap;gap:10px;}.ml-cta-go{width:100%;}}
 .chapter{padding-top:30px;}
 .ch-head{margin:40px 0 8px;}
 .ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
@@ -225,6 +234,12 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
         <div class="stat"><b>22</b>개 코드 블록</div>
         <div class="stat"><b>11</b>개 AI 프롬프트</div>
       </div>
+      <a class="ml-cta" href="ml_site/">
+        <span class="ml-cta-emoji">🔊🧠</span>
+        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
+        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
+        <span class="ml-cta-go">확장판 열기 →</span>
+      </a>
     </header>
     <div class="chapter" id="ch0"><div class="ch-head"><span class="ch-num" style="color:#5B6CF0">CHAPTER 00</span><h2 class="ch-title"><span class="ch-bar" style="background:#5B6CF0"></span>준비하기</h2><p class="ch-sub">Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Thonny(코드 편집기)를 설치하고 실행할 수 있다</li><li>피코 2 WH에 그로브 쉴드와 센서를 바르게 연결할 수 있다</li><li>MicroPython 펌웨어를 설치하고 Thonny와 피코를 연결할 수 있다</li><li>보드 위 LED를 깜빡이는 첫 코드를 실행할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>피코는 손바닥만 한 작은 컴퓨터예요. 다만 처음 한 번은 <b>① 코드를 쓸 도구(Thonny) 설치 → ② 하드웨어 조립 → ③ 피코에 ‘운영체제’ 격인 펌웨어 설치 → ④ 도구와 피코 연결</b> 순서를 거쳐야 합니다. 이 4단계만 통과하면, 다음 장부터는 코드를 복사해 붙여넣고 ▶ 버튼만 누르면 돼요.</p></div><section class="sec" id="ch0-0"><h3 class="sec-title">0.1 · 준비물 확인</h3><p class="prose">책상 위에 아래 물건이 모두 있는지 먼저 확인하세요.</p><ul class="check-list"><li>Raspberry Pi <b>Pico 2 WH</b> (핀 헤더가 납땜된 버전)</li><li>그로브(Grove) <b>베이스 쉴드</b></li><li><b>WS2813 LED 바</b> (10개짜리) + 그로브 케이블</li><li><b>MQ-2 가스센서</b> 모듈 + 그로브 케이블</li><li>데이터 전송이 되는 <b>USB 케이블</b> (충전 전용 케이블 ✗)</li><li>Windows 또는 macOS 컴퓨터</li></ul><div class="callout warn"><div class="callout-head">⚠️ USB 케이블 주의</div><div class="callout-body">세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 연수 현장에서 제일 흔한 막힘 지점입니다.</div></div></section><section class="sec" id="ch0-1"><h3 class="sec-title">0.2 · Thonny 설치 (코드 편집기)</h3><p class="prose"><b>Thonny</b>는 우리가 쓴 코드를 피코에게 전달하고, 피코가 보내는 메시지를 받아 보여 주는 <b>창구</b>예요. 파이썬 입문용으로 가장 쉽고, 피코를 기본 지원합니다.</p><a class="linkbtn" href="https://thonny.org" target="_blank" rel="noopener">🔗 thonny.org — Thonny 내려받기</a><ol class="steps"><li><b>thonny.org 접속</b><span>위 버튼을 눌러 공식 사이트로 갑니다.</span></li><li><b>내 운영체제용 설치파일 받기</b><span>오른쪽 위에서 <b>Windows</b> 또는 <b>macOS</b>에 맞는 파일을 내려받습니다.</span></li><li><b>설치 실행</b><span>받은 파일을 더블클릭해 안내대로 설치합니다. (옵션은 기본값 그대로 두면 됩니다)</span></li><li><b>Thonny 실행</b><span>설치가 끝나면 Thonny를 엽니다. 위에 코드 쓰는 칸, 아래에 <b>Shell</b>(셸) 칸이 보이면 성공이에요.</span></li></ol><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 설치 파일이 백신/보안 경고로 막힘</div><div class="m-row"><span class="m-tag">원인</span>다운로드 직후 일부 백신이 과민 반응합니다.</div><div class="m-row"><span class="m-tag fix">해결</span>공식 사이트(<a class="ilink" href="https://thonny.org" target="_blank" rel="noopener">thonny.org</a>)에서 받았다면 안전합니다. ‘허용’ 또는 ‘추가 정보 → 실행’을 선택하세요.</div></div></div></section><section class="sec" id="ch0-2"><h3 class="sec-title">0.3 · 하드웨어 조립</h3><p class="prose">그로브 베이스 쉴드는 피코 위에 ‘덮어 끼우는’ 확장 보드예요. 센서를 납땜 없이 케이블로 톡 꽂을 수 있게 해 줍니다. 아래 그림처럼 연결합니다.</p><div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코와 그로브 쉴드, LED, 가스센서 연결도">
   <defs>

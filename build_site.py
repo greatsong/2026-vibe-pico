@@ -971,6 +971,15 @@ a{color:inherit;text-decoration:none;}
 .stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
   border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
 .stat b{font-size:15px;color:var(--fg);font-weight:800;}
+.ml-cta{display:flex;align-items:center;gap:14px;margin:24px 0 2px;padding:16px 18px;border:1px solid var(--line);
+  border-radius:14px;background:linear-gradient(100deg,#f0f9ff,#eef2ff);transition:border-color .15s,box-shadow .15s;}
+.ml-cta:hover{border-color:#3B47C2;box-shadow:0 4px 18px rgba(59,71,194,.13);}
+.ml-cta-emoji{font-size:30px;flex:0 0 auto;line-height:1;}
+.ml-cta-txt{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
+.ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
+.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:#3B47C2;white-space:nowrap;}
+@media(max-width:640px){.ml-cta{flex-wrap:wrap;gap:10px;}.ml-cta-go{width:100%;}}
 .chapter{padding-top:30px;}
 .ch-head{margin:40px 0 8px;}
 .ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
@@ -1153,6 +1162,12 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
         <div class="stat"><b>/*NCODE*/</b>개 코드 블록</div>
         <div class="stat"><b>/*NPROMPT*/</b>개 AI 프롬프트</div>
       </div>
+      <a class="ml-cta" href="ml_site/">
+        <span class="ml-cta-emoji">🔊🧠</span>
+        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
+        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
+        <span class="ml-cta-go">확장판 열기 →</span>
+      </a>
     </header>
     /*MAIN*/
     <footer>
