@@ -68,15 +68,34 @@ CHAPTER_SOUND = {
       ]},
       {"type": "step_head", "html": "🔵 <b>경로 B · INMP441</b> — 음질 업그레이드 (점퍼 6선 · 거의 나란히)"},
       {"type": "callout", "kind": "warn", "title": "먼저! VDD는 반드시 3.3V — 5V 금지",
-       "html": "INMP441은 3.3V 소자라 <b>VDD를 5V에 꽂으면 망가집니다.</b> 쉴드가 피코 40핀을 모두 헤더로 뽑아주니, 그 헤더에 점퍼선(암-수)을 꽂으면 돼요. <b>요령</b>: 신호선 바로 양옆의 GND(<b>23·28번</b>)를 쓰면 <b>23~28번 한 군데</b>에 거의 다 모입니다. 7색 리본선이면 <b>가장자리 ‘흰’선은 안 꽂은 채로</b> 두고(자를 필요 없어요 — 재사용해요) 나머지를 순서대로 꽂으세요. 정작 중요한 건 색이 아니라 <b>신호↔핀</b> 짝이에요 — 다른 선이면 색이 달라도 됩니다."},
+       "html": "INMP441은 3.3V 소자라 <b>VDD를 5V에 꽂으면 망가집니다.</b> 쉴드가 피코 40핀을 모두 헤더로 뽑아주니, 그 헤더에 점퍼선(암-수)을 꽂으면 돼요. <b>요령</b>: 신호선 바로 양옆의 GND(<b>23·28번</b>)를 쓰면 <b>23~28번 한 군데</b>에 거의 다 모입니다. 7색 리본선이면 <b>가장자리 ‘흰’선은 안 꽂은 채로</b> 두고(자를 필요 없어요 — 재사용해요) 나머지를 순서대로 꽂으세요. 정작 중요한 건 색이 아니라 <b>신호↔핀</b> 짝이에요 — 다른 선이면 색이 달라도 됩니다.<br><br><b>⚠ 특히 — 리본선을 ‘통째로’ 연속 삽입하지 마세요.</b> 센서 보드는 한 줄이 아니라 <b>2열 6핀</b>이라, 핀 순서가 쉴드 23~28번과 1:1로 맞지 않아요. <b>VDD 한 선만 23~28 묶음과 떨어진 위쪽 36번(3V3)으로 따로</b> 올려야 합니다. 색 순서를 믿지 말고, 아래 핀맵처럼 <b>센서 글자(실크) → 피코 핀 번호</b>를 한 선씩 확인하세요."},
+      {"type": "raw", "html": (
+        '<div style="margin:8px 0 2px">'
+        '<div style="font-weight:800;font-size:13.5px;color:#0f172a;margin-bottom:8px">📷 INMP441 센서 보드 핀맵 — 한 줄이 아니라 <span style="color:#b91c1c">2열 6핀</span> <span style="font-weight:600;color:#64748b">(보드 글자를 읽는 방향 기준)</span></div>'
+        '<table style="border-collapse:separate;border-spacing:7px;width:100%;max-width:560px;font-size:12.5px;line-height:1.35">'
+        '<tr>'
+        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">SCK</b><br><span style="color:#475569">→ GP18 · 24번</span></td>'
+        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">WS</b><br><span style="color:#475569">→ GP19 · 25번</span></td>'
+        '<td style="background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">L/R</b><br><span style="color:#475569">→ <b>GND</b> · 28번</span></td>'
+        '</tr><tr>'
+        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">SD</b><br><span style="color:#475569">→ GP20 · 26번</span></td>'
+        '<td style="background:#fef2f2;border:2px solid #fca5a5;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px;color:#b91c1c">VDD ⚠</b><br><span style="color:#b91c1c"><b>→ 3V3 · 36번</b> (5V 아님!)</span></td>'
+        '<td style="background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">GND</b><br><span style="color:#475569">→ <b>GND</b> · 23번</span></td>'
+        '</tr></table>'
+        '<div style="font-size:12px;color:#475569;margin-top:7px">위쪽 줄 <b>SCK · WS · L/R</b> / 아래쪽 줄 <b>SD · VDD · GND</b> — 서로 <b>다른 줄</b>이에요. '
+        '<b style="color:#b91c1c">VDD만</b> 23~28 묶음에서 떨어진 <b>36번(3V3)</b>으로, <b>L/R은 신호가 아니라 GND</b>로 갑니다.</div>'
+        '</div>'
+      )},
       {"type": "steps", "items": [
         {"t": "GND → GND(23번)", "d": "<b>주</b> 점퍼 — SCK 바로 옆 GND"},
         {"t": "SCK → GP18(24번)", "d": "<b>노</b> 점퍼 — 클록"},
         {"t": "WS → GP19(25번)", "d": "<b>초</b> 점퍼 — <b>반드시 SCK 바로 다음 핀</b>"},
         {"t": "SD → GP20(26번)", "d": "<b>파</b> 점퍼 — 데이터"},
         {"t": "L/R → GND(28번)", "d": "<b>보</b> 점퍼 — SD 옆 GND(왼쪽 채널)"},
-        {"t": "VDD → 3V3(36번)", "d": "<b>회</b> 점퍼 — <b>⚠ 5V 아님!</b> (끝선만 위로)"},
+        {"t": "VDD → 3V3(36번)", "d": "<b>회</b> 점퍼 — <b>⚠ 5V 아님!</b> 23~28 묶음과 떨어진 <b>위쪽 36번</b>으로 따로"},
       ]},
+      {"type": "callout", "kind": "warn", "title": "전원(USB) 켜기 전 — 이 3가지부터 확인",
+       "html": "<b>① VDD → 3V3(36번)</b> 인가요? (5V면 즉시 손상) &nbsp; <b>② GND → GND</b> 인가요? &nbsp; <b>③ L/R → GND</b> 인가요? (신호 핀 아님!)<br>이 세 개만 맞으면 나머지 SCK·WS·SD는 GP18·19·20에 순서대로 꽂혀 있으면 됩니다. <b>리본 색이 아니라 센서 글자 라벨</b> 기준으로 한 선씩 짚어 보세요."},
       {"type": "callout", "kind": "tip", "title": "배선이 헷갈리면",
        "html": "‘배선 위젯/그림’의 핀맵을 보세요. INMP441은 그로브 포트가 아니라 <b>헤더 핀</b>에 점퍼로 꽂는다는 점만 기억하면 됩니다."},
       {"type": "step_head", "html": "이제 값을 읽어 ‘소리가 숫자가 되는’ 걸 봅니다"},
