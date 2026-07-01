@@ -1,4 +1,4 @@
-# 소리 인식 ④(I2S) — INMP441 + k-NN(거리가중)으로 알아맞히기 + LED · 특징 3개
+# 소리 인식 ④(I2S) — INMP441 + k-NN(다수결)으로 알아맞히기 + LED · 특징 3개
 import struct, time, math
 from machine import I2S, Pin
 from neopixel import NeoPixel
@@ -45,7 +45,7 @@ def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 print("조용히… 배경소음 측정 중")

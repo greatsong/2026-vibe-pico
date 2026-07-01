@@ -69,7 +69,7 @@ def predict(f, k=5):
     q = norm(f)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(D))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 print("\n[예측] 소리를 내보세요.")

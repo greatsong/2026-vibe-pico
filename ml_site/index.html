@@ -372,7 +372,7 @@ fig = px.scatter_3d(
     labels={&quot;rms&quot;: &quot;크기&quot;, &quot;zcr&quot;: &quot;높낮이&quot;, &quot;crest&quot;: &quot;들쭉날쭉&quot;, &quot;label&quot;: &quot;소리&quot;},
 )
 fig.update_traces(marker=dict(size=5))
-fig.show()                              # 브라우저가 열리고, 마우스로 빙글빙글 돌려보기!</code></pre></div><div class="callout tip"><div class="callout-head">💡 터미널이 어렵다면 — Thonny로 그냥 실행</div><div class="callout-body">PC에 깔린 <b>Thonny</b>로도 돼요(피코 켤 때 쓰던 그 프로그램!). ① <code>plot_sounds.py</code>를 Thonny로 열기 → ② 오른쪽 아래 인터프리터를 <b>‘이 컴퓨터의 Python’</b>으로 바꾸기 → ③ <code>sounds.csv</code>가 같은 폴더에 있는지 확인하고 ▶ 실행. (단, <code>plotly·pandas</code>는 <b>도구 → 패키지 관리</b>에서 한 번 설치해야 해요.)</div></div><div class="block prompt-block" style="--accent:#0891B2"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 시켜도 돼요 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">sounds.csv(열: rms, zcr, crest, label)를 plotly로 3D 산점도를 그려줘. label별로 색을 다르게 하고 마우스로 회전되게 해줘. 축 이름은 크기/높낮이/들쭉날쭉으로.</div></div><div class="callout key"><div class="callout-head">🔑 무리가 갈리나요?</div><div class="callout-body">소리별 점들이 <b>다른 덩어리</b>로 모여 있으면 → 예측이 잘 될 신호. 두 소리가 <b>겹쳐</b> 있으면 → 헷갈리는 어려운 문제(특징을 더 넣을 차례 — 아래 <b>FFT 심화</b>).</div></div></section><section class="sec" id="chml-6"><h3 class="sec-title">따라하기 ④ k-NN으로 예측 → LED로 표현</h3><p class="prose">이제 모은 데이터를 ‘모델’ 삼아 새 소리를 예측합니다. <b>소리마다 다른 색</b>으로, 확신도만큼 LED 칸이 켜져요. <code>k</code>를 1과 7로 바꿔 차이도 느껴보세요. 아래 <b>동작 흐름</b>에서 소리를 골라 ‘듣기→특징→정규화→k-NN→확신→출력’ 6단계를 눈으로 따라가 보세요.</p><div class="flow" data-ac="#0891B2"></div><div class="block code-block"><div class="block-head"><span class="block-label">코드 ④ · k-NN 예측 + LED</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ④ — k-NN(거리가중)으로 &#x27;무슨 소리인지&#x27; 알아맞히기 + LED · 특징 3개
+fig.show()                              # 브라우저가 열리고, 마우스로 빙글빙글 돌려보기!</code></pre></div><div class="callout tip"><div class="callout-head">💡 터미널이 어렵다면 — Thonny로 그냥 실행</div><div class="callout-body">PC에 깔린 <b>Thonny</b>로도 돼요(피코 켤 때 쓰던 그 프로그램!). ① <code>plot_sounds.py</code>를 Thonny로 열기 → ② 오른쪽 아래 인터프리터를 <b>‘이 컴퓨터의 Python’</b>으로 바꾸기 → ③ <code>sounds.csv</code>가 같은 폴더에 있는지 확인하고 ▶ 실행. (단, <code>plotly·pandas</code>는 <b>도구 → 패키지 관리</b>에서 한 번 설치해야 해요.)</div></div><div class="block prompt-block" style="--accent:#0891B2"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 시켜도 돼요 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">sounds.csv(열: rms, zcr, crest, label)를 plotly로 3D 산점도를 그려줘. label별로 색을 다르게 하고 마우스로 회전되게 해줘. 축 이름은 크기/높낮이/들쭉날쭉으로.</div></div><div class="callout key"><div class="callout-head">🔑 무리가 갈리나요?</div><div class="callout-body">소리별 점들이 <b>다른 덩어리</b>로 모여 있으면 → 예측이 잘 될 신호. 두 소리가 <b>겹쳐</b> 있으면 → 헷갈리는 어려운 문제(특징을 더 넣을 차례 — 아래 <b>FFT 심화</b>).</div></div></section><section class="sec" id="chml-6"><h3 class="sec-title">따라하기 ④ k-NN으로 예측 → LED로 표현</h3><p class="prose">이제 모은 데이터를 ‘모델’ 삼아 새 소리를 예측합니다. <b>소리마다 다른 색</b>으로, 확신도만큼 LED 칸이 켜져요. <code>k</code>를 1과 7로 바꿔 차이도 느껴보세요. 아래 <b>동작 흐름</b>에서 소리를 골라 ‘듣기→특징→정규화→k-NN→확신→출력’ 6단계를 눈으로 따라가 보세요.</p><div class="flow" data-ac="#0891B2"></div><div class="block code-block"><div class="block-head"><span class="block-label">코드 ④ · k-NN 예측 + LED</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ④ — k-NN(다수결)으로 &#x27;무슨 소리인지&#x27; 알아맞히기 + LED · 특징 3개
 import time, math
 from machine import ADC, Pin
 from neopixel import NeoPixel
@@ -419,14 +419,14 @@ maxs = [max(r[i] for r in rows) for i in range(3)]
 def norm(v): return [(v[i] - mins[i]) / (maxs[i] - mins[i] + 1e-9) for i in range(3)]
 ex = [(norm(r[:3]), r[3]) for r in rows]
 
-# ── 3) k-NN (거리 가중) ──
+# ── 3) k-NN (다수결) ──
 def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]
     vote = {}
     for e in near:
-        vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)   # 가까울수록 큰 표
+        vote[e[1]] = vote.get(e[1], 0) + 1   # 이웃 하나당 표 하나
     best = max(vote, key=vote.get)
     return best, vote[best] / sum(vote.values())
 
@@ -440,7 +440,7 @@ while True:
         print(&quot;이건… %s!  (확신 %d%%, 크기=%.0f 높낮이=%d 들쭉=%.2f)&quot;
               % (name, conf * 100, feat[0], feat[1], feat[2]))
         show(cidx[name], max(1, int(conf * NUM))); time.sleep(1.0); show(0, 0)
-    time.sleep(0.005)</code></pre></div><div class="callout info"><div class="callout-head">ℹ️ 이렇게 뜨면 성공! (예상 화면)</div><div class="callout-body">새 소리를 내면 <code>이건… 휘파람!  (확신 92%, 크기=318 높낮이=181 들쭉=3.2)</code> 가 뜨고, <b>LED가 그 소리의 색</b>으로 확신도만큼 켜집니다. 안 가르친 살짝 다른 소리도 맞히면 — 그게 바로 <b>일반화</b>예요!</div></div><div class="callout info"><div class="callout-head">ℹ️ 왜 하필 k-NN? — 실제 데이터로 확인했어요</div><div class="callout-body">공개 음성 데이터(모음·음소 분류)로 여러 알고리즘을 직접 견줘봤더니, <b>피코에 넣을 수 있는 것 중 k-NN이 가장 정확</b>했어요(소리가 다양해질수록 격차가 더 커집니다). 게다가 코드에선 <b>‘가까운 이웃일수록 큰 표’를 주는 거리 가중</b>으로 한 단계 더 똑똑하게 만들었답니다.</div></div><div class="block prompt-block" style="--accent:#0891B2"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">막히면 AI에게 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">이 MicroPython k-NN 코드에서 k 값을 바꾸거나, 예측 결과를 더 보기 좋게 출력하도록 고쳐줘. sounds.csv는 rms,zcr,crest,label 형식이야.</div></div></section><section class="sec" id="chml-7"><h3 class="sec-title">★ 다양하게 실험해보기 — 무엇이든 가르쳐 보세요</h3><p class="prose">같은 코드로 <b>가르칠 소리만 바꾸면</b> 끝없이 실험할 수 있어요. 쉬운 것부터 도전까지, 난이도 순으로 골라보세요. (어려운 건 <b>INMP441 + 조용한 환경 + 마이크 가까이</b>를 권해요.)</p><div class="concept-grid"><div class="concept"><div class="concept-t">🟢 쉬움 (깔끔히 갈림)</div><div class="concept-d"><b>휘파람 · 박수 · 노크</b>. 높낮이·크기·들쭉날쭉이 뚜렷이 달라서 거의 항상 잘 맞아요. <b>첫 성공 경험용으로 강력 추천.</b></div></div><div class="concept"><div class="concept-t">🟡 중간</div><div class="concept-d"><b>말소리(“아~”) · 노크 · 박수</b>. ‘지속되는 소리 vs 톡 치는 소리’가 섞여 재밌어요.</div></div><div class="concept"><div class="concept-t">🔵 도전</div><div class="concept-d"><b>문 여닫는 소리 · 복도 발걸음 · 누구 목소리</b>. 작고 비슷해서 잘 안 될 수 있어요 — 그래서 <b>가장 좋은 수업거리</b>예요.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 발걸음·문소리가 잘 안 잡히면? — 그게 정상이고, 그게 핵심</div><div class="callout-body">발걸음은 <b>소리가 아주 작고</b>, 사람마다 비슷해요. 잘 안 맞는 건 버그가 아니라 <b>‘특징 안에 신호가 부족하다’</b>는 ML의 정직한 한계랍니다. 해결의 방향은 둘 — ① <b>마이크를 더 가까이</b>(바닥/문 근처)·INMP441 사용, ② <b>특징을 더 추가</b>(아래).</div></div><div class="callout info"><div class="callout-head">ℹ️ 특징 공학 — 왜 ‘들쭉날쭉’을 기본에 넣었나 (데이터로 확인)</div><div class="callout-body">크기·높낮이 <b>2개만</b>으론 ‘톡 치는 소리(박수·노크)’와 ‘이어지는 소리(목소리·허밍)’가 잘 안 갈려요. 그래서 <b>들쭉날쭉(crest)=최댓값÷평균크기</b>을 기본 특징으로 넣었습니다. 실제 데이터로 재보니 정확도가 <b>0.73 → 0.96</b>으로 뛰었어요(음량이 변해도 안정적 — 비율이라). ‘더 좋은 특징 = 더 똑똑한 ML’ = <b>특징 공학</b>. 더 올리려면? 아래 <b>FFT 심화</b>로!</div></div></section><section class="sec" id="chml-8"><h3 class="sec-title">INMP441(음질↑) 버전 코드 모음</h3><p class="prose">INMP441을 점퍼로 연결한 분은 아래 4종을 쓰세요. <b>특징·k-NN·LED는 위와 완전히 같고</b>, 마이크 읽는 부분만 다릅니다.</p><details class="codefold"><summary>I2S ① · 값 읽기 <span class="fold-hint">· 19줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">I2S ① · 값 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ①(I2S) — INMP441 마이크 값 읽기 (음질 업그레이드 버전)
+    time.sleep(0.005)</code></pre></div><div class="callout info"><div class="callout-head">ℹ️ 이렇게 뜨면 성공! (예상 화면)</div><div class="callout-body">새 소리를 내면 <code>이건… 휘파람!  (확신 92%, 크기=318 높낮이=181 들쭉=3.2)</code> 가 뜨고, <b>LED가 그 소리의 색</b>으로 확신도만큼 켜집니다. 안 가르친 살짝 다른 소리도 맞히면 — 그게 바로 <b>일반화</b>예요!</div></div><div class="callout info"><div class="callout-head">ℹ️ 왜 하필 k-NN? — 실제 데이터로 확인했어요</div><div class="callout-body">공개 음성 데이터(모음·음소 분류)로 여러 알고리즘을 직접 견줘봤더니, <b>피코에 넣을 수 있는 것 중 k-NN이 가장 정확</b>했어요(소리가 다양해질수록 격차가 더 커집니다).</div></div><div class="block prompt-block" style="--accent:#0891B2"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">막히면 AI에게 (바이브코딩)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">이 MicroPython k-NN 코드에서 k 값을 바꾸거나, 예측 결과를 더 보기 좋게 출력하도록 고쳐줘. sounds.csv는 rms,zcr,crest,label 형식이야.</div></div></section><section class="sec" id="chml-7"><h3 class="sec-title">★ 다양하게 실험해보기 — 무엇이든 가르쳐 보세요</h3><p class="prose">같은 코드로 <b>가르칠 소리만 바꾸면</b> 끝없이 실험할 수 있어요. 쉬운 것부터 도전까지, 난이도 순으로 골라보세요. (어려운 건 <b>INMP441 + 조용한 환경 + 마이크 가까이</b>를 권해요.)</p><div class="concept-grid"><div class="concept"><div class="concept-t">🟢 쉬움 (깔끔히 갈림)</div><div class="concept-d"><b>휘파람 · 박수 · 노크</b>. 높낮이·크기·들쭉날쭉이 뚜렷이 달라서 거의 항상 잘 맞아요. <b>첫 성공 경험용으로 강력 추천.</b></div></div><div class="concept"><div class="concept-t">🟡 중간</div><div class="concept-d"><b>말소리(“아~”) · 노크 · 박수</b>. ‘지속되는 소리 vs 톡 치는 소리’가 섞여 재밌어요.</div></div><div class="concept"><div class="concept-t">🔵 도전</div><div class="concept-d"><b>문 여닫는 소리 · 복도 발걸음 · 누구 목소리</b>. 작고 비슷해서 잘 안 될 수 있어요 — 그래서 <b>가장 좋은 수업거리</b>예요.</div></div></div><div class="callout info"><div class="callout-head">ℹ️ 발걸음·문소리가 잘 안 잡히면? — 그게 정상이고, 그게 핵심</div><div class="callout-body">발걸음은 <b>소리가 아주 작고</b>, 사람마다 비슷해요. 잘 안 맞는 건 버그가 아니라 <b>‘특징 안에 신호가 부족하다’</b>는 ML의 정직한 한계랍니다. 해결의 방향은 둘 — ① <b>마이크를 더 가까이</b>(바닥/문 근처)·INMP441 사용, ② <b>특징을 더 추가</b>(아래).</div></div><div class="callout info"><div class="callout-head">ℹ️ 특징 공학 — 왜 ‘들쭉날쭉’을 기본에 넣었나 (데이터로 확인)</div><div class="callout-body">크기·높낮이 <b>2개만</b>으론 ‘톡 치는 소리(박수·노크)’와 ‘이어지는 소리(목소리·허밍)’가 잘 안 갈려요. 그래서 <b>들쭉날쭉(crest)=최댓값÷평균크기</b>을 기본 특징으로 넣었습니다. 실제 데이터로 재보니 정확도가 <b>0.73 → 0.96</b>으로 뛰었어요(음량이 변해도 안정적 — 비율이라). ‘더 좋은 특징 = 더 똑똑한 ML’ = <b>특징 공학</b>. 더 올리려면? 아래 <b>FFT 심화</b>로!</div></div></section><section class="sec" id="chml-8"><h3 class="sec-title">INMP441(음질↑) 버전 코드 모음</h3><p class="prose">INMP441을 점퍼로 연결한 분은 아래 4종을 쓰세요. <b>특징·k-NN·LED는 위와 완전히 같고</b>, 마이크 읽는 부분만 다릅니다.</p><details class="codefold"><summary>I2S ① · 값 읽기 <span class="fold-hint">· 19줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">I2S ① · 값 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ①(I2S) — INMP441 마이크 값 읽기 (음질 업그레이드 버전)
 # 점퍼 연결: VDD→3.3V(⚠5V 금지), GND→GND, SCK→GP18, WS→GP19, SD→GP20, L/R→GND
 from machine import I2S, Pin
 import struct, math, time
@@ -556,7 +556,7 @@ while True:
     flash((0, 40, 0))
     print(&quot;  저장! %s (크기=%.0f 높낮이=%d 들쭉=%.2f) | 현재: %s&quot; % (name, rms, zcr, crest, counts()))
     time.sleep(0.3)
-print(&quot;끝! sounds.csv 저장됨:&quot;, counts())</code></pre></div></details><details class="codefold"><summary>I2S ④ · k-NN 예측 <span class="fold-hint">· 61줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">I2S ④ · k-NN 예측</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ④(I2S) — INMP441 + k-NN(거리가중)으로 알아맞히기 + LED · 특징 3개
+print(&quot;끝! sounds.csv 저장됨:&quot;, counts())</code></pre></div></details><details class="codefold"><summary>I2S ④ · k-NN 예측 <span class="fold-hint">· 61줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">I2S ④ · k-NN 예측</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 소리 인식 ④(I2S) — INMP441 + k-NN(다수결)으로 알아맞히기 + LED · 특징 3개
 import struct, time, math
 from machine import I2S, Pin
 from neopixel import NeoPixel
@@ -603,7 +603,7 @@ def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 print(&quot;조용히… 배경소음 측정 중&quot;)
@@ -687,7 +687,7 @@ def predict(f, k=5):
     q = norm(f)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(D))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 print(&quot;\n[예측] 소리를 내보세요.&quot;)
@@ -773,7 +773,7 @@ def paint(c, lv):
     for i in range(NUM): np[i] = c if i &lt; lv else (0, 0, 0)
     np.write()
 
-# ── sounds.csv 불러오기 + 정규화 + 거리가중 k-NN (소리 챕터와 동일 · 특징 3개) ──
+# ── sounds.csv 불러오기 + 정규화 + k-NN (소리 챕터와 동일 · 특징 3개) ──
 rows = []
 for ln in open(&quot;sounds.csv&quot;):
     ln = ln.strip()
@@ -788,7 +788,7 @@ def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 # ── 배경소음 → 임계값 ──
@@ -886,7 +886,7 @@ def predict(feat, k=5):
     q = [nz(feat[i], i) for i in range(3)]
     def d2(r): return sum((nz(r[i], i) - q[i]) ** 2 for i in range(3))
     near = sorted(rows, key=d2)[:k]; vote = {}
-    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1.0 / (d2(r) + 1e-6)
+    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 wlan = network.WLAN(network.STA_IF); wlan.active(True)
@@ -1071,7 +1071,7 @@ def predict(feat, k=5):
     q = [nz(feat[i], i) for i in range(3)]
     def d2(r): return sum((nz(r[i], i) - q[i]) ** 2 for i in range(3))
     near = sorted(rows, key=d2)[:k]; vote = {}
-    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1.0 / (d2(r) + 1e-6)
+    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 wlan = network.WLAN(network.STA_IF); wlan.active(True)
@@ -1370,7 +1370,7 @@ secs.forEach(s=>io.observe(s));
 
 /* ============================================================
    동작 흐름 위젯 — 입력을 고르면 파이프라인을 따라 흐르며 결과까지
-   특징 3개(RMS·ZCR·crest) + 실제 거리가중 k-NN을 JS로 시연.
+   특징 3개(RMS·ZCR·crest) + 실제 k-NN(다수결)을 JS로 시연.
    self-contained vanilla JS. 교재 밝은 테마.
    ============================================================ */
 .flow{border:1px solid var(--line);border-radius:12px;background:#fff;margin:16px 0;
@@ -1411,7 +1411,7 @@ secs.forEach(s=>io.observe(s));
 .feat{display:inline-block;margin:2px 10px 2px 0;}
 .feat .v{font-family:var(--mono);font-weight:700;color:var(--fg);}
 .feat.hl .v{color:var(--ac);}
-/* k-NN 이웃 행 (거리가중) */
+/* k-NN 이웃 행 (다수결) */
 .fnb{display:flex;align-items:center;gap:7px;margin:4px 0;font-size:11.5px;}
 .fnb-tag{font-family:var(--mono);font-weight:700;padding:2px 8px;border-radius:99px;color:#fff;min-width:48px;text-align:center;}
 .fnb-d{font-family:var(--mono);color:var(--muted);font-size:10.5px;width:54px;}
@@ -1689,8 +1689,8 @@ document.querySelectorAll(".wire").forEach(buildWidget);
 
 })();</script><script>(function(){
 
-/* 입력 예시 — 우리 실제 코드(features→norm→거리가중 predict)와 같은 구조.
-   neighbors = [라벨, 색, 정규화공간에서의 거리]. 확신도는 JS가 거리가중으로 계산. */
+/* 입력 예시 — 우리 실제 코드(features→norm→predict)와 같은 구조.
+   neighbors = [라벨, 색, 정규화공간에서의 거리]. 확신도는 다수결 비율로 계산. */
 const INPUTS = {
   whistle:{ k:"🎤", label:"휘파람",
     rms:3200, zcr:540, crest:3.1, norm:[0.72,0.88,0.22],
@@ -1711,11 +1711,11 @@ const INPUTS = {
 const CONF_MIN = 60;
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-/* 거리가중 k-NN — sound_predict.py의 vote += 1/(d²+ε) 그대로 */
+/* k-NN 다수결 — sound_predict.py의 vote += 1 그대로 */
 function knn(neighbors){
   const vote={}, colorOf={};
   let total=0;
-  neighbors.forEach(([nm,c,d])=>{ const w=1/(d*d+1e-6); vote[nm]=(vote[nm]||0)+w; colorOf[nm]=c; total+=w; });
+  neighbors.forEach(([nm,c])=>{ vote[nm]=(vote[nm]||0)+1; colorOf[nm]=c; total+=1; });
   const ranked=Object.entries(vote).sort((a,b)=>b[1]-a[1]);
   const [best,bw]=ranked[0];
   return { best, color:colorOf[best], conf:Math.round(bw/total*100), ranked, total, colorOf };
@@ -1738,7 +1738,6 @@ function buildFlow(el){
   function render(inp){
     const R = knn(inp.neighbors);
     const pass = R.conf >= CONF_MIN;
-    const maxW = Math.max(...inp.neighbors.map(([,,d])=>1/(d*d+1e-6)));
     const voteStr = R.ranked.map(([nm,w])=>`${nm} ${Math.round(w/R.total*100)}%`).join(" · ");
 
     const steps = [
@@ -1751,15 +1750,13 @@ function buildFlow(el){
              <br><span style="color:var(--muted)">${esc(inp.note)}</span>`},
       {ic:"⚖️", nm:"정규화", sub:"세 특징 0~1로",
        data:`<code>[${inp.norm.join(", ")}]</code> — 범위가 다른 세 값을 <b>0~1</b>로 맞춰 공평하게 비교해요.`},
-      {ic:"🧠", nm:"거리가중 k-NN", sub:"가까울수록 큰 표",
-       data:`가까운 이웃 5개 — <b>거리가 가까울수록 표가 커져요</b> (<code>1/거리²</code>):
+      {ic:"🧠", nm:"k-NN", sub:"가장 가까운 5개에게 물어보기",
+       data:`가장 가까운 이웃 5개 — <b>가까운 순서대로</b>:
              ${inp.neighbors.slice().sort((a,b)=>a[2]-b[2]).map(([nm,c,d])=>{
-               const w=1/(d*d+1e-6);
                return `<div class="fnb"><span class="fnb-tag" style="background:${c}">${esc(nm)}</span>
-                 <span class="fnb-d">d=${d.toFixed(2)}</span>
-                 <span class="fnb-w"><i style="width:${Math.round(w/maxW*100)}%;background:${c}"></i></span></div>`;
+                 <span class="fnb-d">d=${d.toFixed(2)}</span></div>`;
              }).join("")}
-             <div class="fvote">가중 합산 → <b>${voteStr}</b></div>`},
+             <div class="fvote">다수결 → <b>${voteStr}</b></div>`},
       {ic: pass?"✅":"🤫", nm:"확신도 판정", sub:`기준 ${CONF_MIN}%`,
        data:`<div class="fgauge"><i style="width:${R.conf}%;background:${pass?'#22c55e':'#f97316'}"></i></div>
              확신 <b>${R.conf}%</b> — ${pass?`기준(${CONF_MIN}%) <b style="color:#16a34a">통과</b> → 말한다`:`기준 미만 <b style="color:#ea580c">→ 침묵</b>`}

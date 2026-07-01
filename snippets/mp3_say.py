@@ -44,7 +44,7 @@ def paint(c, lv):
     for i in range(NUM): np[i] = c if i < lv else (0, 0, 0)
     np.write()
 
-# ── sounds.csv 불러오기 + 정규화 + 거리가중 k-NN (소리 챕터와 동일 · 특징 3개) ──
+# ── sounds.csv 불러오기 + 정규화 + k-NN (소리 챕터와 동일 · 특징 3개) ──
 rows = []
 for ln in open("sounds.csv"):
     ln = ln.strip()
@@ -59,7 +59,7 @@ def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]; vote = {}
-    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)
+    for e in near: vote[e[1]] = vote.get(e[1], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 # ── 배경소음 → 임계값 ──

@@ -61,7 +61,7 @@ def predict(feat, k=5):
     q = [nz(feat[i], i) for i in range(3)]
     def d2(r): return sum((nz(r[i], i) - q[i]) ** 2 for i in range(3))
     near = sorted(rows, key=d2)[:k]; vote = {}
-    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1.0 / (d2(r) + 1e-6)
+    for r in near: vote[r[3]] = vote.get(r[3], 0) + 1
     b = max(vote, key=vote.get); return b, vote[b] / sum(vote.values())
 
 wlan = network.WLAN(network.STA_IF); wlan.active(True)

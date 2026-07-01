@@ -1,4 +1,4 @@
-# 소리 인식 ④ — k-NN(거리가중)으로 '무슨 소리인지' 알아맞히기 + LED · 특징 3개
+# 소리 인식 ④ — k-NN(다수결)으로 '무슨 소리인지' 알아맞히기 + LED · 특징 3개
 import time, math
 from machine import ADC, Pin
 from neopixel import NeoPixel
@@ -45,14 +45,14 @@ maxs = [max(r[i] for r in rows) for i in range(3)]
 def norm(v): return [(v[i] - mins[i]) / (maxs[i] - mins[i] + 1e-9) for i in range(3)]
 ex = [(norm(r[:3]), r[3]) for r in rows]
 
-# ── 3) k-NN (거리 가중) ──
+# ── 3) k-NN (다수결) ──
 def predict(feat, k=5):
     q = norm(feat)
     def d2(e): return sum((e[0][i] - q[i]) ** 2 for i in range(3))
     near = sorted(ex, key=d2)[:k]
     vote = {}
     for e in near:
-        vote[e[1]] = vote.get(e[1], 0) + 1.0 / (d2(e) + 1e-6)   # 가까울수록 큰 표
+        vote[e[1]] = vote.get(e[1], 0) + 1   # 이웃 하나당 표 하나
     best = max(vote, key=vote.get)
     return best, vote[best] / sum(vote.values())
 
