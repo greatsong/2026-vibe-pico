@@ -49,7 +49,7 @@ CHAPTER_MP3 = {
     {"title": "1단계 · 모듈 연결하기 (배선)", "items": [
       {"type": "step_head", "html": "Grove MP3 v4는 <b>그로브 4핀 케이블 하나</b>면 연결 끝이에요. 마이크는 앞 챕터 그대로 두고, MP3 모듈만 새로 답니다."},
       {"type": "steps", "items": [
-        {"t": "MP3 모듈 꽂기", "d": "그로브 케이블로 쉴드의 <b>UART 포트</b>에 ‘톡’ 꽂기 (피코 핀 TX=GP0, RX=GP1에 연결돼요)"},
+        {"t": "MP3 모듈 꽂기", "d": "그로브 케이블로 쉴드의 <b>UART0 포트</b>에 ‘톡’ 꽂기 (피코 핀 TX=GP0, RX=GP1에 연결돼요. 쉴드에 UART 포트가 <b>두 개</b>인데 <b>UART1이 아니라 UART0</b>이에요!)"},
         {"t": "스피커 달기", "d": "모듈의 <b>스피커 단자</b>에 작은 스피커, 또는 <b>3.5mm 잭</b>에 이어폰을 꽂기"},
         {"t": "SD카드 꽂기", "d": "음성 MP3를 넣은 microSD를 모듈에 삽입 (만드는 법은 2단계)"},
       ]},
@@ -101,7 +101,7 @@ CHAPTER_MP3 = {
       {"type": "callout", "kind": "tip", "title": "여기서 잠깐 🤔 — 코드가 하는 일",
        "html": "<b>Grove MP3 v4.0(WT2605CX)</b>은 <b>‘AT+’ 텍스트 명령</b>을 <b>115200 baud</b>로 받아요(v2.0의 <code>7E…EF</code> 바이너리와 완전 다름!). 맨 위에서 연결하고 모듈 <b>부팅을 1초 기다린 뒤</b>, <code>AT+VOL=22</code>로 <b>볼륨(0~31)</b>을, <code>AT+PLAY=sd0,1</code>로 <b>1번 곡</b>을 재생합니다. 명령 끝엔 항상 <code>\\r\\n</code>(줄바꿈)이 붙어요."},
       {"type": "callout", "kind": "warn", "title": "소리가 안 나면 — 이 순서로 점검",
-       "html": "① <b>보드레이트 115200</b> 맞나?(v4.0 필수) ② <b>TX↔RX</b>가 엇갈려 꽂혔나?(1순위) ③ 볼륨이 너무 작나?(<code>AT+VOL=22</code>→<code>28</code>) ④ SD가 <b>FAT32</b>이고 <code>0001.mp3</code>가 있나? ⑤ 부팅 대기(<code>1.0</code>→<code>2.0</code>초) 늘리기 ⑥ 응답(<code>&lt; OK</code>)이 오는지. 대부분 ①·②·④에서 해결돼요."},
+       "html": "① 쉴드 모서리의 <b>전원 스위치가 5V</b>인가?(3V3면 모듈이 부팅을 못 해요) ② <b>UART0 포트</b>에 꽂았나?(UART1 아님) ③ <b>보드레이트 115200</b> 맞나?(v4.0 필수) ④ <b>TX↔RX</b>가 엇갈려 꽂혔나? ⑤ 볼륨이 너무 작나?(<code>AT+VOL=22</code>→<code>28</code>) ⑥ SD가 <b>FAT32</b>이고 <code>0001.mp3</code>가 있나? ⑦ 부팅 대기(<code>1.0</code>→<code>2.0</code>초) 늘리기. 대부분 ①·②·④·⑥에서 해결돼요."},
       {"type": "check_list", "items": [
         "스피커에서 <b>1번 곡</b> 소리가 나나요?",
         "약 3초 뒤 <b>2번 곡</b>으로 바뀌나요?",

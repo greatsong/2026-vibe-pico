@@ -1,6 +1,6 @@
 # 동작 인식 ①-MPU : MPU6050(GY-521)을 그로브 쉴드로 연결해 값 읽기 (외부 라이브러리 없이)
 #
-# ▶ 연결: 그로브 I2C 포트 ↔ MPU6050  (그로브–점퍼(암) 변환 케이블 필요)
+# ▶ 연결: 쉴드 UART1 포트(GP4/GP5) ↔ MPU6050  (그로브–점퍼(암) 변환 케이블 필요)
 #     노랑(SCL) → MPU6050  SCL
 #     흰색(SDA) → MPU6050  SDA
 #     빨강(VCC) → MPU6050  VCC
@@ -17,7 +17,7 @@ GYRO_CONFIG  = 0x1B
 ACCEL_XOUT_H = 0x3B    # 가속도 출력 시작(6바이트: X,Y,Z)
 GYRO_XOUT_H  = 0x43    # 자이로 출력 시작(6바이트: X,Y,Z)
 
-i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)   # 그로브 I2C 포트(SDA=GP4, SCL=GP5)
+i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)   # 쉴드 UART1 포트의 GP4/GP5를 I2C로 사용
 
 # 연결 확인
 if ADDR not in i2c.scan():

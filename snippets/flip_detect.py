@@ -15,7 +15,7 @@ for a in (0x6A, 0x6B):
     except OSError:
         pass
 if ADDR is None:
-    raise RuntimeError("IMU 못 찾음 — I2C 포트(SDA=GP4/SCL=GP5) 확인")
+    raise RuntimeError("IMU 못 찾음 — UART1 포트(GP4/GP5) 확인")
 i2c.writeto_mem(ADDR, CTRL1_XL, bytes([0x64]))   # ±16g
 i2c.writeto_mem(ADDR, CTRL2_G,  bytes([0x6C]))   # ±2000°/s
 time.sleep(0.1)

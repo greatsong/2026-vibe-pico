@@ -1,5 +1,5 @@
 # 동작 인식 ③-MPU : 짝 활동 데이터 모으기 (MPU6050 버전, 피코=서버)
-# MPU6050을 그로브 I2C 포트에 변환 케이블로 연결, 전원 3.3V!  던지는 사람: 손목+보조배터리.
+# MPU6050을 쉴드 UART1 포트(GP4/GP5)에 변환 케이블로 연결, 전원 3.3V!  던지는 사람: 손목+보조배터리.
 import network, socket, time, struct, math
 from machine import I2C, Pin
 from neopixel import NeoPixel

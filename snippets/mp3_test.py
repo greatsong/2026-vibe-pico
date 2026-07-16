@@ -5,7 +5,7 @@
 from machine import UART, Pin
 import time
 
-# Grove 케이블 → 쉴드의 UART 포트. 피코 TX=GP0, RX=GP1
+# Grove 케이블 → 쉴드의 UART0 포트(UART1 아님!). 피코 TX=GP0, RX=GP1 · 쉴드 전원 스위치는 5V
 uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1))   # ★ 115200! (v2.0은 9600)
 time.sleep(1.0)                                          # 모듈 부팅 대기
 

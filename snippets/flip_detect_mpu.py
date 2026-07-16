@@ -1,5 +1,5 @@
 # 동작 인식 ②-MPU : 플립 감지 + 특징 추출 (MPU6050 버전)
-# MPU6050(GY-521)을 그로브 I2C 포트에 변환 케이블로 연결, 전원 스위치 3.3V!
+# MPU6050(GY-521)을 쉴드 UART1 포트(GP4/GP5)에 변환 케이블로 연결, 전원 스위치 3.3V!
 from machine import I2C, Pin
 from neopixel import NeoPixel
 import time, struct, math
