@@ -62,19 +62,19 @@ print(year, co2)</pre></div></details></section>
   </section>
 
   <section class="card vibe"><h2>🤖 바이브코딩 프롬프트 <span class="hint">— 복사해 AI(Claude 등)에 붙여넣기</span></h2><p class="vibeintro">이 데이터를 받아 <b>라즈베리파이 피코·LED</b>로 만드는 코드를 받을 수 있어요. 각 프롬프트의 <b>[복사]</b>를 누르면 위 <b>공통 조건</b>(피코·와이파이·LED 설정)까지 함께 복사돼, <b>아무 맥락 없는 새 대화</b>에 그대로 붙여넣을 수 있어요.</p><details class="vibecommon"><summary>🔧 공통 조건 — 아래 모든 프롬프트에 자동 포함 (펼쳐 보기)</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">공통 조건 · 피코·와이파이·LED</span><button class="vibecopy" onclick="vcopypre(this)">복사</button></div><pre id="vibepre" class="vibetext">[공통 조건]
-- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.
-- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
-- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
-- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- HTTP 응답은 이렇게 안전하게 처리해: ① 소켓이 닫힐 때까지 본문을 끝까지 다 받고 ② 헤더(첫 b&#x27;\r\n\r\n&#x27;)를 잘라낸 뒤 ③ 응답 헤더에 &#x27;Transfer-Encoding: chunked&#x27;가 있으면 청크 크기(16진수) 줄을 읽어 그 바이트 수만큼 이어 붙여 본문을 복원하고 ④ ujson(=json).loads로 본문을 통째 파싱해 필요한 값을 키·인덱스로 꺼내 써.
-- 절대 응답 텍스트에서 문자열 .find()나 정규식으로 값을 긁지 마 — 같은 이름의 다른 키(단위·라벨 등)에 잘못 매칭돼 엉뚱한 값이 나와. 피코 2 W는 RAM이 넉넉하니 이 정도 JSON은 통째로 파싱해도 돼.
-- 무한 루프엔 sleep으로 쉬고, 요청 실패나 200이 아닌 HTTP 상태코드는 try/except로 잡아 다음 주기에 재시도해(오류를 정상값처럼 표시하지 마).</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라 코드 → 1인당 CO₂ LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&amp;per_page=5&amp;mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0][&#x27;value&#x27;]가 1인당 CO₂ 배출량(톤), 응답[1][0][&#x27;date&#x27;]가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)
-[만들 것] 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.
-[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라 코드 → 재생에너지 비중 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&amp;per_page=5&amp;mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0][&#x27;value&#x27;]가 최종에너지 중 재생에너지 비중(%), 응답[1][0][&#x27;date&#x27;]가 연도야. (응답[0]은 메타데이터.)
-[만들 것] 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.
-[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">두 나라 → CO₂ 좌우 비교 막대</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&amp;per_page=5&amp;mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0][&#x27;value&#x27;]가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)
-[만들 것] LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.
-[설정] 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA).</pre></div></section>
+- 라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 완결형 main.py로 만들어줘.
+- 인터넷 접속은 외부 라이브러리 설치 없이 피코 기본 내장 기능(socket, ssl)만 쓰고, 보안 인증서 확인은 건너뛰어도 돼.
+- 와이파이 이름과 비밀번호는 설정 파일(wifi_config.py)에 두 변수(WIFI_SSID, WIFI_PASSWORD)로 저장해 두고 거기서 불러와.
+- 열 칸짜리 LED 바(WS2813)는 16번 핀에 연결돼 있어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게(최대 60 정도).
+- 서버가 주는 응답은 조각조각 나뉘어 올 수 있어. 끝까지 다 받은 뒤 머리말(헤더)을 잘라내고, 조각내기 방식(chunked)이면 조각을 이어 붙여 원래대로 복원한 다음, JSON 전체를 한 번에 해석해서 필요한 값을 이름과 순서로 꺼내 써.
+- 응답 글자에서 검색이나 정규식으로 값을 긁어내지 마. 비슷한 이름에 잘못 걸려 엉뚱한 값이 나와. 피코 2 W는 메모리가 넉넉하니 JSON을 통째로 해석해도 돼.
+- 무한 반복문에서는 잠깐씩 쉬어 주고, 요청이 실패하거나 정상 응답(상태코드 200)이 아니면 오류를 정상값처럼 표시하지 말고 다음 차례에 다시 시도해.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라 코드 → 1인당 CO₂ LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">- 데이터: World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&amp;per_page=5&amp;mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0][&#x27;value&#x27;]가 1인당 CO₂ 배출량(톤), 응답[1][0][&#x27;date&#x27;]가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)
+- 만들 것: 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.
+- 설정: 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">나라 코드 → 재생에너지 비중 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">- 데이터: World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&amp;per_page=5&amp;mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0][&#x27;value&#x27;]가 최종에너지 중 재생에너지 비중(%), 응답[1][0][&#x27;date&#x27;]가 연도야. (응답[0]은 메타데이터.)
+- 만들 것: 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.
+- 설정: 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">두 나라 → CO₂ 좌우 비교 막대</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">- 데이터: World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&amp;per_page=5&amp;mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0][&#x27;value&#x27;]가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)
+- 만들 것: LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.
+- 설정: 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA).</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>

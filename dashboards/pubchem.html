@@ -62,17 +62,17 @@ print(formula, mw)</pre></div></details></section>
   </section>
 
   <section class="card vibe"><h2>🤖 바이브코딩 프롬프트 <span class="hint">— 복사해 AI(Claude 등)에 붙여넣기</span></h2><p class="vibeintro">이 데이터를 받아 <b>라즈베리파이 피코·LED</b>로 만드는 코드를 받을 수 있어요. 각 프롬프트의 <b>[복사]</b>를 누르면 위 <b>공통 조건</b>(피코·와이파이·LED 설정)까지 함께 복사돼, <b>아무 맥락 없는 새 대화</b>에 그대로 붙여넣을 수 있어요.</p><details class="vibecommon"><summary>🔧 공통 조건 — 아래 모든 프롬프트에 자동 포함 (펼쳐 보기)</summary><div class="vibebox"><div class="vibehead"><span class="vibelabel">공통 조건 · 피코·와이파이·LED</span><button class="vibecopy" onclick="vcopypre(this)">복사</button></div><pre id="vibepre" class="vibetext">[공통 조건]
-- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.
-- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).
-- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.
-- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).
-- HTTP 응답은 이렇게 안전하게 처리해: ① 소켓이 닫힐 때까지 본문을 끝까지 다 받고 ② 헤더(첫 b&#x27;\r\n\r\n&#x27;)를 잘라낸 뒤 ③ 응답 헤더에 &#x27;Transfer-Encoding: chunked&#x27;가 있으면 청크 크기(16진수) 줄을 읽어 그 바이트 수만큼 이어 붙여 본문을 복원하고 ④ ujson(=json).loads로 본문을 통째 파싱해 필요한 값을 키·인덱스로 꺼내 써.
-- 절대 응답 텍스트에서 문자열 .find()나 정규식으로 값을 긁지 마 — 같은 이름의 다른 키(단위·라벨 등)에 잘못 매칭돼 엉뚱한 값이 나와. 피코 2 W는 RAM이 넉넉하니 이 정도 JSON은 통째로 파싱해도 돼.
-- 무한 루프엔 sleep으로 쉬고, 요청 실패나 200이 아닌 HTTP 상태코드는 try/except로 잡아 다음 주기에 재시도해(오류를 정상값처럼 표시하지 마).</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">물질 이름 목록 → 분자량 LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).
-[만들 것] 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(&lt;100)은 초록, 보통(100~250)은 노랑, 무거운 물질(&gt;250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.
-[설정] 비교할 물질 목록은 코드 맨 위에 MATERIALS = [&quot;water&quot;, &quot;glucose&quot;, &quot;caffeine&quot;] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">두 물질 분자량·분자식 → 무거운 쪽 색으로 비교</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.
-[만들 것] 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 &#x27;비슷함&#x27; 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.
-[설정] 비교할 두 물질은 코드 맨 위에 MAT_A = &quot;caffeine&quot;, MAT_B = &quot;glucose&quot; 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로.</pre></div></section>
+- 라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 완결형 main.py로 만들어줘.
+- 인터넷 접속은 외부 라이브러리 설치 없이 피코 기본 내장 기능(socket, ssl)만 쓰고, 보안 인증서 확인은 건너뛰어도 돼.
+- 와이파이 이름과 비밀번호는 설정 파일(wifi_config.py)에 두 변수(WIFI_SSID, WIFI_PASSWORD)로 저장해 두고 거기서 불러와.
+- 열 칸짜리 LED 바(WS2813)는 16번 핀에 연결돼 있어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게(최대 60 정도).
+- 서버가 주는 응답은 조각조각 나뉘어 올 수 있어. 끝까지 다 받은 뒤 머리말(헤더)을 잘라내고, 조각내기 방식(chunked)이면 조각을 이어 붙여 원래대로 복원한 다음, JSON 전체를 한 번에 해석해서 필요한 값을 이름과 순서로 꺼내 써.
+- 응답 글자에서 검색이나 정규식으로 값을 긁어내지 마. 비슷한 이름에 잘못 걸려 엉뚱한 값이 나와. 피코 2 W는 메모리가 넉넉하니 JSON을 통째로 해석해도 돼.
+- 무한 반복문에서는 잠깐씩 쉬어 주고, 요청이 실패하거나 정상 응답(상태코드 200)이 아니면 오류를 정상값처럼 표시하지 말고 다음 차례에 다시 시도해.</pre></div></details><div class="vibebox"><div class="vibehead"><span class="vibelabel">물질 이름 목록 → 분자량 LED 게이지</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">- 데이터: PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).
+- 만들 것: 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(&lt;100)은 초록, 보통(100~250)은 노랑, 무거운 물질(&gt;250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.
+- 설정: 비교할 물질 목록은 코드 맨 위에 MATERIALS = [&quot;water&quot;, &quot;glucose&quot;, &quot;caffeine&quot;] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로.</pre></div><div class="vibebox"><div class="vibehead"><span class="vibelabel">두 물질 분자량·분자식 → 무거운 쪽 색으로 비교</span><button class="vibecopy" onclick="vcopy(this)">복사</button></div><pre class="vibetext">- 데이터: PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.
+- 만들 것: 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 &#x27;비슷함&#x27; 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.
+- 설정: 비교할 두 물질은 코드 맨 위에 MAT_A = &quot;caffeine&quot;, MAT_B = &quot;glucose&quot; 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로.</pre></div></section>
 
   <footer>데이터 기반 탐구 프로젝트 · 바이브 피지컬 코딩 &nbsp;|&nbsp; 데이터는 각 API 제공처의 것입니다.</footer>
 </div>
