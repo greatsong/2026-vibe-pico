@@ -17,6 +17,7 @@
 - **Chapter 6 — 자유 프로젝트**: 조합 아이디어 + 프롬프트 틀
 - **부록 A — 오픈 API 예제 모음**: 과목별 10가지 API를 피코 10칸 LED로 (미세먼지·지진·ISS·낮길이·우주날씨·분자량·생물·천문사진·에너지·CO₂) · 갤러리는 날씨까지 11종
 - **부록 B — 심화: 센서 데이터를 구글 시트에 쌓기**: Apps Script 웹앱 + 피코(무설치 socket+ssl)로 데이터 로깅
+- **부록 C — 용어 사전**: 프롬프트·본문에서 쓰는 용어를 한 줄씩 정리 (프롬프트에는 코드 대신 정확한 낱말을 쓴다는 원칙)
 
 각 코드/프롬프트 블록의 **복사** 버튼으로 바로 가져다 쓸 수 있습니다.
 
@@ -35,15 +36,32 @@
 
 | 경로 | 설명 |
 |---|---|
-| `index.html` | 완성된 단일 페이지 (GitHub Pages가 그대로 서빙) |
-| `build_site.py` | 페이지 생성 스크립트 (콘텐츠 정의 + 렌더러, `snippets/` 읽음) |
+| `index.html` | 완성된 단일 페이지 · **수강생용** (GitHub Pages가 그대로 서빙) |
+| `teacher.html` | **강사용** — 수강생용 + 강사노트(진행 멘트·발문·예상 오류) 포함 |
+| `build_site.py` | 페이지 생성 스크립트 (콘텐츠 정의 + 렌더러 + 디자인 TEMPLATE, `snippets/` 읽음) |
+| `build_ml_site.py` | ML 확장판(`ml_site/`) 빌더 — build_site.py의 TEMPLATE·렌더러 재사용 |
+| `build_dashboards.py` | 대시보드 11종 + 갤러리 + **`dashboards/lab.css`** 생성 (lab.css도 자동 생성물!) |
 | `snippets/*.py` | 복사해 바로 실행되는 완결형 MicroPython 코드 (검증본) |
 | `firmware/*.uf2` | Pico 2 W용 MicroPython 펌웨어 |
+
+### 🎨 디자인
+
+따뜻한 **크림/골드** 팔레트(2026-snui 웹 교재와 같은 계열). 디자인 토큰과 콜아웃
+클래스(`tip/warn/mini/say/theory/ask/check/err` + `info/key`)는 `build_site.py`의
+TEMPLATE `<style>` 한 곳에서 관리하고, 대시보드는 `build_dashboards.py`의 `LAB_CSS`에서
+같은 토큰을 씁니다. **HTML은 전부 생성물 — 직접 수정 금지.**
+
+### ✍️ 콘텐츠 아이템 타입 메모
+
+- `prompt`(① 샘플 프롬프트) → `code`(② 완성 코드) → **`improve`(③ 프롬프트 개선)** 3박자
+- `teacher`(kind: `say`/`ask`/`theory`/`err`) — 강사노트. `teacher.html`에만 렌더됨
 
 ## 🛠 로컬에서 보기 / 다시 빌드
 
 ```bash
-python3 build_site.py        # snippets + 콘텐츠 → index.html 재생성
+python3 build_site.py        # snippets + 콘텐츠 → index.html(수강생) + teacher.html(강사)
+python3 build_ml_site.py     # → ml_site/index.html (TEMPLATE 공유 — build_site.py 수정만으로 반영)
+python3 build_dashboards.py  # → dashboards/*.html + lab.css
 python3 -m http.server 8000  # http://localhost:8000 접속
 ```
 

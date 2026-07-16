@@ -121,9 +121,9 @@ def page(slug, emoji, title, subject, region, info, apply_html, body, js, chart=
 # ===================================================================
 LAB_CSS = r'''
 :root{
-  --bg:#f6f7fb; --panel:#ffffff; --ink:#2b2d3a; --muted:#7a7f95; --line:#eceef5;
-  --pico1:#5B6CF0; --pico2:#E0568A;
-  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --bg:#fffdf7; --panel:#ffffff; --ink:#3a2e1a; --muted:#9a8b6a; --line:#f0e2bc;
+  --pico1:#f4b400; --pico2:#e8930c;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
   --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -137,23 +137,23 @@ a{text-decoration:none;color:inherit;}
 .phead h1{font-size:clamp(22px,5vw,30px);font-weight:800;letter-spacing:-.02em;margin:8px 0 10px;}
 .tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
 .tag{font-size:12px;font-weight:700;border-radius:999px;padding:4px 12px;}
-.tag.subj{background:#eef0ff;color:#3b47c2;}
+.tag.subj{background:#fff6e0;color:#a06a08;}
 .tag.region{background:#fff0f6;color:#b83d72;}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin:14px 0;
-  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+  box-shadow:0 4px 18px rgba(180,140,20,.08);}
 .card h2{font-size:15px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
 .card h2 .hint{font-weight:500;font-size:12px;color:var(--muted);}
-.lead{font-size:14.5px;line-height:1.8;color:#3a3d4d;background:linear-gradient(180deg,#f7f8ff,#fff);
+.lead{font-size:14.5px;line-height:1.8;color:#6b5836;background:linear-gradient(180deg,#fffaf0,#fff);
   border-left:4px solid #5B6CF0;border-radius:0 12px 12px 0;padding:13px 16px;margin-bottom:14px;}
-.lead b{color:#3b47c2;}
+.lead b{color:#a06a08;}
 .info table{width:100%;border-collapse:collapse;font-size:13.5px;}
 .info td{padding:7px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
 .info td.k{width:108px;color:var(--muted);font-weight:600;}
-.info code,.live code{font-family:var(--mono);font-size:12px;background:#f3f4fa;border:1px solid var(--line);
+.info code,.live code{font-family:var(--mono);font-size:12px;background:#fbf3dd;border:1px solid var(--line);
   border-radius:5px;padding:1px 6px;word-break:break-all;}
-.srclink{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;color:#3b47c2;
-  background:#eef0ff;border:1px solid #d7defb;border-radius:10px;padding:8px 14px;}
-.srclink:hover{background:#e3e7ff;}
+.srclink{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;color:#a06a08;
+  background:#fff6e0;border:1px solid #f0e2bc;border-radius:10px;padding:8px 14px;}
+.srclink:hover{background:#fdeecd;}
 .refs{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .refs-t{font-size:12px;font-weight:700;color:var(--muted);}
 .refchip{font-size:12.5px;font-weight:600;color:#b83d72;background:#fff0f6;border:1px solid #f6d3e3;
@@ -172,36 +172,36 @@ a{text-decoration:none;color:inherit;}
 .earthpulse{animation:twinkle 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
 .apply ul{margin:0;padding-left:18px;}
 .apply li{font-size:14px;margin:7px 0;}
-.vibe .vibeintro{font-size:13.5px;color:#3a3d4d;margin-bottom:12px;}
-.core .coreintro{font-size:13.5px;color:#3a3d4d;margin-bottom:12px;}
-.core .coreintro code,.core .corenote code{font-family:var(--mono);font-size:12.5px;background:#eef0ff;color:#3b47c2;
+.vibe .vibeintro{font-size:13.5px;color:#6b5836;margin-bottom:12px;}
+.core .coreintro{font-size:13.5px;color:#6b5836;margin-bottom:12px;}
+.core .coreintro code,.core .corenote code{font-family:var(--mono);font-size:12.5px;background:#fff6e0;color:#a06a08;
   padding:1px 6px;border-radius:6px;}
 .core .corenote{font-size:12.5px;color:#6b5e2e;background:#fdf8ec;border:1px solid #f0e4c4;
   border-radius:10px;padding:9px 12px;margin-bottom:12px;}
 .core .corenote code{background:#f3ead0;color:#7a6a2e;}
-.corefold{border:1px dashed #cfd5ef;border-radius:12px;background:#fafbff;}
-.corefold summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#3b47c2;padding:11px 13px;list-style:none;}
+.corefold{border:1px dashed #e8d9a8;border-radius:12px;background:#fffaf0;}
+.corefold summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#a06a08;padding:11px 13px;list-style:none;}
 .corefold summary::-webkit-details-marker{display:none;}
 .corefold summary:before{content:'▸ ';}
 .corefold[open] summary:before{content:'▾ ';}
 .corefold[open] summary{border-bottom:1px solid var(--line);}
 .corefold .vibebox{margin:10px;}
-.vibecommon{margin:0 0 14px;border:1px dashed #cfd5ef;border-radius:12px;background:#fafbff;}
-.vibecommon summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#3b47c2;padding:10px 13px;list-style:none;}
+.vibecommon{margin:0 0 14px;border:1px dashed #e8d9a8;border-radius:12px;background:#fffaf0;}
+.vibecommon summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#a06a08;padding:10px 13px;list-style:none;}
 .vibecommon summary::-webkit-details-marker{display:none;}
 .vibecommon summary:before{content:'▸ ';}
 .vibecommon[open] summary:before{content:'▾ ';}
 .vibecommon[open] summary{border-bottom:1px solid var(--line);}
 .vibecommon .vibebox{margin:10px;}
-.vibebox{border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden;background:#fbfbfe;}
+.vibebox{border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden;background:#fffdf7;}
 .vibehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;
-  background:#f3f4fa;border-bottom:1px solid var(--line);}
-.vibelabel{font-size:12.5px;font-weight:700;color:#3b47c2;}
+  background:#fbf3dd;border-bottom:1px solid var(--line);}
+.vibelabel{font-size:12.5px;font-weight:700;color:#a06a08;}
 .vibecopy{font-family:var(--font);font-size:12px;font-weight:700;color:#fff;cursor:pointer;border:none;
   border-radius:8px;padding:5px 12px;background:linear-gradient(120deg,var(--pico1),var(--pico2));white-space:nowrap;}
 .vibecopy:hover{filter:brightness(1.05);}
-.vibecopy.done{background:#22b07d;}
-.vibetext{font-family:var(--mono);font-size:12px;line-height:1.6;color:#2b2d3a;white-space:pre-wrap;
+.vibecopy.done{background:#54a24b;}
+.vibetext{font-family:var(--mono);font-size:12px;line-height:1.6;color:#3a2e1a;white-space:pre-wrap;
   word-break:break-word;padding:12px 14px;margin:0;}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
 .controls input,.controls select{font-family:var(--font);font-size:14px;border:1px solid var(--line);
@@ -212,12 +212,12 @@ a{text-decoration:none;color:inherit;}
 .controls button:hover{filter:brightness(1.05);}
 .controls label{font-size:12.5px;color:var(--muted);font-weight:600;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
-.stat{background:#fafbff;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;}
+.stat{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;}
 .stat .lab{font-size:11px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
 .stat .val{font-size:30px;font-weight:800;margin-top:6px;line-height:1.1;}
 .stat .unit{font-size:11px;color:var(--muted);margin-top:3px;}
 .status{font-size:13px;color:var(--muted);padding:8px 0;}
-.status.err{color:#d94a5a;}
+.status.err{color:#e45756;}
 .chartbox{margin-top:14px;}
 .map{height:360px;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:6px;}
 .leaflet-popup-content{font-family:var(--font);font-size:13px;}
@@ -237,31 +237,31 @@ a{text-decoration:none;color:inherit;}
 .seg button{font-family:var(--font);font-size:13px;font-weight:700;border:none;background:#fff;color:var(--muted);padding:9px 18px;cursor:pointer;}
 .seg button.seg-on{background:linear-gradient(120deg,var(--pico1),var(--pico2));color:#fff;}
 .molimg{width:220px;height:220px;display:block;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;}
-.mol3d{height:340px;position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#f4f6fc;}
+.mol3d{height:340px;position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#fbf3dd;}
 footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
 .gcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;transition:.15s;
-  box-shadow:0 4px 18px rgba(40,50,90,.04);}
-.gcard:hover{transform:translateY(-2px);border-color:#cdd3f3;}
+  box-shadow:0 4px 18px rgba(180,140,20,.08);}
+.gcard:hover{transform:translateY(-2px);border-color:#e8d9a8;}
 .gcard .ge{font-size:30px;}
 .gcard .ge{display:flex;align-items:center;justify-content:space-between;}
 .gcard .gt{font-weight:800;font-size:15px;margin:8px 0 4px;}
 .gcard .gs{font-size:12.5px;color:var(--muted);}
-.gcard .ghook{font-size:12px;color:#3b47c2;margin-top:10px;padding-top:9px;border-top:1px dashed #e6e8f5;line-height:1.5;}
+.gcard .ghook{font-size:12px;color:#a06a08;margin-top:10px;padding-top:9px;border-top:1px dashed #f0e2bc;line-height:1.5;}
 .gmap{font-size:10.5px;font-weight:700;color:#1f7a63;background:#e6f7f0;border:1px solid #c4ebdd;border-radius:999px;padding:2px 8px;}
 .steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:4px 0 18px;}
 .s3{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;
-  box-shadow:0 4px 18px rgba(40,50,90,.04);}
+  box-shadow:0 4px 18px rgba(180,140,20,.08);}
 .s3 .s3n{width:24px;height:24px;border-radius:50%;background:linear-gradient(120deg,var(--pico1),var(--pico2));
   color:#fff;font-weight:800;font-size:13px;text-align:center;line-height:24px;margin-bottom:7px;}
 .s3 b{font-size:14px;}
 .s3 span{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .recgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
-.reccard{display:block;background:#fafbff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:.15s;}
-.reccard:hover{border-color:#cdd3f3;background:#f4f6ff;}
+.reccard{display:block;background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:.15s;}
+.reccard:hover{border-color:#e8d9a8;background:#fff6e0;}
 .reccard .re{font-size:22px;}
 .reccard .rt{font-weight:800;font-size:14px;margin:5px 0 2px;}
-.reccard .rf{font-size:11.5px;color:#3b47c2;font-weight:600;}
+.reccard .rf{font-size:11.5px;color:#a06a08;font-weight:600;}
 .reccard .rd{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5;}
 .pico-accent{background:linear-gradient(120deg,var(--pico1),var(--pico2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
 '''
@@ -277,13 +277,13 @@ SEOUL = ('<div class="controls">'
 # 바이브코딩 프롬프트 (각 대시보드 하단에 표시 · [복사] 시 공통 조건이 함께 붙음)
 PICO_PRE = (
     "[공통 조건]\n"
-    "- 라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py로 만들어 줘.\n"
-    "- 인터넷 접속은 외부 라이브러리 없이 피코 기본 내장 socket+ssl만 사용(requests 설치 금지). https는 인증서 검증 생략(CERT_NONE).\n"
-    "- 와이파이는 wifi_config.py 파일에 WIFI_SSID, WIFI_PASSWORD 두 변수로 저장해 두고 거기서 불러와.\n"
-    "- WS2813 LED 10개는 GP16에 연결, NeoPixel을 timing=(280,515,515,745)로 생성(없으면 색 깨짐), 밝기는 낮게(최대 60 정도).\n"
-    "- HTTP 응답은 이렇게 안전하게 처리해: ① 소켓이 닫힐 때까지 본문을 끝까지 다 받고 ② 헤더(첫 b'\\r\\n\\r\\n')를 잘라낸 뒤 ③ 응답 헤더에 'Transfer-Encoding: chunked'가 있으면 청크 크기(16진수) 줄을 읽어 그 바이트 수만큼 이어 붙여 본문을 복원하고 ④ ujson(=json).loads로 본문을 통째 파싱해 필요한 값을 키·인덱스로 꺼내 써.\n"
-    "- 절대 응답 텍스트에서 문자열 .find()나 정규식으로 값을 긁지 마 — 같은 이름의 다른 키(단위·라벨 등)에 잘못 매칭돼 엉뚱한 값이 나와. 피코 2 W는 RAM이 넉넉하니 이 정도 JSON은 통째로 파싱해도 돼.\n"
-    "- 무한 루프엔 sleep으로 쉬고, 요청 실패나 200이 아닌 HTTP 상태코드는 try/except로 잡아 다음 주기에 재시도해(오류를 정상값처럼 표시하지 마)."
+    "- 라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 완결형 main.py로 만들어줘.\n"
+    "- 인터넷 접속은 외부 라이브러리 설치 없이 피코 기본 내장 기능(socket, ssl)만 쓰고, 보안 인증서 확인은 건너뛰어도 돼.\n"
+    "- 와이파이 이름과 비밀번호는 설정 파일(wifi_config.py)에 두 변수(WIFI_SSID, WIFI_PASSWORD)로 저장해 두고 거기서 불러와.\n"
+    "- 열 칸짜리 LED 바(WS2813)는 16번 핀에 연결돼 있어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게(최대 60 정도).\n"
+    "- 서버가 주는 응답은 조각조각 나뉘어 올 수 있어. 끝까지 다 받은 뒤 머리말(헤더)을 잘라내고, 조각내기 방식(chunked)이면 조각을 이어 붙여 원래대로 복원한 다음, JSON 전체를 한 번에 해석해서 필요한 값을 이름과 순서로 꺼내 써.\n"
+    "- 응답 글자에서 검색이나 정규식으로 값을 긁어내지 마. 비슷한 이름에 잘못 걸려 엉뚱한 값이 나와. 피코 2 W는 메모리가 넉넉하니 JSON을 통째로 해석해도 돼.\n"
+    "- 무한 반복문에서는 잠깐씩 쉬어 주고, 요청이 실패하거나 정상 응답(상태코드 200)이 아니면 오류를 정상값처럼 표시하지 말고 다음 차례에 다시 시도해."
 )
 
 COPY_JS = (
@@ -308,73 +308,73 @@ COPY_JS = (
 PROMPTS = {
   "weather": [
     ("강수확률 → LED 날씨 시계",
-     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&hourly=precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1 → 응답의 hourly.precipitation_probability 는 0~23시 24개 강수확률(%) 배열, hourly.time 은 같은 길이의 시각 배열.\n[만들 것] 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 강수확률로 색칠해 줘. 0~20% 초록(맑음)·21~50% 노랑(흐림)·51~80% 파랑(비 가능)·81~100% 보라(비 확실). 10분마다 다시 받아 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "- 데이터: Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&hourly=precipitation_probability&timezone=Asia%2FSeoul&forecast_days=1 → 응답의 hourly.precipitation_probability 는 0~23시 24개 강수확률(%) 배열, hourly.time 은 같은 길이의 시각 배열.\n- 만들 것: 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 강수확률로 색칠해 줘. 0~20% 초록(맑음)·21~50% 노랑(흐림)·51~80% 파랑(비 가능)·81~100% 보라(비 확실). 10분마다 다시 받아 갱신.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
     ("현재 기온 → 무드등 색",
-     "[API] Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m&timezone=Asia%2FSeoul → 응답의 current.temperature_2m 가 현재 기온(℃) 숫자 하나.\n[만들 것] LED 10칸을 모두 같은 색 무드등으로 켜 줘. 28℃ 이상 빨강(더움)·16~27℃ 초록(적당)·15℃ 이하 파랑(추움). 10분마다 다시 받아 색을 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "- 데이터: Open-Meteo(키 불필요): GET https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m&timezone=Asia%2FSeoul → 응답의 current.temperature_2m 가 현재 기온(℃) 숫자 하나.\n- 만들 것: LED 10칸을 모두 같은 색 무드등으로 켜 줘. 28℃ 이상 빨강(더움)·16~27℃ 초록(적당)·15℃ 이하 파랑(추움). 10분마다 다시 받아 색을 갱신.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
   ],
   "airquality": [
     ("초미세먼지(PM2.5) → LED 신호등",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5(초미세먼지 현재 농도 ㎍/㎥)를 사용해 줘.\n[만들 것] PM2.5 등급을 LED 10칸 신호등으로: 좋음(0~15) 초록·보통(16~35) 노랑·나쁨(36~75) 주황·매우나쁨(76+) 빨강 깜빡. 농도가 높을수록 켜는 칸 수를 늘려(0~150㎍/㎥를 10칸에 비례 매핑) 0칸~10칸으로 표시하고, 10분마다 갱신해 줘.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "- 데이터: 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5(초미세먼지 현재 농도 ㎍/㎥)를 사용해 줘.\n- 만들 것: PM2.5 등급을 LED 10칸 신호등으로: 좋음(0~15) 초록·보통(16~35) 노랑·나쁨(36~75) 주황·매우나쁨(76+) 빨강 깜빡. 농도가 높을수록 켜는 칸 수를 늘려(0~150㎍/㎥를 10칸에 비례 매핑) 0칸~10칸으로 표시하고, 10분마다 갱신해 줘.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
     ("PM2.5+PM10 → 앞5칸·뒤5칸 동시 표시",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5,pm10&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5와 current.pm10(둘 다 현재 농도 ㎍/㎥)를 함께 사용해 줘.\n[만들 것] LED 10칸을 반으로 나눠 앞 5칸은 PM2.5, 뒤 5칸은 PM10 막대그래프로. 각 막대는 등급별 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강). PM2.5는 0~75㎍/㎥를 5칸에, PM10은 0~150㎍/㎥를 5칸에 비례 매핑하고, 둘 중 하나라도 매우나쁨이면 해당 막대를 깜빡여 줘. 10분마다 갱신.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "- 데이터: 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=pm2_5,pm10&timezone=Asia%2FSeoul&forecast_days=1 → current.pm2_5와 current.pm10(둘 다 현재 농도 ㎍/㎥)를 함께 사용해 줘.\n- 만들 것: LED 10칸을 반으로 나눠 앞 5칸은 PM2.5, 뒤 5칸은 PM10 막대그래프로. 각 막대는 등급별 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강). PM2.5는 0~75㎍/㎥를 5칸에, PM10은 0~150㎍/㎥를 5칸에 비례 매핑하고, 둘 중 하나라도 매우나쁨이면 해당 막대를 깜빡여 줘. 10분마다 갱신.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
     ("하루 PM2.5 흐름 → 시간대별 막대",
-     "[API] 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → hourly.pm2_5(0~23시 시간별 농도 배열, 24개)와 hourly.time(같은 길이 시각 배열)을 사용해 줘.\n[만들 것] 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 PM2.5 등급 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강)으로 켜서 '하루 대기질 흐름'을 보여 줘. 30분마다 갱신.\n[참고] 피코는 NTP 없이는 현재 시각을 모르니, '지금 시각'에 기대지 말고 데이터 배열의 6~23시 인덱스를 그대로 써(시계 동기화 불필요).\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
+     "- 데이터: 키 불필요. GET https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&hourly=pm2_5&timezone=Asia%2FSeoul&forecast_days=1 → hourly.pm2_5(0~23시 시간별 농도 배열, 24개)와 hourly.time(같은 길이 시각 배열)을 사용해 줘.\n- 만들 것: 오늘 6~23시(18시간)를 LED 10칸에 시간순으로 균등 배분(앞 칸이 이른 시각)해, 각 칸을 그 구간 평균 PM2.5 등급 색(좋음 초록·보통 노랑·나쁨 주황·매우나쁨 빨강)으로 켜서 '하루 대기질 흐름'을 보여 줘. 30분마다 갱신.\n- 참고: 피코는 NTP 없이는 현재 시각을 모르니, '지금 시각'에 기대지 말고 데이터 배열의 6~23시 인덱스를 그대로 써(시계 동기화 불필요).\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(37.5665/126.9780)."),
   ],
   "earthquake": [
     ("최근 최대 지진 → LED 게이지",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → features 배열에서 각 features[i].properties.mag(규모)만 꺼내 최댓값을 구해 줘.\n[만들 것] 최근 하루 M4.5+ 중 최대 규모를 10칸 LED 게이지로(규모 0~9를 0~10칸에 비례, 가득 차면 10칸). 평소 초록, M6+이면 빨강으로 1초 간격 깜빡, 10분마다 다시 불러와 갱신.\n[설정] 감시할 피드는 코드 맨 위 FEED 변수로 두고 쉽게 바꿀 수 있게 해 줘(선택지: 2.5_day, 4.5_day, significant_week, all_day). 기본값은 \"4.5_day\". 깜빡 시작 규모도 ALERT_MAG 변수로 두고 기본값 6.0."),
+     "- 데이터: 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → features 배열에서 각 features[i].properties.mag(규모)만 꺼내 최댓값을 구해 줘.\n- 만들 것: 최근 하루 M4.5+ 중 최대 규모를 10칸 LED 게이지로(규모 0~9를 0~10칸에 비례, 가득 차면 10칸). 평소 초록, M6+이면 빨강으로 1초 간격 깜빡, 10분마다 다시 불러와 갱신.\n- 설정: 감시할 피드는 코드 맨 위 FEED 변수로 두고 쉽게 바꿀 수 있게 해 줘(선택지: 2.5_day, 4.5_day, significant_week, all_day). 기본값은 \"4.5_day\". 깜빡 시작 규모도 ALERT_MAG 변수로 두고 기본값 6.0."),
     ("하루 지진 건수 → 활동 막대",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson → features 배열의 길이(len)가 최근 하루 M2.5+ 발생 건수야. mag·place는 안 써도 돼.\n[만들 것] 발생 건수를 10칸 LED 막대로 표시(0건=모두 꺼짐, 건수가 늘수록 한 칸씩 채움). 적으면 초록, 중간이면 노랑, 가득 차면 빨강으로 채워 지구가 얼마나 들썩였는지 보여 줘. 10분마다 갱신.\n[설정] 막대가 가득 차는 기준 건수를 코드 맨 위 FULL_COUNT 변수로 두고 쉽게 바꿀 수 있게 해 줘(건수÷FULL_COUNT×10을 칸 수로). 기본값은 50. 피드는 FEED 변수로 두고 기본값 \"2.5_day\"."),
+     "- 데이터: 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson → features 배열의 길이(len)가 최근 하루 M2.5+ 발생 건수야. mag·place는 안 써도 돼.\n- 만들 것: 발생 건수를 10칸 LED 막대로 표시(0건=모두 꺼짐, 건수가 늘수록 한 칸씩 채움). 적으면 초록, 중간이면 노랑, 가득 차면 빨강으로 채워 지구가 얼마나 들썩였는지 보여 줘. 10분마다 갱신.\n- 설정: 막대가 가득 차는 기준 건수를 코드 맨 위 FULL_COUNT 변수로 두고 쉽게 바꿀 수 있게 해 줘(건수÷FULL_COUNT×10을 칸 수로). 기본값은 50. 피드는 FEED 변수로 두고 기본값 \"2.5_day\"."),
     ("우리 동네 근접 경보 → 거리 LED",
-     "[API] 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 각 features[i]의 geometry.coordinates([경도, 위도, 깊이])와 properties.mag을 꺼내 줘.\n[만들 것] 내 위치에서 가장 가까운 지진까지의 거리를 10칸 LED로(가까울수록 많이 켜짐: 0km=10칸, 멀수록 줄어 0칸). 평소 파랑, 가장 가까운 지진이 M6+이면 빨강으로 강조. 위경도 거리는 간단한 유클리드 근사로 계산, 10분마다 갱신.\n[설정] 내 위도·경도(MY_LAT/MY_LON)와 LED가 0칸이 되는 경보 반경(RANGE_KM)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665, MY_LON=126.9780), RANGE_KM=3000."),
+     "- 데이터: 키 불필요. GET https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson → 각 features[i]의 geometry.coordinates([경도, 위도, 깊이])와 properties.mag을 꺼내 줘.\n- 만들 것: 내 위치에서 가장 가까운 지진까지의 거리를 10칸 LED로(가까울수록 많이 켜짐: 0km=10칸, 멀수록 줄어 0칸). 평소 파랑, 가장 가까운 지진이 M6+이면 빨강으로 강조. 위경도 거리는 간단한 유클리드 근사로 계산, 10분마다 갱신.\n- 설정: 내 위도·경도(MY_LAT/MY_LON)와 LED가 0칸이 되는 경보 반경(RANGE_KM)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665, MY_LON=126.9780), RANGE_KM=3000."),
   ],
   "iss": [
     ("내 위치 → ISS 머리 위 통과 알림",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON(딕셔너리)의 latitude, longitude가 ISS 현재 위치.\n[만들 것] 내 위치(MY_LAT/MY_LON)와 ISS 사이 거리를 구해, 5000km 이상이면 LED 1칸, 가까워질수록 칸을 늘려 500km 이하면 10칸 모두 켜. 200km 이내(머리 위 통과)면 초록으로 0.3초 간격 깜빡 알림. 30초마다 갱신.\n[설정] 내 위도·경도는 코드 맨 위에 MY_LAT/MY_LON 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665 / MY_LON=126.9780)."),
+     "- 데이터: wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON(딕셔너리)의 latitude, longitude가 ISS 현재 위치.\n- 만들 것: 내 위치(MY_LAT/MY_LON)와 ISS 사이 거리를 구해, 5000km 이상이면 LED 1칸, 가까워질수록 칸을 늘려 500km 이하면 10칸 모두 켜. 200km 이내(머리 위 통과)면 초록으로 0.3초 간격 깜빡 알림. 30초마다 갱신.\n- 설정: 내 위도·경도는 코드 맨 위에 MY_LAT/MY_LON 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(MY_LAT=37.5665 / MY_LON=126.9780)."),
     ("ISS 고도 → 고도 게이지",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 altitude(고도 km)를 꺼내.\n[만들 것] ISS 고도(보통 400~430km)를 LED 10칸 게이지로 표시: 400km 이하면 1칸, 430km 이상이면 10칸으로 선형 매핑하고, 낮을수록 노랑·높을수록 파랑으로 칸 색을 채워. 30초마다 갱신.\n[설정] 게이지의 최소·최대 고도는 코드 맨 위에 ALT_MIN/ALT_MAX 변수로 두고 바꿀 수 있게 해 줘. 기본값은 ALT_MIN=400, ALT_MAX=430(km)."),
+     "- 데이터: wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 altitude(고도 km)를 꺼내.\n- 만들 것: ISS 고도(보통 400~430km)를 LED 10칸 게이지로 표시: 400km 이하면 1칸, 430km 이상이면 10칸으로 선형 매핑하고, 낮을수록 노랑·높을수록 파랑으로 칸 색을 채워. 30초마다 갱신.\n- 설정: 게이지의 최소·최대 고도는 코드 맨 위에 ALT_MIN/ALT_MAX 변수로 두고 바꿀 수 있게 해 줘. 기본값은 ALT_MIN=400, ALT_MAX=430(km)."),
     ("ISS 속도 → 속도 표시등",
-     "[API] wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 velocity(속도 km/h)를 꺼내.\n[만들 것] ISS 속도(보통 약 27,500km/h)를 LED 10칸으로 표시: 27000km/h를 기준으로 빠를수록 칸 수를 늘리고, 기준 초과면 빨강·기준 이하면 초록으로 채워. 30초마다 갱신해 속도 변화를 한눈에 보이게.\n[설정] 기준 속도는 코드 맨 위에 SPEED_REF 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 SPEED_REF=27000(km/h)."),
+     "- 데이터: wheretheiss(키 불필요): GET https://api.wheretheiss.at/v1/satellites/25544 → 응답 JSON의 velocity(속도 km/h)를 꺼내.\n- 만들 것: ISS 속도(보통 약 27,500km/h)를 LED 10칸으로 표시: 27000km/h를 기준으로 빠를수록 칸 수를 늘리고, 기준 초과면 빨강·기준 이하면 초록으로 채워. 30초마다 갱신해 속도 변화를 한눈에 보이게.\n- 설정: 기준 속도는 코드 맨 위에 SPEED_REF 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 SPEED_REF=27000(km/h)."),
   ],
   "sunrise": [
     ("낮 길이 → LED 게이지",
-     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.day_length(낮 길이, 초 단위 정수)만 사용해.\n[만들 것] 낮 길이를 LED 10칸 게이지로 표시해 줘. 8시간(28800초)이면 0칸, 16시간(57600초)이면 10칸으로 비례 환산하고, 길수록 노란색을 더 밝게(밝기는 60 이하). 하루에 1~2번만 갱신하면 되니 갱신 사이에는 길게 sleep.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "- 데이터: 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.day_length(낮 길이, 초 단위 정수)만 사용해.\n- 만들 것: 낮 길이를 LED 10칸 게이지로 표시해 줘. 8시간(28800초)이면 0칸, 16시간(57600초)이면 10칸으로 비례 환산하고, 길수록 노란색을 더 밝게(밝기는 60 이하). 하루에 1~2번만 갱신하면 되니 갱신 사이에는 길게 sleep.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
     ("일출·일몰 → 시각 LED",
-     "[API] 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.\n[만들 것] 일출·일몰 시각의 '시(hour)'를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.\n[설정] 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
+     "- 데이터: 키 불필요. GET https://api.sunrise-sunset.org/json?lat=LAT&lng=LON&formatted=0 → results.sunrise / results.sunset(둘 다 UTC ISO 문자열). UTC라서 한국시간은 여기에 +9시간 해야 해.\n- 만들 것: 일출·일몰 시각의 '시(hour)'를 한국시간으로 바꾼 뒤, 일출 시각만큼 앞쪽 LED를, 일몰 시각만큼 뒤쪽 LED를 켜서 낮 구간을 띠처럼 보여 줘(예: 일출 5시·일몰 19시면 0~4번은 끄고 5~10번 켜기 식, 10칸에 맞게 0~24시를 비례 배치). 일출 쪽은 주황, 일몰 쪽은 빨강, 밝기 60 이하. 하루 1~2회 갱신하고 사이에는 길게 sleep.\n- 설정: 위도·경도(LAT/LON)는 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780)."),
   ],
   "pubchem": [
     ("물질 이름 목록 → 분자량 LED 게이지",
-     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).\n[만들 것] 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(<100)은 초록, 보통(100~250)은 노랑, 무거운 물질(>250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.\n[설정] 비교할 물질 목록은 코드 맨 위에 MATERIALS = [\"water\", \"glucose\", \"caffeine\"] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로."),
+     "- 데이터: PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)을 꺼내 써. 물질명은 영문(water, glucose, caffeine 등).\n- 만들 것: 목록의 물질을 하나씩 차례로 조회해서, 분자량을 LED 10칸 게이지로 표시해 줘(0~400을 0~10칸에 매핑, 400 넘으면 10칸 꽉). 가벼운 물질(<100)은 초록, 보통(100~250)은 노랑, 무거운 물질(>250)은 빨강으로 켜 줘. 한 물질당 4초씩 보여 주고, 마지막 물질까지 끝나면 다시 처음부터 반복해.\n- 설정: 비교할 물질 목록은 코드 맨 위에 MATERIALS = [\"water\", \"glucose\", \"caffeine\"] 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 이 세 가지로."),
     ("두 물질 분자량·분자식 → 무거운 쪽 색으로 비교",
-     "[API] PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.\n[만들 것] 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 '비슷함' 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.\n[설정] 비교할 두 물질은 코드 맨 위에 MAT_A = \"caffeine\", MAT_B = \"glucose\" 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로."),
+     "- 데이터: PubChem(키 불필요). GET https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/물질명/property/MolecularFormula,MolecularWeight/JSON → PropertyTable.Properties[0].MolecularWeight(분자량)과 .MolecularFormula(분자식, 예 C8H10N4O2)를 꺼내 써.\n- 만들 것: 두 물질 A·B의 분자량과 분자식을 각각 조회해서, 조회할 때마다 물질명·분자식·분자량을 한 줄씩 print로 보여 줘(분자식 확인용). 그리고 더 무거운 쪽을 LED로 보여 줘: 왼쪽 5칸은 A, 오른쪽 5칸은 B 영역으로 나누고, 더 무거운 물질 쪽 칸들을 파랑으로 환하게, 가벼운 쪽은 어둡게 켜 줘. 두 분자량 차이가 10 미만이면 '비슷함' 의미로 10칸 모두 보라색. 6초마다 다시 조회해서 갱신해.\n- 설정: 비교할 두 물질은 코드 맨 위에 MAT_A = \"caffeine\", MAT_B = \"glucose\" 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 카페인과 포도당으로."),
   ],
   "gbif": [
     ("종 학명 → 관찰 수 자릿수 LED",
-     "[API] GBIF(키 불필요): GET https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 → 응답 JSON의 최상위 count가 그 종의 국내(한국) 관찰 기록 수.\n[만들 것] count의 자릿수만큼 LED를 채워 줘. 국내 기록 수는 보통 1~6자리라 1자리=1칸 ~ 7자리 이상=10칸으로 매핑하고(예: 40,631 → 5자리 → 5칸), 자릿수가 적을수록(1~2칸) 빨강, 중간(3~4칸)은 노랑, 많을수록(5칸 이상) 초록으로 색을 정해 흔할수록 초록이 길게 보이게 해 줘. 시작할 때 한 번만 불러오고 그 상태로 유지해.\n[설정] 학명 SCI_NAME은 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 까치(\"Pica pica\")로 하고, 집비둘기는 \"Columba livia\"처럼 바꾸면 된다고 주석으로 적어 줘."),
+     "- 데이터: GBIF(키 불필요): GET https://api.gbif.org/v1/occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 → 응답 JSON의 최상위 count가 그 종의 국내(한국) 관찰 기록 수.\n- 만들 것: count의 자릿수만큼 LED를 채워 줘. 국내 기록 수는 보통 1~6자리라 1자리=1칸 ~ 7자리 이상=10칸으로 매핑하고(예: 40,631 → 5자리 → 5칸), 자릿수가 적을수록(1~2칸) 빨강, 중간(3~4칸)은 노랑, 많을수록(5칸 이상) 초록으로 색을 정해 흔할수록 초록이 길게 보이게 해 줘. 시작할 때 한 번만 불러오고 그 상태로 유지해.\n- 설정: 학명 SCI_NAME은 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 까치(\"Pica pica\")로 하고, 집비둘기는 \"Columba livia\"처럼 바꾸면 된다고 주석으로 적어 줘."),
     ("두 종 학명 → 누가 더 흔한가 LED",
-     "[API] GBIF(키 불필요): 같은 엔드포인트 .../occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 를 두 종에 대해 각각 호출해, 응답 JSON의 최상위 count(국내 관찰 기록 수) 두 개를 비교.\n[만들 것] LED 10칸을 두 종이 count 비율대로 나눠 가져 줘(예: A가 40,000, B가 15,000이면 약 7칸 초록 + 약 3칸 파랑). 더 흔한 쪽 색이 더 길게 켜져 한눈에 승자가 보이게 하고, 두 count의 합이 0이면 전체를 빨강으로 켜서 데이터 없음을 표시해. 시작할 때 한 번만 불러와.\n[설정] 비교할 두 학명을 코드 맨 위 변수 SCI_A, SCI_B로 두고 쉽게 바꾸게 해 줘. 기본값은 까치(\"Pica pica\")와 집비둘기(\"Columba livia\")로 해 줘."),
+     "- 데이터: GBIF(키 불필요): 같은 엔드포인트 .../occurrence/search?country=KR&scientificName=SCI_NAME&limit=0 를 두 종에 대해 각각 호출해, 응답 JSON의 최상위 count(국내 관찰 기록 수) 두 개를 비교.\n- 만들 것: LED 10칸을 두 종이 count 비율대로 나눠 가져 줘(예: A가 40,000, B가 15,000이면 약 7칸 초록 + 약 3칸 파랑). 더 흔한 쪽 색이 더 길게 켜져 한눈에 승자가 보이게 하고, 두 count의 합이 0이면 전체를 빨강으로 켜서 데이터 없음을 표시해. 시작할 때 한 번만 불러와.\n- 설정: 비교할 두 학명을 코드 맨 위 변수 SCI_A, SCI_B로 두고 쉽게 바꾸게 해 줘. 기본값은 까치(\"Pica pica\")와 집비둘기(\"Columba livia\")로 해 줘."),
   ],
   "nasa": [
     ("근접 소행성 → 위험 알림 LED",
-     "[API] NASA NeoWs(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/neo/rest/v1/feed?start_date=DATE&end_date=DATE&api_key=KEY → start_date와 end_date에 같은 날짜를 넣어 하루치만 조회해. 응답 JSON의 near_earth_objects[DATE] 배열에서 각 항목의 is_potentially_hazardous_asteroid(위험 PHA 여부, true/false)와 estimated_diameter.meters.estimated_diameter_max(최대 지름 m)를 꺼내 써.\n[만들 것] 그날 지구 근접 천체 개수만큼 LED 칸을 켜고(10개 초과면 10칸까지), 위험(PHA) 천체가 하나라도 있으면 빨강 깜빡·없으면 초록 고정. 천체 중 가장 큰 지름이 200m를 넘으면 그 칸만 주황으로 강조해. 하루 1회 갱신.\n[설정] api_key와 조회 날짜는 코드 맨 위 변수(API_KEY/DATE)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\", DATE=\"2026-06-25\"(YYYY-MM-DD 형식의 고정 문자열). 다른 날을 보려면 DATE만 바꾸면 되게."),
+     "- 데이터: NASA NeoWs(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/neo/rest/v1/feed?start_date=DATE&end_date=DATE&api_key=KEY → start_date와 end_date에 같은 날짜를 넣어 하루치만 조회해. 응답 JSON의 near_earth_objects[DATE] 배열에서 각 항목의 is_potentially_hazardous_asteroid(위험 PHA 여부, true/false)와 estimated_diameter.meters.estimated_diameter_max(최대 지름 m)를 꺼내 써.\n- 만들 것: 그날 지구 근접 천체 개수만큼 LED 칸을 켜고(10개 초과면 10칸까지), 위험(PHA) 천체가 하나라도 있으면 빨강 깜빡·없으면 초록 고정. 천체 중 가장 큰 지름이 200m를 넘으면 그 칸만 주황으로 강조해. 하루 1회 갱신.\n- 설정: api_key와 조회 날짜는 코드 맨 위 변수(API_KEY/DATE)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\", DATE=\"2026-06-25\"(YYYY-MM-DD 형식의 고정 문자열). 다른 날을 보려면 DATE만 바꾸면 되게."),
     ("오늘의 천문사진 → 사진 도착 신호등",
-     "[API] NASA APOD(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/planetary/apod?api_key=KEY → 응답 JSON의 title(제목), media_type(\"image\" 또는 \"video\"), url(사진·영상 주소). explanation(설명)도 함께 옴.\n[만들 것] 오늘의 천문사진이 잘 도착했는지 알리는 신호등: media_type이 \"image\"면 LED 10칸을 은은한 파랑으로 차오르듯 켜고, \"video\"면 보라로 켜. 응답에 title이 비어 있거나 요청 실패면 빨강 1칸으로 표시. 받은 title과 url은 print로 한 번 출력해 줘(LED는 도착 여부만 표현). 하루 1회 갱신.\n[설정] api_key는 코드 맨 위 변수(API_KEY)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\"."),
+     "- 데이터: NASA APOD(키 필요, 우선 DEMO_KEY): GET https://api.nasa.gov/planetary/apod?api_key=KEY → 응답 JSON의 title(제목), media_type(\"image\" 또는 \"video\"), url(사진·영상 주소). explanation(설명)도 함께 옴.\n- 만들 것: 오늘의 천문사진이 잘 도착했는지 알리는 신호등: media_type이 \"image\"면 LED 10칸을 은은한 파랑으로 차오르듯 켜고, \"video\"면 보라로 켜. 응답에 title이 비어 있거나 요청 실패면 빨강 1칸으로 표시. 받은 title과 url은 print로 한 번 출력해 줘(LED는 도착 여부만 표현). 하루 1회 갱신.\n- 설정: api_key는 코드 맨 위 변수(API_KEY)로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 API_KEY=\"DEMO_KEY\"."),
   ],
   "energy": [
     ("이번 달 일사량 → 태양광 LED 게이지",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(월평균 일사량 kWh/m²/day).\n[만들 것] 선택한 달(MONTH)의 일사량을 LED 10칸 막대 게이지로. 0~8 kWh/m²/day를 10칸에 매핑(약 0.8당 1칸), 채운 칸은 노란색·빈 칸은 꺼짐. 값이 클수록(여름) 더 많이·노랗게 차오르게. 1시간마다 한 번만 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "- 데이터: 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(월평균 일사량 kWh/m²/day).\n- 만들 것: 선택한 달(MONTH)의 일사량을 LED 10칸 막대 게이지로. 0~8 kWh/m²/day를 10칸에 매핑(약 0.8당 1칸), 채운 칸은 노란색·빈 칸은 꺼짐. 값이 클수록(여름) 더 많이·노랗게 차오르게. 1시간마다 한 번만 갱신.\n- 설정: 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
     ("이번 달 풍속 → 풍력 LED 게이지",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.WS10M는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(10m 높이 월평균 풍속 m/s).\n[만들 것] 선택한 달(MONTH)의 풍속을 LED 10칸 게이지로. 0~10 m/s를 10칸에 매핑(1 m/s당 1칸), 채운 칸은 하늘색. 3 m/s 미만이면 1~2칸만 켜고, 6 m/s 이상이면 끝 2칸을 흰색으로 깜빡여 '강풍'을 표시. 1시간마다 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "- 데이터: 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.WS10M는 {\"JAN\":..,..,\"DEC\":..,\"ANN\":연평균} 딕셔너리(10m 높이 월평균 풍속 m/s).\n- 만들 것: 선택한 달(MONTH)의 풍속을 LED 10칸 게이지로. 0~10 m/s를 10칸에 매핑(1 m/s당 1칸), 채운 칸은 하늘색. 3 m/s 미만이면 1~2칸만 켜고, 6 m/s 이상이면 끝 2칸을 흰색으로 깜빡여 '강풍'을 표시. 1시간마다 갱신.\n- 설정: 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
     ("태양 vs 바람 → 어느 쪽이 셀까 비교등",
-     "[API] 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN(일사량 kWh/m²/day)와 properties.parameter.WS10M(풍속 m/s) 둘 다 {\"JAN\":..,..,\"DEC\":..,\"ANN\":..} 딕셔너리.\n[만들 것] 선택한 달(MONTH)에서 태양과 바람 중 어느 자원이 상대적으로 강한지 비교. 일사량은 8로, 풍속은 10으로 각각 나눠 0~1 비율로 환산한 뒤, LED 10칸을 절반씩 나눠 왼쪽 5칸은 태양 비율만큼 노랗게·오른쪽 5칸은 바람 비율만큼 하늘색으로 채워. 더 높은 쪽 끝 칸을 1초 간격으로 천천히 깜빡여 '오늘의 승자'를 표시. 1시간마다 갱신.\n[설정] 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
+     "- 데이터: 키 불필요. GET https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=ALLSKY_SFC_SW_DWN,WS10M&community=RE&longitude=LON&latitude=LAT&format=JSON → properties.parameter.ALLSKY_SFC_SW_DWN(일사량 kWh/m²/day)와 properties.parameter.WS10M(풍속 m/s) 둘 다 {\"JAN\":..,..,\"DEC\":..,\"ANN\":..} 딕셔너리.\n- 만들 것: 선택한 달(MONTH)에서 태양과 바람 중 어느 자원이 상대적으로 강한지 비교. 일사량은 8로, 풍속은 10으로 각각 나눠 0~1 비율로 환산한 뒤, LED 10칸을 절반씩 나눠 왼쪽 5칸은 태양 비율만큼 노랗게·오른쪽 5칸은 바람 비율만큼 하늘색으로 채워. 더 높은 쪽 끝 칸을 1초 간격으로 천천히 깜빡여 '오늘의 승자'를 표시. 1시간마다 갱신.\n- 설정: 위도·경도(LAT/LON)와 조회할 달(MONTH, 1~12)을 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 서울(LAT=37.5665, LON=126.9780), MONTH=6."),
   ],
   "worldbank": [
     ("나라 코드 → 1인당 CO₂ LED 게이지",
-     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 1인당 CO₂ 배출량(톤), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)\n[만들 것] 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.\n[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게."),
+     "- 데이터: World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 1인당 CO₂ 배출량(톤), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터이니 헷갈리지 마.)\n- 만들 것: 한 나라의 1인당 CO₂를 LED 10칸 게이지로 표시(0~20t → 0~10칸, 1칸당 2t). 세계 평균(약 4.5t)보다 높으면 빨강, 낮으면 초록. 하루 1회만 갱신하고 나머지 시간은 sleep.\n- 설정: 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 USA·JPN·CHN 등으로 바꿔 비교하게."),
     ("나라 코드 → 재생에너지 비중 게이지",
-     "[API] World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 최종에너지 중 재생에너지 비중(%), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터.)\n[만들 것] 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.\n[설정] 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게."),
+     "- 데이터: World Bank(키 불필요): GET https://api.worldbank.org/v2/country/KOR/indicator/EG.FEC.RNEW.ZS?format=json&per_page=5&mrnev=1 → 응답은 [메타데이터, 데이터배열] 2요소 배열이야. 응답[1]이 데이터배열이고, 응답[1][0]['value']가 최종에너지 중 재생에너지 비중(%), 응답[1][0]['date']가 연도야. (응답[0]은 메타데이터.)\n- 만들 것: 재생에너지 비중(0~100%)을 LED 10칸 게이지로 표시(10% → 1칸). 높을수록 칸을 많이·초록으로 켜고, 15% 미만이면 빨강으로 경고. 하루 1회만 갱신하고 나머지는 sleep.\n- 설정: 나라 코드(country)를 코드 맨 위 변수로 두고 쉽게 바꿀 수 있게 해 줘. 기본값은 한국(KOR), 그 외 NOR·SWE·BRA 등으로 바꿔 비교하게."),
     ("두 나라 → CO₂ 좌우 비교 막대",
-     "[API] World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0]['value']가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)\n[만들 것] LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.\n[설정] 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA)."),
+     "- 데이터: World Bank(키 불필요): 같은 지표 EN.GHG.CO2.PC.CE.AR5를 두 나라에 각각 GET https://api.worldbank.org/v2/country/{CODE}/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=5&mrnev=1 → 각 응답은 [메타데이터, 데이터배열] 2요소 배열이고, 응답[1][0]['value']가 그 나라의 1인당 CO₂(톤)야. (응답[0]은 메타데이터.)\n- 만들 것: LED 10칸을 왼쪽 5칸·오른쪽 5칸으로 나눠, 두 나라의 1인당 CO₂를 각각 0~20t→0~5칸 막대로 표시. CO₂가 더 많은 쪽을 빨강, 적은 쪽을 초록으로. 하루 1회 갱신하고 나머지는 sleep.\n- 설정: 비교할 두 나라 코드를 코드 맨 위에 country_a, country_b 변수로 두고 바꾸기 쉽게 해 줘. 기본값은 한국(KOR)과 미국(USA)."),
   ],
 }
 

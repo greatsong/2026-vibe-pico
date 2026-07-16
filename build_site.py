@@ -254,6 +254,8 @@ CHAPTERS = [
       ]},
       {"type": "callout", "kind": "warn", "title": "USB 케이블 주의",
        "html": "세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 연수 현장에서 제일 흔한 막힘 지점입니다."},
+      {"type": "teacher", "kind": "say", "title": "진행 멘트 — 준비물 점검 (2분)",
+       "html": "“책상 위 5가지가 다 있는지 <b>옆 사람과 서로</b> 확인해 주세요. 하나라도 없으면 지금 손 들어 주세요.” — 케이블 불량이 가장 흔하니 <b>데이터용 여분 케이블을 3~4개</b> 미리 챙겨 두면 진행이 매끄럽습니다."},
     ]},
     {"title": "0.2 · Thonny 설치 (코드 편집기)", "items": [
       {"type": "text", "html": "<b>Thonny</b>는 우리가 쓴 코드를 피코에게 전달하고, 피코가 보내는 메시지를 받아 보여 주는 <b>창구</b>예요. 파이썬 입문용으로 가장 쉽고, 피코를 기본 지원합니다."},
@@ -288,6 +290,8 @@ CHAPTERS = [
       {"type": "mistakes", "items": [
         {"sym": "RP2350 드라이브가 안 나타남", "cause": "BOOTSEL 버튼을 누르지 않고 꽂았거나, 충전 전용 케이블입니다.", "fix": "케이블을 뽑고 → <b>BOOTSEL 버튼을 누른 채</b> 다시 꽂으세요. 그래도 안 되면 데이터용 케이블로 교체합니다."},
       ]},
+      {"type": "teacher", "kind": "err", "title": "예상 오류 — 펌웨어 단계에서 반드시 나오는 것",
+       "html": "매 기수 2~3명은 <b>BOOTSEL을 안 누르고 꽂거나, 드라이브가 뜨기 전에 손을 뗍니다.</b> ‘버튼 먼저, 꽂는 건 나중’을 두 번 외치고 시작하세요. 이미 MicroPython이 깔린 피코는 드라이브가 안 뜨는 게 정상이니 ‘내 것만 안 떠요’ 질문에는 셸 연결(0.5)로 바로 넘어가면 됩니다."},
     ]},
     {"title": "0.5 · Thonny와 피코 연결 + 첫 코드", "items": [
       {"type": "steps", "items": [
@@ -336,6 +340,10 @@ CHAPTERS = [
       ]},
       {"type": "dig", "title": "RSSI는 왜 -50, -80처럼 ‘음수’일까? (dBm과 데시벨)",
        "html": "RSSI(Received Signal Strength Indicator)의 단위 <b>dBm</b>은 ‘1밀리와트(mW)에 견준 신호 세기를 데시벨로 나타낸 값’이에요. 정의상 <b>0 dBm = 1 mW</b>입니다.<br><br>와이파이 신호가 안테나에 도달할 때의 전력은 1 mW보다 <b>훨씬 작아서</b>(보통 1mW의 수만분의 1 ~ 1억분의 1 수준), 로그(데시벨)로 바꾸면 <b>음수</b>가 됩니다. 그래서 값이 항상 마이너스예요.<br>· -30 dBm ≈ 아주 강함(공유기 바로 옆)<br>· -67 dBm ≈ 영상통화도 무난<br>· -80 dBm ≈ 약함, 끊길 수 있음<br><br>데시벨은 <b>로그 스케일</b>이라, 10 dB 차이가 전력 <b>10배</b> 차이예요. 즉 -60에서 -70으로 떨어지면 신호 전력이 1/10로 준 겁니다. 숫자 차이는 작아 보여도 체감 차이가 큰 이유죠."},
+      {"type": "teacher", "kind": "ask", "title": "발문 — 개념을 몸으로 먼저",
+       "html": "“신호 세기가 <b>-50</b>인 자리와 <b>-80</b>인 자리, 어디가 더 잘 터질까요? 왜 0이 아니라 음수로 잴까요?” — 답을 주지 말고 스캔(Step 1) 결과를 보며 스스로 확인하게 하세요. ‘공유기에서 멀어지면 어떻게 될까?’로 사각지대 활동을 예고하면 동기부여가 됩니다."},
+      {"type": "teacher", "kind": "say", "title": "진행 팁 — 네트워크는 강사 핫스팟이 제일 안전",
+       "html": "학교망은 기기 간 통신(피코↔폰)이 막힌 경우가 많습니다. <b>강사 휴대폰 핫스팟(2.4GHz)</b>을 하나 열어 두고, 막히는 학생은 그리로 옮기게 하세요. SSID·비밀번호를 칠판에 크게 적어 두면 wifi_config.py 오타 질문이 크게 줄어듭니다."},
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "<b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)"},
@@ -347,13 +355,13 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 3.</b> 와이파이에 연결해 신호 세기를 1초마다 출력합니다. <b>편집기 칸에 붙여넣고 ▶ 실행</b>해 원리를 확인하세요. (셸에 RSSI 값이 1초마다 찍혀요.)"},
       {"type": "code", "label": "Step 3 · RSSI 읽기", "lang": "python", "file": "snippets/ch1_rssi.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 대시보드 코드를 만들어 줍니다."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] 와이파이(STA 모드)에 연결해 신호 세기(RSSI, dBm 단위 음수값)를 1초마다 읽고 있어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[만들 것] 피코가 외부 라이브러리 없이 소켓 기반 웹서버(80번 포트)가 되게 해 줘. 브라우저가 /data 주소에서 JSON으로 최신 RSSI를 받아 1초마다 자동 갱신하고, Chart.js로 실시간 꺾은선 그래프를 그리게 해 줘.\n[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘."},
+      {"type": "prompt", "label": "① AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 와이파이 신호 세기 실시간 대시보드야.\n- 지금 내 피코는 와이파이에 접속해 신호 세기(RSSI)를 1초마다 읽고 있어. 신호 세기는 dBm 단위의 음수이고, 0에 가까울수록 강해.\n- 와이파이 이름과 비밀번호는 따로 만들어 둔 설정 파일(wifi_config.py)에서 불러와.\n- 피코가 외부 라이브러리 설치 없이 작은 웹서버(80번 포트)가 되게 해줘.\n- 브라우저가 '/data' 주소에서 최신 신호 세기를 JSON으로 받아 1초마다 자동 갱신하고, Chart.js로 실시간 꺾은선 그래프를 그려줘.\n- 같은 와이파이에 있는 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 바로 돕니다. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요."},
-      {"type": "code", "label": "전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py", "fold": True},
-      {"type": "step_head", "html": "<b>Step 5.</b> 여기서 <b>바이브코딩으로 마무리</b>해 봐요. 숫자만 보여 주는 대신, 신호 세기에 따라 <b>재미있게 반응</b>하도록 AI에게 설명합니다. 아래 프롬프트를 그대로 복사해 AI 도구에 붙여넣으세요."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"내 라즈베리파이 피코 2 W가 지금 와이파이 신호 세기(RSSI)를 측정해서 소켓 기반 웹서버로 보여주고 있어. RSSI는 dBm 단위의 음수이고 0에 가까울수록 강해(예: -50은 강함, -85는 약함). 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n신호 세기에 따라 화면이 재미있게 반응하도록 바꿔 줘:\n- 강할 때(약 -60dBm 이상): 초록색 + ‘신호 최고예요! 😄’ 같은 축하 느낌(살짝 반짝).\n- 보통(-60 ~ -78dBm): 노란색 + ‘쓸 만해요’.\n- 약할 때(약 -78dBm 이하): 빨간색 + ‘⚠️ 신호 약함 — 끊길 수 있어요’ 경고를 크게 띄우고 화면이 살짝 흔들리는 애니메이션.\n그리고 WS2813 LED 10개(GP16, NeoPixel을 timing=(280,515,515,745)로 생성)가 연결돼 있다면, 같은 상태를 LED 색으로도 보여 줘(강함=초록, 보통=노랑, 약함=빨강 깜빡).\n복사해서 바로 도는 완결형 main.py로 주고, 핀·timing 설정은 그대로 유지해 줘."},
+      {"type": "code", "label": "② 전체 코드 · RSSI 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch1_dashboard.py", "fold": True},
+      {"type": "step_head", "html": "<b>Step 5.</b> 여기서 <b>바이브코딩으로 마무리</b>해 봐요. 숫자만 보여 주는 대신, 신호 세기에 따라 <b>재미있게 반응</b>하도록 AI에게 <b>이어서</b> 설명합니다. ①→② 흐름에 이어 붙이는 <b>③ 개선 프롬프트</b>예요."},
+      {"type": "improve", "label": "③ 프롬프트 개선 — 신호 세기에 반응하는 화면 (이어서 복사)", "text":
+"방금 만든 신호 세기 대시보드를 이어서 개선해줘. 신호 세기에 따라 화면이 재미있게 반응하면 좋겠어.\n- 강할 때(약 -60dBm 이상): 초록색 배경에 '신호 최고예요! 😄' 같은 축하 문구를 살짝 반짝이게.\n- 보통(-60 ~ -78dBm): 노란색에 '쓸 만해요'.\n- 약할 때(약 -78dBm 이하): 빨간색으로 '⚠️ 신호 약함, 끊길 수 있어요' 경고를 크게 띄우고 화면이 살짝 흔들리게.\n- 피코의 16번 핀에 열 칸짜리 LED 바(WS2813)가 연결돼 있다면 같은 상태를 LED 색으로도 보여줘. 강함=초록, 보통=노랑, 약함=빨강 깜빡임.\n- 이 LED는 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해야 색이 안 깨져. 이 값과 핀 번호는 그대로 유지해줘.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "callout", "kind": "tip", "title": "바이브코딩 팁",
        "html": "받은 코드를 올리기 전에 ① 신호 기준값(-60·-78 등)이 우리 환경에 맞는지 ② LED를 함께 쓴다면 <code>timing</code> 인자가 들어 있는지 확인하세요. (LED와 <code>timing</code>은 <b>2장</b>에서 자세히 배워요 — 지금은 화면만으로도 충분합니다.) 기준값은 직접 돌아다니며 ‘강한 곳/약한 곳’ RSSI를 보고 조정하면 더 정확해요."},
       {"type": "callout", "kind": "info", "title": "들고 다니려면 — 전원 준비",
@@ -391,7 +399,7 @@ CHAPTERS = [
       {"type": "callout", "kind": "key", "title": "WS2813은 timing 인자가 필수",
        "html": "우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이번 연수의 모든 LED 코드 첫 줄에 들어갑니다."},
       {"type": "callout", "kind": "info", "title": "LED가 60개짜리로 왔다면?",
-       "html": "걱정 마세요. 바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·감정 무드등 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요."},
+       "html": "바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·감정 무드등 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요."},
       {"type": "concept", "items": [
         {"t": "NeoPixel", "d": "여러 개의 색 LED를 한 줄로 제어하는 도구. <code>np[i] = (r, g, b)</code>로 i번 칸 색을 정합니다."},
         {"t": "write()", "d": "색을 정한 뒤 <code>np.write()</code>를 호출해야 실제 LED에 반영됩니다. 깜빡 잊기 쉬워요."},
@@ -413,13 +421,13 @@ CHAPTERS = [
     ]},
     {"title": "내 감정 표현하기 (이 장의 작품)", "items": [
       {"type": "text", "html": "이제 배운 걸 모아 <b>감정 무드등</b>을 만들어요. 색은 ‘무슨 감정인지’, 움직임(숨쉬기·깜빡임·반짝임)은 ‘감정의 느낌·세기’를 나타냅니다. 이런 코드는 손으로 치지 말고, AI에게 아래처럼 <b>설명</b>해 만들면 돼요."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코의 WS2813 LED 10개로 ‘감정 무드등’을 만들 거야. LED는 GP16에 연결했고, NeoPixel을 timing=(280,515,515,745)로 만들어(없으면 색이 깨져). 밝기는 눈이 부시지 않게 낮게(최대 60 정도) 해 줘.\n색과 움직임을 조합해 ‘기쁨·평온·화남·신남’ 4가지 감정을 표현해 줘. 예: 기쁨=따뜻한 노랑이 두근두근 숨쉬기, 평온=파랑이 천천히 숨쉬기, 화남=빨강 깜빡, 신남=청록이 랜덤 칸에 반짝.\n버튼은 없으니, 코드 맨 아래 변수 하나만 바꾸면 감정을 고를 수 있게 해 줘. 복사해서 바로 도는 완결형 main.py로 줘."},
+      {"type": "prompt", "label": "① AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 열 칸짜리 LED 바로 내 기분을 표현하는 '감정 무드등'이야.\n- LED 바(WS2813)는 16번 핀에 연결했어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져.\n- 밝기는 눈이 부시지 않게 낮게(최대 60 정도).\n- 색과 움직임을 조합해 기쁨·평온·화남·신남 네 가지 감정을 표현해줘. 예: 기쁨=따뜻한 노랑이 두근두근 숨쉬기, 평온=파랑이 천천히 숨쉬기, 화남=빨강 깜빡임, 신남=청록이 아무 칸에나 반짝.\n- 버튼은 없으니 코드 맨 아래 변수 하나만 바꾸면 감정을 고를 수 있게 해줘.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "step_head", "html": "아래는 <b>완성본</b>이에요. 버튼이 없으니 코드 맨 아래 <code>MOOD</code> 한 줄만 바꿔 기분을 골라요."},
-      {"type": "code", "label": "전체 코드 · 감정 무드등 (main.py)", "lang": "python", "file": "snippets/ch2_emotion.py", "fold": True},
-      {"type": "step_head", "html": "나만의 감정을 추가해 봐요. 색(<code>(r,g,b)</code>)과 움직임(<code>pulse</code>/<code>blink</code>/<code>sparkle</code>)을 골라 함수 하나만 더 만들면 됩니다."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코의 WS2813 LED 10개(GP16, NeoPixel을 timing=(280,515,515,745)로 생성)로 ‘감정 무드등’을 만들고 있어. 지금은 기쁨·평온·화남·신남 4가지를 색과 움직임으로 표현해.\n여기에 ‘슬픔’과 ‘설렘’ 감정을 추가해 줘. 슬픔은 파란색이 천천히 한 칸씩 흘러내리는 느낌, 설렘은 분홍색이 점점 빨라지며 반짝이는 느낌으로. 밝기는 눈이 부시지 않게 낮게(예: 최대 60) 유지하고, 복사해서 바로 도는 완결형 main.py로 줘. timing 설정은 그대로 둬."},
+      {"type": "code", "label": "② 전체 코드 · 감정 무드등 (main.py)", "lang": "python", "file": "snippets/ch2_emotion.py", "fold": True},
+      {"type": "step_head", "html": "나만의 감정을 추가해 봐요. 색(<code>(r,g,b)</code>)과 움직임(<code>pulse</code>/<code>blink</code>/<code>sparkle</code>)을 골라 함수 하나만 더 만들면 됩니다. 처음부터 다시 설명할 필요 없이, 같은 대화에서 <b>③ 개선 프롬프트</b>로 이어 가면 돼요."},
+      {"type": "improve", "label": "③ 프롬프트 개선 — 감정 추가 (이어서 복사)", "text":
+"방금 만든 감정 무드등을 이어서 개선해줘.\n- '슬픔'과 '설렘' 두 감정을 추가해줘. 슬픔은 파란색이 천천히 한 칸씩 흘러내리는 느낌, 설렘은 분홍색이 점점 빨라지며 반짝이는 느낌으로.\n- 밝기는 지금처럼 낮게 유지하고, LED 타이밍 값과 핀 번호도 그대로 둬.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
@@ -459,7 +467,7 @@ CHAPTERS = [
       {"type": "dig", "title": "ADC가 ‘전압’을 ‘숫자’로 바꾸는 원리 (볼트 변환)",
        "html": "센서는 가스 농도를 <b>전압(아날로그)</b>으로 내보냅니다. 0V~3.3V 사이의 ‘연속된’ 값이죠. 그런데 컴퓨터는 숫자만 다루니, 이 전압을 숫자로 바꿔야 합니다. 그 변환기가 <b>ADC(Analog-to-Digital Converter, 아날로그→디지털 변환기)</b>예요.<br><br>피코의 ADC는 <b>16비트</b> 해상도로 읽습니다. 16비트 = 2¹⁶ = <b>65536단계</b>, 그래서 <code>read_u16()</code>은 <b>0 ~ 65535</b> 사이 숫자를 돌려줘요.<br>· 0V → 0<br>· 3.3V(최대) → 65535<br>· 그 사이는 비례. 따라서 숫자를 전압으로 되돌리면:<br><code>전압(V) = read_u16() / 65535 × 3.3</code><br><br>예) 읽은 값이 32768이면 → 32768/65535×3.3 ≈ <b>1.65V</b> (딱 절반).<br><br><b>주의:</b> MQ-2에서 ‘전압이 곧 가스 농도(ppm)’는 아닙니다. 정확한 ppm은 보정·계산이 필요해서, 수업에서는 <b>상대적인 변화(평소보다 높다/낮다)</b>를 보는 지표로 씁니다. 그래서 SAFE/WARNING/DANGER 임계값도 우리 교실에서 직접 보고 정합니다."},
       {"type": "callout", "kind": "info", "title": "센서는 예열이 필요해요",
-       "html": "MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 놀라지 마세요."},
+       "html": "MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 예열 전이라 그런 것이니 정상이에요."},
       {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
        "html": "대시보드 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다.)"},
     ]},
@@ -471,10 +479,13 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 3.</b> 원시값을 전압·비율로 바꿔 의미를 부여합니다."},
       {"type": "code", "label": "Step 3 · 전압·비율 변환", "lang": "python", "file": "snippets/ch3_03_convert.py"},
       {"type": "step_head", "html": "<b>Step 4.</b> 이제 완성형 대시보드를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 만들어 줍니다."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] MQ-2 가스센서를 ADC(Pin 26, 그로브 A0)로 읽고 있어. read_u16()으로 0~65535 값이 나오고, 여러 번 읽어 이동평균으로 안정시키고 있어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[만들 것] 피코가 외부 라이브러리 없이 소켓 기반 웹서버(80번 포트)가 되게 해 줘. 브라우저가 /data 주소에서 JSON으로 최신 값을 받아 자동 갱신하고, Chart.js로 실시간 그래프를 그리게 해 줘. 임계값으로 SAFE/WARNING/DANGER를 나눠 색으로 표시하고(임계값은 코드 위에서 바꿀 수 있게), 다크 테마로 만들어 줘.\n[조건] 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 도는 완결형 main.py로 줘."},
+      {"type": "prompt", "label": "① AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 우리 반 공기질 실시간 대시보드야.\n- 가스센서(MQ-2)는 아날로그 입력인 26번 핀(그로브 A0 포트)에 연결했어. 읽으면 0~65535 사이 숫자가 나오고, 가스가 짙을수록 값이 커져.\n- 값이 출렁이지 않게 여러 번 읽어 평균(이동 평균)으로 안정시켜줘.\n- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러와.\n- 피코가 외부 라이브러리 설치 없이 작은 웹서버(80번 포트)가 되게 하고, 브라우저가 '/data' 주소에서 JSON으로 최신 값을 받아 자동 갱신하며, Chart.js로 실시간 그래프를 그려줘.\n- 기준값(임계값)으로 안전/주의/위험 세 단계를 나눠 색으로 표시해줘. 기준값은 코드 위쪽에서 쉽게 바꿀 수 있게. 화면은 다크 테마로.\n- 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)"},
-      {"type": "code", "label": "전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py", "fold": True},
+      {"type": "code", "label": "② 전체 코드 · MQ-2 실시간 대시보드 (main.py)", "lang": "python", "file": "snippets/ch3_dashboard.py", "fold": True},
+      {"type": "step_head", "html": "돌아가는 걸 확인했다면, 같은 대화에서 <b>③ 개선 프롬프트</b>로 우리 반에 꼭 맞게 업그레이드해 봐요."},
+      {"type": "improve", "label": "③ 프롬프트 개선 — 환기 알리미로 업그레이드 (이어서 복사)", "text":
+"방금 만든 공기질 대시보드를 이어서 개선해줘.\n- '주의' 이상 상태가 3번 연속 측정되면 화면 맨 위에 '🌬️ 환기하세요!' 배너를 크게 띄우고, '안전'으로 돌아오면 배너를 내려줘.\n- 그래프 옆에 최근 10분의 최고값과 평균값도 함께 보여줘.\n- 센서 핀 번호, 기준값 변수, '/data' 응답 구조는 그대로 유지해줘.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "callout", "kind": "key", "title": "대시보드 열기 · 임계값 바꾸기",
        "html": "실행하면 Thonny <b>셸에 <code>http://...</code> 주소</b>가 찍혀요. 그 주소를 <b>같은 와이파이의 폰/PC 브라우저</b>에 입력하면 화면이 열립니다(<code>http://</code>로, https 아님).<br>안전·주의 기준을 바꾸려면 코드 <b>맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code></b> 두 숫자만 고치세요 — 웹 화면 색도 함께 바뀝니다. (다음 장 LED도 <b>같은 숫자</b>를 씁니다.)"},
     ]},
@@ -520,12 +531,13 @@ CHAPTERS = [
     ]},
     {"title": "따라하기", "items": [
       {"type": "step_head", "html": "2장 <b>게이지</b>(켜진 칸 수로 양을 나타내기)를 떠올리며, 센서값을 칸 수와 색으로 바꿉니다. 이런 코드는 손으로 치지 말고, AI에게 아래처럼 <b>설명</b>해 만들면 돼요."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[하드웨어] MQ-2 가스센서는 ADC(Pin 26, 그로브 A0)로 읽어(read_u16, 0~65535). WS2813 LED 10개는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어(없으면 색 깨짐). 밝기는 낮게.\n[만들 것] 센서값을 여러 번 읽어 이동평균으로 안정시키고, 그 값을 LED 10칸 게이지로 표시해 줘 — 값이 클수록 켜지는 칸이 많아지게. 그리고 안전=초록·주의=노랑·위험=빨강으로 색을 바꾸고, 위험 구간에서는 LED를 깜빡여 줘. 임계값(SAFE/WARNING 기준 숫자)은 코드 맨 위에서 바꿀 수 있게 둬.\n[조건] 와이파이는 필요 없어. 복사해서 바로 도는 완결형 main.py로 줘."},
+      {"type": "prompt", "label": "① AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 폰을 켜지 않아도 LED만 보면 공기질을 아는 장치야.\n- 가스센서(MQ-2)는 아날로그 입력인 26번 핀(그로브 A0 포트)으로 읽어. 값은 0~65535 사이 숫자이고 가스가 짙을수록 커져.\n- 열 칸짜리 LED 바(WS2813)는 16번 핀에 연결했어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게.\n- 센서값을 여러 번 읽어 평균으로 안정시키고, 값이 클수록 켜지는 칸이 많아지는 10칸 게이지로 보여줘.\n- 안전=초록, 주의=노랑, 위험=빨강으로 색을 바꾸고, 위험일 땐 LED를 깜빡여줘.\n- 안전과 주의를 나누는 기준값은 코드 맨 위에서 바꿀 수 있게 해줘.\n- 와이파이는 필요 없어. 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "step_head", "html": "아래는 <b>완성본</b>이에요. (와이파이 불필요 · LED만 있으면 동작) 임계값은 우리 교실에 맞게 코드 위에서 조정하세요."},
-      {"type": "code", "label": "전체 코드 · 공기질 LED 게이지 (main.py)", "lang": "python", "file": "snippets/ch4_led.py", "fold": True},
-      {"type": "callout", "kind": "tip", "title": "웹 + LED를 한 번에 보고 싶다면",
-       "html": "앞 장(웹 대시보드)과 이 장(LED)을 합치고 싶다면 AI에게 이렇게 설명해 보세요: <b>‘앞 장 MQ-2 웹 대시보드 코드에, GP16의 WS2813 LED 10개(timing=(280,515,515,745)) 게이지를 더해 줘. 안전=초록·주의=노랑·위험=빨강 깜빡으로, 웹과 LED가 같은 값을 쓰게.’</b> 받은 코드에 timing이 있는지 꼭 확인하세요."},
+      {"type": "code", "label": "② 전체 코드 · 공기질 LED 게이지 (main.py)", "lang": "python", "file": "snippets/ch4_led.py", "fold": True},
+      {"type": "step_head", "html": "앞 장(웹 대시보드)과 이 장(LED)을 <b>하나로 합치고</b> 싶다면, 아래 <b>③ 개선 프롬프트</b>를 이어서 붙여넣으세요."},
+      {"type": "improve", "label": "③ 프롬프트 개선 — 웹 대시보드와 합치기 (이어서 복사)", "text":
+"3장에서 만든 공기질 웹 대시보드에, 이 장의 LED 게이지를 합쳐줘.\n- 열 칸짜리 LED 바(WS2813)는 16번 핀에 있어. 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정하고, 밝기는 낮게(최대 60).\n- 웹 화면과 LED가 같은 센서값, 같은 기준값을 쓰게 해줘. 안전=초록, 주의=노랑, 위험=빨강 깜빡임.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘. 받은 코드에 타이밍 값이 들어 있는지 내가 확인할게."},
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
@@ -576,22 +588,22 @@ CHAPTERS = [
       {"type": "step_head", "html": "<b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)"},
       {"type": "step_head", "html": "<b>Step 2.</b> 먼저 강수확률을 받아 셸에 출력해, <b>데이터가 어떻게 생겼는지</b> 확인해요. 인터넷 접속 함수(<code>http_get_json</code> 등)는 길어서 손코딩하지 않아요 — AI에게 아래처럼 <b>설명</b>해 만들면 됩니다."},
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[만들 것] Open-Meteo API(키 불필요)에서 우리 지역의 오늘 시간별 강수확률을 받아, 6시~23시를 셸에 ‘N시 강수확률: M%’ 형식으로 출력해 줘. 데이터가 어떻게 생겼는지 먼저 확인하려는 거야.\n[조건] requests 같은 외부 라이브러리는 설치하지 말고, 피코에 기본 내장된 socket+ssl만 써. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 위도/경도(LAT/LON)는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 날씨 데이터가 어떻게 생겼는지 먼저 확인하려는 거야.\n- 무료 날씨 서비스 Open-Meteo(키 필요 없음)에서 우리 지역의 오늘 시간별 강수확률을 받아와.\n- 아침 6시부터 밤 11시까지를 'N시 강수확률: M%' 형식으로 셸에 출력해줘.\n- 외부 라이브러리는 설치하지 말고, 피코에 기본 내장된 인터넷 접속 기능(socket, ssl)만 써. 보안 인증서 확인은 건너뛰어도 돼.\n- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러오고, 위도·경도는 코드 맨 위에 둬서 내가 바꿀 수 있게 해줘.\n- 복사해서 바로 돌아가는 코드 전체를 한 번에 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도 아래 <b>완성본</b>을 복사해 실행하면 됩니다. (긴 <code>http_get_json</code>은 뒤 단계에서도 그대로 재사용해요.)"},
       {"type": "code", "label": "전체 코드 · 강수확률 받아오기", "lang": "python", "file": "snippets/ch5_fetch.py"},
       {"type": "callout", "kind": "info", "title": "코드가 여러 개죠? — 최종은 하나만",
        "html": "아래로 가면서 코드가 여러 번 나와요. <b>피코에 저장(main.py)할 최종 코드는 딱 하나</b>면 됩니다:<br>· Step 2(강수확률 출력) = <b>확인용</b>(잠깐 실행만)<br>· Step 3(날씨 시계) = LED만 버전<br>· <b>Step 5(LED + 웹) = 가장 완성본 ← 이거 하나면 충분</b><br>새 코드를 쓸 땐 <b>이전 코드를 지우고</b> 붙여넣으세요(피코는 한 번에 main.py 하나만 돌려요)."},
       {"type": "step_head", "html": "<b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿔 ‘날씨 시계’를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>설명</b>하면 만들어 줍니다."},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] Open-Meteo API(키 불필요)에서 오늘의 시간별 강수확률을 받고 있어. 인터넷 접속은 피코 기본 내장 socket+ssl만 써(추가 설치 없이). 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[만들 것] 오전 6시~밤 11시(18시간)를 WS2813 LED 10칸에 고르게 나눠, 각 시각의 강수확률을 색으로 표시하는 ‘날씨 시계’를 만들어 줘. LED는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어(없으면 색 깨짐), 밝기는 낮게. 강수확률 구간별 색(예: 맑음=초록·흐림=노랑·비 가능=파랑·비 확실=보라)은 코드 위에서 바꿀 수 있게 둬. 날씨 데이터는 10분에 한 번만 새로 받아와 줘.\n[조건] 위도/경도(LAT/LON)와 timing은 코드 맨 위에 두고, 복사해서 바로 도는 완결형 main.py로 줘."},
+      {"type": "prompt", "label": "① AI에게 이렇게 설명하세요 (그대로 복사)", "text":
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 하루의 비 예보를 LED 색으로 보여주는 '날씨 시계'야.\n- 무료 날씨 서비스 Open-Meteo(키 필요 없음)에서 오늘 시간별 강수확률을 받아와. 인터넷 접속은 피코 기본 내장 기능(socket, ssl)만 쓰고 추가 설치는 하지 마.\n- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러와.\n- 아침 6시~밤 11시(18시간)를 열 칸짜리 LED 바에 고르게 나눠, 각 시각의 강수확률을 색으로 표시해줘. 예: 맑음=초록, 흐림=노랑, 비 가능=파랑, 비 확실=보라. 구간별 색은 코드 위에서 바꿀 수 있게.\n- LED 바(WS2813)는 16번 핀에 연결했어. 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게.\n- 날씨는 10분에 한 번만 새로 받아와줘.\n- 위도·경도와 타이밍 값은 코드 맨 위에 두고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "step_head", "html": "직접 만들지 않아도, 아래 <b>완성본</b>을 복사하면 바로 돕니다. (추가 설치 없음 · 10분마다 새 예보로 갱신)"},
-      {"type": "code", "label": "전체 코드 · 날씨 시계 (main.py) — 무설치", "lang": "python", "file": "snippets/ch5_full.py", "fold": True},
+      {"type": "code", "label": "② 전체 코드 · 날씨 시계 (main.py) — 무설치", "lang": "python", "file": "snippets/ch5_full.py", "fold": True},
       {"type": "callout", "kind": "tip", "title": "더 짧게 쓰고 싶다면 — requests 버전 (설치 1회)",
        "html": "위 무설치 버전이 기본이에요. 만약 <code>requests</code>를 설치할 수 있는 환경이라면, HTTP 부분을 훨씬 짧게 쓸 수 있습니다. Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 한 번 설치(피코가 와이파이 연결된 상태)한 뒤 아래 버전을 쓰세요. 동작은 똑같습니다."},
       {"type": "code", "label": "대안 · 날씨 시계 (requests 설치 버전)", "lang": "python", "file": "snippets/ch5_full_requests.py", "fold": True},
-      {"type": "step_head", "html": "<b>Step 4.</b> 이번엔 여기에 <b>웹 대시보드를 더해</b> 봐요. 아래처럼 AI에게 <b>설명</b>하면 됩니다. (교재를 모르는 AI도 바로 작업할 수 있게, 필요한 정보가 모두 들어 있어요.)"},
-      {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W에서 도는 MicroPython 코드를 만들어 줘.\n[지금 하는 일] Open-Meteo API에서 오늘의 시간별 강수확률을 받아, WS2813 LED 10개에 6시~23시를 색으로 표시하고 있어. LED는 GP16에 연결했고 NeoPixel을 timing=(280,515,515,745)로 만들어. 와이파이 정보는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러와.\n[추가할 기능] 여기에 웹 대시보드를 더해 줘:\n- 피코가 직접 소켓 기반 웹서버가 되어 80번 포트에서 응답하게 해 줘(외부 라이브러리 없이).\n- 브라우저가 /data 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해 줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여 주고, 색의 의미(범례)도 함께 표시해 줘.\n- LED와 웹이 같은 데이터를 쓰고, 날씨 데이터는 10분에 한 번만 새로 받아와 줘(피코가 버겁지 않게).\n[조건] 복사해서 바로 실행되는 완결형 main.py로 주고, 위도/경도(LAT/LON)와 timing 값은 내가 바꿔 쓸 수 있게 코드 맨 위에 둬 줘."},
+      {"type": "step_head", "html": "<b>Step 4.</b> 이번엔 여기에 <b>웹 대시보드를 더해</b> 봐요. ①→②에 이어 붙이는 <b>③ 개선 프롬프트</b>입니다. (교재를 모르는 AI도 바로 작업할 수 있게, 필요한 정보가 모두 들어 있어요.)"},
+      {"type": "improve", "label": "③ 프롬프트 개선 — 웹 대시보드 더하기 (이어서 복사)", "text":
+"방금 만든 날씨 시계에 웹 대시보드를 더해줘.\n- 피코가 외부 라이브러리 없이 작은 웹서버(80번 포트)가 되게 해줘.\n- 브라우저가 '/data' 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해줘.\n- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여주고, 색의 의미(범례)도 함께 표시해줘.\n- LED와 웹이 같은 데이터를 쓰고, 날씨는 지금처럼 10분에 한 번만 새로 받아와줘. 피코가 버겁지 않게.\n- 위도·경도와 LED 타이밍 값은 그대로 코드 맨 위에 두고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
       {"type": "callout", "kind": "tip", "title": "바이브코딩의 핵심",
        "html": "AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 설명 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다."},
       {"type": "step_head", "html": "<b>Step 5.</b> 직접 설명하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)"},
@@ -616,7 +628,7 @@ CHAPTERS = [
       ]},
     ]},
     {"title": "Open-Meteo 자세히 알기", "items": [
-      {"type": "text", "html": "<b>Open-Meteo</b>는 독일의 비영리 프로젝트로, 여러 나라 기상청의 공개 수치예보 모델을 모아 누구나 쓸 수 있게 제공합니다. <b>API 키도, 회원가입도 필요 없고</b>, 비상업·교육용은 자유롭게 쓸 수 있어요. 주소(URL) 하나에 ‘어디(위도·경도)·무엇(변수)·언제(기간)’를 적어 보내면, 그 자리에서 JSON으로 답을 줍니다."},
+      {"type": "text", "html": "<b>Open-Meteo</b>는 독일의 비영리 프로젝트로, 여러 나라 기상청의 공개 수치예보 모델을 모아 누구나 쓰도록 공개합니다. <b>API 키도, 회원가입도 필요 없고</b>, 비상업·교육용은 자유롭게 쓸 수 있어요. 주소(URL) 하나에 ‘어디(위도·경도)·무엇(변수)·언제(기간)’를 적어 보내면, 그 자리에서 JSON으로 답을 줍니다."},
       {"type": "concept", "items": [
         {"t": "여러 종류의 API", "d": "<b>forecast</b>(예보) · <b>archive</b>(1940년~ 과거 데이터) · <b>air-quality</b>(대기질) · <b>marine</b>(파고·해양) · <b>elevation</b>(고도). 주소의 앞부분만 바꾸면 됩니다."},
         {"t": "고를 수 있는 변수", "d": "기온 <code>temperature_2m</code> · 습도 <code>relative_humidity_2m</code> · 강수확률 <code>precipitation_probability</code> · 풍속 <code>windspeed_10m</code> · 기압 <code>surface_pressure</code> · 자외선 <code>uv_index</code> · 일사량 <code>shortwave_radiation</code>"},
@@ -667,7 +679,7 @@ CHAPTERS = [
     {"title": "AI에게 잘 설명하는 틀", "items": [
       {"type": "text", "html": "막연히 ‘만들어 줘’보다, <b>① 지금 상태 → ② 추가할 동작 → ③ 제약(핀·timing·갱신주기)</b>을 함께 설명하면 훨씬 정확한 코드를 받습니다."},
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 — 틀 (복사해서 채우세요)", "text":
-"[지금 상태] 내 피코는 지금 ____ 를 하고 있어. (예: Open-Meteo 강수확률을 10개 LED에 표시)\n[하드웨어] WS2813 LED 10개는 Pin 16, timing=(280,515,515,745) / MQ-2는 ADC Pin 26 / 와이파이는 wifi_config.py 사용.\n[추가할 동작] 여기에 ____ 기능을 더해 줘. (예: 강수확률 60% 넘으면 LED 깜빡)\n[제약] 외부 라이브러리는 최소로, 갱신은 ____초마다, 복사해서 바로 도는 완결형 코드로 줘.\n받은 코드에서 핀 번호와 timing 설정이 내 것과 같은지 확인할게."},
+"[맥락] 내 피코는 지금 ____ 를 하고 있어. (예: 오늘 강수확률을 열 칸 LED에 색으로 표시)\n[하드웨어] 열 칸짜리 LED 바(WS2813)는 16번 핀, 만들 때 타이밍 값 네 개(280, 515, 515, 745) 지정 필요 / 가스센서(MQ-2)는 아날로그 26번 핀 / 와이파이 정보는 설정 파일(wifi_config.py)에서 불러옴.\n[작업] 여기에 ____ 기능을 더해줘. (예: 강수확률이 60%를 넘으면 LED 깜빡이기)\n[제약] 외부 라이브러리는 최소로, 데이터 갱신은 ____초마다.\n[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.\n받은 코드에서 핀 번호와 타이밍 값이 내 것과 같은지 확인할게."},
       {"type": "callout", "kind": "tip", "title": "점검 체크리스트",
        "html": "받은 코드를 올리기 전에: ① <code>timing=(280,515,515,745)</code> 있는지 ② 핀 번호(16 / 26)와 포트(D16 / A0) 맞는지 ③ 무한 반복 속 <code>sleep</code>으로 쉬어 주는지 ④ 와이파이/네트워크 요청이 과하지 않은지."},
     ]},
@@ -788,13 +800,61 @@ CHAPTERS = [
     ]},
     {"title": "바이브코딩 프롬프트", "items": [
       {"type": "prompt", "label": "AI에게 이렇게 설명하세요 (그대로 복사)", "text":
-"라즈베리파이 피코 2 W(MicroPython)에서 도는 완결형 main.py를 만들어 줘.\n[하는 일] MQ-2 가스센서를 ADC(Pin 26)로 읽어 60초마다 구글 시트에 한 줄씩 기록하고 싶어.\n[전송 방법] 구글 Apps Script 웹 앱 URL(.../exec 로 끝나는 전체 주소)에 ?value=값 형태로 GET 요청을 보내. 외부 라이브러리 없이 피코 기본 socket+ssl만 쓰고(requests 설치 금지, https는 CERT_NONE), Apps Script가 주는 302 리다이렉트는 따라가서 완료해 줘.\n[설정] 와이파이는 wifi_config.py(WIFI_SSID, WIFI_PASSWORD)에서 불러오고, 웹 앱 URL과 전송 주기는 코드 맨 위에 둬. 복사해서 바로 도는 코드로 줘."},
+"라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 센서값을 구글 시트에 자동 기록하는 장치야.\n- 가스센서(MQ-2)를 아날로그 입력인 26번 핀으로 읽어, 60초마다 구글 시트에 한 줄씩 기록하고 싶어.\n- 기록 방법: 구글 앱스 스크립트(Apps Script)로 배포한 웹 앱 주소('/exec'로 끝나는 전체 주소) 뒤에 '?value=측정값'을 붙여 요청을 보내는 방식이야.\n- 외부 라이브러리는 설치하지 말고 피코 기본 내장 기능(socket, ssl)만 써. 보안 인증서 확인은 건너뛰어도 되고, 구글이 다른 주소로 한 번 건너뛰게 하면(리다이렉트) 그것까지 따라가서 마무리해줘.\n- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러오고, 웹 앱 주소와 보내는 주기는 코드 맨 위에 둬.\n- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘."},
     ]},
     {"title": "스스로 점검하기", "items": [
       {"type": "check", "items": [
         {"q": "피코가 구글 로그인 없이 시트에 쓸 수 있는 이유는?", "a": "Apps Script 웹앱을 ‘모든 사용자’로 배포해, URL만 알면 누구나(피코도) 호출할 수 있게 했기 때문입니다."},
         {"q": "보내는 간격을 바꾸려면?", "a": "코드 맨 위 <code>INTERVAL</code> 숫자를 바꾸면 됩니다. 60이면 1분마다, 300이면 5분마다 보내요."},
         {"q": "쌓인 데이터로 무엇을 할 수 있나요?", "a": "시트의 ‘삽입 → 차트’로 추세 그래프를 그리거나 통계·탐구 활동에 쓸 수 있습니다."},
+      ]},
+    ]},
+  ],
+},
+# ----------------------------------------------------------------- 부록 C (용어 사전)
+{
+  "id": "apxc", "num": "C", "title": "부록 · 용어 사전", "accent": "#9A8B6A",
+  "subtitle": "프롬프트와 본문에서 만나는 용어를 한 줄씩 정리했어요. AI에게 설명할 때 이 낱말을 그대로 쓰면 훨씬 정확한 코드를 받습니다.",
+  "why": "프롬프트에는 코드를 쓰지 않아요. 대신 <b>정확한 낱말</b>을 씁니다. ‘그거’ 대신 ‘타이밍 값’, ‘저장하는 파일’ 대신 ‘wifi_config.py’라고 말하면 AI가 헤매지 않아요. 뜻이 가물가물할 때 이 페이지로 돌아오세요.",
+  "sections": [
+    {"title": "기본 도구", "items": [
+      {"type": "concept", "items": [
+        {"t": "마이크로파이썬 (MicroPython)", "d": "피코 같은 작은 컴퓨터에서 돌아가도록 만든 파이썬. 펌웨어를 한 번 설치하면 피코가 파이썬 코드를 알아듣습니다."},
+        {"t": "펌웨어 (firmware)", "d": "기기를 켰을 때 가장 먼저 도는 기본 소프트웨어. 컴퓨터의 운영체제에 해당하는 피코의 속살."},
+        {"t": "Thonny (토니)", "d": "코드를 쓰고 피코로 보내는 편집기. 아래쪽 셸 칸으로 피코와 대화합니다."},
+        {"t": "셸 (Shell)", "d": "코드를 한 줄씩 바로 실행해 보고, 피코가 보낸 메시지를 보여 주는 대화창."},
+        {"t": "main.py", "d": "피코에 이 이름으로 저장하면 전원만 넣어도 자동 실행되는 파일."},
+        {"t": "wifi_config.py", "d": "와이파이 이름과 비밀번호를 따로 적어 두는 설정 파일. 여러 코드가 함께 씁니다."},
+      ]},
+    ]},
+    {"title": "하드웨어", "items": [
+      {"type": "concept", "items": [
+        {"t": "핀 (GP 번호)", "d": "피코 다리 하나하나에 붙은 번호. ‘16번 핀’은 GP16을 말해요."},
+        {"t": "그로브 포트 (D·A)", "d": "센서 케이블을 딸깍 꽂는 자리. D는 디지털(D16), A는 아날로그(A0)."},
+        {"t": "디지털 / 아날로그", "d": "켜짐·꺼짐 두 가지로 나뉘는 신호(디지털)와, 밝기·농도처럼 연속으로 이어지는 신호(아날로그)."},
+        {"t": "ADC", "d": "아날로그 신호를 0~65535 사이 숫자로 바꿔 읽어 주는 변환기. 가스센서를 읽을 때 씁니다."},
+        {"t": "LED 바 (WS2813)", "d": "색 LED 열 칸이 한 줄로 붙은 부품. 칸마다 다른 색을 켤 수 있어요."},
+        {"t": "타이밍 값", "d": "WS2813 LED에게 0과 1을 구분해 주는 신호 길이 네 개(280, 515, 515, 745). 빠뜨리면 색이 깨집니다."},
+        {"t": "MQ-2", "d": "공기 중 가스를 감지하는 센서. 가스가 짙을수록 큰 값을 내보냅니다."},
+        {"t": "이동 평균", "d": "여러 번 읽어 평균을 내서 값의 출렁임을 줄이는 방법."},
+        {"t": "기준값 (임계값)", "d": "안전/주의/위험처럼 상태를 가르는 기준 숫자. 환경마다 달라서 직접 보고 정합니다."},
+      ]},
+    ]},
+    {"title": "인터넷과 데이터", "items": [
+      {"type": "concept", "items": [
+        {"t": "와이파이 2.4GHz", "d": "피코가 붙을 수 있는 와이파이 종류. 이름이 ‘…5G’로 끝나는 5GHz 전용 망에는 못 붙어요."},
+        {"t": "SSID", "d": "와이파이의 이름."},
+        {"t": "RSSI · dBm", "d": "신호 세기와 그 단위. 항상 음수이고, 0에 가까울수록(-50) 강하고 멀수록(-85) 약해요."},
+        {"t": "웹서버 · 포트", "d": "브라우저의 접속을 기다렸다 화면이나 데이터를 돌려주는 프로그램. 포트는 그 문 번호(웹은 보통 80번)."},
+        {"t": "JSON", "d": "데이터를 주고받을 때 쓰는 글자 형식. {\"이름\": 값} 모양으로 생겼어요."},
+        {"t": "API", "d": "정해진 양식으로 요청하면 정해진 형식으로 결과를 돌려주는 창구. 관공서 민원 창구와 같은 원리."},
+        {"t": "socket · ssl", "d": "피코에 기본 내장된 인터넷 접속 기능과 암호화 기능. 추가 설치 없이 쓸 수 있어요."},
+        {"t": "인증서", "d": "서버가 진짜인지 확인하는 신분증. 공개 데이터 수업에서는 확인을 건너뛰어도 안전합니다."},
+        {"t": "리다이렉트", "d": "서버가 ‘다른 주소로 가 보세요’ 하고 안내하는 것. 구글 시트에 기록할 때 만나요."},
+        {"t": "Chart.js", "d": "브라우저에서 그래프를 그려 주는 도구. 피코는 숫자만 보내고 그림은 브라우저가 그립니다."},
+        {"t": "Open-Meteo", "d": "키도 회원가입도 필요 없는 무료 날씨 서비스. 위도·경도만 보내면 예보를 돌려줍니다."},
+        {"t": "위도 · 경도", "d": "지구 위 위치를 나타내는 두 숫자. 한국은 위도 33~38, 경도 124~132 범위."},
+        {"t": "강수확률", "d": "그 시각·그 지역에 비가 내릴 통계적 가능성(%). 비의 양이 아니라 올지 안 올지의 가능성이에요."},
       ]},
     ]},
   ],
@@ -807,10 +867,20 @@ CHAPTERS[0]["extra"] = ""   # FW_CARD는 0.4 섹션 안에 배치
 # ===================================================================
 n_code = 0
 n_prompt = 0
+TEACHER = False   # True면 강사노트(type: teacher) 아이템도 렌더 (teacher.html 빌드용)
 
 def render_item(it, accent):
     global n_code, n_prompt
     t = it["type"]
+    if t == "teacher":
+        # 강사 전용 노트 — 학생용 빌드에서는 통째로 생략된다.
+        # kind: say(진행 멘트) / ask(발문) / theory(이론 심화) / err(예상 오류)
+        if not TEACHER:
+            return ""
+        icons = {"say": "🎙️", "ask": "🙋", "theory": "📚", "err": "🧯"}
+        ic = icons.get(it["kind"], "🎙️")
+        return (f'<div class="callout {it["kind"]}"><div class="callout-head">{ic} '
+                f'{esc(it["title"])}</div><div class="callout-body">{it["html"]}</div></div>')
     if t == "text":
         return f'<p class="prose">{it["html"]}</p>'
     if t == "raw":
@@ -823,7 +893,8 @@ def render_item(it, accent):
     if t == "figure_hw":
         return HW_FIGURE
     if t == "callout":
-        icons = {"tip": "💡", "warn": "⚠️", "info": "ℹ️", "key": "🔑"}
+        icons = {"tip": "💡", "warn": "⚠️", "info": "ℹ️", "key": "🔑",
+                 "mini": "🎯", "check": "✅"}
         ic = icons.get(it["kind"], "💡")
         return (f'<div class="callout {it["kind"]}"><div class="callout-head">{ic} '
                 f'{esc(it["title"])}</div><div class="callout-body">{it["html"]}</div></div>')
@@ -877,19 +948,31 @@ def render_item(it, accent):
         return block
     if t == "prompt":
         n_prompt += 1
-        return (f'<div class="block prompt-block" style="--accent:{accent}">'
+        return (f'<div class="block prompt-block">'
                 f'<div class="block-head"><span class="prompt-ico">🤖</span>'
                 f'<span class="block-label">{esc(it["label"])}</span>'
                 f'<button class="copy-btn" aria-label="복사">복사</button></div>'
                 f'<div class="prompt-body">{esc(it["text"])}</div></div>')
+    if t == "improve":
+        # ③ 프롬프트 개선 — ①프롬프트 → ②코드 → ③개선 3박자의 마무리
+        n_prompt += 1
+        label = esc(it.get("label", "③ 프롬프트 개선 (이어서 붙여넣기)"))
+        return (f'<div class="block prompt-block improve-block">'
+                f'<div class="block-head"><span class="prompt-ico">✨</span>'
+                f'<span class="block-label">{label}</span>'
+                f'<button class="copy-btn" aria-label="복사">복사</button></div>'
+                f'<div class="prompt-body">{esc(it["text"])}</div></div>')
     return ""
 
-def render():
+def render(teacher=False):
+    """teacher=True면 강사노트 포함(teacher.html), False면 학생용(index.html)."""
+    global n_code, n_prompt, TEACHER
+    n_code, n_prompt, TEACHER = 0, 0, teacher
     nav, main = [], []
     for c in CHAPTERS:
         nav.append(f'<div class="nav-ch"><a href="#{c["id"]}" class="nav-ch-link" '
-                   f'data-target="{c["id"]}"><span class="nav-dot" '
-                   f'style="background:{c["accent"]}"></span>{esc(c["num"])}. {esc(c["title"])}</a>'
+                   f'data-target="{c["id"]}"><span class="nav-dot"></span>'
+                   f'{esc(c["num"])}. {esc(c["title"])}</a>'
                    f'<div class="nav-secs">')
         sec_html = []
         for si, s in enumerate(c["sections"]):
@@ -910,8 +993,8 @@ def render():
 
         main.append(
             f'<div class="chapter" id="{c["id"]}">'
-            f'<div class="ch-head"><span class="ch-num" style="color:{c["accent"]}">CHAPTER {c["num"]}</span>'
-            f'<h2 class="ch-title"><span class="ch-bar" style="background:{c["accent"]}"></span>{esc(c["title"])}</h2>'
+            f'<div class="ch-head"><span class="ch-num">CHAPTER {c["num"]}</span>'
+            f'<h2 class="ch-title"><span class="ch-bar"></span>{esc(c["title"])}</h2>'
             f'<p class="ch-sub">{esc(c["subtitle"])}</p></div>'
             f'{intro}{c.get("extra","")}{"".join(sec_html)}</div>')
 
@@ -921,6 +1004,13 @@ def render():
     out = out.replace("/*NCODE*/", str(n_code))
     out = out.replace("/*NPROMPT*/", str(n_prompt))
     out = out.replace("/*NCH*/", str(len(CHAPTERS)))
+    if teacher:
+        out = out.replace('<span class="badge">학생용</span>',
+                          '<span class="badge teacher">강사용</span>')
+        out = out.replace('<!--MODELINK-->',
+                          '<a class="home" href="index.html">학생용 ↗</a>')
+        out = out.replace('<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>',
+                          '<title>강사용 · 데이터로 탐구하는 피코 바이브 피지컬 코딩</title>')
     return out
 
 # ===================================================================
@@ -934,228 +1024,307 @@ TEMPLATE = r'''<!DOCTYPE html>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
+/* ============================================================
+   피코 바이브 피지컬 코딩 · 웹 교재 스타일
+   디자인 계열: 2026-snui 웹 교재 (따뜻한 크림·골드)
+   ============================================================ */
 :root{
-  --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
-  --sidebar:#fbfbfa; --code-bg:#f7f6f3; --radius:10px;
-  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,'D2Coding',monospace;
+  --gold:#f4b400; --accent:#e8930c;
+  --bg:#fffdf7; --card:#fff6e0;
+  --border:#f0e2bc; --border-soft:#f7edcf;
+  --text:#3a2e1a; --text-soft:#6b5836; --muted:#9a8b6a;
+  --blue:#4c8df6; --blue-ink:#2f6bd6; --blue-soft:#eef3ff;
+  --green:#54a24b; --green-soft:#eef6e8;
+  --red:#e45756; --red-soft:#fdeeee;
+  --teal:#3ba6a0; --teal-ink:#2b7a75; --teal-soft:#e9f6f5;
+  --violet:#b279a2; --violet-soft:#f8f0f5;
+  --code-bg:#2a2318; --code-text:#f0e8d6;
+  --radius:0.9rem; --radius-sm:0.7rem;
+  --shadow:0 1px 4px rgba(180,140,20,.1);
+  --shadow-lg:0 8px 24px rgba(180,140,20,.16);
+  --maxw:960px;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
+  --mono:'SFMono-Regular','D2Coding',ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15.5px;}
 a{color:inherit;text-decoration:none;}
-.ilink{color:#3b47c2;text-decoration:underline;text-underline-offset:2px;font-weight:600;}
-.ilink:hover{color:#5b6cf0;}
-.layout{display:flex;max-width:1180px;margin:0 auto;}
-.sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
-  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
-.brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
-.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
-.nav-ch{margin-top:10px;}
-.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}
-.nav-ch-link:hover{background:#efefee;}
-.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}
-.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}
+.ilink{color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:var(--blue);}
+/* ---------- 상단 바 ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,253,247,.9);
+  backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);}
+.topbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.menu-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:13px;font-weight:800;
+  color:var(--text-soft);background:var(--card);border:1px solid var(--border);border-radius:999px;
+  padding:5px 13px;cursor:pointer;transition:.15s;white-space:nowrap;}
+.menu-btn:hover{border-color:var(--accent);color:var(--accent);}
+.topbar .brand{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;font-size:15px;min-width:0;}
+.topbar .brand .brand-emoji{font-size:17px;}
+.topbar .spacer{flex:1;}
+.topbar .badge{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--accent);white-space:nowrap;}
+.topbar .badge.teacher{border-color:#cfe0ff;background:var(--blue-soft);color:var(--blue-ink);}
+.topbar a.home{color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap;}
+.topbar a.home:hover{color:var(--text);}
+/* ---------- 목차 드로어 ---------- */
+.drawer{position:fixed;left:0;top:0;bottom:0;z-index:70;width:302px;overflow-y:auto;
+  background:var(--bg);border-right:1px solid var(--border);padding:18px 14px 60px;
+  transform:translateX(-100%);transition:transform .22s ease;}
+.drawer.open{transform:none;box-shadow:0 0 44px rgba(120,90,10,.2);}
+.drawer .brand{font-weight:800;font-size:14.5px;padding:4px 10px 12px;letter-spacing:-.02em;}
+.drawer .brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.scrim{display:none;}
+.scrim.show{display:block;position:fixed;inset:0;background:rgba(58,46,26,.32);z-index:65;}
+.nav-ch{margin-top:8px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:8px;}
+.nav-ch-link:hover{background:var(--card);}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;background:linear-gradient(120deg,var(--gold),var(--accent));}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--border);}
 .nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
-.nav-sec:hover{color:var(--fg);}
-.nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
-.main{flex:1;min-width:0;padding:0 56px 120px;}
-.hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
-.hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
-.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:660px;}
+.nav-sec:hover{color:var(--text);}
+.nav-sec.active{color:var(--text);font-weight:700;border-left-color:var(--accent);}
+/* ---------- 레이아웃 ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 96px;}
+.main{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px clamp(20px,5vw,52px) 48px;box-shadow:var(--shadow);}
+/* ---------- 히어로 ---------- */
+.hero{padding:10px 0 26px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.eyebrow{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.hero h1{font-size:clamp(26px,4.5vw,36px);font-weight:800;letter-spacing:-.03em;margin:8px 0 0;line-height:1.28;}
+.under{width:64px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffd766);margin:.6rem 0 1.1rem;}
+.hero p{font-size:15px;color:var(--text-soft);margin:0 0 20px;max-width:680px;}
 .stats{display:flex;gap:10px;flex-wrap:wrap;}
-.stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
-  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
-.stat b{font-size:15px;color:var(--fg);font-weight:800;}
-.ml-cta{display:flex;align-items:center;gap:14px;margin:24px 0 2px;padding:16px 18px;border:1px solid var(--line);
-  border-radius:14px;background:linear-gradient(100deg,#f0f9ff,#eef2ff);transition:border-color .15s,box-shadow .15s;}
-.ml-cta:hover{border-color:#3B47C2;box-shadow:0 4px 18px rgba(59,71,194,.13);}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 15px;font-size:13px;color:var(--text-soft);}
+.stat b{font-size:15px;color:var(--text);font-weight:800;}
+.ml-cta{display:flex;align-items:center;gap:14px;margin:22px 0 2px;padding:16px 18px;border:1px solid var(--border);
+  border-radius:var(--radius);background:linear-gradient(135deg,var(--card),var(--bg));box-shadow:var(--shadow);
+  transition:border-color .15s,box-shadow .15s,transform .15s;}
+.ml-cta:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px);}
 .ml-cta-emoji{font-size:30px;flex:0 0 auto;line-height:1;}
 .ml-cta-txt{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
 .ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
 .ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
-.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:#3B47C2;white-space:nowrap;}
-@media(max-width:640px){.ml-cta{flex-wrap:wrap;gap:10px;}.ml-cta-go{width:100%;}}
-.chapter{padding-top:30px;}
-.ch-head{margin:40px 0 8px;}
-.ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
-.ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
-.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
-.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:680px;}
-.sec{padding-top:14px;}
-.sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap;}
+/* ---------- 챕터 / 섹션 ---------- */
+.chapter{padding-top:24px;scroll-margin-top:70px;}
+.ch-head{margin:34px 0 8px;}
+.ch-num{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;background:linear-gradient(180deg,var(--gold),var(--accent));}
+.ch-sub{color:var(--text-soft);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:12px;scroll-margin-top:70px;}
+.sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
 .prose{font-size:14.5px;margin:12px 0;max-width:720px;}
 .prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code,.dig-body code{
-  font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
-  border-radius:4px;padding:1px 6px;}
+  font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:#7a5a1e;}
 .step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
-/* 챕터 인트로 */
-.goals{background:#f8f9ff;border:1px solid #e6e8fb;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
-.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;}
+/* ---------- 챕터 인트로 (목표 / 왜 배우나요) ---------- */
+.goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin:14px 0;max-width:720px;box-shadow:var(--shadow);}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;color:var(--accent);}
 .goals ul{margin:0;padding-left:20px;}
 .goals li{font-size:13.5px;margin:4px 0;}
-.why{background:#fffdf5;border:1px solid #f1e9cf;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
-.why-t{font-weight:800;font-size:14px;margin-bottom:6px;}
+.why{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);padding:14px 18px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;color:var(--text-soft);}
 .why p{margin:0;font-size:14px;}
-/* 콜아웃 */
-.callout{border-radius:10px;padding:14px 18px;margin:14px 0;max-width:720px;border:1px solid var(--line);border-left-width:4px;}
-.callout-head{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+/* ---------- 콜아웃 (tip/warn/mini/say/theory/ask/check/err + info/key) ---------- */
+.callout{border:1px solid var(--border);border-left:4px solid var(--muted);background:var(--card);
+  border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;max-width:720px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:5px;}
 .callout-body{font-size:13.5px;}
-.callout.tip{background:#f0faf4;border-left-color:#22c55e;}
-.callout.warn{background:#fff6f0;border-left-color:#f97316;}
-.callout.info{background:#f0f7ff;border-left-color:#3b82f6;}
-.callout.key{background:#f7f0ff;border-left-color:#8b5cf6;}
-/* 링크 버튼 */
-.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6d5d2;
-  border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;margin:8px 8px 8px 0;transition:.15s;}
-.linkbtn:hover{border-color:#9b9b97;background:var(--code-bg);}
-/* 체크리스트(준비물) */
+.callout.tip{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.tip .callout-head{color:var(--blue-ink);}
+.callout.info{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.info .callout-head{color:var(--blue-ink);}
+.callout.warn{border-left-color:var(--accent);background:var(--card);}
+.callout.warn .callout-head{color:#b45309;}
+.callout.key{border-left-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff);}
+.callout.key .callout-head{color:#a06a08;}
+.callout.check{border-left-color:var(--green);background:var(--green-soft);}
+.callout.check .callout-head{color:#3d7a37;}
+.callout.mini{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.mini .callout-head{color:var(--teal-ink);}
+.callout.say{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.say .callout-head{color:var(--blue-ink);}
+.callout.ask{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.ask .callout-head{color:var(--teal-ink);}
+.callout.theory{border-left-color:var(--violet);background:var(--violet-soft);}
+.callout.theory .callout-head{color:#8a5578;}
+.callout.err{border-left-color:var(--red);background:var(--red-soft);}
+.callout.err .callout-head{color:#c23b3a;}
+/* ---------- 링크 버튼 ---------- */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;padding:9px 16px;font-size:13.5px;font-weight:700;margin:8px 8px 8px 0;transition:.15s;color:var(--text-soft);}
+.linkbtn:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow);}
+/* ---------- 체크리스트 (준비물) ---------- */
 .check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
-.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);}
-.check-list li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:16px;color:var(--muted);}
-/* 핵심 개념 그리드 */
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--border-soft);}
+.check-list li:before{content:"☐";position:absolute;left:4px;top:6px;font-size:16px;color:var(--accent);}
+/* ---------- 핵심 개념 / 아이디어 그리드 ---------- */
 .concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
-.concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
 .concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
-.concept-d,.idea-d{font-size:13px;color:#55524c;}
+.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
 .idea-d code,.concept-d code{word-break:break-all;}
 .idea-d{line-height:1.7;}
-/* 스텝 */
-.steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
-.steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
-.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
-  background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
+/* ---------- 스텝 ---------- */
+.steps{margin:14px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:3px 0 16px 44px;font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:29px;height:29px;
+  background:var(--accent);color:#fff;border-radius:50%;text-align:center;line-height:29px;font-size:13px;font-weight:800;
+  box-shadow:var(--shadow);}
+.steps li:not(:last-child):after{content:"";position:absolute;left:14px;top:35px;bottom:2px;width:2px;background:var(--border);}
 .steps li>b{display:block;margin-bottom:2px;}
-.steps li span{color:#55524c;font-size:13.5px;}
-/* 자주 하는 실수 */
+.steps li span{color:var(--text-soft);font-size:13.5px;}
+/* ---------- 자주 하는 실수 ---------- */
 .mistakes{margin:12px 0;max-width:720px;}
-.mistake{border:1px solid #f0d9d9;border-radius:10px;padding:12px 15px;margin:10px 0;background:#fffafa;}
-.m-sym{font-weight:700;font-size:13.5px;color:#c0392b;margin-bottom:7px;}
+.mistake{border:1px solid var(--border);border-left:4px solid var(--red);border-radius:var(--radius-sm);
+  padding:12px 15px;margin:10px 0;background:var(--red-soft);}
+.m-sym{font-weight:800;font-size:13.5px;color:#c23b3a;margin-bottom:7px;}
 .m-row{font-size:13px;margin:4px 0;padding-left:2px;}
-.m-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#bbb;border-radius:5px;
+.m-tag{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--muted);border-radius:5px;
   padding:1px 7px;margin-right:7px;}
-.m-tag.fix{background:#22a06b;}
-/* 스스로 점검 */
+.m-tag.fix{background:var(--green);}
+/* ---------- 스스로 점검 ---------- */
 .checks{margin:12px 0;max-width:720px;}
-.qa{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fff;}
-.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:600;list-style:none;}
+.qa{border:1px solid var(--border);border-radius:var(--radius-sm);margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:700;list-style:none;}
+.qa summary::-webkit-details-marker{display:none;}
 .qa summary:before{content:"❓ ";}
-.qa[open] summary{border-bottom:1px solid var(--line);}
-.qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
+.qa[open] summary{border-bottom:1px solid var(--border);background:var(--green-soft);border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.qa-a{padding:11px 15px;font-size:13.5px;color:var(--text-soft);}
 .qa-a:before{content:"✅ ";}
-/* 더 알아보기 (심화 이론) */
-.dig{border:1px solid #dde2f2;border-left:4px solid #6b7cff;border-radius:10px;margin:14px 0;max-width:760px;
-  background:linear-gradient(180deg,#fafbff,#fff);}
-.dig summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:13.5px;color:#3a45a8;list-style:none;}
+/* ---------- 더 알아보기 (이론 심화) ---------- */
+.dig{border:1px solid var(--border);border-left:4px solid var(--violet);border-radius:var(--radius-sm);
+  margin:16px 0;max-width:760px;background:var(--violet-soft);}
+.dig summary{cursor:pointer;padding:12px 16px;font-weight:800;font-size:13.5px;color:#8a5578;list-style:none;}
 .dig summary::-webkit-details-marker{display:none;}
-.dig summary:after{content:"▾";float:right;color:#9aa1cf;transition:.2s;}
+.dig summary:after{content:"▾";float:right;color:var(--violet);transition:.2s;}
 .dig[open] summary:after{transform:rotate(180deg);}
-.dig[open] summary{border-bottom:1px solid #e7eaf7;}
-.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:#44464f;}
-.dig-body b{color:#2f3a96;}
-/* 코드 접기 */
+.dig[open] summary{border-bottom:1px solid #ecd9e6;}
+.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:var(--text-soft);background:#fff;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.dig-body b{color:#8a5578;}
+/* ---------- 코드 접기 ---------- */
 .codefold{margin:12px 0;max-width:840px;}
-.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #cfd3e6;border-radius:10px;
-  background:#f7f8fd;font-size:13px;font-weight:700;color:#4a4f74;}
+.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #e0cf9a;border-radius:var(--radius-sm);
+  background:var(--card);font-size:13px;font-weight:800;color:var(--text-soft);}
 .codefold>summary::-webkit-details-marker{display:none;}
 .codefold>summary:before{content:"📄 ";}
-.codefold>summary:after{content:"  ▾";color:#aab;}
+.codefold>summary:after{content:"  ▾";color:var(--muted);}
 .codefold[open]>summary:after{content:"  ▴";}
-.codefold[open]>summary{border-style:solid;border-color:var(--line);border-bottom:none;
-  border-radius:10px 10px 0 0;background:var(--code-bg);}
-.codefold .fold-hint{font-weight:500;color:#9aa;}
-.codefold .block{margin:0;border-radius:0 0 10px 10px;}
-/* 귀여운 브랜딩 강조 */
-.pico-accent{background:linear-gradient(120deg,#5B6CF0,#E0568A);-webkit-background-clip:text;
+.codefold[open]>summary{border-style:solid;border-color:var(--border);border-bottom:none;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.codefold .fold-hint{font-weight:500;color:var(--muted);}
+.codefold .block{margin:0;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+/* ---------- 브랜딩 강조 ---------- */
+.pico-accent{background:linear-gradient(120deg,var(--gold),var(--accent));-webkit-background-clip:text;
   background-clip:text;color:transparent;font-weight:900;}
 .brand-emoji{font-size:17px;}
 /* '피지컬 코딩'의 [피][코] 글자 강조 — 피코 워드플레이 */
-.pk{background:linear-gradient(120deg,#5B6CF0,#E0568A);color:#fff;font-weight:900;
+.pk{background:linear-gradient(120deg,var(--gold),var(--accent));color:#fff;font-weight:900;
   border-radius:7px;padding:0 .26em;margin:0 .02em;}
-/* 하드웨어 다이어그램 */
+/* ---------- 하드웨어 다이어그램 ---------- */
 .figure{margin:14px 0;max-width:760px;}
-.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
-  border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
-.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--font);}
-.api-svg{width:100%;height:auto;background:#fbfcff;border:1px solid #e6e8f5;border-radius:14px;padding:8px;font-family:var(--font);}
-/* 코드/프롬프트 블록 */
-.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
-.block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
-.block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;overflow-x:auto;white-space:pre;}
+.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font-family:var(--font);}
+.api-svg{width:100%;height:auto;background:#fffdf9;border:1px solid var(--border);border-radius:14px;padding:8px;font-family:var(--font);}
+/* ---------- 코드 / 프롬프트 / 개선 블록 ---------- */
+.block{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--card);border-bottom:1px solid var(--border);}
+.block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
 .lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
-  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
-.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
-  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
-.copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
-.copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
-.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#282c34;}
-.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:#abb2bf;}
-.code-block .block-head{background:#21252b;border-bottom-color:#181b20;}
-.code-block .block-label{color:#c7cdd6;}
-.code-block .lang-tag{color:#9aa3b2;background:#2c313a;border-color:#3a4150;}
-.code-block .copy-btn{color:#aeb6c2;background:#2c313a;border-color:#3a4150;}
-.code-block .copy-btn:hover{color:#fff;border-color:#5a6275;}
-.code-block .copy-btn.done{color:#79e3b4;border-color:#2f6b4f;background:#1f3a2c;}
-.prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
-.prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
-  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
-.prompt-block .block-label{color:color-mix(in srgb,var(--accent) 55%,#37352f);}
+  background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 코드: 따뜻한 다크 (파트너 code-bg) */
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:var(--code-bg);}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:var(--code-text);}
+.code-block .block-head{background:#211b10;border-bottom-color:#3b3222;}
+.code-block .block-label{color:#e8dcc0;}
+.code-block .lang-tag{color:#c9b98c;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn{color:#e8dcc0;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn:hover{color:#fff;border-color:#7a6338;}
+.code-block .copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 프롬프트: 파트너 teal 다크 */
+.prompt-block{border-color:#cfe8e4;}
+.prompt-block .block-head{background:var(--teal-soft);border-bottom-color:#cfe8e4;}
+.prompt-block .block-label{color:var(--teal-ink);}
 .prompt-ico{font-size:15px;}
-.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
-  white-space:pre-wrap;word-break:break-word;padding:15px 18px;
-  background:color-mix(in srgb,var(--accent) 4%,#fff);}
-/* 펌웨어 카드 */
-.fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
-  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);padding:22px 24px;margin:12px 0 18px;max-width:840px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#d7f0ea;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;background:#1c2b26;}
+/* ③ 프롬프트 개선: 파트너 improve (따뜻한 다크 골드) */
+.improve-block{border-color:#ecd9ae;}
+.improve-block .block-head{background:linear-gradient(135deg,#fdf3dd,#fffaf0);border-bottom-color:#ecd9ae;}
+.improve-block .block-label{color:#b45309;}
+.improve-block .prompt-body{background:#2a2012;color:#f6e8cf;}
+/* ---------- 펌웨어 카드 ---------- */
+.fw-card{border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--card),#fff);padding:22px 24px;margin:12px 0 18px;max-width:840px;box-shadow:var(--shadow);}
 .fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
-.fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
-  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:800;color:var(--accent);
+  background:#fff;border:1px solid var(--border);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
 .fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
 .fw-meta{margin:0;color:var(--muted);font-size:13px;}
-.fw-meta b{color:var(--fg);}
-.dl-btn{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+.fw-meta b{color:var(--text);}
+.dl-btn{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-weight:800;
   font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
-  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}
-.dl-btn:hover{background:#4a5ae0;transform:translateY(-1px);}
-.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}
-.fw-steps-title{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}
-.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}
+  box-shadow:0 5px 16px rgba(232,147,12,.35);transition:.15s;}
+.dl-btn:hover{background:#d2830a;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--text);line-height:1.5;}
 .fw-steps li{padding-left:3px;}
 .fw-dim{color:var(--muted);}
-.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--code-bg);
-  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--card);
+  border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:#7a5a1e;}
 .fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
-.fw-note a{color:#3B47C2;text-decoration:underline;}
-footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
-.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
-  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
-.scrim{display:none;}
-@media(max-width:920px){
-  .main{padding:0 22px 100px;}
-  .hero{padding-top:74px;}
-  .hero h1{font-size:30px;}
-  .menu-btn{display:block;}
-  .sidebar{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}
-  .sidebar.open{transform:none;}
-  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}
+.fw-note a{color:var(--blue-ink);text-decoration:underline;}
+/* ---------- 푸터 ---------- */
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;}
+/* ---------- 반응형 ---------- */
+@media(max-width:640px){
+  body{font-size:15px;}
+  .main{padding:26px 16px 36px;}
+  .topbar .inner{padding:9px 12px;gap:8px;}
+  .topbar .brand{font-size:13.5px;}
+  .topbar a.home{display:none;}
+  .hero h1{font-size:24px;}
+  .ml-cta{flex-wrap:wrap;gap:10px;}
+  .ml-cta-go{width:100%;}
 }
 </style>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+<div class="topbar"><div class="inner">
+  <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
+  <a class="brand" href="#top"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <span class="spacer"></span>
+  <!--MODELINK-->
+  <span class="badge">학생용</span>
+</div></div>
 <div class="scrim" id="scrim"></div>
-<div class="layout">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
-    /*NAV*/
-  </aside>
-  <main class="main">
-    <header class="hero">
+<aside class="drawer" id="sidebar">
+  <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
+  /*NAV*/
+</aside>
+<div class="wrap">
+<main class="main">
+    <header class="hero" id="top">
+      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
       <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
+      <div class="under"></div>
       <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
       <div class="stats">
         <div class="stat"><b>/*NCH*/</b>개 챕터</div>
@@ -1174,7 +1343,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:v
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
     </footer>
-  </main>
+</main>
 </div>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script>
@@ -1212,11 +1381,12 @@ document.querySelectorAll('.block').forEach(block=>{
     }
   });
 });
+// 목차 드로어 (모든 화면 폭에서 동일하게 동작)
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
 function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
 mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>toggle(false));
-sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
+sb.addEventListener('click',e=>{if(e.target.closest('a'))toggle(false);});
 const secs=[...document.querySelectorAll('.sec, .chapter')];
 const links=new Map();
 document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
@@ -1232,5 +1402,8 @@ secs.forEach(s=>io.observe(s));
 </html>'''
 
 with open(os.path.join(BASE, "index.html"), "w", encoding="utf-8") as f:
-    f.write(render())
-print(f"생성 완료 · 코드 {n_code}개 · 프롬프트 {n_prompt}개")
+    f.write(render(teacher=False))
+print(f"생성 완료 (학생용 index.html) · 코드 {n_code}개 · 프롬프트 {n_prompt}개")
+with open(os.path.join(BASE, "teacher.html"), "w", encoding="utf-8") as f:
+    f.write(render(teacher=True))
+print(f"생성 완료 (강사용 teacher.html) · 강사노트 포함")

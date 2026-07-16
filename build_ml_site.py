@@ -25,7 +25,7 @@ CHS = [CHAPTER_SOUND, CHAPTER_MP3]
 nav_all, main_all = [], []
 for c in CHS:
     nav = [f'<div class="nav-ch"><a href="#{c["id"]}" class="nav-ch-link" data-target="{c["id"]}">'
-           f'<span class="nav-dot" style="background:{c["accent"]}"></span>'
+           f'<span class="nav-dot"></span>'
            f'{esc(c["num"])}. {esc(c["title"])}</a><div class="nav-secs">']
     sec_html = []
     for si, s in enumerate(c["sections"]):
@@ -45,8 +45,8 @@ for c in CHS:
         intro += f'<div class="why"><div class="why-t">💡 왜 배우나요?</div><p>{c["why"]}</p></div>'
     main_all.append(
         f'<div class="chapter" id="{c["id"]}">'
-        f'<div class="ch-head"><span class="ch-num" style="color:{c["accent"]}">CHAPTER {c["num"]}</span>'
-        f'<h2 class="ch-title"><span class="ch-bar" style="background:{c["accent"]}"></span>'
+        f'<div class="ch-head"><span class="ch-num">CHAPTER {c["num"]}</span>'
+        f'<h2 class="ch-title"><span class="ch-bar"></span>'
         f'{esc(c["title"])}</h2><p class="ch-sub">{esc(c["subtitle"])}</p></div>'
         f'{intro}{c.get("extra","")}{"".join(sec_html)}</div>')
 
@@ -62,8 +62,25 @@ BRAND = [
    "라즈베리파이 피코 2 WH로 마이크 소리를 모아 k-NN으로 분류하고 LED·MP3 음성으로 말하게 하는 머신러닝 확장판 — 3특징·실시간 대시보드·모의 테스트까지 복붙 MicroPython 코드 모음."),
   ("<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>",
    "<title>소리를 배우고 말하는 피코 · 바이브 피지컬 코딩 ML 확장판 (ml-sound)</title>"),
+  # 드로어 브랜드 (TEMPLATE의 .drawer 안)
   ('<div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>',
    '<div class="brand"><span class="brand-emoji">🐣🔊</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>머신러닝 확장판 · 소리편 (분류 → 음성출력)</small></div>'),
+  # 상단바 브랜드 이모지 (본편 🐣🔌 → 확장판 🐣🔊)
+  ('<a class="brand" href="#top"><span class="brand-emoji">🐣🔌</span>',
+   '<a class="brand" href="#top"><span class="brand-emoji">🐣🔊</span>'),
+  # 히어로의 확장판 CTA → ml_site 안에서는 '본편으로 돌아가기' 카드로 교체
+  ('''<a class="ml-cta" href="ml_site/">
+        <span class="ml-cta-emoji">🔊🧠</span>
+        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
+        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
+        <span class="ml-cta-go">확장판 열기 →</span>
+      </a>''',
+   '''<a class="ml-cta" href="../">
+        <span class="ml-cta-emoji">🐣🔌</span>
+        <span class="ml-cta-txt"><b>본편 · 데이터로 탐구하는 바이브 피지컬 코딩</b>
+        <small>설치·와이파이·LED·가스센서·날씨 API — 이 확장판의 바탕이 되는 본편 교재예요.</small></span>
+        <span class="ml-cta-go">본편 열기 →</span>
+      </a>'''),
   ('<h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>',
    '<h1>소리를 배우고 말하는 <span class="pk">피</span><span class="pk">코</span> 🔊<br>머신러닝 확장판</h1>'),
   ('<p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>',
