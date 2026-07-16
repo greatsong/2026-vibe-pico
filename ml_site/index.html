@@ -93,6 +93,20 @@ a{color:inherit;text-decoration:none;}
 .ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
 .ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
 .ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap;}
+/* ---------- 링크 카드 (허브 목차) ---------- */
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+/* ---------- 하단 이동 (이전/다음) ---------- */
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:46px;}
+.pager a{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;background:#fff;transition:border-color .15s,box-shadow .15s;}
+.pager a:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.pager .dir{display:block;font-size:.72rem;color:var(--muted);font-weight:800;}
+.pager .tt{display:block;font-weight:800;}
+.pager a.next{text-align:right;}
 /* ---------- 챕터 / 섹션 ---------- */
 .chapter{padding-top:24px;scroll-margin-top:70px;}
 .ch-head{margin:34px 0 8px;}
@@ -291,9 +305,9 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 <body>
 <div class="topbar"><div class="inner">
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
-  <a class="brand" href="#top"><span class="brand-emoji">🐣🔊</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <a class="brand" href="index.html"><span class="brand-emoji">🐣🔊</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  <!--MODELINK-->
+  <a class="home" href="../">본편 ↗</a>
   <span class="badge">학생용</span>
 </div></div>
 <div class="scrim" id="scrim"></div>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
+<title>01. 와이파이 사각지대 찾기 · 데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
@@ -307,7 +307,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
   <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  
+  <a class="home" href="index.html">← 목차</a>
   <span class="badge">학생용</span>
 </div></div>
 <div class="scrim" id="scrim"></div>
@@ -317,24 +317,199 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 </aside>
 <div class="wrap">
 <main class="main">
-    <header class="hero" id="top">
-      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
-      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
-      <div class="under"></div>
-      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
-      <div class="stats">
-        <div class="stat"><b>10</b>개 챕터</div>
-        <div class="stat"><b>22</b>개 코드 블록</div>
-        <div class="stat"><b>13</b>개 AI 프롬프트</div>
-      </div>
-      <a class="ml-cta" href="ml_site/">
-        <span class="ml-cta-emoji">🔊🧠</span>
-        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
-        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
-        <span class="ml-cta-go">확장판 열기 →</span>
-      </a>
-    </header>
-    <h2 style="font-size:1.35rem;font-weight:800;margin:6px 0 4px">📚 목차</h2><p style="color:var(--text-soft);font-size:14px;margin:0 0 10px">순서대로 따라가도 되고, 필요한 장만 골라 봐도 됩니다. 용어가 낯설면 <a class="ilink" href="apxc.html">부록 C · 용어 사전</a>부터 열어 두세요.</p><div class="linkgrid"><a class="linkcard" href="ch0.html"><span class="n">CHAPTER 00</span><span class="tt">준비하기</span><span class="d">Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.</span></a><a class="linkcard" href="ch1.html"><span class="n">CHAPTER 01</span><span class="tt">와이파이 사각지대 찾기</span><span class="d">피코를 들고 교실을 돌아다니며 와이파이 신호 세기(RSSI)를 측정해, 신호가 약한 ‘사각지대’를 찾고 스마트폰으로 실시간 확인합니다. 첫 IoT 작품이에요.</span></a><a class="linkcard" href="ch2.html"><span class="n">CHAPTER 02</span><span class="tt">LED로 내 감정 표현하기</span><span class="d">WS2813 LED 바(10개)를 색과 움직임으로 자유자재로 다뤄, 마지막엔 내 기분을 표현하는 ‘감정 무드등’을 만듭니다.</span></a><a class="linkcard" href="ch3.html"><span class="n">CHAPTER 03</span><span class="tt">우리반 공기질 대시보드 (웹)</span><span class="d">MQ-2 센서로 우리반 공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 웹 대시보드(다크 테마)를 만듭니다.</span></a><a class="linkcard" href="ch4.html"><span class="n">CHAPTER 04</span><span class="tt">우리반 공기질, 실시간으로 확인하기 (LED)</span><span class="d">폰을 켜지 않아도 책상 위 LED만 흘끗 보면 공기질을 알 수 있게 — 앞 장의 센서값을 10칸 LED 게이지로 바꿉니다.</span></a><a class="linkcard" href="ch5.html"><span class="n">CHAPTER 05</span><span class="tt">강수확률 물리 대시보드 (API×LED)</span><span class="d">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계(물리 대시보드)’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.</span></a><a class="linkcard" href="ch6.html"><span class="n">CHAPTER 06</span><span class="tt">자유 프로젝트</span><span class="d">지금까지 배운 LED·센서·웹·날씨 API를 조합해, 나만의 작품을 바이브코딩으로 완성합니다.</span></a><a class="linkcard" href="apx.html"><span class="n">CHAPTER A</span><span class="tt">부록 · 오픈 API 한눈에 보기</span><span class="d">프로젝트에 쓸 만한 과목별 오픈 API 카탈로그예요. 각 API가 어떤 데이터를 주고 무엇을 탐구할 수 있는지 보고, 바로 살아 있는 대시보드로 들어가 보세요.</span></a><a class="linkcard" href="apxb.html"><span class="n">CHAPTER B</span><span class="tt">부록 · 심화: 센서 데이터를 구글 시트에 쌓기</span><span class="d">피코가 잰 값을 구글 시트에 한 줄씩 자동으로 기록합니다. 며칠치 데이터를 모아 그래프·통계로 탐구할 수 있어요. (설치할 것 없이 바로 됩니다)</span></a><a class="linkcard" href="apxc.html"><span class="n">CHAPTER C</span><span class="tt">부록 · 용어 사전</span><span class="d">프롬프트와 본문에서 만나는 용어를 한 줄씩 정리했어요. AI에게 설명할 때 이 낱말을 그대로 쓰면 훨씬 정확한 코드를 받습니다.</span></a><a class="linkcard" href="dashboards/index.html"><span class="n">LIVE</span><span class="tt">🛰️ 오픈 API 라이브 대시보드</span><span class="d">피코 없이 브라우저에서 공개 데이터를 바로 받아 그려 보는 탐구실 11종 (지진·ISS·미세먼지…)</span></a></div>
+    
+    <div class="chapter" id="ch1"><div class="ch-head"><span class="ch-num">CHAPTER 01</span><h2 class="ch-title"><span class="ch-bar"></span>와이파이 사각지대 찾기</h2><p class="ch-sub">피코를 들고 교실을 돌아다니며 와이파이 신호 세기(RSSI)를 측정해, 신호가 약한 ‘사각지대’를 찾고 스마트폰으로 실시간 확인합니다. 첫 IoT 작품이에요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>피코를 와이파이(STA 모드)에 연결할 수 있다</li><li>신호 세기(RSSI)가 무엇이고 어떻게 읽는지 안다</li><li>측정하며 돌아다녀 신호가 약한 ‘사각지대’를 찾을 수 있다</li><li>피코를 작은 웹서버로 만들어 브라우저에서 데이터를 본다</li><li>‘피코는 /data로 값만 주고, 그래프는 브라우저가 그린다’는 구조를 이해한다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>교실·집 어디나 와이파이가 똑같이 잘 터지진 않아요. 피코로 신호 세기(RSSI)를 재면서 돌아다니면 <b>어디가 약한지(사각지대)</b>를 찾을 수 있어요. 게다가 피코가 <b>웹서버</b>가 되면 같은 와이파이의 누구나 스마트폰으로 실시간 값을 함께 볼 수 있죠. 이 장에서 익히는 <b>‘피코=서버, 브라우저=화면’</b> 구조는 뒤의 공기질·날씨 대시보드에서도 똑같이 재사용됩니다.</p></div><section class="sec" id="ch1-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">STA 모드</div><div class="concept-d">피코가 집/학교 와이파이에 <b>접속하는</b> 모드. <code>network.WLAN(network.STA_IF)</code></div></div><div class="concept"><div class="concept-t">RSSI</div><div class="concept-d">신호 세기. 단위는 dBm이고 <b>음수</b>예요. -50처럼 0에 가까울수록 강하고, -80처럼 작을수록 약합니다.</div></div><div class="concept"><div class="concept-t">소켓 웹서버</div><div class="concept-d">포트 80에서 브라우저의 접속을 기다리다가, 요청이 오면 HTML이나 데이터를 돌려주는 작은 서버.</div></div><div class="concept"><div class="concept-t">/data 폴링</div><div class="concept-d">브라우저가 1초마다 <code>/data</code>를 불러 최신 값을 받고, Chart.js로 그래프를 갱신하는 방식.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — RSSI는 왜 -50, -80처럼 ‘음수’일까? (dBm과 데시벨)</summary><div class="dig-body">RSSI(Received Signal Strength Indicator)의 단위 <b>dBm</b>은 ‘1밀리와트(mW)에 견준 신호 세기를 데시벨로 나타낸 값’이에요. 정의상 <b>0 dBm = 1 mW</b>입니다.<br><br>와이파이 신호가 안테나에 도달할 때의 전력은 1 mW보다 <b>훨씬 작아서</b>(보통 1mW의 수만분의 1 ~ 1억분의 1 수준), 로그(데시벨)로 바꾸면 <b>음수</b>가 됩니다. 그래서 값이 항상 마이너스예요.<br>· -30 dBm ≈ 아주 강함(공유기 바로 옆)<br>· -67 dBm ≈ 영상통화도 무난<br>· -80 dBm ≈ 약함, 끊길 수 있음<br><br>데시벨은 <b>로그 스케일</b>이라, 10 dB 차이가 전력 <b>10배</b> 차이예요. 즉 -60에서 -70으로 떨어지면 신호 전력이 1/10로 준 겁니다. 숫자 차이는 작아 보여도 체감 차이가 큰 이유죠.</div></details></section><section class="sec" id="ch1-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 주변에 어떤 와이파이가 있는지 스캔해 봅니다. (셸에서 실행)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 와이파이 스캔</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 주변에 어떤 와이파이가 있는지 스캔해 봅니다
+import network
+
+wlan = network.WLAN(network.STA_IF)   # STA = 와이파이에 &#x27;접속하는&#x27; 모드
+wlan.active(True)
+
+for net in wlan.scan():
+    ssid = net[0].decode()            # 와이파이 이름
+    rssi = net[3]                     # 신호 세기 (dBm, 0에 가까울수록 강함)
+    print(&quot;%-22s  %d dBm&quot; % (ssid, rssi))</code></pre></div><p class="step-head"><b>Step 2.</b> 와이파이 이름·비밀번호를 <b>wifi_config.py</b> 파일에 따로 저장해요. Thonny <b>파일 → 새 파일</b> → 아래 두 줄 입력 → <b>💾 저장 → ‘Raspberry Pi Pico’</b> 선택 → 파일 이름을 정확히 <b><code>wifi_config.py</code></b>로. (와이파이를 쓰는 코드는 모두 이 파일을 함께 씁니다.)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · wifi_config.py (따로 저장)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># wifi_config.py  ── 와이파이 정보만 따로 담아두는 파일
+# (이 파일을 main.py와 같은 위치에 저장하면, 모든 코드가 같이 씁니다)
+
+WIFI_SSID = &quot;여기에_와이파이_이름&quot;      # 2.4GHz 와이파이 이름 (대소문자 정확히!)
+WIFI_PASSWORD = &quot;여기에_와이파이_비밀번호&quot;</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 두 줄 적을 때 주의</div><div class="callout-body"><b>따옴표 <code>"</code> 는 그대로 두고 그 안의 글자만</b> 내 와이파이 이름·비밀번호로 바꾸세요(대소문자 정확히). 피코는 <b>2.4GHz</b> 와이파이만 됩니다 — 이름이 <code>…5G</code>로 끝나면 안 돼요.</div></div><p class="step-head"><b>Step 3.</b> 와이파이에 연결해 신호 세기를 1초마다 출력합니다. <b>편집기 칸에 붙여넣고 ▶ 실행</b>해 원리를 확인하세요. (셸에 RSSI 값이 1초마다 찍혀요.)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · RSSI 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 와이파이에 연결하고, 신호 세기(RSSI)를 계속 읽어 봅니다
+import network, time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+
+print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+while not wlan.isconnected():
+    print(&quot;.&quot;, end=&quot;&quot;)
+    time.sleep(0.5)
+print(&quot;\n연결 완료! IP =&quot;, wlan.ifconfig()[0])
+
+while True:
+    rssi = wlan.status(&quot;rssi&quot;)        # 현재 신호 세기 (예: -55 dBm)
+    print(&quot;신호 세기:&quot;, rssi, &quot;dBm&quot;)
+    time.sleep(1)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 이 값을 웹으로 봅니다. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 대시보드 코드를 만들어 줍니다.</p><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">① AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 와이파이 신호 세기 실시간 대시보드야.
+- 지금 내 피코는 와이파이에 접속해 신호 세기(RSSI)를 1초마다 읽고 있어. 신호 세기는 dBm 단위의 음수이고, 0에 가까울수록 강해.
+- 와이파이 이름과 비밀번호는 따로 만들어 둔 설정 파일(wifi_config.py)에서 불러와.
+- 피코가 외부 라이브러리 설치 없이 작은 웹서버(80번 포트)가 되게 해줘.
+- 브라우저가 &#x27;/data&#x27; 주소에서 최신 신호 세기를 JSON으로 받아 1초마다 자동 갱신하고, Chart.js로 실시간 꺾은선 그래프를 그려줘.
+- 같은 와이파이에 있는 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 바로 돕니다. 실행 후 셸에 찍힌 <code>http://...</code> 주소를 같은 와이파이의 스마트폰에서 열어 보세요.</p><details class="codefold"><summary>② 전체 코드 · RSSI 실시간 대시보드 (main.py) <span class="fold-hint">· 151줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">② 전체 코드 · RSSI 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 와이파이 신호 세기(RSSI) 실시간 대시보드 ===
+# 피코가 작은 웹서버가 되어, 같은 와이파이의 스마트폰/PC 브라우저에서
+# 신호 세기를 실시간 그래프로 볼 수 있게 합니다.
+import network
+import socket
+import json
+import time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+wlan = network.WLAN(network.STA_IF)
+
+
+def connect_wifi():
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;)
+        time.sleep(0.5)
+        timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  →  http://%s&quot; % ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Wi-Fi 신호 세기 모니터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;
+  body { font-family: &#x27;Noto Sans KR&#x27;, sans-serif; max-width: 860px;
+         margin: 24px auto; padding: 0 16px; background: #f5f7fb; color: #222; }
+  h1 { text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 14px; margin: 20px 0; }
+  .card { background: #fff; border-radius: 14px; padding: 18px; text-align: center;
+          box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .label { font-size: 12px; color: #888; letter-spacing: 1px; margin-bottom: 8px; }
+  .big { font-size: 38px; font-weight: 800; color: #3b82f6; }
+  .unit { font-size: 11px; color: #aaa; margin-top: 4px; }
+  .chart-wrap { background: #fff; border-radius: 14px; padding: 18px;
+                box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;📶 Wi-Fi 신호 세기 모니터&lt;/h1&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;label&quot;&gt;RSSI&lt;/div&gt;
+      &lt;div class=&quot;big&quot; id=&quot;rssiVal&quot;&gt;---&lt;/div&gt;
+      &lt;div class=&quot;unit&quot;&gt;dBm (0에 가까울수록 강함)&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;label&quot;&gt;상태&lt;/div&gt;
+      &lt;div class=&quot;big&quot; id=&quot;statusVal&quot; style=&quot;font-size:24px&quot;&gt;측정중&lt;/div&gt;
+      &lt;div class=&quot;unit&quot;&gt;신호 품질&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;chart-wrap&quot;&gt;
+    &lt;canvas id=&quot;chart&quot; height=&quot;110&quot;&gt;&lt;/canvas&gt;
+  &lt;/div&gt;
+&lt;script&gt;
+const labels = [], data = [];
+const MAX = 40;
+function quality(r) {
+  if (r &gt;= -55) return { t: &#x27;아주 강함&#x27;, c: &#x27;#22c55e&#x27; };
+  if (r &gt;= -67) return { t: &#x27;강함&#x27;,     c: &#x27;#84cc16&#x27; };
+  if (r &gt;= -75) return { t: &#x27;보통&#x27;,     c: &#x27;#f59e0b&#x27; };
+  return                { t: &#x27;약함&#x27;,     c: &#x27;#ef4444&#x27; };
+}
+const chart = new Chart(document.getElementById(&#x27;chart&#x27;), {
+  type: &#x27;line&#x27;,
+  data: { labels, datasets: [{ label: &#x27;RSSI&#x27;, data,
+    borderColor: &#x27;#3b82f6&#x27;, backgroundColor: &#x27;rgba(59,130,246,.1)&#x27;,
+    fill: true, tension: .3, pointRadius: 0 }] },
+  options: { animation: false,
+    scales: { y: { suggestedMin: -90, suggestedMax: -30 } },
+    plugins: { legend: { display: false } } }
+});
+async function update() {
+  try {
+    const res = await fetch(&#x27;/data&#x27;);
+    const j = await res.json();
+    const r = j.value;
+    const q = quality(r);
+    document.getElementById(&#x27;rssiVal&#x27;).textContent = r;
+    document.getElementById(&#x27;rssiVal&#x27;).style.color = q.c;
+    document.getElementById(&#x27;statusVal&#x27;).textContent = q.t;
+    document.getElementById(&#x27;statusVal&#x27;).style.color = q.c;
+    labels.push(new Date().toLocaleTimeString());
+    data.push(r);
+    if (labels.length &gt; MAX) { labels.shift(); data.shift(); }
+    chart.update(&#x27;none&#x27;);
+  } catch (e) { console.warn(&#x27;응답 없음&#x27;, e); }
+}
+setInterval(update, 1000);
+update();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;&quot;&quot;&quot;
+
+
+def send_response(conn, content_type, body):
+    header = (
+        &quot;HTTP/1.1 200 OK\r\n&quot;
+        &quot;Content-Type: %s\r\n&quot;
+        &quot;Content-Length: %d\r\n&quot;
+        &quot;Connection: close\r\n&quot;
+        &quot;\r\n&quot;
+    ) % (content_type, len(body))
+    conn.sendall(header.encode() + body)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    print(&quot;서버 대기 중... (브라우저로 위 주소에 접속하세요)&quot;)
+    while True:
+        conn, _ = srv.accept()
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                value = wlan.status(&quot;rssi&quot;)
+                body = json.dumps({&quot;value&quot;: value}).encode()
+                send_response(conn, &quot;application/json&quot;, body)
+            else:
+                send_response(conn, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    run_server()</code></pre></div></details><p class="step-head"><b>Step 5.</b> 여기서 <b>바이브코딩으로 마무리</b>해 봐요. 숫자만 보여 주는 대신, 신호 세기에 따라 <b>재미있게 반응</b>하도록 AI에게 <b>이어서</b> 설명합니다. ①→② 흐름에 이어 붙이는 <b>③ 개선 프롬프트</b>예요.</p><div class="block prompt-block improve-block"><div class="block-head"><span class="prompt-ico">✨</span><span class="block-label">③ 프롬프트 개선 — 신호 세기에 반응하는 화면 (이어서 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">방금 만든 신호 세기 대시보드를 이어서 개선해줘. 신호 세기에 따라 화면이 재미있게 반응하면 좋겠어.
+- 강할 때(약 -60dBm 이상): 초록색 배경에 &#x27;신호 최고예요! 😄&#x27; 같은 축하 문구를 살짝 반짝이게.
+- 보통(-60 ~ -78dBm): 노란색에 &#x27;쓸 만해요&#x27;.
+- 약할 때(약 -78dBm 이하): 빨간색으로 &#x27;⚠️ 신호 약함, 끊길 수 있어요&#x27; 경고를 크게 띄우고 화면이 살짝 흔들리게.
+- 피코의 16번 핀에 열 칸짜리 LED 바(WS2813)가 연결돼 있다면 같은 상태를 LED 색으로도 보여줘. 강함=초록, 보통=노랑, 약함=빨강 깜빡임.
+- 이 LED는 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해야 색이 안 깨져. 이 값과 핀 번호는 그대로 유지해줘.
+- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩 팁</div><div class="callout-body">받은 코드를 올리기 전에 ① 신호 기준값(-60·-78 등)이 우리 환경에 맞는지 ② LED를 함께 쓴다면 <code>timing</code> 인자가 들어 있는지 확인하세요. (LED와 <code>timing</code>은 <b>2장</b>에서 자세히 배워요 — 지금은 화면만으로도 충분합니다.) 기준값은 직접 돌아다니며 ‘강한 곳/약한 곳’ RSSI를 보고 조정하면 더 정확해요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 들고 다니려면 — 전원 준비</div><div class="callout-body">사각지대를 찾으려면 피코를 들고 돌아다녀야 해요. 노트북에 USB로 연결한 채 움직이거나, <b>보조배터리(파워뱅크)</b>에 USB로 연결하면 선 없이 교실 곳곳의 신호를 잴 수 있어요. 측정 위치를 바꿀 때마다 몇 초 기다렸다가 값을 읽으세요.</div></div></section><section class="sec" id="ch1-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 계속 연결 중... 에서 멈춤</div><div class="m-row"><span class="m-tag">원인</span>5GHz 와이파이이거나 비밀번호 오타.</div><div class="m-row"><span class="m-tag fix">해결</span>피코는 <b>2.4GHz</b> 와이파이만 됩니다. 5GHz 전용이면 안 돼요. SSID/비번 대소문자도 정확히 확인하세요.</div></div><div class="mistake"><div class="m-sym">❌ 브라우저에서 주소가 안 열림</div><div class="m-row"><span class="m-tag">원인</span>스마트폰이 피코와 <b>다른 와이파이</b>에 있음.</div><div class="m-row"><span class="m-tag fix">해결</span>스마트폰을 피코와 <b>같은 와이파이</b>에 연결하세요. 학교망은 기기 간 통신이 막힌 경우도 있어, 휴대폰 핫스팟이 가장 확실합니다.</div></div><div class="mistake"><div class="m-sym">❌ RSSI가 0 또는 이상한 값</div><div class="m-row"><span class="m-tag">원인</span>연결 전에 status를 읽음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>wlan.isconnected()</code>가 참이 된 뒤에 읽어야 합니다. (위 코드는 이미 연결 후 읽습니다)</div></div></div></section><section class="sec" id="ch1-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>RSSI가 -50과 -80 중 어느 쪽이 더 좋은 신호인가요?</summary><div class="qa-a">-50입니다. 0에 가까울수록 강한 신호예요.</div></details><details class="qa"><summary>그래프는 피코가 그리나요, 브라우저가 그리나요?</summary><div class="qa-a">브라우저가 그립니다. 피코는 <code>/data</code>로 숫자만 보내고, Chart.js가 화면에 그려요. 그래서 피코의 부담이 적습니다.</div></details><details class="qa"><summary>wifi_config.py를 따로 두는 이유는?</summary><div class="qa-a">비밀번호를 코드 본문과 분리해 관리하기 쉽고, 여러 코드가 같은 설정을 재사용할 수 있어서요.</div></details></div></section></div><nav class="pager"><a class="prev" href="ch0.html"><span class="dir">← 이전</span><span class="tt">00. 준비하기</span></a><a class="next" href="ch2.html"><span class="dir">다음 →</span><span class="tt">02. LED로 내 감정 표현하기</span></a></nav>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.

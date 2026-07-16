@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>B. 부록 · 심화: 센서 데이터를 구글 시트에 쌓기 · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
@@ -307,8 +307,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
   <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  
-  <span class="badge">학생용</span>
+  <a class="home" href="../apxb.html">학생용 ↗</a>
+  <span class="badge teacher">강사용</span>
 </div></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="sidebar">
@@ -317,24 +317,117 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 </aside>
 <div class="wrap">
 <main class="main">
-    <header class="hero" id="top">
-      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
-      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
-      <div class="under"></div>
-      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
-      <div class="stats">
-        <div class="stat"><b>10</b>개 챕터</div>
-        <div class="stat"><b>22</b>개 코드 블록</div>
-        <div class="stat"><b>13</b>개 AI 프롬프트</div>
-      </div>
-      <a class="ml-cta" href="ml_site/">
-        <span class="ml-cta-emoji">🔊🧠</span>
-        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
-        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
-        <span class="ml-cta-go">확장판 열기 →</span>
-      </a>
-    </header>
-    <h2 style="font-size:1.35rem;font-weight:800;margin:6px 0 4px">📚 목차</h2><p style="color:var(--text-soft);font-size:14px;margin:0 0 10px">순서대로 따라가도 되고, 필요한 장만 골라 봐도 됩니다. 용어가 낯설면 <a class="ilink" href="apxc.html">부록 C · 용어 사전</a>부터 열어 두세요.</p><div class="linkgrid"><a class="linkcard" href="ch0.html"><span class="n">CHAPTER 00</span><span class="tt">준비하기</span><span class="d">Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.</span></a><a class="linkcard" href="ch1.html"><span class="n">CHAPTER 01</span><span class="tt">와이파이 사각지대 찾기</span><span class="d">피코를 들고 교실을 돌아다니며 와이파이 신호 세기(RSSI)를 측정해, 신호가 약한 ‘사각지대’를 찾고 스마트폰으로 실시간 확인합니다. 첫 IoT 작품이에요.</span></a><a class="linkcard" href="ch2.html"><span class="n">CHAPTER 02</span><span class="tt">LED로 내 감정 표현하기</span><span class="d">WS2813 LED 바(10개)를 색과 움직임으로 자유자재로 다뤄, 마지막엔 내 기분을 표현하는 ‘감정 무드등’을 만듭니다.</span></a><a class="linkcard" href="ch3.html"><span class="n">CHAPTER 03</span><span class="tt">우리반 공기질 대시보드 (웹)</span><span class="d">MQ-2 센서로 우리반 공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 웹 대시보드(다크 테마)를 만듭니다.</span></a><a class="linkcard" href="ch4.html"><span class="n">CHAPTER 04</span><span class="tt">우리반 공기질, 실시간으로 확인하기 (LED)</span><span class="d">폰을 켜지 않아도 책상 위 LED만 흘끗 보면 공기질을 알 수 있게 — 앞 장의 센서값을 10칸 LED 게이지로 바꿉니다.</span></a><a class="linkcard" href="ch5.html"><span class="n">CHAPTER 05</span><span class="tt">강수확률 물리 대시보드 (API×LED)</span><span class="d">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계(물리 대시보드)’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.</span></a><a class="linkcard" href="ch6.html"><span class="n">CHAPTER 06</span><span class="tt">자유 프로젝트</span><span class="d">지금까지 배운 LED·센서·웹·날씨 API를 조합해, 나만의 작품을 바이브코딩으로 완성합니다.</span></a><a class="linkcard" href="apx.html"><span class="n">CHAPTER A</span><span class="tt">부록 · 오픈 API 한눈에 보기</span><span class="d">프로젝트에 쓸 만한 과목별 오픈 API 카탈로그예요. 각 API가 어떤 데이터를 주고 무엇을 탐구할 수 있는지 보고, 바로 살아 있는 대시보드로 들어가 보세요.</span></a><a class="linkcard" href="apxb.html"><span class="n">CHAPTER B</span><span class="tt">부록 · 심화: 센서 데이터를 구글 시트에 쌓기</span><span class="d">피코가 잰 값을 구글 시트에 한 줄씩 자동으로 기록합니다. 며칠치 데이터를 모아 그래프·통계로 탐구할 수 있어요. (설치할 것 없이 바로 됩니다)</span></a><a class="linkcard" href="apxc.html"><span class="n">CHAPTER C</span><span class="tt">부록 · 용어 사전</span><span class="d">프롬프트와 본문에서 만나는 용어를 한 줄씩 정리했어요. AI에게 설명할 때 이 낱말을 그대로 쓰면 훨씬 정확한 코드를 받습니다.</span></a><a class="linkcard" href="dashboards/index.html"><span class="n">LIVE</span><span class="tt">🛰️ 오픈 API 라이브 대시보드</span><span class="d">피코 없이 브라우저에서 공개 데이터를 바로 받아 그려 보는 탐구실 11종 (지진·ISS·미세먼지…)</span></a></div>
+    
+    <div class="chapter" id="apxb"><div class="ch-head"><span class="ch-num">CHAPTER B</span><h2 class="ch-title"><span class="ch-bar"></span>부록 · 심화: 센서 데이터를 구글 시트에 쌓기</h2><p class="ch-sub">피코가 잰 값을 구글 시트에 한 줄씩 자동으로 기록합니다. 며칠치 데이터를 모아 그래프·통계로 탐구할 수 있어요. (설치할 것 없이 바로 됩니다)</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Google Apps Script로 시트에 데이터를 받는 웹앱을 만들 수 있다</li><li>피코에서 센서값을 HTTPS로 시트에 전송할 수 있다</li><li>쌓인 데이터를 시트의 차트로 탐구할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>지금까지는 값을 LED·웹으로 ‘그 순간’만 봤어요. 하지만 <b>시간에 따라 쌓아 두면</b> 훨씬 강력해집니다 — 하루 공기질 변화, 며칠치 신호 추세, 일주일 데이터를 그래프로 볼 수 있죠. 구글 시트는 무료이고, <b>Apps Script 웹앱</b>을 거치면 피코가 복잡한 로그인 없이 <b>URL 하나로</b> 데이터를 보낼 수 있어요.</p></div><section class="sec" id="apxb-0"><h3 class="sec-title">그림으로 보기 — 데이터가 어떻게 쌓일까</h3><p class="prose">마치 <b>엽서</b>를 보내는 것과 같아요. 피코가 지금 잰 숫자를 엽서에 적어 ‘구글 시트’라는 <b>우편함</b>으로 보내면, 시트에 <b>새 줄이 하나씩</b> 차곡차곡 쌓입니다. 👇</p><div class="figure"><svg class="hw-svg" viewBox="0 0 760 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피코가 센서값을 구글 시트에 보내 한 줄씩 쌓이는 과정">
+  <!-- 피코 + 센서 카드 -->
+  <rect x="24" y="78" width="186" height="104" rx="14" fill="#eef0ff" stroke="#c9d0fb"/>
+  <text x="117" y="108" text-anchor="middle" font-size="14" font-weight="800" fill="#3b47c2">🔌 피코 + 센서</text>
+  <text x="117" y="130" text-anchor="middle" font-size="11" fill="#7a7f95">지금 잰 값</text>
+  <rect x="73" y="138" width="88" height="34" rx="8" fill="#fff" stroke="#c9d0fb"/>
+  <text x="117" y="161" text-anchor="middle" font-size="19" font-weight="800" fill="#3b47c2">42</text>
+
+  <!-- 인터넷 화살표 -->
+  <line x1="216" y1="130" x2="470" y2="130" stroke="#cbd2e6" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="343" y="116" text-anchor="middle" font-size="11" fill="#8a8fa6">인터넷으로 전송</text>
+  <polygon points="472,130 461,124 461,136" fill="#cbd2e6"/>
+
+  <!-- 날아가는 값(엽서) -->
+  <g>
+    <rect x="196" y="114" width="48" height="32" rx="8" fill="#5B6CF0"/>
+    <text x="220" y="136" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">42</text>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 252,0; 252,0" keyTimes="0;0.45;1" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.45;0.52;1" dur="3s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- 구글 시트 카드 -->
+  <rect x="486" y="36" width="250" height="186" rx="14" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="611" y="62" text-anchor="middle" font-size="14" font-weight="800" fill="#15803d">📊 구글 시트</text>
+  <rect x="506" y="76" width="210" height="26" rx="6" fill="#dcfce7"/>
+  <text x="556" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">시각</text>
+  <text x="666" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">값</text>
+  <line x1="611" y1="76" x2="611" y2="208" stroke="#bbf7d0"/>
+  <text x="556" y="122" text-anchor="middle" font-size="11" fill="#555">09:58</text><text x="666" y="122" text-anchor="middle" font-size="11" fill="#555">39</text>
+  <text x="556" y="144" text-anchor="middle" font-size="11" fill="#555">09:59</text><text x="666" y="144" text-anchor="middle" font-size="11" fill="#555">45</text>
+  <text x="556" y="166" text-anchor="middle" font-size="11" fill="#555">10:00</text><text x="666" y="166" text-anchor="middle" font-size="11" fill="#555">41</text>
+  <!-- 새로 추가되는 줄 -->
+  <g>
+    <rect x="506" y="178" width="210" height="24" rx="5" fill="#bbf7d0"/>
+    <text x="556" y="195" text-anchor="middle" font-size="11" font-weight="800" fill="#15803d">10:01</text>
+    <text x="666" y="195" text-anchor="middle" font-size="11" font-weight="800" fill="#15803d">42</text>
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.5;0.62;1" dur="3s" repeatCount="indefinite"/>
+  </g>
+
+  <text x="380" y="242" text-anchor="middle" font-size="11.5" fill="#7a7f95">보낼 때마다 시트에 <tspan font-weight="800" fill="#15803d">새 줄이 하나씩</tspan> 쌓여요</text>
+</svg></div></section><section class="sec" id="apxb-1"><h3 class="sec-title">1단계 · 구글 쪽 설정 (한 번만)</h3><ol class="steps"><li><b>새 구글 시트 만들기</b><span>주소창에 <a class="ilink" href="https://sheets.new" target="_blank" rel="noopener"><code>sheets.new</code></a>를 입력하면 새 시트가 열려요. (구글 계정이 필요해요 — 로그인 안 돼 있으면 <b>로그인 화면이 먼저</b> 뜹니다.) 첫 행(1행)에 <b>시각</b>·<b>값</b>이라고 적어 둡니다.</span></li><li><b>Apps Script 열기</b><span>메뉴 <b>확장 프로그램 → Apps Script</b>를 누르면 코드 편집기가 새 탭으로 열려요.</span></li><li><b>코드 붙여넣기 → 저장</b><span>편집기에 이미 적힌 <code>function myFunction()…</code>을 <b>전부 선택(Ctrl+A·맥은 ⌘A)해 지우고</b>, 아래 코드를 통째로 붙여넣으세요. 파일 이름은 <code>Code.gs</code> 그대로 두고 저장(💾).</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">Apps Script 코드 (Code.gs 에 붙여넣기)</span><span class="lang-tag">JAVASCRIPT</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-javascript">function doGet(e) {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  sh.appendRow([new Date(), e.parameter.value]);   // [시각, 값] 한 줄 추가
+  return ContentService.createTextOutput(&quot;OK&quot;);
+}</code></pre></div><ol class="steps"><li><b>웹 앱으로 배포 시작</b><span>오른쪽 위 파란 <b>배포 → 새 배포</b>를 누르고, ‘유형 선택’ 옆 <b>톱니바퀴(⚙️)</b>를 눌러 <b>웹 앱</b>을 고릅니다.</span></li><li><b>권한 설정 후 배포</b><span>실행: <b>나</b> · 액세스 권한: <b>모든 사용자</b>로 두고 <b>배포</b>를 누르세요. (피코는 로그인을 못 하니 꼭 ‘모든 사용자’!)</span></li><li><b>권한 승인 (처음 한 번만)</b><span>‘액세스 승인’ → 내 구글 <b>계정 선택</b> → <b>‘확인되지 않은 앱’ 경고</b>가 떠도 정상 → 왼쪽 아래 <b>고급</b> → <b>‘…(으)로 이동’</b> → <b>허용</b>.</span></li><li><b>웹 앱 주소 복사</b><span>마지막에 나오는 <b>‘웹 앱 URL’</b>(<code>/exec</code>로 끝나는 긴 주소)의 <b>복사</b>를 누르세요. (디플로이 ID가 아니라 <b>URL</b>이에요!) 다음 단계에서 그대로 붙여넣습니다.</span></li></ol><div class="callout tip"><div class="callout-head">💡 겁먹지 마세요 — ‘확인되지 않은 앱’ 경고</div><div class="callout-body">빨간/노란 경고 화면은 ‘구글이 아직 검토하지 않은 앱’이라는 뜻일 뿐이에요. <b>내가 방금 만든 스크립트라 안전</b>합니다. <b>왼쪽 아래 ‘고급’ → ‘…(으)로 이동(안전하지 않음)’ → ‘허용’</b> 순서로 넘어가면 됩니다.</div></div><div class="callout info"><div class="callout-head">ℹ️ 나중에 코드를 고치면 — 새 버전으로 재배포</div><div class="callout-body">Apps Script 코드를 수정했다면 <b>배포 → 배포 관리 → 편집(연필) → 버전: 새 버전 → 배포</b>로 다시 배포해야 반영됩니다. (주소는 그대로예요.)</div></div></section><section class="sec" id="apxb-2"><h3 class="sec-title">2단계 · 피코에 붙여넣고 실행</h3><div class="callout info"><div class="callout-head">ℹ️ 먼저 — 와이파이 정보 파일 (wifi_config.py)</div><div class="callout-body">이 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = "우리_와이파이_이름"</code><br><code>WIFI_PASSWORD = "비밀번호"</code><br><br>(1장에서 이미 만들었다면 그대로 두면 돼요. 피코는 <b>2.4GHz</b> 와이파이만 됩니다.)</div></div><p class="prose">아래 코드를 펼쳐(▶) 복사해 Thonny에 붙여넣고, 위쪽의 <code>WEB_APP_URL = "…"</code> 줄에서 <b>따옴표 안 주소 전체를</b> 아까 복사한 주소로 바꾸세요. (양쪽 따옴표 <code>"</code> 는 지우지 말고 남겨 두세요.)</p><details class="codefold"><summary>전체 코드 · 센서값 → 구글 시트 (main.py) <span class="fold-hint">· 61줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 센서값 → 구글 시트 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 센서값을 구글 시트에 보내기 (설치할 것 없음)
+import network, socket, ssl, time, gc
+from machine import ADC, Pin
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+# ↓ 이 따옴표 안 주소 전체를, 구글에서 복사한 웹 앱 주소(.../exec)로 바꾸세요
+WEB_APP_URL = &quot;https://script.google.com/macros/s/...여기에_주소_붙여넣기.../exec&quot;
+INTERVAL = 60                 # 몇 초마다 보낼지 (60 = 1분)
+gas = ADC(Pin(26))           # 가스센서 (그로브 A0)
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    t = 20
+    while not wlan.isconnected() and t &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); t -= 1
+    print(&quot;\nOK&quot; if wlan.isconnected() else &quot;\n실패&quot;)
+    return wlan.isconnected()
+
+def https_get(url):           # 전체 주소(https://...)를 받아 요청
+    host, _, path = url[8:].partition(&quot;/&quot;)
+    gc.collect()
+    s = socket.socket()
+    s.connect(socket.getaddrinfo(host, 443)[0][-1])
+    try:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.verify_mode = ssl.CERT_NONE
+        s = ctx.wrap_socket(s, server_hostname=host)
+    except AttributeError:
+        s = ssl.wrap_socket(s, server_hostname=host)
+    s.write((&quot;GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n&quot;
+             % (path, host)).encode())
+    buf = b&quot;&quot;
+    while True:
+        c = s.read(512)
+        if not c:
+            break
+        buf += c
+    s.close()
+    return buf
+
+def send(value):
+    resp = https_get(WEB_APP_URL + &quot;?value=&quot; + str(value))
+    head = resp.split(b&quot;\r\n\r\n&quot;, 1)[0]
+    if b&quot; 302 &quot; in head or b&quot; 301 &quot; in head:     # 구글이 다른 주소로 넘기면 따라가기
+        for line in head.split(b&quot;\r\n&quot;):
+            if line.lower().startswith(b&quot;location:&quot;):
+                https_get(line.split(b&quot;:&quot;, 1)[1].strip().decode())
+                break
+
+if connect_wifi():
+    while True:
+        v = gas.read_u16()
+        try:
+            send(v)
+            print(&quot;시트로 보냄:&quot;, v)
+        except Exception as e:
+            print(&quot;실패(잠시 뒤 다시 시도):&quot;, e)
+        time.sleep(INTERVAL)</code></pre></div></details><p class="step-head">그리고 <b>▶ 실행</b>하면 끝! (피코에 <b>main.py</b>로 저장하면 전원만 넣어도 자동 실행돼요. 실행·저장이 낯설면 <b>0장</b>을 참고하세요.) 이 코드는 <b>가스센서(MQ-2)</b> 기준이라, 다른 센서를 쓰면 코드에서 센서 읽는 줄만 바꾸면 됩니다.</p><div class="callout key"><div class="callout-head">🔑 둘은 ‘value’라는 이름으로 짝이에요</div><div class="callout-body">피코는 주소 뒤에 <code>?value=42</code>처럼 값을 붙여 보내고, Apps Script(1단계 코드)는 그 <code>value</code>를 꺼내 시트 ‘값’ 칸에 적습니다. <b>양쪽 이름이 같아서</b> 짝이 맞는 거예요.</div></div><div class="callout tip"><div class="callout-head">💡 잘 되는지 확인하는 법</div><div class="callout-body">코드를 실행한 채 <b>구글 시트를 열어 두세요.</b> 1분마다 줄이 하나씩 <b>스르륵 늘어나면</b> 성공! Thonny 아래 <b>셸(Shell) 칸</b>에 <code>시트로 보냄: 42</code> 같은 메시지가 1분마다 찍혀도 잘 가는 거예요. 안 되면 아래 ‘자주 막히는 곳’을 보세요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 왜 딱 60초마다 안 와요?</div><div class="callout-body"><code>INTERVAL</code>은 ‘<b>쉬는 시간</b>’만 정해요. 그런데 한 바퀴에는 <b>쉬는 시간 + 인터넷으로 보내는 시간</b>이 같이 들어가요. 인터넷 전송이 몇 초 더 걸리고 그 시간도 매번 조금씩 달라서, 실제 간격은 설정값보다 <b>살짝 길고 들쭉날쭉</b>합니다. ‘정확한 초’보다 ‘꾸준히 기록’이 목적이라 괜찮아요. (정확히 맞추고 싶으면 보낸 데 걸린 시간을 빼고 남은 만큼만 쉬게 하면 돼요.)</div></div></section><section class="sec" id="apxb-3"><h3 class="sec-title">쌓인 데이터로 탐구하기</h3><p class="prose">시트에 줄이 쌓이면, 값 열을 선택하고 <b>삽입 → 차트</b>로 추세 그래프를 바로 그릴 수 있어요. ‘하루 중 공기질이 가장 나쁜 시간’, ‘환기 전후 변화’, ‘요일별 비교’ 같은 탐구로 이어집니다.</p></section><section class="sec" id="apxb-4"><h3 class="sec-title">자주 막히는 곳</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 시트에 아무것도 안 쌓임</div><div class="m-row"><span class="m-tag">원인</span>웹앱 액세스 권한이 ‘모든 사용자’가 아님.</div><div class="m-row"><span class="m-tag fix">해결</span>배포를 <b>모든 사용자</b>로 다시 하세요. 코드 수정 후엔 <b>배포 관리 → 편집 → 새 버전</b>으로 재배포해야 반영됩니다.</div></div><div class="mistake"><div class="m-sym">❌ ImportError: no module named &#x27;wifi_config&#x27;</div><div class="m-row"><span class="m-tag">원인</span><code>wifi_config.py</code>가 피코에 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>위 2단계 안내대로 <code>wifi_config.py</code>를 main.py와 같은 위치에 만들고 와이파이 두 줄(<code>WIFI_SSID</code>, <code>WIFI_PASSWORD</code>)을 적으세요.</div></div><div class="mistake"><div class="m-sym">❌ 셸에 ‘실패’라고 떠요</div><div class="m-row"><span class="m-tag">원인</span>잠깐 인터넷이 끊겼을 때 그래요.</div><div class="m-row"><span class="m-tag fix">해결</span>한두 번은 괜찮아요 — 다음 차례에 다시 보냅니다. 계속 그러면 보내는 간격(<code>INTERVAL</code>)을 늘려 보세요.</div></div><div class="mistake"><div class="m-sym">❌ 시각이 한국시간과 다름</div><div class="m-row"><span class="m-tag">원인</span>Apps Script 프로젝트 시간대가 기본(미국).</div><div class="m-row"><span class="m-tag fix">해결</span>Apps Script <b>프로젝트 설정(⚙️) → 시간대 → (GMT+09:00) 서울</b>로 바꾸세요.</div></div><div class="mistake"><div class="m-sym">❌ 문자열 값이 깨짐</div><div class="m-row"><span class="m-tag">원인</span>공백·특수문자를 URL에 그대로 넣음.</div><div class="m-row"><span class="m-tag fix">해결</span>숫자 센서값은 문제없어요. 문자열은 공백 등을 <code>%20</code>처럼 URL 인코딩하거나 단순 텍스트/숫자만 보내세요.</div></div></div></section><section class="sec" id="apxb-5"><h3 class="sec-title">바이브코딩 프롬프트</h3><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 센서값을 구글 시트에 자동 기록하는 장치야.
+- 가스센서(MQ-2)를 아날로그 입력인 26번 핀으로 읽어, 60초마다 구글 시트에 한 줄씩 기록하고 싶어.
+- 기록 방법: 구글 앱스 스크립트(Apps Script)로 배포한 웹 앱 주소(&#x27;/exec&#x27;로 끝나는 전체 주소) 뒤에 &#x27;?value=측정값&#x27;을 붙여 요청을 보내는 방식이야.
+- 외부 라이브러리는 설치하지 말고 피코 기본 내장 기능(socket, ssl)만 써. 보안 인증서 확인은 건너뛰어도 되고, 구글이 다른 주소로 한 번 건너뛰게 하면(리다이렉트) 그것까지 따라가서 마무리해줘.
+- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러오고, 웹 앱 주소와 보내는 주기는 코드 맨 위에 둬.
+- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div></section><section class="sec" id="apxb-6"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>피코가 구글 로그인 없이 시트에 쓸 수 있는 이유는?</summary><div class="qa-a">Apps Script 웹앱을 ‘모든 사용자’로 배포해, URL만 알면 누구나(피코도) 호출할 수 있게 했기 때문입니다.</div></details><details class="qa"><summary>보내는 간격을 바꾸려면?</summary><div class="qa-a">코드 맨 위 <code>INTERVAL</code> 숫자를 바꾸면 됩니다. 60이면 1분마다, 300이면 5분마다 보내요.</div></details><details class="qa"><summary>쌓인 데이터로 무엇을 할 수 있나요?</summary><div class="qa-a">시트의 ‘삽입 → 차트’로 추세 그래프를 그리거나 통계·탐구 활동에 쓸 수 있습니다.</div></details></div></section></div><nav class="pager"><a class="prev" href="apx.html"><span class="dir">← 이전</span><span class="tt">A. 부록 · 오픈 API 한눈에 보기</span></a><a class="next" href="apxc.html"><span class="dir">다음 →</span><span class="tt">C. 부록 · 용어 사전</span></a></nav>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.

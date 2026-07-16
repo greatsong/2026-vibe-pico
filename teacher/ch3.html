@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>03. 우리반 공기질 대시보드 (웹) · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
@@ -307,8 +307,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
   <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  
-  <span class="badge">학생용</span>
+  <a class="home" href="../ch3.html">학생용 ↗</a>
+  <span class="badge teacher">강사용</span>
 </div></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="sidebar">
@@ -317,24 +317,307 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 </aside>
 <div class="wrap">
 <main class="main">
-    <header class="hero" id="top">
-      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
-      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
-      <div class="under"></div>
-      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
-      <div class="stats">
-        <div class="stat"><b>10</b>개 챕터</div>
-        <div class="stat"><b>22</b>개 코드 블록</div>
-        <div class="stat"><b>13</b>개 AI 프롬프트</div>
-      </div>
-      <a class="ml-cta" href="ml_site/">
-        <span class="ml-cta-emoji">🔊🧠</span>
-        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
-        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
-        <span class="ml-cta-go">확장판 열기 →</span>
-      </a>
-    </header>
-    <h2 style="font-size:1.35rem;font-weight:800;margin:6px 0 4px">📚 목차</h2><p style="color:var(--text-soft);font-size:14px;margin:0 0 10px">순서대로 따라가도 되고, 필요한 장만 골라 봐도 됩니다. 용어가 낯설면 <a class="ilink" href="apxc.html">부록 C · 용어 사전</a>부터 열어 두세요.</p><div class="linkgrid"><a class="linkcard" href="ch0.html"><span class="n">CHAPTER 00</span><span class="tt">준비하기</span><span class="d">Thonny 설치부터 피코·그로브 쉴드·센서 조립, 펌웨어 설치, 첫 코드까지 — 여기만 끝내면 모든 장을 따라올 수 있어요.</span></a><a class="linkcard" href="ch1.html"><span class="n">CHAPTER 01</span><span class="tt">와이파이 사각지대 찾기</span><span class="d">피코를 들고 교실을 돌아다니며 와이파이 신호 세기(RSSI)를 측정해, 신호가 약한 ‘사각지대’를 찾고 스마트폰으로 실시간 확인합니다. 첫 IoT 작품이에요.</span></a><a class="linkcard" href="ch2.html"><span class="n">CHAPTER 02</span><span class="tt">LED로 내 감정 표현하기</span><span class="d">WS2813 LED 바(10개)를 색과 움직임으로 자유자재로 다뤄, 마지막엔 내 기분을 표현하는 ‘감정 무드등’을 만듭니다.</span></a><a class="linkcard" href="ch3.html"><span class="n">CHAPTER 03</span><span class="tt">우리반 공기질 대시보드 (웹)</span><span class="d">MQ-2 센서로 우리반 공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 웹 대시보드(다크 테마)를 만듭니다.</span></a><a class="linkcard" href="ch4.html"><span class="n">CHAPTER 04</span><span class="tt">우리반 공기질, 실시간으로 확인하기 (LED)</span><span class="d">폰을 켜지 않아도 책상 위 LED만 흘끗 보면 공기질을 알 수 있게 — 앞 장의 센서값을 10칸 LED 게이지로 바꿉니다.</span></a><a class="linkcard" href="ch5.html"><span class="n">CHAPTER 05</span><span class="tt">강수확률 물리 대시보드 (API×LED)</span><span class="d">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계(물리 대시보드)’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.</span></a><a class="linkcard" href="ch6.html"><span class="n">CHAPTER 06</span><span class="tt">자유 프로젝트</span><span class="d">지금까지 배운 LED·센서·웹·날씨 API를 조합해, 나만의 작품을 바이브코딩으로 완성합니다.</span></a><a class="linkcard" href="apx.html"><span class="n">CHAPTER A</span><span class="tt">부록 · 오픈 API 한눈에 보기</span><span class="d">프로젝트에 쓸 만한 과목별 오픈 API 카탈로그예요. 각 API가 어떤 데이터를 주고 무엇을 탐구할 수 있는지 보고, 바로 살아 있는 대시보드로 들어가 보세요.</span></a><a class="linkcard" href="apxb.html"><span class="n">CHAPTER B</span><span class="tt">부록 · 심화: 센서 데이터를 구글 시트에 쌓기</span><span class="d">피코가 잰 값을 구글 시트에 한 줄씩 자동으로 기록합니다. 며칠치 데이터를 모아 그래프·통계로 탐구할 수 있어요. (설치할 것 없이 바로 됩니다)</span></a><a class="linkcard" href="apxc.html"><span class="n">CHAPTER C</span><span class="tt">부록 · 용어 사전</span><span class="d">프롬프트와 본문에서 만나는 용어를 한 줄씩 정리했어요. AI에게 설명할 때 이 낱말을 그대로 쓰면 훨씬 정확한 코드를 받습니다.</span></a><a class="linkcard" href="dashboards/index.html"><span class="n">LIVE</span><span class="tt">🛰️ 오픈 API 라이브 대시보드</span><span class="d">피코 없이 브라우저에서 공개 데이터를 바로 받아 그려 보는 탐구실 11종 (지진·ISS·미세먼지…)</span></a></div>
+    
+    <div class="chapter" id="ch3"><div class="ch-head"><span class="ch-num">CHAPTER 03</span><h2 class="ch-title"><span class="ch-bar"></span>우리반 공기질 대시보드 (웹)</h2><p class="ch-sub">MQ-2 센서로 우리반 공기 중 가스를 숫자로 읽고, 안전/주의/위험을 색과 그래프로 보여 주는 웹 대시보드(다크 테마)를 만듭니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>ADC로 가스센서 값을 읽고 전압·비율로 바꿀 수 있다</li><li>이동 평균으로 값을 안정시킬 수 있다</li><li>임계값으로 안전/주의/위험 상태를 판단해 웹으로 보여 준다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>공기질은 눈에 안 보이죠. MQ-2 센서로 측정해 <b>숫자 → 색 → 그래프</b>로 바꾸면, 환기 타이밍을 한눈에 알 수 있어요. 센서값을 ‘판단(임계값)’하고 피코가 웹서버가 되어 스마트폰·PC로 보여 줍니다. <b>다음 장에선 폰을 켜지 않고 LED만으로</b> 같은 공기질을 확인해 볼 거예요.</p></div><section class="sec" id="ch3-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">ADC (아날로그)</div><div class="concept-d">가스 농도 같은 ‘연속된 값’을 숫자로 바꿔 읽는 기능. 그로브 <b>A0 = GP26</b>. <code>ADC(Pin(26))</code></div></div><div class="concept"><div class="concept-t">read_u16()</div><div class="concept-d">0~65535 사이 값으로 읽습니다. 가스가 짙을수록 값이 커져요.</div></div><div class="concept"><div class="concept-t">이동 평균</div><div class="concept-d">여러 번 읽어 평균 내면 값이 출렁이지 않고 안정됩니다. <code>read_average()</code></div></div><div class="concept"><div class="concept-t">임계값</div><div class="concept-d">SAFE / WARNING / DANGER를 나누는 기준 숫자. 환경마다 달라 보정이 필요해요.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — ADC가 ‘전압’을 ‘숫자’로 바꾸는 원리 (볼트 변환)</summary><div class="dig-body">센서는 가스 농도를 <b>전압(아날로그)</b>으로 내보냅니다. 0V~3.3V 사이의 ‘연속된’ 값이죠. 그런데 컴퓨터는 숫자만 다루니, 이 전압을 숫자로 바꿔야 합니다. 그 변환기가 <b>ADC(Analog-to-Digital Converter, 아날로그→디지털 변환기)</b>예요.<br><br>피코의 ADC는 <b>16비트</b> 해상도로 읽습니다. 16비트 = 2¹⁶ = <b>65536단계</b>, 그래서 <code>read_u16()</code>은 <b>0 ~ 65535</b> 사이 숫자를 돌려줘요.<br>· 0V → 0<br>· 3.3V(최대) → 65535<br>· 그 사이는 비례. 따라서 숫자를 전압으로 되돌리면:<br><code>전압(V) = read_u16() / 65535 × 3.3</code><br><br>예) 읽은 값이 32768이면 → 32768/65535×3.3 ≈ <b>1.65V</b> (딱 절반).<br><br><b>주의:</b> MQ-2에서 ‘전압이 곧 가스 농도(ppm)’는 아닙니다. 정확한 ppm은 보정·계산이 필요해서, 수업에서는 <b>상대적인 변화(평소보다 높다/낮다)</b>를 보는 지표로 씁니다. 그래서 SAFE/WARNING/DANGER 임계값도 우리 교실에서 직접 보고 정합니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ 센서는 예열이 필요해요</div><div class="callout-body">MQ-2는 전원을 넣고 <b>1~2분</b> 지나야 값이 안정됩니다. 처음 켜자마자 값이 크게 나와도 예열 전이라 그런 것이니 정상이에요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)</div><div class="callout-body">대시보드 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = "우리_와이파이_이름"</code><br><code>WIFI_PASSWORD = "비밀번호"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다.)</div></div></section><section class="sec" id="ch3-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 값 한 번 읽기. (그로브 A0에 센서를 꽂았는지 확인!)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 번 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MQ-2 가스센서 값 한 번 읽기 (그로브 A0 = GP26 = ADC0)
+from machine import ADC, Pin
+
+gas_sensor = ADC(Pin(26))
+print(gas_sensor.read_u16())     # 0 ~ 65535</code></pre></div><p class="step-head"><b>Step 2.</b> 반복해서 읽고, Thonny <b>플로터</b>로 그래프 보기. (셸 옆 ‘Plotter’ 켜기)</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 반복 읽기 (플로터)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 반복해서 읽기 — Thonny의 &#x27;플로터&#x27;로 그래프를 볼 수 있어요
+from machine import ADC, Pin
+import time
+
+gas_sensor = ADC(Pin(26))
+while True:
+    print(gas_sensor.read_u16())
+    time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 3.</b> 원시값을 전압·비율로 바꿔 의미를 부여합니다.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · 전압·비율 변환</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 원시값을 전압과 비율로 바꿔 보기
+from machine import ADC, Pin
+import time
+
+gas_sensor = ADC(Pin(26))
+while True:
+    value = gas_sensor.read_u16()
+    voltage = value / 65535 * 3.3
+    percent = value / 65535 * 100
+    print(&quot;ADC: %5d  |  %.2fV  |  %.1f%%&quot; % (value, voltage, percent))
+    time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 완성형 대시보드를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 만들어 줍니다.</p><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">① AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 우리 반 공기질 실시간 대시보드야.
+- 가스센서(MQ-2)는 아날로그 입력인 26번 핀(그로브 A0 포트)에 연결했어. 읽으면 0~65535 사이 숫자가 나오고, 가스가 짙을수록 값이 커져.
+- 값이 출렁이지 않게 여러 번 읽어 평균(이동 평균)으로 안정시켜줘.
+- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러와.
+- 피코가 외부 라이브러리 설치 없이 작은 웹서버(80번 포트)가 되게 하고, 브라우저가 &#x27;/data&#x27; 주소에서 JSON으로 최신 값을 받아 자동 갱신하며, Chart.js로 실시간 그래프를 그려줘.
+- 기준값(임계값)으로 안전/주의/위험 세 단계를 나눠 색으로 표시해줘. 기준값은 코드 위쪽에서 쉽게 바꿀 수 있게. 화면은 다크 테마로.
+- 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)</p><details class="codefold"><summary>② 전체 코드 · MQ-2 실시간 대시보드 (main.py) <span class="fold-hint">· 269줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">② 전체 코드 · MQ-2 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">import network
+import socket
+import json
+from machine import ADC, Pin
+import time
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+gas_sensor = ADC(Pin(26))
+
+# ── 임계값: 우리 교실에 맞게 이 두 숫자만 바꾸세요 (웹 화면 색도 함께 바뀜) ──
+SAFE_MAX = 20000   # 이 아래 = 안전(초록)
+WARN_MAX = 45000   # 이 아래 = 주의(노랑), 넘으면 위험(빨강)
+
+
+def read_average(sensor, count=10):
+    total = 0
+    for _ in range(count):
+        total += sensor.read_u16()
+        time.sleep_ms(10)
+    return total // count
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;)
+        time.sleep(0.5)
+        timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(f&quot;\n✅ 연결 완료!  →  http://{ip}&quot;)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;MQ-2 가스 센서 모니터&lt;/title&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;
+  @import url(&#x27;https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=Noto+Sans+KR:wght@300;400;700&amp;display=swap&#x27;);
+
+  :root {
+    --bg:      #0b0f1a;
+    --panel:   #111827;
+    --border:  #1f2d45;
+    --safe:    #22d3a6;
+    --warn:    #f59e0b;
+    --danger:  #ef4444;
+    --accent:  #3b82f6;
+    --text:    #e2e8f0;
+    --muted:   #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text);
+         font-family: &#x27;Noto Sans KR&#x27;, sans-serif;
+         min-height: 100vh; padding: 24px 16px; }
+
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 {
+    font-family: &#x27;Orbitron&#x27;, monospace;
+    font-size: clamp(18px, 4vw, 28px);
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(59,130,246,0.5);
+  }
+  header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .grid { display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 14px; max-width: 860px; margin: 0 auto 24px; }
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 14px; padding: 18px 14px; text-align: center;
+          transition: border-color .3s; }
+  .card .label { font-size: 11px; letter-spacing: 2px;
+                 text-transform: uppercase; color: var(--muted);
+                 margin-bottom: 10px; }
+  .card .big { font-family: &#x27;Orbitron&#x27;, monospace;
+               font-size: clamp(28px, 6vw, 40px); font-weight: 900;
+               transition: color .3s; }
+  .card .unit { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  #statusCard { border-color: var(--safe);
+                box-shadow: 0 0 20px rgba(34,211,166,.12); }
+  #statusText { font-family: &#x27;Orbitron&#x27;, monospace;
+                font-size: clamp(14px, 3vw, 20px);
+                font-weight: 700; letter-spacing: 3px; }
+
+  .chart-wrap { max-width: 860px; margin: 0 auto;
+                background: var(--panel); border: 1px solid var(--border);
+                border-radius: 14px; padding: 20px; }
+  .chart-wrap h2 { font-family: &#x27;Orbitron&#x27;, monospace;
+                   font-size: 12px; letter-spacing: 3px;
+                   color: var(--muted); margin-bottom: 16px; }
+
+  #dot { display: inline-block; width: 8px; height: 8px;
+         border-radius: 50%; background: var(--safe);
+         margin-right: 6px; animation: pulse 1.4s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .4; transform: scale(1.4); }
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header&gt;
+  &lt;h1&gt;MQ-2 GAS SENSOR MONITOR&lt;/h1&gt;
+  &lt;p&gt;&lt;span id=&quot;dot&quot;&gt;&lt;/span&gt;Raspberry Pi Pico 2 WH &amp;mdash; 실시간 측정&lt;/p&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;grid&quot;&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;ADC RAW&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;rawVal&quot;&gt;---&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;0 ~ 65535&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;전압&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;voltVal&quot;&gt;-.-&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;Volt (3.3 V ref)&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;농도 비율&lt;/div&gt;
+    &lt;div class=&quot;big&quot; id=&quot;pctVal&quot;&gt;--%&lt;/div&gt;
+    &lt;div class=&quot;unit&quot;&gt;풀스케일 대비&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card&quot; id=&quot;statusCard&quot;&gt;
+    &lt;div class=&quot;label&quot;&gt;상태&lt;/div&gt;
+    &lt;div id=&quot;statusText&quot; style=&quot;color:var(--safe)&quot;&gt;SAFE&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;chart-wrap&quot;&gt;
+  &lt;h2&gt;REALTIME WAVEFORM &amp;nbsp;(최근 60초)&lt;/h2&gt;
+  &lt;canvas id=&quot;chart&quot; height=&quot;120&quot;&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+const MAX = 60;
+const times = [], vals = [];
+
+const ctx = document.getElementById(&#x27;chart&#x27;).getContext(&#x27;2d&#x27;);
+const chart = new Chart(ctx, {
+  type: &#x27;line&#x27;,
+  data: { labels: times,
+    datasets: [{ label: &#x27;ADC (이동평균)&#x27;, data: vals,
+      borderColor: &#x27;#3b82f6&#x27;,
+      backgroundColor: &#x27;rgba(59,130,246,0.08)&#x27;,
+      borderWidth: 2, fill: true, tension: 0.4,
+      pointRadius: 0, pointHitRadius: 8 }] },
+  options: { animation: false, responsive: true,
+    scales: {
+      y: { suggestedMin: 0, suggestedMax: 65535,
+           grid: { color: &#x27;rgba(255,255,255,.06)&#x27; },
+           ticks: { color: &#x27;#64748b&#x27;,
+                    font: { family: &#x27;monospace&#x27;, size: 10 },
+                    callback: v =&gt; v.toLocaleString() } },
+      x: { grid: { color: &#x27;rgba(255,255,255,.06)&#x27; },
+           ticks: { color: &#x27;#64748b&#x27;,
+                    font: { family: &#x27;monospace&#x27;, size: 10 },
+                    maxTicksLimit: 8 } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+let TH = { safe: 20000, warn: 45000 };   // /data 가 코드 상단 임계값을 알려주면 갱신됨
+function levelOf(v) {
+  if (v &lt; TH.safe) return { label: &#x27;SAFE&#x27;,    color: &#x27;#22d3a6&#x27; };
+  if (v &lt; TH.warn) return { label: &#x27;WARNING&#x27;, color: &#x27;#f59e0b&#x27; };
+  return                 { label: &#x27;DANGER&#x27;,   color: &#x27;#ef4444&#x27; };
+}
+
+async function poll() {
+  try {
+    const res  = await fetch(&#x27;/data&#x27;);
+    const json = await res.json();
+    if (json.safe != null) { TH.safe = json.safe; TH.warn = json.warn; }
+    const v    = json.value;
+    const now  = new Date().toLocaleTimeString(&#x27;ko-KR&#x27;, { hour12: false });
+    const lv   = levelOf(v);
+
+    document.getElementById(&#x27;rawVal&#x27;).textContent  = v.toLocaleString();
+    document.getElementById(&#x27;rawVal&#x27;).style.color  = lv.color;
+    document.getElementById(&#x27;voltVal&#x27;).textContent = (v / 65535 * 3.3).toFixed(3);
+    document.getElementById(&#x27;pctVal&#x27;).textContent  = (v / 65535 * 100).toFixed(1) + &#x27;%&#x27;;
+    document.getElementById(&#x27;statusText&#x27;).textContent  = lv.label;
+    document.getElementById(&#x27;statusText&#x27;).style.color  = lv.color;
+    document.getElementById(&#x27;statusCard&#x27;).style.borderColor  = lv.color;
+    document.getElementById(&#x27;statusCard&#x27;).style.boxShadow    =
+      `0 0 20px ${lv.color}30`;
+
+    times.push(now); vals.push(v);
+    if (times.length &gt; MAX) { times.shift(); vals.shift(); }
+
+    const margin = 2000;
+    const yMin = Math.max(0,     Math.min(...vals) - margin);
+    const yMax = Math.min(65535, Math.max(...vals) + margin);
+    chart.options.scales.y.min = yMin;
+    chart.options.scales.y.max = yMax;
+
+    chart.data.datasets[0].borderColor     = lv.color;
+    chart.data.datasets[0].backgroundColor = lv.color + &#x27;18&#x27;;
+    chart.update(&#x27;none&#x27;);
+  } catch (e) {
+    console.warn(&#x27;센서 응답 없음&#x27;, e);
+  }
+}
+
+setInterval(poll, 500);
+poll();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;&quot;&quot;&quot;
+
+
+def send_response(conn, status, content_type, body_bytes):
+    header = (
+        f&quot;HTTP/1.1 {status}\r\n&quot;
+        f&quot;Content-Type: {content_type}\r\n&quot;
+        f&quot;Content-Length: {len(body_bytes)}\r\n&quot;
+        &quot;Access-Control-Allow-Origin: *\r\n&quot;
+        &quot;Connection: close\r\n&quot;
+        &quot;\r\n&quot;
+    ).encode()
+    conn.sendall(header + body_bytes)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv  = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    print(&quot;서버 대기 중... (Ctrl+C로 종료)&quot;)
+
+    while True:
+        conn, _ = srv.accept()
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                value = read_average(gas_sensor, 10)
+                body  = json.dumps({&quot;value&quot;: value, &quot;safe&quot;: SAFE_MAX, &quot;warn&quot;: WARN_MAX}).encode()
+                send_response(conn, &quot;200 OK&quot;, &quot;application/json&quot;, body)
+            else:
+                send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    run_server()</code></pre></div></details><p class="step-head">돌아가는 걸 확인했다면, 같은 대화에서 <b>③ 개선 프롬프트</b>로 우리 반에 꼭 맞게 업그레이드해 봐요.</p><div class="block prompt-block improve-block"><div class="block-head"><span class="prompt-ico">✨</span><span class="block-label">③ 프롬프트 개선 — 환기 알리미로 업그레이드 (이어서 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">방금 만든 공기질 대시보드를 이어서 개선해줘.
+- &#x27;주의&#x27; 이상 상태가 3번 연속 측정되면 화면 맨 위에 &#x27;🌬️ 환기하세요!&#x27; 배너를 크게 띄우고, &#x27;안전&#x27;으로 돌아오면 배너를 내려줘.
+- 그래프 옆에 최근 10분의 최고값과 평균값도 함께 보여줘.
+- 센서 핀 번호, 기준값 변수, &#x27;/data&#x27; 응답 구조는 그대로 유지해줘.
+- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><div class="callout key"><div class="callout-head">🔑 대시보드 열기 · 임계값 바꾸기</div><div class="callout-body">실행하면 Thonny <b>셸에 <code>http://...</code> 주소</b>가 찍혀요. 그 주소를 <b>같은 와이파이의 폰/PC 브라우저</b>에 입력하면 화면이 열립니다(<code>http://</code>로, https 아님).<br>안전·주의 기준을 바꾸려면 코드 <b>맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code></b> 두 숫자만 고치세요 — 웹 화면 색도 함께 바뀝니다. (다음 장 LED도 <b>같은 숫자</b>를 씁니다.)</div></div></section><section class="sec" id="ch3-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 값이 늘 0이거나 65535에 붙어 있음</div><div class="m-row"><span class="m-tag">원인</span>센서를 A0가 아닌 다른 포트에 꽂음.</div><div class="m-row"><span class="m-tag fix">해결</span>그로브 <b>A0(=GP26)</b>에 꽂았는지 확인하세요. D포트에 꽂으면 아날로그 값을 못 읽습니다.</div></div><div class="mistake"><div class="m-sym">❌ 켜자마자 ‘위험’으로 뜸</div><div class="m-row"><span class="m-tag">원인</span>예열 전이라 값이 큼.</div><div class="m-row"><span class="m-tag fix">해결</span>1~2분 기다리세요. 그래도 항상 위험이면 코드 맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code> 숫자를 우리 환경에 맞게 올리세요.</div></div><div class="mistake"><div class="m-sym">❌ ‘❌ Wi-Fi 연결 실패’만 뜨고 멈춤</div><div class="m-row"><span class="m-tag">원인</span>SSID·비밀번호 오타 또는 5GHz 망.</div><div class="m-row"><span class="m-tag fix">해결</span><code>wifi_config.py</code>의 따옴표 안 이름·비밀번호를 정확히(대소문자) 확인하고 <b>2.4GHz</b> 망인지 보세요. 고친 뒤 ⏹ 정지 → 다시 ▶ 실행.</div></div><div class="mistake"><div class="m-sym">❌ ImportError: wifi_config</div><div class="m-row"><span class="m-tag">원인</span><code>wifi_config.py</code>가 피코에 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>main.py와 같은 위치에 <code>wifi_config.py</code> 파일을 새로 만들어 두 줄만 적으세요. <code>WIFI_SSID = "와이파이이름"</code> / <code>WIFI_PASSWORD = "비밀번호"</code> (위 핵심 개념의 안내 참고).</div></div></div></section><section class="sec" id="ch3-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>MQ-2는 그로브의 어느 포트에 꽂나요?</summary><div class="qa-a">A0 (= GP26 = ADC0). 아날로그 포트입니다.</div></details><details class="qa"><summary>값을 안정시키는 read_average는 무엇을 하나요?</summary><div class="qa-a">여러 번(기본 10번) 읽어 평균을 냅니다. 출렁임이 줄어요.</div></details><details class="qa"><summary>임계값은 어디서나 같은 숫자를 쓰면 되나요?</summary><div class="qa-a">아니요. 센서·환경마다 기준이 달라, 우리 교실에서 직접 보고 보정해야 합니다.</div></details></div></section></div><nav class="pager"><a class="prev" href="ch2.html"><span class="dir">← 이전</span><span class="tt">02. LED로 내 감정 표현하기</span></a><a class="next" href="ch4.html"><span class="dir">다음 →</span><span class="tt">04. 우리반 공기질, 실시간으로 확인하기 (LED)</span></a></nav>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<title>05. 강수확률 물리 대시보드 (API×LED) · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+<style>
+/* ============================================================
+   피코 바이브 피지컬 코딩 · 웹 교재 스타일
+   디자인 계열: 2026-snui 웹 교재 (따뜻한 크림·골드)
+   ============================================================ */
+:root{
+  --gold:#f4b400; --accent:#e8930c;
+  --bg:#fffdf7; --card:#fff6e0;
+  --border:#f0e2bc; --border-soft:#f7edcf;
+  --text:#3a2e1a; --text-soft:#6b5836; --muted:#9a8b6a;
+  --blue:#4c8df6; --blue-ink:#2f6bd6; --blue-soft:#eef3ff;
+  --green:#54a24b; --green-soft:#eef6e8;
+  --red:#e45756; --red-soft:#fdeeee;
+  --teal:#3ba6a0; --teal-ink:#2b7a75; --teal-soft:#e9f6f5;
+  --violet:#b279a2; --violet-soft:#f8f0f5;
+  --code-bg:#2a2318; --code-text:#f0e8d6;
+  --radius:0.9rem; --radius-sm:0.7rem;
+  --shadow:0 1px 4px rgba(180,140,20,.1);
+  --shadow-lg:0 8px 24px rgba(180,140,20,.16);
+  --maxw:960px;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
+  --mono:'SFMono-Regular','D2Coding',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15.5px;}
+a{color:inherit;text-decoration:none;}
+.ilink{color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:var(--blue);}
+/* ---------- 상단 바 ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,253,247,.9);
+  backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);}
+.topbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.menu-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:13px;font-weight:800;
+  color:var(--text-soft);background:var(--card);border:1px solid var(--border);border-radius:999px;
+  padding:5px 13px;cursor:pointer;transition:.15s;white-space:nowrap;}
+.menu-btn:hover{border-color:var(--accent);color:var(--accent);}
+.topbar .brand{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;font-size:15px;min-width:0;}
+.topbar .brand .brand-emoji{font-size:17px;}
+.topbar .spacer{flex:1;}
+.topbar .badge{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--accent);white-space:nowrap;}
+.topbar .badge.teacher{border-color:#cfe0ff;background:var(--blue-soft);color:var(--blue-ink);}
+.topbar a.home{color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap;}
+.topbar a.home:hover{color:var(--text);}
+/* ---------- 목차 드로어 ---------- */
+.drawer{position:fixed;left:0;top:0;bottom:0;z-index:70;width:302px;overflow-y:auto;
+  background:var(--bg);border-right:1px solid var(--border);padding:18px 14px 60px;
+  transform:translateX(-100%);transition:transform .22s ease;}
+.drawer.open{transform:none;box-shadow:0 0 44px rgba(120,90,10,.2);}
+.drawer .brand{font-weight:800;font-size:14.5px;padding:4px 10px 12px;letter-spacing:-.02em;}
+.drawer .brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.scrim{display:none;}
+.scrim.show{display:block;position:fixed;inset:0;background:rgba(58,46,26,.32);z-index:65;}
+.nav-ch{margin-top:8px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:8px;}
+.nav-ch-link:hover{background:var(--card);}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;background:linear-gradient(120deg,var(--gold),var(--accent));}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--border);}
+.nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
+.nav-sec:hover{color:var(--text);}
+.nav-sec.active{color:var(--text);font-weight:700;border-left-color:var(--accent);}
+/* ---------- 레이아웃 ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 96px;}
+.main{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px clamp(20px,5vw,52px) 48px;box-shadow:var(--shadow);}
+/* ---------- 히어로 ---------- */
+.hero{padding:10px 0 26px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.eyebrow{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.hero h1{font-size:clamp(26px,4.5vw,36px);font-weight:800;letter-spacing:-.03em;margin:8px 0 0;line-height:1.28;}
+.under{width:64px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffd766);margin:.6rem 0 1.1rem;}
+.hero p{font-size:15px;color:var(--text-soft);margin:0 0 20px;max-width:680px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 15px;font-size:13px;color:var(--text-soft);}
+.stat b{font-size:15px;color:var(--text);font-weight:800;}
+.ml-cta{display:flex;align-items:center;gap:14px;margin:22px 0 2px;padding:16px 18px;border:1px solid var(--border);
+  border-radius:var(--radius);background:linear-gradient(135deg,var(--card),var(--bg));box-shadow:var(--shadow);
+  transition:border-color .15s,box-shadow .15s,transform .15s;}
+.ml-cta:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.ml-cta-emoji{font-size:30px;flex:0 0 auto;line-height:1;}
+.ml-cta-txt{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
+.ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
+.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap;}
+/* ---------- 링크 카드 (허브 목차) ---------- */
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+/* ---------- 하단 이동 (이전/다음) ---------- */
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:46px;}
+.pager a{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;background:#fff;transition:border-color .15s,box-shadow .15s;}
+.pager a:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.pager .dir{display:block;font-size:.72rem;color:var(--muted);font-weight:800;}
+.pager .tt{display:block;font-weight:800;}
+.pager a.next{text-align:right;}
+/* ---------- 챕터 / 섹션 ---------- */
+.chapter{padding-top:24px;scroll-margin-top:70px;}
+.ch-head{margin:34px 0 8px;}
+.ch-num{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;background:linear-gradient(180deg,var(--gold),var(--accent));}
+.ch-sub{color:var(--text-soft);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:12px;scroll-margin-top:70px;}
+.sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code,.dig-body code{
+  font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:#7a5a1e;}
+.step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
+/* ---------- 챕터 인트로 (목표 / 왜 배우나요) ---------- */
+.goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin:14px 0;max-width:720px;box-shadow:var(--shadow);}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;color:var(--accent);}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);padding:14px 18px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;color:var(--text-soft);}
+.why p{margin:0;font-size:14px;}
+/* ---------- 콜아웃 (tip/warn/mini/say/theory/ask/check/err + info/key) ---------- */
+.callout{border:1px solid var(--border);border-left:4px solid var(--muted);background:var(--card);
+  border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;max-width:720px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.tip .callout-head{color:var(--blue-ink);}
+.callout.info{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.info .callout-head{color:var(--blue-ink);}
+.callout.warn{border-left-color:var(--accent);background:var(--card);}
+.callout.warn .callout-head{color:#b45309;}
+.callout.key{border-left-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff);}
+.callout.key .callout-head{color:#a06a08;}
+.callout.check{border-left-color:var(--green);background:var(--green-soft);}
+.callout.check .callout-head{color:#3d7a37;}
+.callout.mini{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.mini .callout-head{color:var(--teal-ink);}
+.callout.say{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.say .callout-head{color:var(--blue-ink);}
+.callout.ask{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.ask .callout-head{color:var(--teal-ink);}
+.callout.theory{border-left-color:var(--violet);background:var(--violet-soft);}
+.callout.theory .callout-head{color:#8a5578;}
+.callout.err{border-left-color:var(--red);background:var(--red-soft);}
+.callout.err .callout-head{color:#c23b3a;}
+/* ---------- 링크 버튼 ---------- */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;padding:9px 16px;font-size:13.5px;font-weight:700;margin:8px 8px 8px 0;transition:.15s;color:var(--text-soft);}
+.linkbtn:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow);}
+/* ---------- 체크리스트 (준비물) ---------- */
+.check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--border-soft);}
+.check-list li:before{content:"☐";position:absolute;left:4px;top:6px;font-size:16px;color:var(--accent);}
+/* ---------- 핵심 개념 / 아이디어 그리드 ---------- */
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
+.idea-d code,.concept-d code{word-break:break-all;}
+.idea-d{line-height:1.7;}
+/* ---------- 스텝 ---------- */
+.steps{margin:14px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:3px 0 16px 44px;font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:29px;height:29px;
+  background:var(--accent);color:#fff;border-radius:50%;text-align:center;line-height:29px;font-size:13px;font-weight:800;
+  box-shadow:var(--shadow);}
+.steps li:not(:last-child):after{content:"";position:absolute;left:14px;top:35px;bottom:2px;width:2px;background:var(--border);}
+.steps li>b{display:block;margin-bottom:2px;}
+.steps li span{color:var(--text-soft);font-size:13.5px;}
+/* ---------- 자주 하는 실수 ---------- */
+.mistakes{margin:12px 0;max-width:720px;}
+.mistake{border:1px solid var(--border);border-left:4px solid var(--red);border-radius:var(--radius-sm);
+  padding:12px 15px;margin:10px 0;background:var(--red-soft);}
+.m-sym{font-weight:800;font-size:13.5px;color:#c23b3a;margin-bottom:7px;}
+.m-row{font-size:13px;margin:4px 0;padding-left:2px;}
+.m-tag{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--muted);border-radius:5px;
+  padding:1px 7px;margin-right:7px;}
+.m-tag.fix{background:var(--green);}
+/* ---------- 스스로 점검 ---------- */
+.checks{margin:12px 0;max-width:720px;}
+.qa{border:1px solid var(--border);border-radius:var(--radius-sm);margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:700;list-style:none;}
+.qa summary::-webkit-details-marker{display:none;}
+.qa summary:before{content:"❓ ";}
+.qa[open] summary{border-bottom:1px solid var(--border);background:var(--green-soft);border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.qa-a{padding:11px 15px;font-size:13.5px;color:var(--text-soft);}
+.qa-a:before{content:"✅ ";}
+/* ---------- 더 알아보기 (이론 심화) ---------- */
+.dig{border:1px solid var(--border);border-left:4px solid var(--violet);border-radius:var(--radius-sm);
+  margin:16px 0;max-width:760px;background:var(--violet-soft);}
+.dig summary{cursor:pointer;padding:12px 16px;font-weight:800;font-size:13.5px;color:#8a5578;list-style:none;}
+.dig summary::-webkit-details-marker{display:none;}
+.dig summary:after{content:"▾";float:right;color:var(--violet);transition:.2s;}
+.dig[open] summary:after{transform:rotate(180deg);}
+.dig[open] summary{border-bottom:1px solid #ecd9e6;}
+.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:var(--text-soft);background:#fff;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.dig-body b{color:#8a5578;}
+/* ---------- 코드 접기 ---------- */
+.codefold{margin:12px 0;max-width:840px;}
+.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #e0cf9a;border-radius:var(--radius-sm);
+  background:var(--card);font-size:13px;font-weight:800;color:var(--text-soft);}
+.codefold>summary::-webkit-details-marker{display:none;}
+.codefold>summary:before{content:"📄 ";}
+.codefold>summary:after{content:"  ▾";color:var(--muted);}
+.codefold[open]>summary:after{content:"  ▴";}
+.codefold[open]>summary{border-style:solid;border-color:var(--border);border-bottom:none;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.codefold .fold-hint{font-weight:500;color:var(--muted);}
+.codefold .block{margin:0;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+/* ---------- 브랜딩 강조 ---------- */
+.pico-accent{background:linear-gradient(120deg,var(--gold),var(--accent));-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-weight:900;}
+.brand-emoji{font-size:17px;}
+/* '피지컬 코딩'의 [피][코] 글자 강조 — 피코 워드플레이 */
+.pk{background:linear-gradient(120deg,var(--gold),var(--accent));color:#fff;font-weight:900;
+  border-radius:7px;padding:0 .26em;margin:0 .02em;}
+/* ---------- 하드웨어 다이어그램 ---------- */
+.figure{margin:14px 0;max-width:760px;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;overflow-x:auto;white-space:pre;}
+.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font-family:var(--font);}
+.api-svg{width:100%;height:auto;background:#fffdf9;border:1px solid var(--border);border-radius:14px;padding:8px;font-family:var(--font);}
+/* ---------- 코드 / 프롬프트 / 개선 블록 ---------- */
+.block{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--card);border-bottom:1px solid var(--border);}
+.block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 코드: 따뜻한 다크 (파트너 code-bg) */
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:var(--code-bg);}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:var(--code-text);}
+.code-block .block-head{background:#211b10;border-bottom-color:#3b3222;}
+.code-block .block-label{color:#e8dcc0;}
+.code-block .lang-tag{color:#c9b98c;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn{color:#e8dcc0;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn:hover{color:#fff;border-color:#7a6338;}
+.code-block .copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 프롬프트: 파트너 teal 다크 */
+.prompt-block{border-color:#cfe8e4;}
+.prompt-block .block-head{background:var(--teal-soft);border-bottom-color:#cfe8e4;}
+.prompt-block .block-label{color:var(--teal-ink);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#d7f0ea;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;background:#1c2b26;}
+/* ③ 프롬프트 개선: 파트너 improve (따뜻한 다크 골드) */
+.improve-block{border-color:#ecd9ae;}
+.improve-block .block-head{background:linear-gradient(135deg,#fdf3dd,#fffaf0);border-bottom-color:#ecd9ae;}
+.improve-block .block-label{color:#b45309;}
+.improve-block .prompt-body{background:#2a2012;color:#f6e8cf;}
+/* ---------- 펌웨어 카드 ---------- */
+.fw-card{border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--card),#fff);padding:22px 24px;margin:12px 0 18px;max-width:840px;box-shadow:var(--shadow);}
+.fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:800;color:var(--accent);
+  background:#fff;border:1px solid var(--border);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.fw-meta{margin:0;color:var(--muted);font-size:13px;}
+.fw-meta b{color:var(--text);}
+.dl-btn{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-weight:800;
+  font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
+  box-shadow:0 5px 16px rgba(232,147,12,.35);transition:.15s;}
+.dl-btn:hover{background:#d2830a;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--text);line-height:1.5;}
+.fw-steps li{padding-left:3px;}
+.fw-dim{color:var(--muted);}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--card);
+  border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:#7a5a1e;}
+.fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+.fw-note a{color:var(--blue-ink);text-decoration:underline;}
+/* ---------- 푸터 ---------- */
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;}
+/* ---------- 반응형 ---------- */
+@media(max-width:640px){
+  body{font-size:15px;}
+  .main{padding:26px 16px 36px;}
+  .topbar .inner{padding:9px 12px;gap:8px;}
+  .topbar .brand{font-size:13.5px;}
+  .topbar a.home{display:none;}
+  .hero h1{font-size:24px;}
+  .ml-cta{flex-wrap:wrap;gap:10px;}
+  .ml-cta-go{width:100%;}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner">
+  <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
+  <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <span class="spacer"></span>
+  <a class="home" href="../ch5.html">학생용 ↗</a>
+  <span class="badge teacher">강사용</span>
+</div></div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="sidebar">
+  <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
+  <div class="nav-ch"><a href="ch0.html" class="nav-ch-link" data-target="ch0"><span class="nav-dot"></span>00. 준비하기</a><div class="nav-secs"><a href="ch0.html#ch0-0" class="nav-sec" data-target="ch0-0">0.1 · 준비물 확인</a><a href="ch0.html#ch0-1" class="nav-sec" data-target="ch0-1">0.2 · Thonny 설치 (코드 편집기)</a><a href="ch0.html#ch0-2" class="nav-sec" data-target="ch0-2">0.3 · 하드웨어 조립</a><a href="ch0.html#ch0-3" class="nav-sec" data-target="ch0-3">0.4 · MicroPython 펌웨어 설치</a><a href="ch0.html#ch0-4" class="nav-sec" data-target="ch0-4">0.5 · Thonny와 피코 연결 + 첫 코드</a></div></div><div class="nav-ch"><a href="ch1.html" class="nav-ch-link" data-target="ch1"><span class="nav-dot"></span>01. 와이파이 사각지대 찾기</a><div class="nav-secs"><a href="ch1.html#ch1-0" class="nav-sec" data-target="ch1-0">핵심 개념</a><a href="ch1.html#ch1-1" class="nav-sec" data-target="ch1-1">따라하기</a><a href="ch1.html#ch1-2" class="nav-sec" data-target="ch1-2">자주 하는 실수</a><a href="ch1.html#ch1-3" class="nav-sec" data-target="ch1-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="ch2.html" class="nav-ch-link" data-target="ch2"><span class="nav-dot"></span>02. LED로 내 감정 표현하기</a><div class="nav-secs"><a href="ch2.html#ch2-0" class="nav-sec" data-target="ch2-0">핵심 개념 — timing이 진짜 중요해요</a><a href="ch2.html#ch2-1" class="nav-sec" data-target="ch2-1">따라하기</a><a href="ch2.html#ch2-2" class="nav-sec" data-target="ch2-2">내 감정 표현하기 (이 장의 작품)</a><a href="ch2.html#ch2-3" class="nav-sec" data-target="ch2-3">자주 하는 실수</a><a href="ch2.html#ch2-4" class="nav-sec" data-target="ch2-4">스스로 점검하기</a></div></div><div class="nav-ch"><a href="ch3.html" class="nav-ch-link" data-target="ch3"><span class="nav-dot"></span>03. 우리반 공기질 대시보드 (웹)</a><div class="nav-secs"><a href="ch3.html#ch3-0" class="nav-sec" data-target="ch3-0">핵심 개념</a><a href="ch3.html#ch3-1" class="nav-sec" data-target="ch3-1">따라하기</a><a href="ch3.html#ch3-2" class="nav-sec" data-target="ch3-2">자주 하는 실수</a><a href="ch3.html#ch3-3" class="nav-sec" data-target="ch3-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="ch4.html" class="nav-ch-link" data-target="ch4"><span class="nav-dot"></span>04. 우리반 공기질, 실시간으로 확인하기 (LED)</a><div class="nav-secs"><a href="ch4.html#ch4-0" class="nav-sec" data-target="ch4-0">핵심 개념</a><a href="ch4.html#ch4-1" class="nav-sec" data-target="ch4-1">따라하기</a><a href="ch4.html#ch4-2" class="nav-sec" data-target="ch4-2">자주 하는 실수</a><a href="ch4.html#ch4-3" class="nav-sec" data-target="ch4-3">스스로 점검하기</a></div></div><div class="nav-ch"><a href="ch5.html" class="nav-ch-link" data-target="ch5"><span class="nav-dot"></span>05. 강수확률 물리 대시보드 (API×LED)</a><div class="nav-secs"><a href="ch5.html#ch5-0" class="nav-sec" data-target="ch5-0">핵심 개념</a><a href="ch5.html#ch5-1" class="nav-sec" data-target="ch5-1">따라하기</a><a href="ch5.html#ch5-2" class="nav-sec" data-target="ch5-2">자주 하는 실수</a><a href="ch5.html#ch5-3" class="nav-sec" data-target="ch5-3">스스로 점검하기</a><a href="ch5.html#ch5-4" class="nav-sec" data-target="ch5-4">Open-Meteo 자세히 알기</a><a href="ch5.html#ch5-5" class="nav-sec" data-target="ch5-5">과학 수업에 쓸 만한 다른 오픈 API</a></div></div><div class="nav-ch"><a href="ch6.html" class="nav-ch-link" data-target="ch6"><span class="nav-dot"></span>06. 자유 프로젝트</a><div class="nav-secs"><a href="ch6.html#ch6-0" class="nav-sec" data-target="ch6-0">아이디어 모음</a><a href="ch6.html#ch6-1" class="nav-sec" data-target="ch6-1">AI에게 잘 설명하는 틀</a><a href="ch6.html#ch6-2" class="nav-sec" data-target="ch6-2">마무리</a></div></div><div class="nav-ch"><a href="apx.html" class="nav-ch-link" data-target="apx"><span class="nav-dot"></span>A. 부록 · 오픈 API 한눈에 보기</a><div class="nav-secs"><a href="apx.html#apx-0" class="nav-sec" data-target="apx-0">이 부록 쓰는 법</a><a href="apx.html#apx-1" class="nav-sec" data-target="apx-1">1) 미세먼지 (대기질) — 환경 🌍</a><a href="apx.html#apx-2" class="nav-sec" data-target="apx-2">2) 전 세계 지진 — 지구과학 🌎</a><a href="apx.html#apx-3" class="nav-sec" data-target="apx-3">3) 국제우주정거장 ISS — 천문·물리 🌍</a><a href="apx.html#apx-4" class="nav-sec" data-target="apx-4">4) 일출·일몰·낮 길이 — 천문·지구과학 🇰🇷</a><a href="apx.html#apx-5" class="nav-sec" data-target="apx-5">5) 물질 정보 — 화학 🌐</a><a href="apx.html#apx-6" class="nav-sec" data-target="apx-6">6) 우리나라 생물 관찰 — 생물 🇰🇷</a><a href="apx.html#apx-7" class="nav-sec" data-target="apx-7">7) NASA 우주 데이터 — 천문 🌐 (키 필요)</a><a href="apx.html#apx-8" class="nav-sec" data-target="apx-8">8) 태양·바람 에너지 — 에너지·물리·지구 🌍</a><a href="apx.html#apx-9" class="nav-sec" data-target="apx-9">10) 나라별 CO₂·에너지 — 환경·에너지 🌍</a></div></div><div class="nav-ch"><a href="apxb.html" class="nav-ch-link" data-target="apxb"><span class="nav-dot"></span>B. 부록 · 심화: 센서 데이터를 구글 시트에 쌓기</a><div class="nav-secs"><a href="apxb.html#apxb-0" class="nav-sec" data-target="apxb-0">그림으로 보기 — 데이터가 어떻게 쌓일까</a><a href="apxb.html#apxb-1" class="nav-sec" data-target="apxb-1">1단계 · 구글 쪽 설정 (한 번만)</a><a href="apxb.html#apxb-2" class="nav-sec" data-target="apxb-2">2단계 · 피코에 붙여넣고 실행</a><a href="apxb.html#apxb-3" class="nav-sec" data-target="apxb-3">쌓인 데이터로 탐구하기</a><a href="apxb.html#apxb-4" class="nav-sec" data-target="apxb-4">자주 막히는 곳</a><a href="apxb.html#apxb-5" class="nav-sec" data-target="apxb-5">바이브코딩 프롬프트</a><a href="apxb.html#apxb-6" class="nav-sec" data-target="apxb-6">스스로 점검하기</a></div></div><div class="nav-ch"><a href="apxc.html" class="nav-ch-link" data-target="apxc"><span class="nav-dot"></span>C. 부록 · 용어 사전</a><div class="nav-secs"><a href="apxc.html#apxc-0" class="nav-sec" data-target="apxc-0">기본 도구</a><a href="apxc.html#apxc-1" class="nav-sec" data-target="apxc-1">하드웨어</a><a href="apxc.html#apxc-2" class="nav-sec" data-target="apxc-2">인터넷과 데이터</a></div></div>
+</aside>
+<div class="wrap">
+<main class="main">
+    
+    <div class="chapter" id="ch5"><div class="ch-head"><span class="ch-num">CHAPTER 05</span><h2 class="ch-title"><span class="ch-bar"></span>강수확률 물리 대시보드 (API×LED)</h2><p class="ch-sub">인터넷에서 오늘의 강수확률을 받아, 6시~23시를 10개 LED에 담는 ‘날씨 시계(물리 대시보드)’를 만들고, 같은 데이터를 보여 주는 웹 대시보드까지 완성합니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Open-Meteo에서 강수확률 데이터를 받아올 수 있다</li><li>받은 데이터(JSON)에서 시간대별 강수확률을 꺼낼 수 있다</li><li>6시~23시의 강수확률을 10개 LED의 색으로 표현할 수 있다</li><li>LED와 똑같은 정보를 보여 주는 웹 대시보드(색 범례 포함)를 띄울 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>앞에서는 <b>센서로 내 주변</b>을 봤어요. 이번엔 <b>인터넷 너머 바깥 세상의 데이터</b>를 다룹니다. 무료 날씨 API <b>Open-Meteo</b>에서 오늘의 강수확률을 받아, LED 바가 <b>아침부터 밤까지 비 올 시간을 색으로 알려 주는 시계</b>가 되고, 같은 데이터를 웹으로도 보여 줍니다. 나갈 때 LED만 보고 우산을 챙길 수 있죠.</p></div><section class="sec" id="ch5-0"><h3 class="sec-title">핵심 개념</h3><div class="concept-grid"><div class="concept"><div class="concept-t">Open-Meteo</div><div class="concept-d">무료·<b>API 키 불필요</b>한 날씨 서비스. 위도·경도만 넣으면 시간대별 강수확률을 줍니다.</div></div><div class="concept"><div class="concept-t">강수확률(precipitation_probability)</div><div class="concept-d">그 시각에 비가 올 가능성(%). 0시~23시까지 24개가 옵니다.</div></div><div class="concept"><div class="concept-t">HTTP 요청 (requests)</div><div class="concept-d">피코가 인터넷 주소에 접속해 데이터를 받아오는 도구. <code>requests.get(url)</code></div></div><div class="concept"><div class="concept-t">6~23 → 10칸 매핑</div><div class="concept-d">오전 6시~밤 11시(18시간)를 10칸으로 고르게 나눠 대표 시각 10개를 LED에 배치합니다.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — API가 대체 뭐예요? — 관공서에서 등본 떼기로 이해하기</summary><div class="dig-body"><p style="margin:0 0 12px">API는 <b>‘정해진 양식을 채워 보내면, 원하는 결과물을 정해진 형식으로 돌려주는 창구’</b>예요. 아래 <b>두 줄을 각각 클릭</b>해 보세요 — 동사무소 등본 떼기와 피코의 날씨 받기가 똑같이 ‘<b>요청 → 응답</b>’으로 흐릅니다.</p>
+<svg class="api-svg" viewBox="0 0 760 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="클릭하면 신청서가 가고 결과물이 돌아오는 API 비유 애니메이션">
+  <defs>
+    <marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#7d93ef"/></marker>
+    <marker id="arL" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#e98bb6"/></marker>
+    <filter id="ds2" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2a3568" flood-opacity="0.14"/></filter>
+  </defs>
+  <rect x="14" y="58" width="732" height="184" rx="14" fill="transparent" style="cursor:pointer" onclick="playLane(&#39;A&#39;)"/>
+  <text x="380" y="100" text-anchor="middle" font-size="11.5" font-weight="800" fill="#3b47c2" style="pointer-events:none">👆 ‘비유’ 클릭 — 등본 신청해 보기</text>
+  <g filter="url(#ds2)" style="pointer-events:none"><rect x="24" y="112" width="140" height="76" rx="16" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="94" y="148" text-anchor="middle" font-size="27" style="pointer-events:none">🙋</text>
+  <text x="94" y="174" text-anchor="middle" font-size="12" font-weight="800" fill="#2b2d3a" style="pointer-events:none">나 = 민원인</text>
+  <g filter="url(#ds2)" style="pointer-events:none"><rect x="596" y="112" width="140" height="76" rx="16" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="666" y="146" text-anchor="middle" font-size="25" style="pointer-events:none">🏛️</text>
+  <text x="666" y="168" text-anchor="middle" font-size="11.5" font-weight="800" fill="#3b47c2" style="pointer-events:none">관공서 창구</text>
+  <text x="666" y="182" text-anchor="middle" font-size="9.5" fill="#8a8fb0" style="pointer-events:none">데이터 보관</text>
+  <line x1="172" y1="135" x2="586" y2="135" stroke="#9fb0f5" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arR)" style="pointer-events:none"/>
+  <text x="378" y="127" text-anchor="middle" font-size="10" fill="#5B6CF0" font-weight="700" style="pointer-events:none">요청(신청서) →</text>
+  <line x1="586" y1="165" x2="172" y2="165" stroke="#f0b9d2" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arL)" style="pointer-events:none"/>
+  <text x="378" y="183" text-anchor="middle" font-size="10" fill="#E0568A" font-weight="700" style="pointer-events:none">← 응답(결과물)</text>
+  <g opacity="0" style="pointer-events:none">
+    <rect x="-36" y="-23" width="72" height="46" rx="5" fill="#ffffff" stroke="#b9c0f5"/>
+    <rect x="-36" y="-23" width="72" height="12" rx="5" fill="#5B6CF0"/><rect x="-36" y="-17" width="72" height="6" fill="#5B6CF0"/>
+    <text x="0" y="-14" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">📝 등본 신청서</text>
+    <text x="0" y="1" text-anchor="middle" font-size="8" font-weight="700" fill="#3b47c2" opacity="0">이름: 홍길동<animate attributeName="opacity" begin="reqMoveA.begin" dur="2.4s" keyTimes="0;0.08;0.14;1" values="0;0;1;1"/></text>
+    <text x="0" y="12" text-anchor="middle" font-size="8" font-weight="700" fill="#3b47c2" opacity="0">주소: 서울 ○○구<animate attributeName="opacity" begin="reqMoveA.begin" dur="2.4s" keyTimes="0;0.16;0.22;1" values="0;0;1;1"/></text>
+    <animate attributeName="opacity" begin="reqMoveA.begin" dur="2.4s" keyTimes="0;0.05;0.30;0.85;1" values="0;1;1;1;0"/>
+    <animateTransform id="reqMoveA" attributeName="transform" type="translate" begin="indefinite" dur="2.4s" calcMode="spline" keyTimes="0;0.30;1" values="200,135;200,135;556,135" keySplines="0 0 1 1;0.42 0 0.2 1"/>
+  </g>
+  <g opacity="0" style="pointer-events:none">
+    <rect x="-36" y="-26" width="72" height="52" rx="5" fill="#ffffff" stroke="#f0c6da"/>
+    <rect x="-36" y="-26" width="72" height="12" rx="5" fill="#E0568A"/><rect x="-36" y="-20" width="72" height="6" fill="#E0568A"/>
+    <text x="0" y="-17" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">📄 주민등록등본</text>
+    <text x="0" y="-2" text-anchor="middle" font-size="8.5" font-weight="800" fill="#2b2d3a">홍길동</text>
+    <text x="0" y="9" text-anchor="middle" font-size="7.5" fill="#55524c">서울 ○○구</text>
+    <circle cx="0" cy="18" r="6" fill="none" stroke="#e0392f" stroke-width="1.2"/><text x="0" y="20.5" text-anchor="middle" font-size="6" font-weight="800" fill="#e0392f">印</text>
+    <animate attributeName="opacity" begin="reqMoveA.end" dur="2.4s" keyTimes="0;0.05;0.15;0.85;1" values="0;1;1;1;0"/>
+    <animateTransform attributeName="transform" type="translate" begin="reqMoveA.end" dur="2.4s" calcMode="spline" keyTimes="0;0.10;1" values="556,165;556,165;200,165" keySplines="0 0 1 1;0.42 0 0.2 1"/>
+  </g>
+  <line x1="40" y1="262" x2="720" y2="262" stroke="#eceef5" stroke-width="1"/>
+  <rect x="14" y="280" width="732" height="184" rx="14" fill="transparent" style="cursor:pointer" onclick="playLane(&#39;B&#39;)"/>
+  <text x="380" y="322" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0e9488" style="pointer-events:none">👆 ‘피코’ 클릭 — 강수확률 받아 보기</text>
+  <g filter="url(#ds2)" style="pointer-events:none"><rect x="24" y="334" width="140" height="76" rx="16" fill="#ffffff" stroke="#e6e8f2"/></g>
+  <text x="94" y="370" text-anchor="middle" font-size="27" style="pointer-events:none">🔌</text>
+  <text x="94" y="396" text-anchor="middle" font-size="12" font-weight="800" fill="#2b2d3a" style="pointer-events:none">피코 · 브라우저</text>
+  <g filter="url(#ds2)" style="pointer-events:none"><rect x="596" y="334" width="140" height="76" rx="16" fill="#eef0ff" stroke="#c3c9f5"/></g>
+  <text x="666" y="368" text-anchor="middle" font-size="25" style="pointer-events:none">☁️</text>
+  <text x="666" y="390" text-anchor="middle" font-size="11.5" font-weight="800" fill="#3b47c2" style="pointer-events:none">Open-Meteo</text>
+  <text x="666" y="404" text-anchor="middle" font-size="9.5" fill="#8a8fb0" style="pointer-events:none">= 관공서(API)</text>
+  <line x1="172" y1="357" x2="586" y2="357" stroke="#9fb0f5" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arR)" style="pointer-events:none"/>
+  <text x="378" y="349" text-anchor="middle" font-size="10" fill="#5B6CF0" font-weight="700" style="pointer-events:none">요청(신청서) →</text>
+  <line x1="586" y1="387" x2="172" y2="387" stroke="#f0b9d2" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arL)" style="pointer-events:none"/>
+  <text x="378" y="405" text-anchor="middle" font-size="10" fill="#E0568A" font-weight="700" style="pointer-events:none">← 응답(결과물)</text>
+  <g opacity="0" style="pointer-events:none">
+    <rect x="-36" y="-29" width="72" height="57" rx="5" fill="#ffffff" stroke="#b9c0f5"/>
+    <rect x="-36" y="-29" width="72" height="12" rx="5" fill="#0e9488"/><rect x="-36" y="-23" width="72" height="6" fill="#0e9488"/>
+    <text x="0" y="-20" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">📝 요청 (URL)</text>
+    <text x="0" y="-5" text-anchor="middle" font-size="8" font-weight="700" fill="#3b47c2" opacity="0">위도: 37.5<animate attributeName="opacity" begin="reqMoveB.begin" dur="2.4s" keyTimes="0;0.06;0.12;1" values="0;0;1;1"/></text>
+    <text x="0" y="6" text-anchor="middle" font-size="8" font-weight="700" fill="#3b47c2" opacity="0">경도: 127<animate attributeName="opacity" begin="reqMoveB.begin" dur="2.4s" keyTimes="0;0.12;0.18;1" values="0;0;1;1"/></text>
+    <text x="0" y="17" text-anchor="middle" font-size="8" font-weight="700" fill="#3b47c2" opacity="0">시간: 15시<animate attributeName="opacity" begin="reqMoveB.begin" dur="2.4s" keyTimes="0;0.18;0.24;1" values="0;0;1;1"/></text>
+    <animate attributeName="opacity" begin="reqMoveB.begin" dur="2.4s" keyTimes="0;0.05;0.30;0.85;1" values="0;1;1;1;0"/>
+    <animateTransform id="reqMoveB" attributeName="transform" type="translate" begin="indefinite" dur="2.4s" calcMode="spline" keyTimes="0;0.30;1" values="200,357;200,357;556,357" keySplines="0 0 1 1;0.42 0 0.2 1"/>
+  </g>
+  <g opacity="0" style="pointer-events:none">
+    <rect x="-36" y="-26" width="72" height="52" rx="5" fill="#ffffff" stroke="#f0c6da"/>
+    <rect x="-36" y="-26" width="72" height="12" rx="5" fill="#0e9488"/><rect x="-36" y="-20" width="72" height="6" fill="#0e9488"/>
+    <text x="0" y="-17" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">📦 응답 (JSON)</text>
+    <text x="0" y="3" text-anchor="middle" font-size="16" font-weight="800" fill="#2b2d3a">☔ 60%</text>
+    <text x="0" y="18" text-anchor="middle" font-size="7.5" fill="#8a8fa6">강수확률</text>
+    <animate attributeName="opacity" begin="reqMoveB.end" dur="2.4s" keyTimes="0;0.05;0.15;0.85;1" values="0;1;1;1;0"/>
+    <animateTransform attributeName="transform" type="translate" begin="reqMoveB.end" dur="2.4s" calcMode="spline" keyTimes="0;0.10;1" values="556,387;556,387;200,387" keySplines="0 0 1 1;0.42 0 0.2 1"/>
+  </g>
+  <text x="380" y="476" text-anchor="middle" font-size="11" fill="#7a7f95" style="pointer-events:none">이름·주소 = 위도·경도·시간(신청) · 주민등록등본 = 강수확률(결과) · 관공서 = API 서버 · 🔑 일부는 ‘신분증=키’ 필요</text>
+</svg>
+<script>function playLane(L){var m=document.getElementById("reqMove"+L);if(m){try{m.beginElement();}catch(e){}}}</script></div></details><a class="linkbtn" href="https://open-meteo.com" target="_blank" rel="noopener">🔗 open-meteo.com — 무료 날씨 API (키 불필요)</a><div class="callout info"><div class="callout-head">ℹ️ 설치 없이 바로 됩니다</div><div class="callout-body">이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다.</div></div><div class="callout info"><div class="callout-head">ℹ️ 먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)</div><div class="callout-body">이 장의 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = "우리_와이파이_이름"</code><br><code>WIFI_PASSWORD = "비밀번호"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다. 이름·비밀번호를 정확히.)</div></div><details class="dig"><summary>🔬 더 알아보기 — HTTPS와 인증서 — 코드의 CERT_NONE은 무슨 뜻일까?</summary><div class="dig-body">주소가 <code>https://</code>로 시작하면, 피코와 서버 사이 통신이 <b>암호화(TLS)</b>됩니다. 중간에서 누가 엿봐도 내용을 못 읽죠.<br><br>원래 인터넷 브라우저는 ‘이 서버가 진짜 open-meteo가 맞는지’를 <b>인증서</b>로 확인합니다. 이때 신뢰할 수 있는 기관(CA) 목록이 필요한데, <b>피코에는 그 목록이 기본으로 들어 있지 않아요.</b> 그래서 코드에서 <code>ssl.CERT_NONE</code>으로 ‘서버 신원 확인은 건너뛰고, 암호화만 쓰겠다’고 한 거예요.<br><br>교육용으로 공개 날씨 데이터를 받는 정도는 충분히 안전합니다. 다만 <b>로그인·비밀번호처럼 민감한 정보</b>를 주고받을 땐 신원 확인을 생략하면 안 되니, 그때는 인증서를 갖춘 환경에서 해야 합니다.</div></details></section><section class="sec" id="ch5-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 우리 지역 <b>위도·경도</b>를 정합니다. 코드 맨 위 <code>LAT</code>/<code>LON</code>을 바꾸면 돼요. (검색창에 ‘우리동네 위도 경도’를 쳐서 찾으세요. 서울시청은 37.5665 / 126.9780)</p><p class="step-head"><b>Step 2.</b> 먼저 강수확률을 받아 셸에 출력해, <b>데이터가 어떻게 생겼는지</b> 확인해요. 인터넷 접속 함수(<code>http_get_json</code> 등)는 길어서 손코딩하지 않아요 — AI에게 아래처럼 <b>설명</b>해 만들면 됩니다.</p><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 날씨 데이터가 어떻게 생겼는지 먼저 확인하려는 거야.
+- 무료 날씨 서비스 Open-Meteo(키 필요 없음)에서 우리 지역의 오늘 시간별 강수확률을 받아와.
+- 아침 6시부터 밤 11시까지를 &#x27;N시 강수확률: M%&#x27; 형식으로 셸에 출력해줘.
+- 외부 라이브러리는 설치하지 말고, 피코에 기본 내장된 인터넷 접속 기능(socket, ssl)만 써. 보안 인증서 확인은 건너뛰어도 돼.
+- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러오고, 위도·경도는 코드 맨 위에 둬서 내가 바꿀 수 있게 해줘.
+- 복사해서 바로 돌아가는 코드 전체를 한 번에 줘.</div></div><p class="step-head">직접 만들지 않아도 아래 <b>완성본</b>을 복사해 실행하면 됩니다. (긴 <code>http_get_json</code>은 뒤 단계에서도 그대로 재사용해요.)</p><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 강수확률 받아오기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 1단계: 오늘의 강수확률 가져오기 (설치 불필요) ===
+# 피코에 기본 내장된 socket + ssl 만으로 Open-Meteo(HTTPS)에 접속합니다.
+import network, socket, ssl, json, time, gc
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+LAT = 37.5665      # 위도 (우리 지역 좌표로 바꾸세요)
+LON = 126.9780     # 경도
+HOST = &quot;api.open-meteo.com&quot;
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+def http_get_json(host, path):
+    gc.collect()
+    addr = socket.getaddrinfo(host, 443)[0][-1]
+    s = socket.socket()
+    s.connect(addr)
+    try:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.verify_mode = ssl.CERT_NONE          # 피코엔 인증서 목록이 없어 검증 생략
+        s = ctx.wrap_socket(s, server_hostname=host)
+    except AttributeError:                       # 옛 펌웨어 호환
+        s = ssl.wrap_socket(s, server_hostname=host)
+    s.write((&quot;GET %s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n&quot;
+             % (path, host)).encode())
+    buf = b&quot;&quot;
+    while True:
+        chunk = s.read(512)
+        if not chunk:
+            break
+        buf += chunk
+    s.close()
+    body = buf.split(b&quot;\r\n\r\n&quot;, 1)[1]          # 헤더 떼고 본문(JSON)만
+    return json.loads(body)
+
+
+if connect_wifi():
+    path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
+            &quot;&amp;hourly=precipitation_probability&quot;
+            &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    data = http_get_json(HOST, path)
+
+    probs = data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+    for hour in range(6, 24):
+        print(&quot;%2d시 강수확률: %s%%&quot; % (hour, probs[hour]))</code></pre></div><div class="callout info"><div class="callout-head">ℹ️ 코드가 여러 개죠? — 최종은 하나만</div><div class="callout-body">아래로 가면서 코드가 여러 번 나와요. <b>피코에 저장(main.py)할 최종 코드는 딱 하나</b>면 됩니다:<br>· Step 2(강수확률 출력) = <b>확인용</b>(잠깐 실행만)<br>· Step 3(날씨 시계) = LED만 버전<br>· <b>Step 5(LED + 웹) = 가장 완성본 ← 이거 하나면 충분</b><br>새 코드를 쓸 땐 <b>이전 코드를 지우고</b> 붙여넣으세요(피코는 한 번에 main.py 하나만 돌려요).</div></div><p class="step-head"><b>Step 3.</b> 받은 값을 10개 LED의 색으로 바꿔 ‘날씨 시계’를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>설명</b>하면 만들어 줍니다.</p><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">① AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 하루의 비 예보를 LED 색으로 보여주는 &#x27;날씨 시계&#x27;야.
+- 무료 날씨 서비스 Open-Meteo(키 필요 없음)에서 오늘 시간별 강수확률을 받아와. 인터넷 접속은 피코 기본 내장 기능(socket, ssl)만 쓰고 추가 설치는 하지 마.
+- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러와.
+- 아침 6시~밤 11시(18시간)를 열 칸짜리 LED 바에 고르게 나눠, 각 시각의 강수확률을 색으로 표시해줘. 예: 맑음=초록, 흐림=노랑, 비 가능=파랑, 비 확실=보라. 구간별 색은 코드 위에서 바꿀 수 있게.
+- LED 바(WS2813)는 16번 핀에 연결했어. 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져. 밝기는 낮게.
+- 날씨는 10분에 한 번만 새로 받아와줘.
+- 위도·경도와 타이밍 값은 코드 맨 위에 두고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사하면 바로 돕니다. (추가 설치 없음 · 10분마다 새 예보로 갱신)</p><details class="codefold"><summary>② 전체 코드 · 날씨 시계 (main.py) — 무설치 <span class="fold-hint">· 91줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">② 전체 코드 · 날씨 시계 (main.py) — 무설치</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보를 10개 LED에 담는 &#x27;날씨 시계&#x27; (설치 불필요) ===
+# 내장 socket + ssl 로 Open-Meteo에 접속 — 추가 설치 없이 복붙 실행됩니다.
+#   맑음(연초록) → 흐림(노랑) → 비 가능(파랑) → 비 확실(보라)
+import network, socket, ssl, json, time, gc
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+LAT = 37.5665      # 우리 지역 위도
+LON = 126.9780     # 우리 지역 경도
+HOST = &quot;api.open-meteo.com&quot;
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+
+# 6시~23시를 LED 칸 수만큼 고르게 나눈 대표 시각 (NUM만 바꾸면 자동 적용)
+HOURS = [round(6 + i * (23 - 6) / (NUM - 1)) for i in range(NUM)]
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+def http_get_json(host, path):
+    gc.collect()
+    addr = socket.getaddrinfo(host, 443)[0][-1]
+    s = socket.socket()
+    s.connect(addr)
+    try:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.verify_mode = ssl.CERT_NONE          # 피코엔 인증서 목록이 없어 검증 생략
+        s = ctx.wrap_socket(s, server_hostname=host)
+    except AttributeError:                       # 옛 펌웨어 호환
+        s = ssl.wrap_socket(s, server_hostname=host)
+    s.write((&quot;GET %s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n&quot;
+             % (path, host)).encode())
+    buf = b&quot;&quot;
+    while True:
+        chunk = s.read(512)
+        if not chunk:
+            break
+        buf += chunk
+    s.close()
+    return json.loads(buf.split(b&quot;\r\n\r\n&quot;, 1)[1])
+
+
+def get_rain_probs():
+    path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
+            &quot;&amp;hourly=precipitation_probability&quot;
+            &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    return http_get_json(HOST, path)[&quot;hourly&quot;][&quot;precipitation_probability&quot;]
+
+
+def prob_to_color(p):
+    if p is None:  return (0, 0, 0)
+    if p &lt; 20:     return (0, 30, 5)     # 맑음 - 연초록
+    if p &lt; 50:     return (30, 25, 0)    # 흐림 - 노랑
+    if p &lt; 80:     return (0, 10, 40)    # 비 가능 - 파랑
+    return (15, 0, 40)                   # 비 확실 - 보라
+
+
+def show(probs):
+    for i, hour in enumerate(HOURS):
+        p = probs[hour]
+        np[i] = prob_to_color(p)
+        print(&quot;LED %d = %2d시 → %s%%&quot; % (i, hour, p))
+    np.write()
+
+
+# 10분마다 새 예보를 받아 LED를 갱신
+ip = connect_wifi()
+if ip:
+    while True:
+        try:
+            show(get_rain_probs())
+        except Exception as e:
+            print(&quot;오류:&quot;, e)
+        time.sleep(600)</code></pre></div></details><div class="callout tip"><div class="callout-head">💡 더 짧게 쓰고 싶다면 — requests 버전 (설치 1회)</div><div class="callout-body">위 무설치 버전이 기본이에요. 만약 <code>requests</code>를 설치할 수 있는 환경이라면, HTTP 부분을 훨씬 짧게 쓸 수 있습니다. Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 한 번 설치(피코가 와이파이 연결된 상태)한 뒤 아래 버전을 쓰세요. 동작은 똑같습니다.</div></div><details class="codefold"><summary>대안 · 날씨 시계 (requests 설치 버전) <span class="fold-hint">· 76줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">대안 · 날씨 시계 (requests 설치 버전)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보를 10개 LED에 담는 &#x27;날씨 시계&#x27; ===
+# 6시~23시를 10칸으로 나눠, 각 칸의 색으로 강수확률을 보여 줍니다.
+#   맑음(연초록) → 흐림(노랑) → 비 가능(파랑) → 비 확실(보라)
+import network, time
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+try:
+    import requests
+except ImportError:
+    import urequests as requests
+
+LAT = 37.5665      # 우리 지역 위도
+LON = 126.9780     # 우리 지역 경도
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+
+# 6시~23시를 LED 칸 수만큼 고르게 나눈 대표 시각 (NUM만 바꾸면 자동 적용)
+HOURS = [round(6 + i * (23 - 6) / (NUM - 1)) for i in range(NUM)]
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+def get_rain_probs():
+    url = (&quot;https://api.open-meteo.com/v1/forecast&quot;
+           &quot;?latitude=%s&amp;longitude=%s&quot;
+           &quot;&amp;hourly=precipitation_probability&quot;
+           &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    res = requests.get(url)
+    data = res.json()
+    res.close()
+    return data[&quot;hourly&quot;][&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+
+
+def prob_to_color(p):
+    if p is None:  return (0, 0, 0)
+    if p &lt; 20:     return (0, 30, 5)     # 맑음 - 연초록
+    if p &lt; 50:     return (30, 25, 0)    # 흐림 - 노랑
+    if p &lt; 80:     return (0, 10, 40)    # 비 가능 - 파랑
+    return (15, 0, 40)                   # 비 확실 - 보라
+
+
+def show(probs):
+    for i, hour in enumerate(HOURS):
+        p = probs[hour]
+        np[i] = prob_to_color(p)
+        print(&quot;LED %d = %2d시 → %s%%&quot; % (i, hour, p))
+    np.write()
+
+
+# 10분마다 새 예보를 받아 LED를 갱신
+ip = connect_wifi()
+if ip:
+    while True:
+        try:
+            show(get_rain_probs())
+        except Exception as e:
+            print(&quot;오류:&quot;, e)
+        time.sleep(600)</code></pre></div></details><p class="step-head"><b>Step 4.</b> 이번엔 여기에 <b>웹 대시보드를 더해</b> 봐요. ①→②에 이어 붙이는 <b>③ 개선 프롬프트</b>입니다. (교재를 모르는 AI도 바로 작업할 수 있게, 필요한 정보가 모두 들어 있어요.)</p><div class="block prompt-block improve-block"><div class="block-head"><span class="prompt-ico">✨</span><span class="block-label">③ 프롬프트 개선 — 웹 대시보드 더하기 (이어서 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">방금 만든 날씨 시계에 웹 대시보드를 더해줘.
+- 피코가 외부 라이브러리 없이 작은 웹서버(80번 포트)가 되게 해줘.
+- 브라우저가 &#x27;/data&#x27; 주소에서 JSON을 주기적으로 받아 화면을 자동 갱신하게 해줘.
+- 같은 와이파이의 스마트폰에서 접속하면 6시~23시 강수확률을 막대그래프로 보여주고, 색의 의미(범례)도 함께 표시해줘.
+- LED와 웹이 같은 데이터를 쓰고, 날씨는 지금처럼 10분에 한 번만 새로 받아와줘. 피코가 버겁지 않게.
+- 위도·경도와 LED 타이밍 값은 그대로 코드 맨 위에 두고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩의 핵심</div><div class="callout-body">AI가 준 코드를 <b>그대로 믿지 말고</b>, ① timing 인자가 들어 있는지 ② 내 위도·경도를 쓰는지 ③ 너무 자주 API를 부르지 않는지 확인하세요. ‘동작을 우리말로 설명 → 받은 코드를 내 기준으로 점검’이 바이브코딩의 리듬입니다.</div></div><p class="step-head"><b>Step 5.</b> 직접 설명하지 않아도, 아래 <b>완성형 대시보드</b>를 바로 써도 됩니다. LED를 켜면서 동시에 웹서버가 되어, 스마트폰/PC로 접속하면 <b>피코 10칸과 똑같은 색의 칸 · 색의 뜻(범례) · 시간별 강수확률 막대</b>를 보여 줍니다. (무설치 · main.py로 저장)</p><details class="codefold"><summary>전체 코드 · 날씨 LED + 웹 대시보드 (main.py) <span class="fold-hint">· 257줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">전체 코드 · 날씨 LED + 웹 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># === 오늘의 비 예보: 10개 LED + 웹 대시보드 (설치 불필요) ===
+# 피코가 LED 날씨 시계이면서 동시에 웹서버가 됩니다.
+# 같은 와이파이의 스마트폰/PC에서 접속하면:
+#   · 피코 10칸 LED와 똑같은 색의 칸 (이 시각에 비가 오는지)
+#   · 색이 무슨 뜻인지 알려 주는 범례
+#   · 6시~23시 시간별 강수확률 막대그래프
+import network, socket, ssl, json, time, gc
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import WIFI_SSID as SSID, WIFI_PASSWORD as PASSWORD
+
+LAT = 37.5665       # 우리 지역 위도 (바꾸세요)
+LON = 126.9780      # 우리 지역 경도
+HOST = &quot;api.open-meteo.com&quot;
+REFRESH = 600       # 날씨 갱신 주기(초). 600 = 10분
+
+TIMING = (280, 515, 515, 745)
+NUM = 10
+np = NeoPixel(Pin(16), NUM, timing=TIMING)
+HOURS = [round(6 + i * (23 - 6) / (NUM - 1)) for i in range(NUM)]
+
+# 강수확률 단계 → LED 색(rgb). 웹 범례 색·의미와 똑같이 맞춰 둡니다.
+#   0~20 맑음(연초록) · 20~50 흐림(노랑) · 50~80 비 가능(파랑) · 80~ 비 확실(보라)
+LEVELS = [(20, (0, 30, 5)), (50, (30, 25, 0)), (80, (0, 10, 40)), (101, (15, 0, 40))]
+
+state = {&quot;probs&quot;: [None] * 24, &quot;date&quot;: &quot;&quot;, &quot;fetched&quot;: None}
+
+
+def level_index(p):
+    p = p if p is not None else 0
+    for i, (thr, _rgb) in enumerate(LEVELS):
+        if p &lt; thr:
+            return i
+    return len(LEVELS) - 1
+
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+    print(&quot;Wi-Fi 연결 중&quot;, end=&quot;&quot;)
+    timeout = 20
+    while not wlan.isconnected() and timeout &gt; 0:
+        print(&quot;.&quot;, end=&quot;&quot;); time.sleep(0.5); timeout -= 1
+    if wlan.isconnected():
+        ip = wlan.ifconfig()[0]
+        print(&quot;\n✅ 연결 완료!  IP:&quot;, ip)
+        return ip
+    print(&quot;\n❌ Wi-Fi 연결 실패&quot;)
+    return None
+
+
+def http_get_json(host, path):
+    gc.collect()
+    addr = socket.getaddrinfo(host, 443)[0][-1]
+    s = socket.socket()
+    s.connect(addr)
+    try:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        ctx.verify_mode = ssl.CERT_NONE          # 피코엔 인증서 목록이 없어 검증 생략
+        s = ctx.wrap_socket(s, server_hostname=host)
+    except AttributeError:                       # 옛 펌웨어 호환
+        s = ssl.wrap_socket(s, server_hostname=host)
+    s.write((&quot;GET %s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n&quot;
+             % (path, host)).encode())
+    buf = b&quot;&quot;
+    while True:
+        chunk = s.read(512)
+        if not chunk:
+            break
+        buf += chunk
+    s.close()
+    return json.loads(buf.split(b&quot;\r\n\r\n&quot;, 1)[1])
+
+
+def refresh():
+    path = (&quot;/v1/forecast?latitude=%s&amp;longitude=%s&quot;
+            &quot;&amp;hourly=precipitation_probability&quot;
+            &quot;&amp;timezone=Asia%%2FSeoul&amp;forecast_days=1&quot; % (LAT, LON))
+    hourly = http_get_json(HOST, path)[&quot;hourly&quot;]
+    state[&quot;probs&quot;] = hourly[&quot;precipitation_probability&quot;]   # 24개 (0~23시)
+    state[&quot;date&quot;] = hourly[&quot;time&quot;][0][:10]                 # &quot;YYYY-MM-DD&quot;
+    state[&quot;fetched&quot;] = time.ticks_ms()
+    for i, h in enumerate(HOURS):                          # LED 갱신
+        np[i] = LEVELS[level_index(state[&quot;probs&quot;][h])][1]
+    np.write()
+    print(&quot;날씨 갱신:&quot;, state[&quot;date&quot;])
+
+
+def refresh_if_due():
+    if (state[&quot;fetched&quot;] is None or
+            time.ticks_diff(time.ticks_ms(), state[&quot;fetched&quot;]) &gt; REFRESH * 1000):
+        try:
+            refresh()
+        except Exception as e:
+            print(&quot;갱신 오류:&quot;, e)
+
+
+def data_json():
+    p = state[&quot;probs&quot;]
+    ago = 0 if state[&quot;fetched&quot;] is None else \
+        time.ticks_diff(time.ticks_ms(), state[&quot;fetched&quot;]) // 1000
+    leds = [{&quot;h&quot;: h, &quot;p&quot;: p[h], &quot;lv&quot;: level_index(p[h])} for h in HOURS]
+    hourly = [{&quot;h&quot;: h, &quot;p&quot;: p[h], &quot;lv&quot;: level_index(p[h])} for h in range(6, 24)]
+    return json.dumps({&quot;date&quot;: state[&quot;date&quot;], &quot;ago&quot;: ago,
+                       &quot;leds&quot;: leds, &quot;hourly&quot;: hourly})
+
+
+HTML = b&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;오늘의 비 예보 · LED 날씨 시계&lt;/title&gt;
+&lt;style&gt;
+  :root{ --bg:#0b1020; --panel:#161c30; --line:#26304d; --text:#e8edf7; --muted:#8b93ab; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--bg); color:var(--text); padding:22px 14px; min-height:100vh;
+        font-family:&#x27;Noto Sans KR&#x27;,system-ui,-apple-system,sans-serif; }
+  .wrap{ max-width:760px; margin:0 auto; }
+  header{ text-align:center; margin-bottom:18px; }
+  h1{ font-size:clamp(18px,4.5vw,26px); }
+  .sub{ color:var(--muted); font-size:13px; margin-top:7px; }
+  .card{ background:var(--panel); border:1px solid var(--line);
+         border-radius:16px; padding:18px; margin:14px 0; }
+  .h2{ font-size:12px; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
+  .leds{ display:grid; grid-template-columns:repeat(10,1fr); gap:7px; }
+  .led{ text-align:center; }
+  .dot{ height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.08);
+        box-shadow:0 0 14px var(--g,transparent); transition:.5s; }
+  .led .hr{ font-size:11px; color:var(--muted); margin-top:7px; }
+  .led .pp{ font-size:12px; font-weight:700; margin-top:2px; }
+  .legend{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .lg{ display:flex; align-items:center; gap:10px; font-size:13px; }
+  .sw{ width:22px; height:22px; border-radius:6px; flex:0 0 22px; }
+  .lg .r{ color:var(--muted); font-size:11px; }
+  .bars{ display:flex; align-items:flex-end; gap:4px; height:130px; }
+  .bar{ flex:1; display:flex; flex-direction:column; justify-content:flex-end;
+        align-items:center; height:100%; }
+  .bar .b{ width:100%; border-radius:4px 4px 0 0; transition:.5s; min-height:2px; }
+  .bar .t{ font-size:9px; color:var(--muted); margin-top:5px; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+  &lt;header&gt;
+    &lt;h1&gt;🌧️ 오늘의 비 예보 · LED 날씨 시계&lt;/h1&gt;
+    &lt;div class=&quot;sub&quot; id=&quot;sub&quot;&gt;불러오는 중…&lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;LED 바 — 피코의 10칸과 똑같은 색&lt;/div&gt;
+    &lt;div class=&quot;leds&quot; id=&quot;leds&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;색이 뜻하는 것&lt;/div&gt;
+    &lt;div class=&quot;legend&quot; id=&quot;legend&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;h2&quot;&gt;시간별 강수확률 (6시 → 23시)&lt;/div&gt;
+    &lt;div class=&quot;bars&quot; id=&quot;bars&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// 웹 범례 — 피코 LEVELS와 같은 의미/순서
+const LV = [
+  { n:&#x27;맑음&#x27;,    c:&#x27;#22c55e&#x27;, r:&#x27;0–20%&#x27;  },
+  { n:&#x27;흐림&#x27;,    c:&#x27;#eab308&#x27;, r:&#x27;20–50%&#x27; },
+  { n:&#x27;비 가능&#x27;, c:&#x27;#3b82f6&#x27;, r:&#x27;50–80%&#x27; },
+  { n:&#x27;비 확실&#x27;, c:&#x27;#8b5cf6&#x27;, r:&#x27;80–100%&#x27;}
+];
+
+document.getElementById(&#x27;legend&#x27;).innerHTML = LV.map(l =&gt;
+  `&lt;div class=&quot;lg&quot;&gt;&lt;span class=&quot;sw&quot; style=&quot;background:${l.c}&quot;&gt;&lt;/span&gt;
+   &lt;div&gt;&lt;div&gt;${l.n}&lt;/div&gt;&lt;div class=&quot;r&quot;&gt;강수확률 ${l.r}&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+
+const pct = p =&gt; (p == null ? &#x27;-&#x27; : p + &#x27;%&#x27;);
+
+async function load(){
+  try{
+    const j = await (await fetch(&#x27;/data&#x27;)).json();
+    document.getElementById(&#x27;sub&#x27;).textContent =
+      `${j.date} 예보 · ${j.ago}초 전 갱신 · 10분마다 자동 갱신`;
+    document.getElementById(&#x27;leds&#x27;).innerHTML = j.leds.map(d =&gt; {
+      const c = LV[d.lv].c;
+      return `&lt;div class=&quot;led&quot;&gt;
+                &lt;div class=&quot;dot&quot; style=&quot;background:${c}; --g:${c}&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;hr&quot;&gt;${d.h}시&lt;/div&gt;
+                &lt;div class=&quot;pp&quot; style=&quot;color:${c}&quot;&gt;${pct(d.p)}&lt;/div&gt;
+              &lt;/div&gt;`;
+    }).join(&#x27;&#x27;);
+    document.getElementById(&#x27;bars&#x27;).innerHTML = j.hourly.map(d =&gt; {
+      const c = LV[d.lv].c;
+      const h = (d.p == null ? 2 : Math.max(2, d.p));
+      return `&lt;div class=&quot;bar&quot; title=&quot;${d.h}시 ${pct(d.p)}&quot;&gt;
+                &lt;div class=&quot;b&quot; style=&quot;height:${h}%; background:${c}&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;t&quot;&gt;${d.h}&lt;/div&gt;
+              &lt;/div&gt;`;
+    }).join(&#x27;&#x27;);
+  }catch(e){
+    document.getElementById(&#x27;sub&#x27;).textContent = &#x27;응답 없음 — 다시 시도 중…&#x27;;
+  }
+}
+load();
+setInterval(load, 30000);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;&quot;&quot;&quot;
+
+
+def send_response(conn, status, content_type, body):
+    header = (&quot;HTTP/1.1 %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n&quot;
+              &quot;Access-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n&quot;
+              % (status, content_type, len(body))).encode()
+    conn.sendall(header + body)
+
+
+def run_server():
+    addr = socket.getaddrinfo(&quot;0.0.0.0&quot;, 80)[0][-1]
+    srv = socket.socket()
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(addr)
+    srv.listen(3)
+    srv.settimeout(REFRESH)        # 방문자가 없어도 주기적으로 깨어나 날씨를 갱신
+    print(&quot;대시보드 열림 — 위 주소로 접속하세요 (Ctrl+C로 종료)&quot;)
+    while True:
+        refresh_if_due()
+        try:
+            conn, _ = srv.accept()
+        except OSError:            # accept 타임아웃 → 위로 올라가 날씨 갱신
+            continue
+        conn.settimeout(10)        # 받은 연결은 블로킹으로! (서버 타임아웃이 상속되면 요청을 못 읽어 페이지가 안 열림)
+        try:
+            req = conn.recv(512).decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+            if &quot;GET /data&quot; in req:
+                send_response(conn, &quot;200 OK&quot;, &quot;application/json&quot;, data_json().encode())
+            else:
+                send_response(conn, &quot;200 OK&quot;, &quot;text/html; charset=utf-8&quot;, HTML)
+        except Exception as e:
+            code = e.args[0] if e.args else None
+            tip = {104: &quot;브라우저가 연결을 먼저 끊음 (정상, 무시 OK)&quot;,
+                   32:  &quot;응답 도중 연결이 끊김 (정상)&quot;,
+                   110: &quot;응답 대기 시간 초과&quot;,
+                   11:  &quot;데이터가 아직 안 옴 (일시적)&quot;}.get(code)
+            print(&quot;요청 처리:&quot;, (&quot;[%s] %s&quot; % (code, tip)) if tip else (&quot;오류 &quot; + str(e)))
+        finally:
+            conn.close()
+
+
+ip = connect_wifi()
+if ip:
+    refresh()
+    print(&quot;대시보드 주소:  http://%s&quot; % ip)
+    run_server()</code></pre></div></details><div class="callout key"><div class="callout-head">🔑 대시보드 읽는 법 — 색이 곧 비 예보</div><div class="callout-body">화면의 10칸은 피코 LED와 1:1로 같아요. 칸 위 시각(6시·8시…)과 색을 보면 <b>‘이 시각에 비가 오는구나’</b>를 알 수 있습니다.<br>🟩 <b>맑음</b> 0–20% · 🟨 <b>흐림</b> 20–50% · 🟦 <b>비 가능</b> 50–80% · 🟪 <b>비 확실</b> 80–100%.<br>아래 막대그래프는 6시~23시 전체 흐름이라, 파랑·보라가 모이는 구간이 ‘비 오는 시간대’입니다. 임계값(20·50·80)이나 색은 코드 맨 위 <code>LEVELS</code>에서 바꾸면 LED·웹이 함께 바뀝니다.</div></div></section><section class="sec" id="ch5-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ImportError: no module named &#x27;requests&#x27;</div><div class="m-row"><span class="m-tag">원인</span><b>requests 설치 버전</b>을 쓰는데 모듈이 없음.</div><div class="m-row"><span class="m-tag fix">해결</span>기본(무설치) 버전을 쓰면 이 오류가 안 납니다. 굳이 requests 버전을 쓰려면 Thonny <b>도구 → 패키지 관리</b>에서 <code>requests</code>를 와이파이 연결 후 설치하세요.</div></div><div class="mistake"><div class="m-sym">❌ ssl/연결 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>TLS 연결이 일시적으로 실패하거나 메모리 부족.</div><div class="m-row"><span class="m-tag fix">해결</span>다시 실행해 보세요. 코드는 매 요청 전 <code>gc.collect()</code>로 메모리를 정리하고, 인증서 검증은 생략(<code>CERT_NONE</code>)합니다. 자주 끊기면 갱신 간격을 늘리세요.</div></div><div class="mistake"><div class="m-sym">❌ 위도·경도를 바꿨는데 엉뚱한 지역</div><div class="m-row"><span class="m-tag">원인</span>위도(LAT)와 경도(LON)를 바꿔 넣음.</div><div class="m-row"><span class="m-tag fix">해결</span>한국 기준 위도는 33~38, 경도는 124~132 범위예요. 둘이 바뀌면 바다 한가운데가 됩니다.</div></div><div class="mistake"><div class="m-sym">❌ 메모리 오류로 멈춤</div><div class="m-row"><span class="m-tag">원인</span>HTTPS 응답이 큰데 자주 부름.</div><div class="m-row"><span class="m-tag fix">해결</span>필요한 항목(precipitation_probability)만 요청하고, 갱신 간격을 10분(600초) 이상으로 두세요. 위 코드는 이미 그렇게 했습니다.</div></div><div class="mistake"><div class="m-sym">❌ 대시보드 주소가 안 열림</div><div class="m-row"><span class="m-tag">원인</span>스마트폰이 피코와 다른 와이파이이거나 <code>https</code>로 접속.</div><div class="m-row"><span class="m-tag fix">해결</span>셸에 찍힌 주소를 <b><code>http://</code></b>(s 없이)로, 피코와 <b>같은 와이파이</b>에서 여세요. LED는 떠도 화면이 안 뜨면 갱신을 기다리거나 페이지를 새로고침하세요.</div></div></div></section><section class="sec" id="ch5-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>Open-Meteo는 API 키가 필요한가요?</summary><div class="qa-a">아니요. 무료이고 키 없이 위도·경도만으로 씁니다.</div></details><details class="qa"><summary>강수확률 24개 중 6시 값은 어떻게 꺼내나요?</summary><div class="qa-a"><code>probs[6]</code>. 리스트 인덱스가 곧 시각(0~23시)입니다.</div></details><details class="qa"><summary>왜 10분마다만 새로 받아오나요?</summary><div class="qa-a">날씨는 자주 안 바뀌고, 너무 자주 요청하면 피코 메모리·네트워크에 부담이 되기 때문입니다.</div></details></div></section><section class="sec" id="ch5-4"><h3 class="sec-title">Open-Meteo 자세히 알기</h3><p class="prose"><b>Open-Meteo</b>는 독일의 비영리 프로젝트로, 여러 나라 기상청의 공개 수치예보 모델을 모아 누구나 쓰도록 공개합니다. <b>API 키도, 회원가입도 필요 없고</b>, 비상업·교육용은 자유롭게 쓸 수 있어요. 주소(URL) 하나에 ‘어디(위도·경도)·무엇(변수)·언제(기간)’를 적어 보내면, 그 자리에서 JSON으로 답을 줍니다.</p><div class="concept-grid"><div class="concept"><div class="concept-t">여러 종류의 API</div><div class="concept-d"><b>forecast</b>(예보) · <b>archive</b>(1940년~ 과거 데이터) · <b>air-quality</b>(대기질) · <b>marine</b>(파고·해양) · <b>elevation</b>(고도). 주소의 앞부분만 바꾸면 됩니다.</div></div><div class="concept"><div class="concept-t">고를 수 있는 변수</div><div class="concept-d">기온 <code>temperature_2m</code> · 습도 <code>relative_humidity_2m</code> · 강수확률 <code>precipitation_probability</code> · 풍속 <code>windspeed_10m</code> · 기압 <code>surface_pressure</code> · 자외선 <code>uv_index</code> · 일사량 <code>shortwave_radiation</code></div></div><div class="concept"><div class="concept-t">응답(JSON) 구조</div><div class="concept-d"><code>hourly.time</code>(시각 배열)과 <code>hourly.기온</code>(값 배열)이 <b>같은 순서로 짝</b>을 이룹니다. 그래서 <code>값[6]</code>이 곧 그 날 6시 값이에요.</div></div><div class="concept"><div class="concept-t">기간 고르기</div><div class="concept-d"><code>forecast_days=1</code>(오늘) · <code>past_days=7</code>(지난 일주일) · archive는 <code>start_date</code>/<code>end_date</code>로 특정 기간.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — ‘강수확률 60%’가 실제로 뜻하는 것</summary><div class="dig-body">강수확률(POP, Probability of Precipitation)은 <b>그 시간·그 지역에 0.1mm 이상의 비가 내릴 통계적 확률</b>입니다. 비의 ‘양’이나 ‘세기’가 아니라 ‘올지 안 올지의 가능성’이에요.<br><br>흔한 오해 두 가지:<br>· ‘60%’는 <b>‘하늘의 60%에 비가 온다’</b>는 뜻이 아니에요.<br>· ‘비가 60% 세기로 온다’는 뜻도 아니에요.<br><br>예보 모델이 같은 조건을 여러 번 시뮬레이션했을 때 <b>10번 중 6번꼴로 비가 내렸다</b>는 의미에 가깝습니다. 그래서 강수확률이 높아도 실제로 안 올 수 있고, 낮아도 소나기가 올 수 있어요. 수업에서 ‘확률’과 ‘실제 관측’의 차이를 이야기하기 좋은 소재입니다.</div></details><div class="callout tip"><div class="callout-head">💡 변수 바꾸는 법 — 주소의 hourly= 뒤만 고치면 끝</div><div class="callout-body">앞서 만든 코드에서 요청 주소의 <code>hourly=</code> 뒤만 바꾸면 다른 데이터를 받습니다.<br>· 기온: <code>...&hourly=temperature_2m</code><br>· 자외선 지수: <code>...&hourly=uv_index</code><br>· 일사량(태양광): <code>...&hourly=shortwave_radiation</code><br>여러 개를 쉼표로: <code>...&hourly=temperature_2m,relative_humidity_2m</code><br>과거 데이터는 주소를 <code>https://archive-api.open-meteo.com/v1/archive</code> 로 바꾸고 <code>&start_date=2015-06-01&end_date=2015-06-30</code> 처럼.</div></div><div class="idea-grid"><div class="idea"><div class="idea-t">📈 하루 기온 곡선</div><div class="idea-d">기온을 받아 24시간 그래프 → 일교차·최고/최저 시각 찾기 (지구과학)</div></div><div class="idea"><div class="idea-t">🌡️ 기후변화 비교</div><div class="idea-d">archive로 ‘10년 전 6월’과 ‘올해 6월’ 평균기온 비교 (환경·기후)</div></div><div class="idea"><div class="idea-t">☀️ 자외선 경보등</div><div class="idea-d">uv_index가 높으면 LED 빨강 → 자외선 차단 알림 (보건·물리)</div></div><div class="idea"><div class="idea-t">🔆 태양광 발전 추정</div><div class="idea-d">shortwave_radiation(일사량)으로 발전량 어림 (에너지·물리)</div></div></div><a class="linkbtn" href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">🔗 open-meteo.com/en/docs — 변수·파라미터 전체 문서</a></section><section class="sec" id="ch5-5"><h3 class="sec-title">과학 수업에 쓸 만한 다른 오픈 API</h3><p class="prose">Open-Meteo 말고도 <b>무료에 대부분 키가 필요 없는</b> 과학 데이터 API가 많아요 — 지진·ISS·일출몰·물질(화학)·생물 등. 과목별로 <b>어떤 데이터를 주고 무엇을 탐구할 수 있는지</b>를 <b>부록 A</b>에 한눈에 정리했고, 브라우저에서 바로 받아 그려 보는 <b>라이브 대시보드(지도·그래프)</b>로도 만들어 뒀습니다(국내 적용 여부도 표시). 키 없이 동작하는 것만 골랐고, 2026년 기준 응답을 확인했어요.</p><a class="linkbtn" href="../dashboards/index.html" target="_blank" rel="noopener">🔗 오픈 API 라이브 대시보드 갤러리 열기 (10종 · 5장 날씨 포함)</a><div class="callout key"><div class="callout-head">🔑 🇰🇷 국내 공식 데이터가 필요하면 — 공공데이터포털</div><div class="callout-body">‘우리나라 공식 수치’가 필요한 수업(국내 지진·미세먼지·동네예보)이라면 <a class="ilink" href="https://www.data.go.kr" target="_blank" rel="noopener"><b>공공데이터포털(data.go.kr)</b></a>에서 무료 인증키를 받아 쓰세요. 글로벌 API보다 국내 정확도가 높습니다.<br>· <b>기상청 동네예보·지진통보</b> (data.go.kr) — 국내 공식 기상·지진<br>· <a class="ilink" href="https://www.airkorea.or.kr" target="_blank" rel="noopener"><b>에어코리아(한국환경공단) 미세먼지</b></a> — 측정소별 실시간 PM2.5/PM10<br><span style='color:#a55'>※ 회원가입 + 서비스키 신청이 필요하고 응답 형식(XML/JSON)이 제각각이라, 초보 단계에선 키 없는 글로벌 API로 원리를 익힌 뒤 넘어오길 권합니다.</span></div></div><div class="callout info"><div class="callout-head">ℹ️ 피코로 가져올 때 한 가지</div><div class="callout-body">대부분 <b>https + JSON</b>이라, 이 장의 <code>http_get_json()</code>(소켓+ssl) 함수를 그대로 써서 받을 수 있어요. 다만 응답이 큰 API(지진 전체 목록, NASA 이미지 등)는 피코 메모리에 부담이 될 수 있으니, <b>필요한 항목만 요청</b>하거나 수업에서는 컴퓨터(파이썬·브라우저)로 보여 주는 방법도 좋습니다.</div></div></section></div><nav class="pager"><a class="prev" href="ch4.html"><span class="dir">← 이전</span><span class="tt">04. 우리반 공기질, 실시간으로 확인하기 (LED)</span></a><a class="next" href="ch6.html"><span class="dir">다음 →</span><span class="tt">06. 자유 프로젝트</span></a></nav>
+    <footer>
+      라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
+    </footer>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백 (둘 다 처리)
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
+document.querySelectorAll('.block').forEach(block=>{
+  const btn=block.querySelector('.copy-btn'); if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const code=block.querySelector('code');
+    const body=block.querySelector('.prompt-body');
+    const text=code?code.textContent:(body?body.textContent:'');
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
+  });
+});
+// 목차 드로어 (모든 화면 폭에서 동일하게 동작)
+const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
+function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
+mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
+scrim.addEventListener('click',()=>toggle(false));
+sb.addEventListener('click',e=>{if(e.target.closest('a'))toggle(false);});
+const secs=[...document.querySelectorAll('.sec, .chapter')];
+const links=new Map();
+document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.nav-sec.active').forEach(x=>x.classList.remove('active'));
+    const l=links.get(e.target.id); if(l&&l.classList.contains('nav-sec'))l.classList.add('active');
+  }});
+},{rootMargin:'-10% 0px -80% 0px',threshold:0});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
