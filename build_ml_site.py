@@ -8,12 +8,13 @@ import os, shutil, sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# build_site.py 소스에서 '마지막 index.html 쓰기' 블록만 떼고 실행 → 부작용 없음
+# build_site.py 소스에서 '파일 쓰기' 블록(BUILD_MARKER 이하)만 떼고 실행 → 부작용 없음
 src = open(os.path.join(ROOT, "build_site.py"), encoding="utf-8").read()
-src = src.split('\nwith open(os.path.join(BASE, "index.html")')[0]
+src = src.split('# === BUILD_MARKER')[0]
 ns = {"__file__": os.path.join(ROOT, "build_site.py"), "__name__": "build_site_lib"}
 exec(compile(src, os.path.join(ROOT, "build_site.py"), "exec"), ns)
 render_item, esc, TEMPLATE = ns["render_item"], ns["esc"], ns["TEMPLATE"]
+HERO_HTML = ns["HERO_HTML"]
 
 sys.path.insert(0, os.path.join(ROOT, "sound_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "mp3_lesson"))
@@ -53,8 +54,11 @@ for c in CHS:
 ncode = sum(1 for c in CHS for s in c["sections"] for it in s["items"] if it.get("type") == "code")
 nprompt = sum(1 for c in CHS for s in c["sections"] for it in s["items"] if it.get("type") == "prompt")
 
-out = (TEMPLATE.replace("/*NAV*/", "".join(nav_all)).replace("/*MAIN*/", "".join(main_all))
-       .replace("/*NCODE*/", str(ncode)).replace("/*NPROMPT*/", str(nprompt)).replace("/*NCH*/", str(len(CHS))))
+# 히어로를 먼저 주입한 뒤 NCH/NCODE/NPROMPT를 치환해야 히어로 안 플레이스홀더까지 채워진다
+out = (TEMPLATE.replace("/*NAV*/", "".join(nav_all))
+       .replace("/*HERO*/", HERO_HTML)
+       .replace("/*MAIN*/", "".join(main_all)))
+out = (out.replace("/*NCODE*/", str(ncode)).replace("/*NPROMPT*/", str(nprompt)).replace("/*NCH*/", str(len(CHS))))
 
 # ── ML 확장판 브랜딩 (메인 책 표지/제목을 별도 사이트용으로 교체) ──
 BRAND = [
@@ -65,9 +69,12 @@ BRAND = [
   # 드로어 브랜드 (TEMPLATE의 .drawer 안)
   ('<div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>',
    '<div class="brand"><span class="brand-emoji">🐣🔊</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>머신러닝 확장판 · 소리편 (분류 → 음성출력)</small></div>'),
-  # 상단바 브랜드 이모지 (본편 🐣🔌 → 확장판 🐣🔊)
-  ('<a class="brand" href="#top"><span class="brand-emoji">🐣🔌</span>',
-   '<a class="brand" href="#top"><span class="brand-emoji">🐣🔊</span>'),
+  # 상단바 브랜드 이모지 (본편 🐣🔌 → 확장판 🐣🔊) — href는 ml_site 자기 자신이라 그대로 둔다
+  ('<a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span>',
+   '<a class="brand" href="index.html"><span class="brand-emoji">🐣🔊</span>'),
+  # 상단바 모드 링크 자리 → 본편으로 가는 링크
+  ('<!--MODELINK-->',
+   '<a class="home" href="../">본편 ↗</a>'),
   # 히어로의 확장판 CTA → ml_site 안에서는 '본편으로 돌아가기' 카드로 교체
   ('''<a class="ml-cta" href="ml_site/">
         <span class="ml-cta-emoji">🔊🧠</span>

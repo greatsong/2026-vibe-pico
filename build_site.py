@@ -863,6 +863,28 @@ CHAPTERS = [
 CHAPTERS[0]["extra"] = ""   # FW_CARD는 0.4 섹션 안에 배치
 
 # ===================================================================
+#  히어로 (허브 index.html 전용) — build_ml_site.py의 BRAND 치환이
+#  이 문자열과 정확히 일치해야 하므로 내용은 수정 금지
+# ===================================================================
+HERO_HTML = r'''<header class="hero" id="top">
+      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
+      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
+      <div class="under"></div>
+      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
+      <div class="stats">
+        <div class="stat"><b>/*NCH*/</b>개 챕터</div>
+        <div class="stat"><b>/*NCODE*/</b>개 코드 블록</div>
+        <div class="stat"><b>/*NPROMPT*/</b>개 AI 프롬프트</div>
+      </div>
+      <a class="ml-cta" href="ml_site/">
+        <span class="ml-cta-emoji">🔊🧠</span>
+        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
+        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
+        <span class="ml-cta-go">확장판 열기 →</span>
+      </a>
+    </header>'''
+
+# ===================================================================
 #  렌더러
 # ===================================================================
 n_code = 0
@@ -964,54 +986,123 @@ def render_item(it, accent):
                 f'<div class="prompt-body">{esc(it["text"])}</div></div>')
     return ""
 
-def render(teacher=False):
-    """teacher=True면 강사노트 포함(teacher.html), False면 학생용(index.html)."""
-    global n_code, n_prompt, TEACHER
-    n_code, n_prompt, TEACHER = 0, 0, teacher
-    nav, main = [], []
+BASE_TITLE = "데이터로 탐구하는 피코 바이브 피지컬 코딩"
+
+def nav_html():
+    """드로어 목차 — 모든 페이지 공용. 챕터별 파일(ch0.html…)로 링크한다."""
+    nav = []
     for c in CHAPTERS:
-        nav.append(f'<div class="nav-ch"><a href="#{c["id"]}" class="nav-ch-link" '
+        nav.append(f'<div class="nav-ch"><a href="{c["id"]}.html" class="nav-ch-link" '
                    f'data-target="{c["id"]}"><span class="nav-dot"></span>'
                    f'{esc(c["num"])}. {esc(c["title"])}</a>'
                    f'<div class="nav-secs">')
-        sec_html = []
         for si, s in enumerate(c["sections"]):
             sid = f'{c["id"]}-{si}'
-            nav.append(f'<a href="#{sid}" class="nav-sec" data-target="{sid}">{esc(s["title"])}</a>')
-            items_html = "".join(render_item(it, c["accent"]) for it in s["items"])
-            sec_html.append(f'<section class="sec" id="{sid}">'
-                            f'<h3 class="sec-title">{esc(s["title"])}</h3>{items_html}</section>')
+            nav.append(f'<a href="{c["id"]}.html#{sid}" class="nav-sec" data-target="{sid}">{esc(s["title"])}</a>')
         nav.append('</div></div>')
+    return "".join(nav)
 
-        # 챕터 인트로 (목표 + 왜 배우나요)
-        goals = "".join(f'<li>{g}</li>' for g in c.get("goals", []))
-        intro = ''
-        if goals:
-            intro += f'<div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul>{goals}</ul></div>'
-        if c.get("why"):
-            intro += f'<div class="why"><div class="why-t">💡 왜 배우나요?</div><p>{c["why"]}</p></div>'
-
-        main.append(
-            f'<div class="chapter" id="{c["id"]}">'
+def chapter_main(c):
+    """한 챕터의 본문 HTML (챕터 페이지용)."""
+    sec_html = []
+    for si, s in enumerate(c["sections"]):
+        sid = f'{c["id"]}-{si}'
+        items_html = "".join(render_item(it, c.get("accent", "")) for it in s["items"])
+        sec_html.append(f'<section class="sec" id="{sid}">'
+                        f'<h3 class="sec-title">{esc(s["title"])}</h3>{items_html}</section>')
+    goals = "".join(f'<li>{g}</li>' for g in c.get("goals", []))
+    intro = ''
+    if goals:
+        intro += f'<div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul>{goals}</ul></div>'
+    if c.get("why"):
+        intro += f'<div class="why"><div class="why-t">💡 왜 배우나요?</div><p>{c["why"]}</p></div>'
+    return (f'<div class="chapter" id="{c["id"]}">'
             f'<div class="ch-head"><span class="ch-num">CHAPTER {c["num"]}</span>'
             f'<h2 class="ch-title"><span class="ch-bar"></span>{esc(c["title"])}</h2>'
             f'<p class="ch-sub">{esc(c["subtitle"])}</p></div>'
             f'{intro}{c.get("extra","")}{"".join(sec_html)}</div>')
 
+def pager_html(idx):
+    """챕터 하단 이전/다음 이동 카드."""
+    prev = CHAPTERS[idx - 1] if idx > 0 else None
+    nxt = CHAPTERS[idx + 1] if idx + 1 < len(CHAPTERS) else None
+    def card(c, cls, direction):
+        if not c:
+            return (f'<a class="{cls}" href="index.html"><span class="dir">{direction}</span>'
+                    f'<span class="tt">목차로</span></a>')
+        return (f'<a class="{cls}" href="{c["id"]}.html"><span class="dir">{direction}</span>'
+                f'<span class="tt">{esc(c["num"])}. {esc(c["title"])}</span></a>')
+    return ('<nav class="pager">'
+            + card(prev, "prev", "← 이전")
+            + card(nxt, "next", "다음 →")
+            + '</nav>')
+
+def hub_main():
+    """허브(index.html) 본문 — 히어로 + 챕터 링크카드 목차."""
+    cards = []
+    for c in CHAPTERS:
+        cards.append(f'<a class="linkcard" href="{c["id"]}.html">'
+                     f'<span class="n">CHAPTER {esc(c["num"])}</span>'
+                     f'<span class="tt">{esc(c["title"])}</span>'
+                     f'<span class="d">{esc(c.get("subtitle", ""))}</span></a>')
+    cards.append('<a class="linkcard" href="dashboards/index.html">'
+                 '<span class="n">LIVE</span>'
+                 '<span class="tt">🛰️ 오픈 API 라이브 대시보드</span>'
+                 '<span class="d">피코 없이 브라우저에서 공개 데이터를 바로 받아 그려 보는 탐구실 11종 (지진·ISS·미세먼지…)</span></a>')
+    return (f'<h2 style="font-size:1.35rem;font-weight:800;margin:6px 0 4px">📚 목차</h2>'
+            f'<p style="color:var(--text-soft);font-size:14px;margin:0 0 10px">순서대로 따라가도 되고, 필요한 장만 골라 봐도 됩니다. '
+            f'용어가 낯설면 <a class="ilink" href="apxc.html">부록 C · 용어 사전</a>부터 열어 두세요.</p>'
+            f'<div class="linkgrid">{"".join(cards)}</div>')
+
+def page(main, title, teacher=False, fname=None, hero=""):
+    """TEMPLATE에 본문을 끼워 완성된 페이지 HTML을 돌려준다."""
     out = TEMPLATE
-    out = out.replace("/*NAV*/", "".join(nav))
-    out = out.replace("/*MAIN*/", "".join(main))
-    out = out.replace("/*NCODE*/", str(n_code))
-    out = out.replace("/*NPROMPT*/", str(n_prompt))
-    out = out.replace("/*NCH*/", str(len(CHAPTERS)))
+    out = out.replace("/*NAV*/", nav_html())
+    out = out.replace("/*HERO*/", hero)
+    out = out.replace("/*MAIN*/", main)
+    out = out.replace(f'<title>{BASE_TITLE}</title>', f'<title>{title}</title>')
     if teacher:
         out = out.replace('<span class="badge">학생용</span>',
                           '<span class="badge teacher">강사용</span>')
         out = out.replace('<!--MODELINK-->',
-                          '<a class="home" href="index.html">학생용 ↗</a>')
-        out = out.replace('<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>',
-                          '<title>강사용 · 데이터로 탐구하는 피코 바이브 피지컬 코딩</title>')
+                          f'<a class="home" href="../{fname}">학생용 ↗</a>')
+        # teacher/ 하위 디렉터리 기준으로 자산·형제 사이트 경로 보정
+        for pre in ("favicon.svg", "dashboards/", "ml_site/", "firmware/"):
+            out = out.replace(f'href="{pre}', f'href="../{pre}')
+    else:
+        out = out.replace('<!--MODELINK-->',
+                          '<a class="home" href="index.html">← 목차</a>' if fname != "index.html" else '')
     return out
+
+def build(teacher=False):
+    """학생용(루트) 또는 강사용(teacher/) 사이트 한 벌을 생성한다."""
+    global n_code, n_prompt, TEACHER
+    n_code, n_prompt, TEACHER = 0, 0, teacher
+    outdir = os.path.join(BASE, "teacher") if teacher else BASE
+    os.makedirs(outdir, exist_ok=True)
+    who = "강사용" if teacher else "학생용"
+
+    # 챕터 페이지 (렌더하며 코드/프롬프트 수를 함께 센다)
+    for i, c in enumerate(CHAPTERS):
+        title = f'{c["num"]}. {c["title"]} · {BASE_TITLE}' + (' (강사용)' if teacher else '')
+        html_out = page(chapter_main(c) + pager_html(i), title,
+                        teacher=teacher, fname=f'{c["id"]}.html')
+        with open(os.path.join(outdir, f'{c["id"]}.html'), "w", encoding="utf-8") as f:
+            f.write(html_out)
+
+    # 허브 (히어로 + 링크카드 목차)
+    hero = (HERO_HTML.replace("/*NCH*/", str(len(CHAPTERS)))
+                     .replace("/*NCODE*/", str(n_code))
+                     .replace("/*NPROMPT*/", str(n_prompt)))
+    hub_title = BASE_TITLE + (' (강사용)' if teacher else '')
+    html_out = page(hub_main(), hub_title, teacher=teacher, fname="index.html", hero=hero)
+    if teacher:
+        html_out = html_out.replace('<a class="home" href="../index.html">학생용 ↗</a>',
+                                    '<a class="home" href="../">학생용 ↗</a>')
+    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(html_out)
+    print(f"생성 완료 ({who}) · 허브 + 챕터 {len(CHAPTERS)}페이지 · 코드 {n_code}개 · 프롬프트 {n_prompt}개"
+          + (" · 강사노트 포함" if teacher else ""))
 
 # ===================================================================
 #  HTML 템플릿 (CSS는 그대로 — 토큰 치환 방식)
@@ -1111,6 +1202,20 @@ a{color:inherit;text-decoration:none;}
 .ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
 .ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
 .ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap;}
+/* ---------- 링크 카드 (허브 목차) ---------- */
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+/* ---------- 하단 이동 (이전/다음) ---------- */
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:46px;}
+.pager a{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;background:#fff;transition:border-color .15s,box-shadow .15s;}
+.pager a:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.pager .dir{display:block;font-size:.72rem;color:var(--muted);font-weight:800;}
+.pager .tt{display:block;font-weight:800;}
+.pager a.next{text-align:right;}
 /* ---------- 챕터 / 섹션 ---------- */
 .chapter{padding-top:24px;scroll-margin-top:70px;}
 .ch-head{margin:34px 0 8px;}
@@ -1309,7 +1414,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 <body>
 <div class="topbar"><div class="inner">
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
-  <a class="brand" href="#top"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
   <!--MODELINK-->
   <span class="badge">학생용</span>
@@ -1321,23 +1426,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 </aside>
 <div class="wrap">
 <main class="main">
-    <header class="hero" id="top">
-      <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
-      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
-      <div class="under"></div>
-      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
-      <div class="stats">
-        <div class="stat"><b>/*NCH*/</b>개 챕터</div>
-        <div class="stat"><b>/*NCODE*/</b>개 코드 블록</div>
-        <div class="stat"><b>/*NPROMPT*/</b>개 AI 프롬프트</div>
-      </div>
-      <a class="ml-cta" href="ml_site/">
-        <span class="ml-cta-emoji">🔊🧠</span>
-        <span class="ml-cta-txt"><b>새 확장판 · 소리를 배우고 말하는 피코 (머신러닝)</b>
-        <small>마이크로 소리를 모아 k-NN으로 분류하고, LED·MP3 음성으로 말하게 만들어요. 이 책을 끝낸 다음 단계예요.</small></span>
-        <span class="ml-cta-go">확장판 열기 →</span>
-      </a>
-    </header>
+    /*HERO*/
     /*MAIN*/
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
@@ -1401,9 +1490,6 @@ secs.forEach(s=>io.observe(s));
 </body>
 </html>'''
 
-with open(os.path.join(BASE, "index.html"), "w", encoding="utf-8") as f:
-    f.write(render(teacher=False))
-print(f"생성 완료 (학생용 index.html) · 코드 {n_code}개 · 프롬프트 {n_prompt}개")
-with open(os.path.join(BASE, "teacher.html"), "w", encoding="utf-8") as f:
-    f.write(render(teacher=True))
-print(f"생성 완료 (강사용 teacher.html) · 강사노트 포함")
+# === BUILD_MARKER: 이 아래는 파일 쓰기 — build_ml_site.py는 이 마커 앞까지만 라이브러리로 재사용 ===
+build(teacher=False)
+build(teacher=True)
