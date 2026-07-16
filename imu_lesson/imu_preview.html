@@ -6,228 +6,320 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
+/* ============================================================
+   피코 바이브 피지컬 코딩 · 웹 교재 스타일
+   디자인 계열: 2026-snui 웹 교재 (따뜻한 크림·골드)
+   ============================================================ */
 :root{
-  --bg:#ffffff; --fg:#37352f; --muted:#7b7872; --line:#ededec;
-  --sidebar:#fbfbfa; --code-bg:#f7f6f3; --radius:10px;
-  --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,'D2Coding',monospace;
+  --gold:#f4b400; --accent:#e8930c;
+  --bg:#fffdf7; --card:#fff6e0;
+  --border:#f0e2bc; --border-soft:#f7edcf;
+  --text:#3a2e1a; --text-soft:#6b5836; --muted:#9a8b6a;
+  --blue:#4c8df6; --blue-ink:#2f6bd6; --blue-soft:#eef3ff;
+  --green:#54a24b; --green-soft:#eef6e8;
+  --red:#e45756; --red-soft:#fdeeee;
+  --teal:#3ba6a0; --teal-ink:#2b7a75; --teal-soft:#e9f6f5;
+  --violet:#b279a2; --violet-soft:#f8f0f5;
+  --code-bg:#2a2318; --code-text:#f0e8d6;
+  --radius:0.9rem; --radius-sm:0.7rem;
+  --shadow:0 1px 4px rgba(180,140,20,.1);
+  --shadow-lg:0 8px 24px rgba(180,140,20,.16);
+  --maxw:960px;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
+  --mono:'SFMono-Regular','D2Coding',ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;font-family:var(--font);color:var(--fg);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15.5px;}
 a{color:inherit;text-decoration:none;}
-.ilink{color:#3b47c2;text-decoration:underline;text-underline-offset:2px;font-weight:600;}
-.ilink:hover{color:#5b6cf0;}
-.layout{display:flex;max-width:1180px;margin:0 auto;}
-.sidebar{position:sticky;top:0;height:100vh;width:280px;flex:0 0 280px;overflow-y:auto;
-  background:var(--sidebar);border-right:1px solid var(--line);padding:26px 16px 60px;}
-.brand{font-weight:800;font-size:15px;padding:6px 10px 14px;letter-spacing:-.02em;}
-.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
-.nav-ch{margin-top:10px;}
-.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:7px;}
-.nav-ch-link:hover{background:#efefee;}
-.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;}
-.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--line);}
+.ilink{color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:var(--blue);}
+/* ---------- 상단 바 ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,253,247,.9);
+  backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);}
+.topbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.menu-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:13px;font-weight:800;
+  color:var(--text-soft);background:var(--card);border:1px solid var(--border);border-radius:999px;
+  padding:5px 13px;cursor:pointer;transition:.15s;white-space:nowrap;}
+.menu-btn:hover{border-color:var(--accent);color:var(--accent);}
+.topbar .brand{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;font-size:15px;min-width:0;}
+.topbar .brand .brand-emoji{font-size:17px;}
+.topbar .spacer{flex:1;}
+.topbar .badge{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--accent);white-space:nowrap;}
+.topbar .badge.teacher{border-color:#cfe0ff;background:var(--blue-soft);color:var(--blue-ink);}
+.topbar a.home{color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap;}
+.topbar a.home:hover{color:var(--text);}
+/* ---------- 목차 드로어 ---------- */
+.drawer{position:fixed;left:0;top:0;bottom:0;z-index:70;width:302px;overflow-y:auto;
+  background:var(--bg);border-right:1px solid var(--border);padding:18px 14px 60px;
+  transform:translateX(-100%);transition:transform .22s ease;}
+.drawer.open{transform:none;box-shadow:0 0 44px rgba(120,90,10,.2);}
+.drawer .brand{font-weight:800;font-size:14.5px;padding:4px 10px 12px;letter-spacing:-.02em;}
+.drawer .brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:3px;}
+.scrim{display:none;}
+.scrim.show{display:block;position:fixed;inset:0;background:rgba(58,46,26,.32);z-index:65;}
+.nav-ch{margin-top:8px;}
+.nav-ch-link{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:8px;}
+.nav-ch-link:hover{background:var(--card);}
+.nav-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;background:linear-gradient(120deg,var(--gold),var(--accent));}
+.nav-secs{display:flex;flex-direction:column;margin:2px 0 8px 18px;border-left:1px solid var(--border);}
 .nav-sec{font-size:12.5px;color:var(--muted);padding:5px 10px;border-left:2px solid transparent;margin-left:-1px;}
-.nav-sec:hover{color:var(--fg);}
-.nav-sec.active{color:var(--fg);font-weight:600;border-left-color:var(--fg);}
-.main{flex:1;min-width:0;padding:0 56px 120px;}
-.hero{padding:64px 0 30px;border-bottom:1px solid var(--line);margin-bottom:18px;}
-.hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;margin:0 0 14px;line-height:1.2;}
-.hero p{font-size:15.5px;color:var(--muted);margin:0 0 22px;max-width:660px;}
+.nav-sec:hover{color:var(--text);}
+.nav-sec.active{color:var(--text);font-weight:700;border-left-color:var(--accent);}
+/* ---------- 레이아웃 ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 96px;}
+.main{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px clamp(20px,5vw,52px) 48px;box-shadow:var(--shadow);}
+/* ---------- 히어로 ---------- */
+.hero{padding:10px 0 26px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.eyebrow{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.hero h1{font-size:clamp(26px,4.5vw,36px);font-weight:800;letter-spacing:-.03em;margin:8px 0 0;line-height:1.28;}
+.under{width:64px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffd766);margin:.6rem 0 1.1rem;}
+.hero p{font-size:15px;color:var(--text-soft);margin:0 0 20px;max-width:680px;}
 .stats{display:flex;gap:10px;flex-wrap:wrap;}
-.stat{display:flex;align-items:baseline;gap:7px;background:var(--code-bg);border:1px solid var(--line);
-  border-radius:999px;padding:7px 15px;font-size:13px;color:var(--muted);}
-.stat b{font-size:15px;color:var(--fg);font-weight:800;}
-.chapter{padding-top:30px;}
-.ch-head{margin:40px 0 8px;}
-.ch-num{font-size:12px;font-weight:800;letter-spacing:.12em;}
-.ch-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
-.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;}
-.ch-sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:680px;}
-.sec{padding-top:14px;}
-.sec-title{font-size:16.5px;font-weight:700;margin:30px 0 12px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 15px;font-size:13px;color:var(--text-soft);}
+.stat b{font-size:15px;color:var(--text);font-weight:800;}
+.ml-cta{display:flex;align-items:center;gap:14px;margin:22px 0 2px;padding:16px 18px;border:1px solid var(--border);
+  border-radius:var(--radius);background:linear-gradient(135deg,var(--card),var(--bg));box-shadow:var(--shadow);
+  transition:border-color .15s,box-shadow .15s,transform .15s;}
+.ml-cta:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.ml-cta-emoji{font-size:30px;flex:0 0 auto;line-height:1;}
+.ml-cta-txt{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.ml-cta-txt b{font-size:15px;letter-spacing:-.01em;}
+.ml-cta-txt small{color:var(--muted);font-size:12.5px;line-height:1.5;}
+.ml-cta-go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap;}
+/* ---------- 링크 카드 (허브 목차) ---------- */
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+/* ---------- 하단 이동 (이전/다음) ---------- */
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:46px;}
+.pager a{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;background:#fff;transition:border-color .15s,box-shadow .15s;}
+.pager a:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.pager .dir{display:block;font-size:.72rem;color:var(--muted);font-weight:800;}
+.pager .tt{display:block;font-weight:800;}
+.pager a.next{text-align:right;}
+/* ---------- 챕터 / 섹션 ---------- */
+.chapter{padding-top:24px;scroll-margin-top:70px;}
+.ch-head{margin:34px 0 8px;}
+.ch-num{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;background:linear-gradient(180deg,var(--gold),var(--accent));}
+.ch-sub{color:var(--text-soft);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:12px;scroll-margin-top:70px;}
+.sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
 .prose{font-size:14.5px;margin:12px 0;max-width:720px;}
 .prose code,.callout-body code,.concept-d code,.steps code,.m-row code,.qa-a code,.idea-d code,.dig-body code{
-  font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);
-  border-radius:4px;padding:1px 6px;}
+  font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:#7a5a1e;}
 .step-head{font-size:14.5px;margin:22px 0 10px;max-width:720px;}
-/* 챕터 인트로 */
-.goals{background:#f8f9ff;border:1px solid #e6e8fb;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
-.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;}
+/* ---------- 챕터 인트로 (목표 / 왜 배우나요) ---------- */
+.goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin:14px 0;max-width:720px;box-shadow:var(--shadow);}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;color:var(--accent);}
 .goals ul{margin:0;padding-left:20px;}
 .goals li{font-size:13.5px;margin:4px 0;}
-.why{background:#fffdf5;border:1px solid #f1e9cf;border-radius:12px;padding:16px 20px;margin:14px 0;max-width:720px;}
-.why-t{font-weight:800;font-size:14px;margin-bottom:6px;}
+.why{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);padding:14px 18px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;color:var(--text-soft);}
 .why p{margin:0;font-size:14px;}
-/* 콜아웃 */
-.callout{border-radius:10px;padding:14px 18px;margin:14px 0;max-width:720px;border:1px solid var(--line);border-left-width:4px;}
-.callout-head{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+/* ---------- 콜아웃 (tip/warn/mini/say/theory/ask/check/err + info/key) ---------- */
+.callout{border:1px solid var(--border);border-left:4px solid var(--muted);background:var(--card);
+  border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;max-width:720px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:5px;}
 .callout-body{font-size:13.5px;}
-.callout.tip{background:#f0faf4;border-left-color:#22c55e;}
-.callout.warn{background:#fff6f0;border-left-color:#f97316;}
-.callout.info{background:#f0f7ff;border-left-color:#3b82f6;}
-.callout.key{background:#f7f0ff;border-left-color:#8b5cf6;}
-/* 링크 버튼 */
-.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6d5d2;
-  border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;margin:8px 8px 8px 0;transition:.15s;}
-.linkbtn:hover{border-color:#9b9b97;background:var(--code-bg);}
-/* 체크리스트(준비물) */
+.callout.tip{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.tip .callout-head{color:var(--blue-ink);}
+.callout.info{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.info .callout-head{color:var(--blue-ink);}
+.callout.warn{border-left-color:var(--accent);background:var(--card);}
+.callout.warn .callout-head{color:#b45309;}
+.callout.key{border-left-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff);}
+.callout.key .callout-head{color:#a06a08;}
+.callout.check{border-left-color:var(--green);background:var(--green-soft);}
+.callout.check .callout-head{color:#3d7a37;}
+.callout.mini{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.mini .callout-head{color:var(--teal-ink);}
+.callout.say{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.say .callout-head{color:var(--blue-ink);}
+.callout.ask{border-left-color:var(--teal);background:var(--teal-soft);}
+.callout.ask .callout-head{color:var(--teal-ink);}
+.callout.theory{border-left-color:var(--violet);background:var(--violet-soft);}
+.callout.theory .callout-head{color:#8a5578;}
+.callout.err{border-left-color:var(--red);background:var(--red-soft);}
+.callout.err .callout-head{color:#c23b3a;}
+/* ---------- 링크 버튼 ---------- */
+.linkbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;padding:9px 16px;font-size:13.5px;font-weight:700;margin:8px 8px 8px 0;transition:.15s;color:var(--text-soft);}
+.linkbtn:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow);}
+/* ---------- 체크리스트 (준비물) ---------- */
 .check-list{list-style:none;padding:0;margin:12px 0;max-width:720px;}
-.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line);}
-.check-list li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:16px;color:var(--muted);}
-/* 핵심 개념 그리드 */
+.check-list li{font-size:14px;padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--border-soft);}
+.check-list li:before{content:"☐";position:absolute;left:4px;top:6px;font-size:16px;color:var(--accent);}
+/* ---------- 핵심 개념 / 아이디어 그리드 ---------- */
 .concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
-.concept,.idea{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
 .concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
-.concept-d,.idea-d{font-size:13px;color:#55524c;}
+.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
 .idea-d code,.concept-d code{word-break:break-all;}
 .idea-d{line-height:1.7;}
-/* 스텝 */
-.steps{margin:12px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
-.steps li{position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:14px;}
-.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;
-  background:#37352f;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;}
+/* ---------- 스텝 ---------- */
+.steps{margin:14px 0;padding-left:0;counter-reset:s;list-style:none;max-width:720px;}
+.steps li{position:relative;padding:3px 0 16px 44px;font-size:14px;}
+.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:29px;height:29px;
+  background:var(--accent);color:#fff;border-radius:50%;text-align:center;line-height:29px;font-size:13px;font-weight:800;
+  box-shadow:var(--shadow);}
+.steps li:not(:last-child):after{content:"";position:absolute;left:14px;top:35px;bottom:2px;width:2px;background:var(--border);}
 .steps li>b{display:block;margin-bottom:2px;}
-.steps li span{color:#55524c;font-size:13.5px;}
-/* 자주 하는 실수 */
+.steps li span{color:var(--text-soft);font-size:13.5px;}
+/* ---------- 자주 하는 실수 ---------- */
 .mistakes{margin:12px 0;max-width:720px;}
-.mistake{border:1px solid #f0d9d9;border-radius:10px;padding:12px 15px;margin:10px 0;background:#fffafa;}
-.m-sym{font-weight:700;font-size:13.5px;color:#c0392b;margin-bottom:7px;}
+.mistake{border:1px solid var(--border);border-left:4px solid var(--red);border-radius:var(--radius-sm);
+  padding:12px 15px;margin:10px 0;background:var(--red-soft);}
+.m-sym{font-weight:800;font-size:13.5px;color:#c23b3a;margin-bottom:7px;}
 .m-row{font-size:13px;margin:4px 0;padding-left:2px;}
-.m-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#bbb;border-radius:5px;
+.m-tag{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--muted);border-radius:5px;
   padding:1px 7px;margin-right:7px;}
-.m-tag.fix{background:#22a06b;}
-/* 스스로 점검 */
+.m-tag.fix{background:var(--green);}
+/* ---------- 스스로 점검 ---------- */
 .checks{margin:12px 0;max-width:720px;}
-.qa{border:1px solid var(--line);border-radius:9px;margin:8px 0;background:#fff;}
-.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:600;list-style:none;}
+.qa{border:1px solid var(--border);border-radius:var(--radius-sm);margin:8px 0;background:#fff;}
+.qa summary{cursor:pointer;padding:11px 15px;font-size:13.8px;font-weight:700;list-style:none;}
+.qa summary::-webkit-details-marker{display:none;}
 .qa summary:before{content:"❓ ";}
-.qa[open] summary{border-bottom:1px solid var(--line);}
-.qa-a{padding:11px 15px;font-size:13.5px;color:#55524c;}
+.qa[open] summary{border-bottom:1px solid var(--border);background:var(--green-soft);border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.qa-a{padding:11px 15px;font-size:13.5px;color:var(--text-soft);}
 .qa-a:before{content:"✅ ";}
-/* 더 알아보기 (심화 이론) */
-.dig{border:1px solid #dde2f2;border-left:4px solid #6b7cff;border-radius:10px;margin:14px 0;max-width:760px;
-  background:linear-gradient(180deg,#fafbff,#fff);}
-.dig summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:13.5px;color:#3a45a8;list-style:none;}
+/* ---------- 더 알아보기 (이론 심화) ---------- */
+.dig{border:1px solid var(--border);border-left:4px solid var(--violet);border-radius:var(--radius-sm);
+  margin:16px 0;max-width:760px;background:var(--violet-soft);}
+.dig summary{cursor:pointer;padding:12px 16px;font-weight:800;font-size:13.5px;color:#8a5578;list-style:none;}
 .dig summary::-webkit-details-marker{display:none;}
-.dig summary:after{content:"▾";float:right;color:#9aa1cf;transition:.2s;}
+.dig summary:after{content:"▾";float:right;color:var(--violet);transition:.2s;}
 .dig[open] summary:after{transform:rotate(180deg);}
-.dig[open] summary{border-bottom:1px solid #e7eaf7;}
-.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:#44464f;}
-.dig-body b{color:#2f3a96;}
-/* 코드 접기 */
+.dig[open] summary{border-bottom:1px solid #ecd9e6;}
+.dig-body{padding:14px 16px;font-size:13.5px;line-height:1.8;color:var(--text-soft);background:#fff;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.dig-body b{color:#8a5578;}
+/* ---------- 코드 접기 ---------- */
 .codefold{margin:12px 0;max-width:840px;}
-.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #cfd3e6;border-radius:10px;
-  background:#f7f8fd;font-size:13px;font-weight:700;color:#4a4f74;}
+.codefold>summary{cursor:pointer;list-style:none;padding:11px 15px;border:1px dashed #e0cf9a;border-radius:var(--radius-sm);
+  background:var(--card);font-size:13px;font-weight:800;color:var(--text-soft);}
 .codefold>summary::-webkit-details-marker{display:none;}
 .codefold>summary:before{content:"📄 ";}
-.codefold>summary:after{content:"  ▾";color:#aab;}
+.codefold>summary:after{content:"  ▾";color:var(--muted);}
 .codefold[open]>summary:after{content:"  ▴";}
-.codefold[open]>summary{border-style:solid;border-color:var(--line);border-bottom:none;
-  border-radius:10px 10px 0 0;background:var(--code-bg);}
-.codefold .fold-hint{font-weight:500;color:#9aa;}
-.codefold .block{margin:0;border-radius:0 0 10px 10px;}
-/* 귀여운 브랜딩 강조 */
-.pico-accent{background:linear-gradient(120deg,#5B6CF0,#E0568A);-webkit-background-clip:text;
+.codefold[open]>summary{border-style:solid;border-color:var(--border);border-bottom:none;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.codefold .fold-hint{font-weight:500;color:var(--muted);}
+.codefold .block{margin:0;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+/* ---------- 브랜딩 강조 ---------- */
+.pico-accent{background:linear-gradient(120deg,var(--gold),var(--accent));-webkit-background-clip:text;
   background-clip:text;color:transparent;font-weight:900;}
 .brand-emoji{font-size:17px;}
 /* '피지컬 코딩'의 [피][코] 글자 강조 — 피코 워드플레이 */
-.pk{background:linear-gradient(120deg,#5B6CF0,#E0568A);color:#fff;font-weight:900;
+.pk{background:linear-gradient(120deg,var(--gold),var(--accent));color:#fff;font-weight:900;
   border-radius:7px;padding:0 .26em;margin:0 .02em;}
-/* 하드웨어 다이어그램 */
+/* ---------- 하드웨어 다이어그램 ---------- */
 .figure{margin:14px 0;max-width:760px;}
-.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--code-bg);
-  border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;white-space:pre;}
-.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--font);}
-.api-svg{width:100%;height:auto;background:#fbfcff;border:1px solid #e6e8f5;border-radius:14px;padding:8px;font-family:var(--font);}
-/* 코드/프롬프트 블록 */
-.block{border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
-.block-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--code-bg);border-bottom:1px solid var(--line);}
-.block-label{font-size:12.5px;font-weight:600;color:#55524c;flex:1;min-width:0;}
+.diagram{font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;overflow-x:auto;white-space:pre;}
+.hw-svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font-family:var(--font);}
+.api-svg{width:100%;height:auto;background:#fffdf9;border:1px solid var(--border);border-radius:14px;padding:8px;font-family:var(--font);}
+/* ---------- 코드 / 프롬프트 / 개선 블록 ---------- */
+.block{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--card);border-bottom:1px solid var(--border);}
+.block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
 .lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
-  background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
-.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;
-  background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
-.copy-btn:hover{color:var(--fg);border-color:#d6d5d2;}
-.copy-btn.done{color:#0a7f54;border-color:#9bd9bd;background:#f0faf5;}
-.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:#282c34;}
-.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:#abb2bf;}
-.code-block .block-head{background:#21252b;border-bottom-color:#181b20;}
-.code-block .block-label{color:#c7cdd6;}
-.code-block .lang-tag{color:#9aa3b2;background:#2c313a;border-color:#3a4150;}
-.code-block .copy-btn{color:#aeb6c2;background:#2c313a;border-color:#3a4150;}
-.code-block .copy-btn:hover{color:#fff;border-color:#5a6275;}
-.code-block .copy-btn.done{color:#79e3b4;border-color:#2f6b4f;background:#1f3a2c;}
-.prompt-block{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));}
-.prompt-block .block-head{background:color-mix(in srgb,var(--accent) 8%,#fff);
-  border-bottom-color:color-mix(in srgb,var(--accent) 18%,var(--line));}
-.prompt-block .block-label{color:color-mix(in srgb,var(--accent) 55%,#37352f);}
+  background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 코드: 따뜻한 다크 (파트너 code-bg) */
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:var(--code-bg);}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:var(--code-text);}
+.code-block .block-head{background:#211b10;border-bottom-color:#3b3222;}
+.code-block .block-label{color:#e8dcc0;}
+.code-block .lang-tag{color:#c9b98c;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn{color:#e8dcc0;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn:hover{color:#fff;border-color:#7a6338;}
+.code-block .copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+/* 프롬프트: 파트너 teal 다크 */
+.prompt-block{border-color:#cfe8e4;}
+.prompt-block .block-head{background:var(--teal-soft);border-bottom-color:#cfe8e4;}
+.prompt-block .block-label{color:var(--teal-ink);}
 .prompt-ico{font-size:15px;}
-.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#3a3833;
-  white-space:pre-wrap;word-break:break-word;padding:15px 18px;
-  background:color-mix(in srgb,var(--accent) 4%,#fff);}
-/* 펌웨어 카드 */
-.fw-card{border:1px solid color-mix(in srgb,#5B6CF0 30%,var(--line));border-radius:14px;
-  background:linear-gradient(180deg,color-mix(in srgb,#5B6CF0 7%,#fff),#ffffff);padding:22px 24px;margin:12px 0 18px;max-width:840px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#d7f0ea;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;background:#1c2b26;}
+/* ③ 프롬프트 개선: 파트너 improve (따뜻한 다크 골드) */
+.improve-block{border-color:#ecd9ae;}
+.improve-block .block-head{background:linear-gradient(135deg,#fdf3dd,#fffaf0);border-bottom-color:#ecd9ae;}
+.improve-block .block-label{color:#b45309;}
+.improve-block .prompt-body{background:#2a2012;color:#f6e8cf;}
+/* ---------- 펌웨어 카드 ---------- */
+.fw-card{border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--card),#fff);padding:22px 24px;margin:12px 0 18px;max-width:840px;box-shadow:var(--shadow);}
 .fw-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
-.fw-badge{display:inline-block;font-size:11.5px;font-weight:700;color:#3B47C2;
-  background:color-mix(in srgb,#5B6CF0 13%,#fff);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
+.fw-badge{display:inline-block;font-size:11.5px;font-weight:800;color:var(--accent);
+  background:#fff;border:1px solid var(--border);border-radius:999px;padding:3px 12px;margin-bottom:9px;}
 .fw-title{margin:0 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
 .fw-meta{margin:0;color:var(--muted);font-size:13px;}
-.fw-meta b{color:var(--fg);}
-.dl-btn{display:inline-flex;align-items:center;background:#5B6CF0;color:#fff;font-weight:700;
+.fw-meta b{color:var(--text);}
+.dl-btn{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-weight:800;
   font-size:14.5px;border-radius:11px;padding:13px 22px;white-space:nowrap;
-  box-shadow:0 5px 16px color-mix(in srgb,#5B6CF0 38%,transparent);transition:.15s;}
-.dl-btn:hover{background:#4a5ae0;transform:translateY(-1px);}
-.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px 16px;}
-.fw-steps-title{font-size:12.5px;font-weight:700;color:#3B47C2;margin-bottom:6px;}
-.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--fg);line-height:1.5;}
+  box-shadow:0 5px 16px rgba(232,147,12,.35);transition:.15s;}
+.dl-btn:hover{background:#d2830a;transform:translateY(-1px);}
+.fw-steps-wrap{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px 16px;}
+.fw-steps-title{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:6px;}
+.fw-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--text);line-height:1.5;}
 .fw-steps li{padding-left:3px;}
 .fw-dim{color:var(--muted);}
-.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--code-bg);
-  border:1px solid var(--line);border-radius:4px;padding:1px 6px;}
+.fw-steps code,.fw-note code{font-family:var(--mono);font-size:12px;background:var(--card);
+  border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:#7a5a1e;}
 .fw-note{margin:14px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
-.fw-note a{color:#3B47C2;text-decoration:underline;}
-footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;}
-.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:#fff;border:1px solid var(--line);
-  border-radius:9px;width:42px;height:42px;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.07);}
-.scrim{display:none;}
-@media(max-width:920px){
-  .main{padding:0 22px 100px;}
-  .hero{padding-top:74px;}
-  .hero h1{font-size:30px;}
-  .menu-btn{display:block;}
-  .sidebar{position:fixed;left:0;top:0;z-index:45;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12);}
-  .sidebar.open{transform:none;}
-  .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:44;}
+.fw-note a{color:var(--blue-ink);text-decoration:underline;}
+/* ---------- 푸터 ---------- */
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;}
+/* ---------- 반응형 ---------- */
+@media(max-width:640px){
+  body{font-size:15px;}
+  .main{padding:26px 16px 36px;}
+  .topbar .inner{padding:9px 12px;gap:8px;}
+  .topbar .brand{font-size:13.5px;}
+  .topbar a.home{display:none;}
+  .hero h1{font-size:24px;}
+  .ml-cta{flex-wrap:wrap;gap:10px;}
+  .ml-cta-go{width:100%;}
 }
 </style>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+<div class="topbar"><div class="inner">
+  <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
+  <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <span class="spacer"></span>
+  <!--MODELINK-->
+  <span class="badge">학생용</span>
+</div></div>
 <div class="scrim" id="scrim"></div>
-<div class="layout">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
-    <div class="nav-ch"><a href="#chml" class="nav-ch-link" data-target="chml"><span class="nav-dot" style="background:#7C3AED"></span>ML. 동작을 배우는 피코 — 머신러닝 첫걸음</a><div class="nav-secs"><a href="#chml-0" class="nav-sec" data-target="chml-0">핵심 개념 — 기계가 배운다는 것</a><a href="#chml-1" class="nav-sec" data-target="chml-1">하드웨어 준비 + 값 읽기</a><a href="#chml-2" class="nav-sec" data-target="chml-2">따라하기 ① 플립 감지</a><a href="#chml-3" class="nav-sec" data-target="chml-3">따라하기 ② 짝 활동으로 데이터 모으기</a><a href="#chml-4" class="nav-sec" data-target="chml-4">따라하기 ③ 산점도로 눈으로 보기</a><a href="#chml-5" class="nav-sec" data-target="chml-5">따라하기 ④ k-NN으로 예측</a><a href="#chml-6" class="nav-sec" data-target="chml-6">자주 하는 실수</a><a href="#chml-7" class="nav-sec" data-target="chml-7">스스로 점검하기</a><a href="#chml-8" class="nav-sec" data-target="chml-8">수업 시나리오 (강사용)</a></div></div>
-  </aside>
-  <main class="main">
-    <header class="hero">
-      <h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>
-      <p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>
-      <div class="stats">
-        <div class="stat"><b>1</b>개 챕터</div>
-        <div class="stat"><b>4</b>개 코드 블록</div>
-        <div class="stat"><b>1</b>개 AI 프롬프트</div>
-      </div>
-    </header>
-    <div class="chapter" id="chml"><div class="ch-head"><span class="ch-num" style="color:#7C3AED">CHAPTER ML</span><h2 class="ch-title"><span class="ch-bar" style="background:#7C3AED"></span>동작을 배우는 피코 — 머신러닝 첫걸음</h2><p class="ch-sub">Grove 6축 IMU + k-NN으로 ‘물통 세우기(bottle flip)’ 성공을 예측하는 지도학습 첫걸음.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>IMU(가속도·자이로)로 동작을 숫자로 읽는다</li><li>짝 활동으로 성공/실패 데이터를 모은다(라벨링)</li><li>k-NN으로 새 동작의 결과를 예측한다</li><li>정규화·k·확신도 같은 머신러닝 핵심 개념을 이해한다</li><li>ML이 잘 되는 문제와 어려운 문제의 차이를 안다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>지금까지 피코는 ‘플립이 일어났다’까지만 알았어요. 이제 한 걸음 더 — 짝과 함께 모은 <b>성공/실패 데이터</b>만 보여주면, 피코가 스스로 두 무리의 경계를 찾습니다. <b>규칙은 한 줄도 안 짭니다.</b> 이것이 <b>지도학습</b>이고, 오늘은 가장 직관적인 <b>k-NN</b>으로 ‘물통 세우기’ 성공을 예측합니다. 진짜 가스를 못 쓰듯, 핵심은 <b>데이터로 배우는 경험</b>이에요.</p></div><section class="sec" id="chml-0"><h3 class="sec-title">핵심 개념 — 기계가 배운다는 것</h3><p class="prose">오늘 쓸 도구와 개념을 먼저 천천히 짚어요. 어려운 수학은 없습니다 — ‘가장 닮은 이웃에게 물어본다’가 전부예요.</p><div class="concept-grid"><div class="concept"><div class="concept-t">지도학습</div><div class="concept-d"><b>정답(라벨)이 붙은 예시</b>로 배워, 새 데이터의 정답을 맞히는 것. 우리는 플립마다 <b>성공/실패</b>를 알려줍니다.</div></div><div class="concept"><div class="concept-t">k-NN</div><div class="concept-d">새 동작과 <b>가장 닮은(가까운) 이웃 k개</b>의 다수결로 결정. <code>k</code>는 ‘몇 명에게 물어볼까’예요.</div></div><div class="concept"><div class="concept-t">‘학습’의 정체</div><div class="concept-d">k-NN은 훈련이 따로 없어요. <b>예시를 통째로 기억</b>해뒀다 비교할 뿐. 그래서 <b>모델 = 우리가 모은 데이터</b>입니다.</div></div><div class="concept"><div class="concept-t">거리(distance)</div><div class="concept-d">두 동작이 얼마나 닮았나 = <b>두 점 사이 거리</b>(피타고라스). 가까울수록 닮은 동작.</div></div></div><div class="callout key"><div class="callout-head">🔑 정규화 — 단위가 다르면 공평하지 않다</div><div class="callout-body">두 특징의 범위가 너무 달라요. 회전피크는 <b>0~2000°/s</b>, 가속피크는 <b>0~16g</b>. 그냥 거리를 재면 숫자가 큰 <b>회전에만 휘둘리고 가속은 무시</b>됩니다. 그래서 두 특징을 각각 <b>0~1로 다시 스케일</b>해 공평하게 만들어요. 머신러닝에서 거의 항상 필요한 단계랍니다.</div></div><details class="dig"><summary>🔬 더 알아보기 — 정규화를 숫자로 — 왜 가속이 무시될까</summary><div class="dig-body">회전은 100 차이가 흔하지만, 가속은 최대 16이라 100 차이가 <b>아예 불가능</b>합니다. 거리 = √((회전차)²+(가속차)²) 에서 회전차는 수백까지 커지고 가속차는 기껏 몇이라, 제곱하면 <b>가속차는 사실상 0으로 묻혀요</b>. 두 특징을 0~1로 맞추면 ‘회전 0.1 차이 = 가속 0.1 차이’가 되어 <b>둘 다 똑같이 중요</b>해집니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ k 고르기 &amp; 확신도</div><div class="callout-body"><b>k=1</b>은 이웃 하나에 휘둘려 과민(과적합), <b>너무 큰 k</b>는 경계가 흐려져요. 보통 <b>홀수 5</b>(동점 방지). <b>확신도</b>는 다수 비율 — 이웃 5 중 4가 성공이면 ‘성공, 확신 80%’이고, 이걸 <b>LED 칸 수</b>로 보여줍니다.</div></div></section><section class="sec" id="chml-1"><h3 class="sec-title">하드웨어 준비 + 값 읽기</h3><p class="prose">Grove <b>6축 가속도·자이로(LSM6DS3)</b>를 그로브 <b>I2C 포트</b>(SDA=GP4, SCL=GP5)에 톡 꽂으세요. MQ-2(A0)·LED(D16)는 그대로 둔 채 <b>동시에</b> 쓸 수 있어요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ① · IMU 값 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ① — IMU(LSM6DS3) 값 읽기 (외부 라이브러리 없이 복사-실행)
-# Grove 6축 가속도·자이로를 그로브 I2C 포트(SDA=GP4, SCL=GP5)에 꽂으세요.
+<aside class="drawer" id="sidebar">
+  <div class="brand"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>데이터 기반 탐구 프로젝트 · <span class="pico-accent">피코</span>로 시작하기</small></div>
+  <div class="nav-ch"><a href="#chimu" class="nav-ch-link" data-target="chimu"><span class="nav-dot" style="background:#7C3AED"></span>ML2. 동작을 배우는 피코 — 머신러닝 첫걸음</a><div class="nav-secs"><a href="#chimu-0" class="nav-sec" data-target="chimu-0">핵심 개념 — 기계가 배운다는 것</a><a href="#chimu-1" class="nav-sec" data-target="chimu-1">하드웨어 준비 + 값 읽기</a><a href="#chimu-2" class="nav-sec" data-target="chimu-2">따라하기 ① 플립 감지</a><a href="#chimu-3" class="nav-sec" data-target="chimu-3">따라하기 ② 짝 활동으로 데이터 모으기</a><a href="#chimu-4" class="nav-sec" data-target="chimu-4">따라하기 ③ 산점도로 눈으로 보기</a><a href="#chimu-5" class="nav-sec" data-target="chimu-5">따라하기 ④ k-NN으로 예측</a><a href="#chimu-6" class="nav-sec" data-target="chimu-6">자주 하는 실수</a><a href="#chimu-7" class="nav-sec" data-target="chimu-7">스스로 점검하기</a><a href="#chimu-8" class="nav-sec" data-target="chimu-8">수업 시나리오 (강사용)</a></div></div>
+</aside>
+<div class="wrap">
+<main class="main">
+    /*HERO*/
+    <div class="chapter" id="chimu"><div class="ch-head"><span class="ch-num" style="color:#7C3AED">CHAPTER ML2</span><h2 class="ch-title"><span class="ch-bar" style="background:#7C3AED"></span>동작을 배우는 피코 — 머신러닝 첫걸음</h2><p class="ch-sub">Grove 6축 IMU + k-NN으로 ‘물통 세우기(bottle flip)’ 성공을 예측하는 지도학습 첫걸음.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>IMU(가속도·자이로)로 동작을 숫자로 읽는다</li><li>짝 활동으로 성공/실패 데이터를 모은다(라벨링)</li><li>k-NN으로 새 동작의 결과를 예측한다</li><li>정규화·k·확신도 같은 머신러닝 핵심 개념을 이해한다</li><li>ML이 잘 되는 문제와 어려운 문제의 차이를 안다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>소리 챕터에서 피코는 <b>소리</b>를 배웠어요. 이번엔 몸의 <b>동작</b>(뒤집기·흔들기·던지기) 차례입니다. 짝과 함께 모은 <b>성공/실패 데이터</b>만 보여주면, 피코가 스스로 두 무리의 경계를 찾습니다. <b>규칙은 한 줄도 안 짭니다.</b> 이것이 <b>지도학습</b>이고, 오늘은 소리 챕터에서 익힌 <b>k-NN</b>으로 ‘물통 세우기(bottle flip)’ 성공을 예측합니다. 핵심은 이번에도 <b>데이터로 배우는 경험</b>이에요.</p></div><section class="sec" id="chimu-0"><h3 class="sec-title">핵심 개념 — 기계가 배운다는 것</h3><p class="prose">지도학습·k-NN·정규화는 <b>소리 챕터에서 만난 개념</b>이에요. 이미 배웠다면 가볍게 복습하고, 처음이라면 여기서 익혀도 충분합니다. 어려운 수학은 없습니다 — ‘가장 닮은 이웃에게 물어본다’가 전부예요.</p><div class="concept-grid"><div class="concept"><div class="concept-t">지도학습</div><div class="concept-d"><b>정답(라벨)이 붙은 예시</b>로 배워, 새 데이터의 정답을 맞히는 것. 우리는 플립마다 <b>성공/실패</b>를 알려줍니다.</div></div><div class="concept"><div class="concept-t">k-NN</div><div class="concept-d">새 동작과 <b>가장 닮은(가까운) 이웃 k개</b>의 다수결로 결정. <code>k</code>는 ‘몇 명에게 물어볼까’예요.</div></div><div class="concept"><div class="concept-t">‘학습’의 정체</div><div class="concept-d">k-NN은 훈련이 따로 없어요. <b>예시를 통째로 기억</b>해뒀다 비교할 뿐. 그래서 <b>모델 = 우리가 모은 데이터</b>입니다.</div></div><div class="concept"><div class="concept-t">거리(distance)</div><div class="concept-d">두 동작이 얼마나 닮았나 = <b>두 점 사이 거리</b>(피타고라스). 가까울수록 닮은 동작.</div></div></div><div class="callout key"><div class="callout-head">🔑 정규화 — 단위가 다르면 공평하지 않다</div><div class="callout-body">두 특징의 범위가 너무 달라요. 회전피크는 <b>0~2000°/s</b>, 가속피크는 <b>0~16g</b>. 그냥 거리를 재면 숫자가 큰 <b>회전에만 휘둘리고 가속은 무시</b>됩니다. 그래서 두 특징을 각각 <b>0~1로 다시 스케일</b>해 공평하게 만들어요. 머신러닝에서 거의 항상 필요한 단계랍니다.</div></div><details class="dig"><summary>🔬 더 알아보기 — 정규화를 숫자로 — 왜 가속이 무시될까</summary><div class="dig-body">회전은 100 차이가 흔하지만, 가속은 최대 16이라 100 차이가 <b>아예 불가능</b>합니다. 거리 = √((회전차)²+(가속차)²) 에서 회전차는 수백까지 커지고 가속차는 기껏 몇이라, 제곱하면 <b>가속차는 사실상 0으로 묻혀요</b>. 두 특징을 0~1로 맞추면 ‘회전 0.1 차이 = 가속 0.1 차이’가 되어 <b>둘 다 똑같이 중요</b>해집니다.</div></details><div class="callout info"><div class="callout-head">ℹ️ k 고르기 &amp; 확신도</div><div class="callout-body"><b>k=1</b>은 이웃 하나에 휘둘려 과민(과적합), <b>너무 큰 k</b>는 경계가 흐려져요. 보통 <b>홀수 5</b>(동점 방지). <b>확신도</b>는 다수 비율 — 이웃 5 중 4가 성공이면 ‘성공, 확신 80%’이고, 이걸 <b>LED 칸 수</b>로 보여줍니다.</div></div></section><section class="sec" id="chimu-1"><h3 class="sec-title">하드웨어 준비 + 값 읽기</h3><p class="prose">Grove <b>6축 가속도·자이로(LSM6DS3)</b>를 쉴드의 <b>UART1 포트</b>(GP4·GP5 — 이 핀들을 I2C로 씁니다. 실크에 I2C라 적힌 포트가 아니에요!)에 톡 꽂으세요. MQ-2(A0)·LED(D16)는 그대로 둔 채 <b>동시에</b> 쓸 수 있어요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ① · IMU 값 읽기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ① — IMU(LSM6DS3) 값 읽기 (외부 라이브러리 없이 복사-실행)
+# Grove 6축 가속도·자이로를 쉴드의 UART1 포트(GP4/GP5)에 꽂으세요. (I2C0/I2C1 포트 아님!)
 from machine import I2C, Pin
 import time, struct
 
@@ -235,7 +327,7 @@ import time, struct
 WHO_AM_I, CTRL1_XL, CTRL2_G = 0x0F, 0x10, 0x11
 OUTX_L_G, OUTX_L_XL = 0x22, 0x28          # 자이로/가속도 출력(각 6바이트: X,Y,Z)
 
-i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)   # 그로브 I2C 포트
+i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)   # 쉴드 UART1 포트의 GP4/GP5를 I2C로 사용
 
 # 주소 자동 찾기 (그로브 모듈은 0x6A 또는 0x6B)
 ADDR = None
@@ -248,7 +340,7 @@ for a in (0x6A, 0x6B):
     except OSError:
         pass
 if ADDR is None:
-    raise RuntimeError(&quot;IMU 못 찾음 — I2C 포트(SDA=GP4/SCL=GP5)에 꽂았는지 확인&quot;)
+    raise RuntimeError(&quot;IMU 못 찾음 — UART1 포트(GP4/GP5)에 꽂았는지 확인&quot;)
 
 # ★ 빠른 플립에 대비해 &#x27;최대 범위&#x27;로 (포화 방지!) ★
 i2c.writeto_mem(ADDR, CTRL1_XL, bytes([0x64]))   # 가속도: 416Hz, ±16g
@@ -265,7 +357,7 @@ while True:
     gx, gy, gz = read3(OUTX_L_G)
     print(&quot;a(g): %+.2f %+.2f %+.2f  |  회전(°/s): %+6.0f %+6.0f %+6.0f&quot; %
           (ax*A_SCALE, ay*A_SCALE, az*A_SCALE, gx*G_SCALE, gy*G_SCALE, gz*G_SCALE))
-    time.sleep(0.1)</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 빠른 플립엔 ‘최대 범위’ 필수</div><div class="callout-body">플립은 빠른 플릭이라 기본 범위면 값이 ‘포화(천장에 붙음)’돼 신호가 잘립니다. 코드처럼 <b>±16g·±2000°/s</b>로 설정하세요. (이미 코드에 들어 있어요.)</div></div><ul class="check-list"><li>콘솔에 <b>‘IMU 찾음!’</b>이 뜨나요? (안 뜨면 I2C 포트 재확인)</li><li>가만히 둘 때 한 축이 <b>≈1g</b>(중력)인가요?</li><li>흔들면 숫자가 출렁이나요? (Thonny <b>플로터</b>로 그래프도 보기)</li></ul></section><section class="sec" id="chml-2"><h3 class="sec-title">따라하기 ① 플립 감지</h3><p class="step-head">큰 회전이 일어나면 한 동작으로 잡아, <b>회전·가속의 ‘피크’</b>를 특징으로 뽑습니다. 이 두 특징이 다음 단계 예측의 입력이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ② · 플립 감지 + 특징 추출</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ② — &#x27;플립(던지는 동작)&#x27;을 감지하고 특징을 뽑기
+    time.sleep(0.1)</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ 빠른 플립엔 ‘최대 범위’ 필수</div><div class="callout-body">플립은 빠른 플릭이라 기본 범위면 값이 ‘포화(천장에 붙음)’돼 신호가 잘립니다. 코드처럼 <b>±16g·±2000°/s</b>로 설정하세요. (이미 코드에 들어 있어요.)</div></div><ul class="check-list"><li>콘솔에 <b>‘IMU 찾음!’</b>이 뜨나요? (안 뜨면 <b>UART1 포트</b>에 꽂았는지 재확인 — I2C0/I2C1 포트 아님)</li><li>가만히 둘 때 한 축이 <b>≈1g</b>(중력)인가요?</li><li>흔들면 숫자가 출렁이나요? (Thonny <b>플로터</b>로 그래프도 보기)</li></ul></section><section class="sec" id="chimu-2"><h3 class="sec-title">따라하기 ① 플립 감지</h3><p class="step-head">큰 회전이 일어나면 한 동작으로 잡아, <b>회전·가속의 ‘피크’</b>를 특징으로 뽑습니다. 이 두 특징이 다음 단계 예측의 입력이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">코드 ② · 플립 감지 + 특징 추출</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ② — &#x27;플립(던지는 동작)&#x27;을 감지하고 특징을 뽑기
 # 큰 회전이 일어나면 한 동작으로 잡아, 회전피크·가속피크·지속시간을 계산합니다.
 from machine import I2C, Pin
 from neopixel import NeoPixel
@@ -282,7 +374,7 @@ for a in (0x6A, 0x6B):
     except OSError:
         pass
 if ADDR is None:
-    raise RuntimeError(&quot;IMU 못 찾음 — I2C 포트(SDA=GP4/SCL=GP5) 확인&quot;)
+    raise RuntimeError(&quot;IMU 못 찾음 — UART1 포트(GP4/GP5) 확인&quot;)
 i2c.writeto_mem(ADDR, CTRL1_XL, bytes([0x64]))   # ±16g
 i2c.writeto_mem(ADDR, CTRL2_G,  bytes([0x6C]))   # ±2000°/s
 time.sleep(0.1)
@@ -316,7 +408,7 @@ while True:
         print(&quot;플립 감지! 회전피크=%.0f°/s  가속피크=%.1fg  표본=%d&quot; % (peak_g, peak_a, n))
         flash((0, 0, 40))                  # 파랑 점멸 = 감지 성공
         time.sleep(0.4)                    # 쿨다운(중복 감지 방지)
-    time.sleep(0.005)</code></pre></div><div class="callout tip"><div class="callout-head">💡 감지가 안 되거나 너무 잦으면</div><div class="callout-body"><code>START_G</code>(기본 300)를 조절하세요. 플립이 안 잡히면 ↓, 가만히 있어도 잡히면 ↑.</div></div></section><section class="sec" id="chml-3"><h3 class="sec-title">따라하기 ② 짝 활동으로 데이터 모으기</h3><p class="prose">데이터 모으기는 <b>짝 활동</b>이 현실적이에요.<br>🙋 <b>던지는 사람</b>: 손목 보호대에 피코 착용(주머니 보조배터리). 플립만.<br>📱 <b>기록하는 사람</b>: 폰으로 피코 화면을 열고, 착지 보고 <b>성공/실패</b>를 누름.</p><ol class="steps"><li><b>도전!</b><span>기록 화면이 ‘플립하세요’ (LED 초록)</span></li><li><b>시도</b><span>던지는 사람이 플립 → 피코가 감지 (LED 주황, 버튼 뜸)</span></li><li><b>기록</b><span>기록하는 사람이 성공/실패 누름 → 저장 (LED 초록 깜빡)</span></li><li><b>반복</b><span>성공·실패 <b>각 10개+</b> 모일 때까지 (반 전체가 합치면 더 좋아요)</span></li><li><b>종료</b><span>‘종료’ 누르면 flips.csv 완성</span></li></ol><div class="callout info"><div class="callout-head">ℹ️ Pico 2 WH — 무선으로 플립하기</div><div class="callout-body">와이파이가 있어 <b>피코=서버</b>로 폰에 버튼을 띄웁니다(우리 책 그대로). 전원은 LiPo 납땜 대신 <b>주머니 보조배터리 + 짧은 USB</b>가 안전하고 간단해요. 폰과 피코는 <b>같은 와이파이</b>여야 합니다.</div></div><details class="codefold"><summary>코드 ③ · 짝 기록 서버 (main.py) <span class="fold-hint">· 104줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 ③ · 짝 기록 서버 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ③ — 짝 활동: 플립 데이터 모으기 (피코=서버, 폰=기록 화면)
+    time.sleep(0.005)</code></pre></div><div class="callout tip"><div class="callout-head">💡 감지가 안 되거나 너무 잦으면</div><div class="callout-body"><code>START_G</code>(기본 300)를 조절하세요. 플립이 안 잡히면 ↓, 가만히 있어도 잡히면 ↑.</div></div></section><section class="sec" id="chimu-3"><h3 class="sec-title">따라하기 ② 짝 활동으로 데이터 모으기</h3><p class="prose">데이터 모으기는 <b>짝 활동</b>이 현실적이에요.<br>🙋 <b>던지는 사람</b>: 손목 보호대에 피코 착용(주머니 보조배터리). 플립만.<br>📱 <b>기록하는 사람</b>: 폰으로 피코 화면을 열고, 착지 보고 <b>성공/실패</b>를 누름.</p><ol class="steps"><li><b>도전!</b><span>기록 화면이 ‘플립하세요’ (LED 초록)</span></li><li><b>시도</b><span>던지는 사람이 플립 → 피코가 감지 (LED 주황, 버튼 뜸)</span></li><li><b>기록</b><span>기록하는 사람이 성공/실패 누름 → 저장 (LED 초록 깜빡)</span></li><li><b>반복</b><span>성공·실패 <b>각 10개+</b> 모일 때까지 (반 전체가 합치면 더 좋아요)</span></li><li><b>종료</b><span>‘종료’ 누르면 flips.csv 완성</span></li></ol><div class="callout info"><div class="callout-head">ℹ️ Pico 2 WH — 무선으로 플립하기</div><div class="callout-body">와이파이가 있어 <b>피코=서버</b>로 폰에 버튼을 띄웁니다(우리 책 그대로). 전원은 LiPo 납땜 대신 <b>주머니 보조배터리 + 짧은 USB</b>가 안전하고 간단해요. 폰과 피코는 <b>같은 와이파이</b>여야 합니다.</div></div><details class="codefold"><summary>코드 ③ · 짝 기록 서버 (main.py) <span class="fold-hint">· 104줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 ③ · 짝 기록 서버 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ③ — 짝 활동: 플립 데이터 모으기 (피코=서버, 폰=기록 화면)
 # 던지는 사람: 손목에 피코 + 주머니 보조배터리.  기록하는 사람: 폰으로 성공/실패.
 import network, socket, time, struct, math
 from machine import I2C, Pin
@@ -331,7 +423,7 @@ for a in (0x6A, 0x6B):
     try:
         if i2c.readfrom_mem(a, WHO_AM_I, 1)[0] in (0x69, 0x6A): ADDR = a; break
     except OSError: pass
-if ADDR is None: raise RuntimeError(&quot;IMU 못 찾음 — I2C(SDA=GP4/SCL=GP5) 확인&quot;)
+if ADDR is None: raise RuntimeError(&quot;IMU 못 찾음 — UART1 포트(GP4/GP5) 확인&quot;)
 i2c.writeto_mem(ADDR, CTRL1_XL, bytes([0x64]))   # ±16g
 i2c.writeto_mem(ADDR, CTRL2_G,  bytes([0x6C]))   # ±2000°/s
 time.sleep(0.1)
@@ -419,7 +511,7 @@ while True:
         except (OSError, IndexError): pass
         cl.close()
     time.sleep(0.005)
-s, f = counts(); print(&quot;끝! 성공 %d · 실패 %d → flips.csv&quot; % (s, f)); led((0,0,0))</code></pre></div></details><div class="callout warn"><div class="callout-head">⚠️ 이 코드는 바이브코딩 영역</div><div class="callout-body">와이파이 서버 + IMU를 동시에 다뤄 <b>책에서 가장 복잡</b>합니다. <b>AI에게 생성·수정을 맡기기</b> 딱 좋은 부분이고, 처음엔 하드웨어에서 한 번 점검하세요.</div></div></section><section class="sec" id="chml-4"><h3 class="sec-title">따라하기 ③ 산점도로 눈으로 보기</h3><p class="prose">예측을 돌리기 전에, 두 무리가 정말 갈리는지 <b>눈으로</b> 봅니다.</p><ol class="steps"><li><b>내려받기</b><span>Thonny 왼쪽 파일 목록에서 <code>flips.csv</code> 우클릭 → Download</span></li><li><b>차트</b><span>구글시트로 열고 <b>삽입 ▸ 차트 ▸ 분산형</b></span></li><li><b>색 구분</b><span>x=회전피크, y=가속피크, 성공/실패를 색으로</span></li></ol><div class="callout key"><div class="callout-head">🔑 두 무리가 갈리나요?</div><div class="callout-body">성공 점과 실패 점이 <b>다른 구역</b>에 모여 있으면 → ML이 잘 될 신호. 마구 섞여 있으면 → 어려운 문제(그것도 훌륭한 수업거리).</div></div></section><section class="sec" id="chml-5"><h3 class="sec-title">따라하기 ④ k-NN으로 예측</h3><p class="prose">이제 모은 데이터를 ‘모델’ 삼아 새 플립을 예측합니다. <b>성공=초록, 실패=빨강</b>, 확신도만큼 LED 칸이 켜져요. <code>k</code>를 1과 7로 바꿔 차이도 느껴보세요.</p><details class="codefold"><summary>코드 ④ · k-NN 예측 <span class="fold-hint">· 80줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 ④ · k-NN 예측</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ④ — k-NN으로 &#x27;성공/실패&#x27; 예측하기
+s, f = counts(); print(&quot;끝! 성공 %d · 실패 %d → flips.csv&quot; % (s, f)); led((0,0,0))</code></pre></div></details><div class="callout warn"><div class="callout-head">⚠️ 이 코드는 바이브코딩 영역</div><div class="callout-body">와이파이 서버 + IMU를 동시에 다뤄 <b>책에서 가장 복잡</b>합니다. <b>AI에게 생성·수정을 맡기기</b> 딱 좋은 부분이고, 처음엔 하드웨어에서 한 번 점검하세요.</div></div></section><section class="sec" id="chimu-4"><h3 class="sec-title">따라하기 ③ 산점도로 눈으로 보기</h3><p class="prose">예측을 돌리기 전에, 두 무리가 정말 갈리는지 <b>눈으로</b> 봅니다.</p><ol class="steps"><li><b>내려받기</b><span>Thonny 왼쪽 파일 목록에서 <code>flips.csv</code> 우클릭 → Download</span></li><li><b>차트</b><span>구글시트로 열고 <b>삽입 ▸ 차트 ▸ 분산형</b></span></li><li><b>색 구분</b><span>x=회전피크, y=가속피크, 성공/실패를 색으로</span></li></ol><div class="callout key"><div class="callout-head">🔑 두 무리가 갈리나요?</div><div class="callout-body">성공 점과 실패 점이 <b>다른 구역</b>에 모여 있으면 → ML이 잘 될 신호. 마구 섞여 있으면 → 어려운 문제(그것도 훌륭한 수업거리).</div></div></section><section class="sec" id="chimu-5"><h3 class="sec-title">따라하기 ④ k-NN으로 예측</h3><p class="prose">이제 모은 데이터를 ‘모델’ 삼아 새 플립을 예측합니다. <b>성공=초록, 실패=빨강</b>, 확신도만큼 LED 칸이 켜져요. <code>k</code>를 1과 7로 바꿔 차이도 느껴보세요.</p><details class="codefold"><summary>코드 ④ · k-NN 예측 <span class="fold-hint">· 80줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 ④ · k-NN 예측</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 동작 인식 ④ — k-NN으로 &#x27;성공/실패&#x27; 예측하기
 # flips.csv(짝 활동으로 모은 데이터)를 &#x27;모델&#x27;로 삼아, 새 플립의 결과를 예측합니다.
 import time, struct, math
 from machine import I2C, Pin
@@ -433,7 +525,7 @@ for a in (0x6A, 0x6B):
     try:
         if i2c.readfrom_mem(a, WHO_AM_I, 1)[0] in (0x69, 0x6A): ADDR = a; break
     except OSError: pass
-if ADDR is None: raise RuntimeError(&quot;IMU 못 찾음 — I2C(SDA=GP4/SCL=GP5) 확인&quot;)
+if ADDR is None: raise RuntimeError(&quot;IMU 못 찾음 — UART1 포트(GP4/GP5) 확인&quot;)
 i2c.writeto_mem(ADDR, CTRL1_XL, bytes([0x64]))   # ±16g
 i2c.writeto_mem(ADDR, CTRL2_G,  bytes([0x6C]))   # ±2000°/s
 time.sleep(0.1)
@@ -498,12 +590,15 @@ while True:
         else:
             print(&quot;예측: 실패 ❌  확신 %d%%  (회전 %.0f 가속 %.1f)&quot; % (conf*100, pg, pa))
             show((40,0,0), bars)
-        time.sleep(1.0); show((0,0,0), 0)</code></pre></div></details><div class="block prompt-block" style="--accent:#7C3AED"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 시각화 시키기 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">flips.csv 파일을 회전피크-가속피크 분산형 그래프로 그려줘. 성공(라벨 1)은 파란 점, 실패(라벨 0)는 빨간 점으로 색을 다르게 하고, 방금 측정한 새 점은 큰 별표로 표시해줘. 두 무리를 가르는 경계선도 그려주면 좋아.</div></div></section><section class="sec" id="chml-6"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 데이터가 적거나 한쪽만 있음</div><div class="m-row"><span class="m-tag">원인</span>성공만 모으면 항상 ‘성공’만 예측해요.</div><div class="m-row"><span class="m-tag fix">해결</span>성공·실패 <b>각 10개+</b> 균형 있게 모으세요.</div></div><div class="mistake"><div class="m-sym">❌ 가속 특징이 무시됨</div><div class="m-row"><span class="m-tag">원인</span>정규화를 빼먹어 회전 숫자에만 휘둘림.</div><div class="m-row"><span class="m-tag fix">해결</span>두 특징을 <b>0~1로 정규화</b>(코드의 <code>norm()</code>)하세요.</div></div><div class="mistake"><div class="m-sym">❌ 예측이 자꾸 동점/이상</div><div class="m-row"><span class="m-tag">원인</span><code>k</code>가 짝수.</div><div class="m-row"><span class="m-tag fix">해결</span><b>홀수(5,7)</b>로 두세요.</div></div><div class="mistake"><div class="m-sym">❌ 다른 사람이 하면 정확도가 뚝</div><div class="m-row"><span class="m-tag">원인</span>폼이 달라서 — 버그가 아니에요.</div><div class="m-row"><span class="m-tag fix">해결</span><b>개인화</b>의 증거. 자기 데이터로 다시 모으면 올라갑니다.</div></div><div class="mistake"><div class="m-sym">❌ 플립이 안 잡힘 / 너무 자주 잡힘</div><div class="m-row"><span class="m-tag">원인</span><code>START_G</code> 임계값이 안 맞음.</div><div class="m-row"><span class="m-tag fix">해결</span>안 잡히면 ↓, 잦으면 ↑.</div></div></div></section><section class="sec" id="chml-7"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>k-NN에서 ‘학습’은 무엇을 하는 건가요?</summary><div class="qa-a">훈련이 따로 없고, <b>예시를 기억</b>해뒀다 새 데이터와 비교합니다. 모델 = 데이터.</div></details><details class="qa"><summary>정규화는 왜 필요할까요?</summary><div class="qa-a">회전(0~2000)과 가속(0~16)의 범위가 달라, 안 하면 <b>가속이 무시</b>됩니다. 0~1로 맞춰 공평하게.</div></details><details class="qa"><summary>k=1과 k=7의 차이는?</summary><div class="qa-a">k=1은 이웃 하나에 휘둘려 과민(과적합), k가 크면 경계가 부드러워집니다.</div></details><details class="qa"><summary>확신 80%는 무슨 뜻인가요?</summary><div class="qa-a">가까운 이웃 5개 중 4개가 같은 답을 냈다는 뜻.</div></details><details class="qa"><summary>사람이 바뀌면 왜 정확도가 떨어지나요?</summary><div class="qa-a">손목 동작 폼이 사람마다 달라서. 자기 데이터로 다시 학습(개인화)하면 올라갑니다.</div></details></div></section><section class="sec" id="chml-8"><h3 class="sec-title">수업 시나리오 (강사용)</h3><p class="prose">한 차시(40~50분) 흐름과 ‘와우 포인트’입니다. 모든 무게는 <b>장면 4 — 안 가르친 동작을 맞히는 0.5초</b>에 싣습니다.</p><details class="dig"><summary>🔬 더 알아보기 — 장면별 흐름과 와우 포인트</summary><div class="dig-body"><b>① 훅</b> — “만보기는 누가 셀까?” 흔들림의 ‘모양’으로 판단함을 던진다.<br><b>② 손이 숫자가 된다</b> 🌟 — IMU 값을 플로터로. 신체성·즉각성.<br><b>③ 규칙으로 해보기 → 막힘</b> — <code>if</code>로 못 가름 → ML의 필요성.<br><b>④ 첫 인식</b> ⭐ <b>메인 와우</b> — 5번 보여준 것과 다른 6번째를 맞힘 = ‘일반화’. 일부러 다르게 해 증명.<br><b>⑤ 일부러 깨뜨리기</b> 🌟 — 비슷한 동작은 헷갈림 → 특징·과적합·정직한 한계.<br><b>⑥ 내 동작 만들기</b> 🌟 — 동작·의미를 학습자가 정함(주도성).<br><b>⑦ 정리</b> — 만보기·낙상 감지가 다 이 원리. 지도학습 개념 명명.</div></details><div class="callout info"><div class="callout-head">ℹ️ 정직한 한 방 (선택)</div><div class="callout-body">“손목만으로 성공을 70~80%까지 맞히는데, 더 올리려면?” → 특징을 더하거나 센서를 더(전자코처럼). <b>‘특징 안에 신호가 있어야 ML이 된다’</b>를 남기며 마무리.</div></div></section></div>
+        time.sleep(1.0); show((0,0,0), 0)</code></pre></div></details><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">AI에게 시각화 시키기 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">플립 기록 파일(flips.csv)을 회전피크-가속피크 산점도로 그리는 파이썬 코드를 만들어줘. 열은 회전피크(peak_g), 가속피크(peak_a), 성공 여부(label) 세 개야.
+- 성공(라벨 1)은 파란 점, 실패(라벨 0)는 빨간 점으로 색을 다르게 해줘.
+- 방금 측정한 새 점은 큰 별표로 표시해줘.
+- 두 무리를 가르는 경계선도 함께 그려줘.</div></div></section><section class="sec" id="chimu-6"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 데이터가 적거나 한쪽만 있음</div><div class="m-row"><span class="m-tag">원인</span>성공만 모으면 항상 ‘성공’만 예측해요.</div><div class="m-row"><span class="m-tag fix">해결</span>성공·실패 <b>각 10개+</b> 균형 있게 모으세요.</div></div><div class="mistake"><div class="m-sym">❌ 가속 특징이 무시됨</div><div class="m-row"><span class="m-tag">원인</span>정규화를 빼먹어 회전 숫자에만 휘둘림.</div><div class="m-row"><span class="m-tag fix">해결</span>두 특징을 <b>0~1로 정규화</b>(코드의 <code>norm()</code>)하세요.</div></div><div class="mistake"><div class="m-sym">❌ 예측이 자꾸 동점/이상</div><div class="m-row"><span class="m-tag">원인</span><code>k</code>가 짝수.</div><div class="m-row"><span class="m-tag fix">해결</span><b>홀수(5,7)</b>로 두세요.</div></div><div class="mistake"><div class="m-sym">❌ 다른 사람이 하면 정확도가 뚝</div><div class="m-row"><span class="m-tag">원인</span>폼이 달라서 — 버그가 아니에요.</div><div class="m-row"><span class="m-tag fix">해결</span><b>개인화</b>의 증거. 자기 데이터로 다시 모으면 올라갑니다.</div></div><div class="mistake"><div class="m-sym">❌ 플립이 안 잡힘 / 너무 자주 잡힘</div><div class="m-row"><span class="m-tag">원인</span><code>START_G</code> 임계값이 안 맞음.</div><div class="m-row"><span class="m-tag fix">해결</span>안 잡히면 ↓, 잦으면 ↑.</div></div></div></section><section class="sec" id="chimu-7"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>k-NN에서 ‘학습’은 무엇을 하는 건가요?</summary><div class="qa-a">훈련이 따로 없고, <b>예시를 기억</b>해뒀다 새 데이터와 비교합니다. 모델 = 데이터.</div></details><details class="qa"><summary>정규화는 왜 필요할까요?</summary><div class="qa-a">회전(0~2000)과 가속(0~16)의 범위가 달라, 안 하면 <b>가속이 무시</b>됩니다. 0~1로 맞춰 공평하게.</div></details><details class="qa"><summary>k=1과 k=7의 차이는?</summary><div class="qa-a">k=1은 이웃 하나에 휘둘려 과민(과적합), k가 크면 경계가 부드러워집니다.</div></details><details class="qa"><summary>확신 80%는 무슨 뜻인가요?</summary><div class="qa-a">가까운 이웃 5개 중 4개가 같은 답을 냈다는 뜻.</div></details><details class="qa"><summary>사람이 바뀌면 왜 정확도가 떨어지나요?</summary><div class="qa-a">손목 동작 폼이 사람마다 달라서. 자기 데이터로 다시 학습(개인화)하면 올라갑니다.</div></details></div></section><section class="sec" id="chimu-8"><h3 class="sec-title">수업 시나리오 (강사용)</h3><p class="prose">한 차시(40~50분) 흐름과 ‘와우 순간’입니다. 모든 무게는 <b>장면 4 — 안 가르친 동작을 맞히는 0.5초</b>에 싣습니다.</p><details class="dig"><summary>🔬 더 알아보기 — 장면별 흐름과 와우 순간</summary><div class="dig-body"><b>① 훅</b> — “만보기는 누가 셀까?” 흔들림의 ‘모양’으로 판단함을 던진다.<br><b>② 손이 숫자가 된다</b> 🌟 — IMU 값을 플로터로. 신체성·즉각성.<br><b>③ 규칙으로 해보기 → 막힘</b> — <code>if</code>로 못 가름 → ML의 필요성.<br><b>④ 첫 인식</b> ⭐ <b>메인 와우</b> — 5번 보여준 것과 다른 6번째를 맞힘 = ‘일반화’. 일부러 다르게 해 증명.<br><b>⑤ 일부러 깨뜨리기</b> 🌟 — 비슷한 동작은 헷갈림 → 특징·과적합·정직한 한계.<br><b>⑥ 내 동작 만들기</b> 🌟 — 동작·의미를 학습자가 정함(주도성).<br><b>⑦ 정리</b> — 만보기·낙상 감지가 다 이 원리. 지도학습 개념 명명.</div></details><div class="callout info"><div class="callout-head">ℹ️ 정직한 한 방 (선택)</div><div class="callout-body">“손목만으로 성공을 70~80%까지 맞히는데, 더 올리려면?” → 특징을 더하거나 센서를 더(전자코처럼). <b>‘특징 안에 신호가 있어야 ML이 된다’</b>를 남기며 마무리.</div></div></section></div>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
     </footer>
-  </main>
+</main>
 </div>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script>
@@ -541,11 +636,12 @@ document.querySelectorAll('.block').forEach(block=>{
     }
   });
 });
+// 목차 드로어 (모든 화면 폭에서 동일하게 동작)
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
 function toggle(o){sb.classList.toggle('open',o);scrim.classList.toggle('show',o);}
 mb.addEventListener('click',()=>toggle(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>toggle(false));
-sb.addEventListener('click',e=>{if(e.target.closest('a')&&window.innerWidth<=920)toggle(false);});
+sb.addEventListener('click',e=>{if(e.target.closest('a'))toggle(false);});
 const secs=[...document.querySelectorAll('.sec, .chapter')];
 const links=new Map();
 document.querySelectorAll('.nav-sec,.nav-ch-link').forEach(a=>links.set(a.dataset.target,a));
