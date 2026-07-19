@@ -13,7 +13,6 @@
 <header class="topbar"><div class="inner">
   <a class="brand" href="../index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  <span id="modeBadge" class="badge">모드 확인 중…</span>
   <a class="home" href="../index.html">← 목차</a>
 </div></header>
 
@@ -22,7 +21,7 @@
     <span class="eyebrow">GALLERY · 로그인 없이 참여</span>
     <h1>학생 작품 <span class="pico-accent">갤러리</span> 🖼️</h1>
     <div class="under"></div>
-    <p>피코로 만든 작품을 자유롭게 올리고, 다른 선생님들의 작품도 둘러보세요. 회원가입·로그인 없이 <b>닉네임만으로</b> 참여할 수 있어요.</p>
+    <p>피코로 만든 작품을 자유롭게 올리고, 친구들의 작품도 둘러보세요. 회원가입·로그인 없이 <b>닉네임만으로</b> 참여할 수 있어요.</p>
   </header>
 
   <div id="fallbackNotice" class="callout warn" hidden>
@@ -69,8 +68,8 @@
 
       <form id="submitForm" class="form-card" novalidate>
         <div class="field">
-          <label for="f-nickname">닉네임(작성자) *</label>
-          <input id="f-nickname" type="text" maxlength="20" placeholder="예: 김쌤" required>
+          <label for="f-nickname">닉네임(작성자) * <span class="hint">(학교와 이름 — 예: 당곡고 석리송)</span></label>
+          <input id="f-nickname" type="text" maxlength="20" placeholder="예: 당곡고 석리송" required>
         </div>
 
         <div class="field">
@@ -135,7 +134,7 @@
       <summary>피드백 <span class="fb-count">(0)</span></summary>
       <ul class="fb-list"></ul>
       <form class="fb-form">
-        <input type="text" class="fb-nickname" maxlength="16" placeholder="닉네임" required>
+        <input type="text" class="fb-nickname" maxlength="16" placeholder="예: 당곡고 석리송" required>
         <input type="text" class="fb-content" maxlength="60" placeholder="한 줄 피드백을 남겨주세요" required>
         <button type="submit" class="btn-small">남기기</button>
       </form>

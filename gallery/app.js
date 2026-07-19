@@ -492,13 +492,16 @@
   // 11. 모드 배지 & 폴백 안내 배너
   // ---------------------------------------------------------
   function renderModeBadge() {
+    // 학생 화면에는 기술 용어 배지를 표시하지 않는다 — 요소가 있으면(과거 버전) 조작하고 없으면 건너뜀.
     const badge = $("#modeBadge");
-    if (useSupabase) {
-      badge.textContent = "실제 모드 (Supabase 연동)";
-      badge.classList.add("live");
-    } else {
-      badge.textContent = tableMissing ? "데모 모드 (테이블 준비 전)" : "데모 모드 (샘플 데이터)";
-      badge.classList.add("demo");
+    if (badge) {
+      if (useSupabase) {
+        badge.textContent = "실제 모드 (Supabase 연동)";
+        badge.classList.add("live");
+      } else {
+        badge.textContent = tableMissing ? "데모 모드 (테이블 준비 전)" : "데모 모드 (샘플 데이터)";
+        badge.classList.add("demo");
+      }
     }
 
     const notice = $("#fallbackNotice");
