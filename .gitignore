@@ -2,3 +2,7 @@
 *.png
 __pycache__/
 .gstack/
+_workspace/
+print/node_modules/
+print/content*.json
+print/*.pdf
