@@ -1,8 +1,8 @@
 // ============================================================
-// 피코 바이브 코딩 연수 · 작품 갤러리 — app.js
+// 피코 바이브 코딩 수업 · 학생 작품 갤러리 — app.js
 // 로그인 없는 버전. 빌드 없는 정적 SPA.
 // config.js 에 SUPABASE_URL/KEY 가 비어 있으면 자동으로 데모 모드(메모리 내
-// 샘플 데이터)로 동작하고, 값이 있어도 테이블이 아직 없으면(연수 전 배포
+// 샘플 데이터)로 동작하고, 값이 있어도 테이블이 아직 없으면(개강 전 배포
 // 등) 자동으로 데모 모드로 폴백하며 안내 배너를 띄운다.
 // ============================================================
 
@@ -71,10 +71,10 @@
       id: nextDemoId(), nickname: "이코치", category: "오픈 API",
       title: "국제우주정거장(ISS) 위치 LED 시계", url: "https://example.com/demo-pico-iss-clock",
       description: "Open Notify API로 ISS 위치를 받아 LED로 표시했어요", likes: 8,
-      feedback: [{ nickname: "정연수생", content: "부록A 예제에서 아이디어를 얻었어요" }],
+      feedback: [{ nickname: "정하늘", content: "부록A 예제에서 아이디어를 얻었어요" }],
     },
     {
-      id: nextDemoId(), nickname: "정연수생", category: "수업 응용",
+      id: nextDemoId(), nickname: "정하늘", category: "수업 응용",
       title: "강수확률 물리 대시보드 개선판", url: "https://example.com/demo-pico-rain-dashboard",
       description: "5장 대시보드에 우산 이모지 알림을 추가했어요", likes: 3,
       feedback: [
@@ -211,7 +211,7 @@
   //    계정이 없으므로 "누가 눌렀는지"를 서버가 알 방법이 없다. 이 갤러리는
   //    브라우저의 localStorage에 "내가 누른 작품 id"만 저장해 같은
   //    브라우저에서는 중복 클릭을 막는다. 시크릿창·다른 기기·캐시 삭제
-  //    후에는 다시 누를 수 있다 — 연수용으로 감수한 한계다.
+  //    후에는 다시 누를 수 있다 — 수업용으로 감수한 한계다.
   // ---------------------------------------------------------
   const LIKED_KEY = "pico_gallery_liked_ids";
   function getLikedSet() {
