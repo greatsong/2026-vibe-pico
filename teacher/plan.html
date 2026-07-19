@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-<title>02. LED로 내 감정 표현하기 · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
+<title>연수 운영 계획 · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
 <meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
@@ -322,7 +322,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
   <button class="menu-btn" id="menuBtn" aria-label="목차 열기">☰ 목차</button>
   <a class="brand" href="index.html"><span class="brand-emoji">🐣🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
   <span class="spacer"></span>
-  <a class="home" href="../ch2.html">학생용 ↗</a>
+  <a class="home" href="../index.html">학생용 ↗</a>
   <span class="badge teacher">강사용</span>
 </div></div>
 <div class="scrim" id="scrim"></div>
@@ -333,135 +333,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 <div class="wrap">
 <main class="main">
     
-    <div class="chapter" id="ch2"><div class="ch-head"><span class="ch-num">CHAPTER 02</span><h2 class="ch-title"><span class="ch-bar"></span>LED로 내 감정 표현하기</h2><p class="ch-sub">WS2813 LED 바(10개)를 색과 움직임으로 자유자재로 다뤄, 마지막엔 내 기분을 표현하는 ‘감정 무드등’을 만듭니다.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>NeoPixel로 LED 한 칸·전체를 원하는 색으로 켤 수 있다</li><li>WS2813에 꼭 필요한 timing 인자를 이해한다</li><li>10칸에 무지개·게이지를 표현할 수 있다</li><li>색과 움직임을 조합해 내 감정을 LED로 표현할 수 있다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>LED는 ‘숫자·상태를 빛으로 바꾸는’ 가장 직관적인 출력 장치예요. 색과 움직임만으로도 기쁨·평온·화남 같은 <b>감정을 표현</b>할 수 있죠. 이 장에서 10칸을 다루는 법을 익히면, 뒤의 공기질·날씨 장에서 데이터를 색으로 보여 주는 데에도 똑같이 씁니다.</p></div><section class="sec" id="ch2-0"><h3 class="sec-title">핵심 개념 — timing이 진짜 중요해요</h3><div class="callout key"><div class="callout-head">🔑 WS2813은 timing 인자가 필수</div><div class="callout-body">우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이번 연수의 모든 LED 코드 첫 줄에 들어갑니다.</div></div><div class="callout info"><div class="callout-head">ℹ️ LED가 60개짜리로 왔다면?</div><div class="callout-body">바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·감정 무드등 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요.</div></div><div class="concept-grid"><div class="concept"><div class="concept-t">NeoPixel</div><div class="concept-d">여러 개의 색 LED를 한 줄로 제어하는 도구. <code>np[i] = (r, g, b)</code>로 i번 칸 색을 정합니다.</div></div><div class="concept"><div class="concept-t">write()</div><div class="concept-d">색을 정한 뒤 <code>np.write()</code>를 호출해야 실제 LED에 반영됩니다. 깜빡 잊기 쉬워요.</div></div><div class="concept"><div class="concept-t">칸 번호 0~9</div><div class="concept-d">10개니까 <code>np[0]</code>부터 <code>np[9]</code>까지. 0부터 시작!</div></div><div class="concept"><div class="concept-t">밝기는 낮게</div><div class="concept-d">(255,255,255)는 너무 밝고 전류도 많이 써요. (30,30,30) 정도면 충분히 보입니다.</div></div></div><details class="dig"><summary>🔬 더 알아보기 — timing=(280, 515, 515, 745)의 정체 (1선 통신과 GRB)</summary><div class="dig-body">WS2813 같은 LED는 칸이 10개여도 <b>데이터 선이 하나</b>뿐이에요. 그래서 0과 1을 <b>‘펄스(전기 신호)의 길이’</b>로 구분합니다. 이게 <b>1-wire(원-와이어) 프로토콜</b>이에요.<br><br>네 숫자는 <b>나노초(ns, 10억분의 1초)</b> 단위의 시간이고, 각각:<br>· <b>T0H</b>=280 — ‘0’을 보낼 때 켜 두는 시간<br>· <b>T0L</b>=515 — ‘0’을 보낼 때 꺼 두는 시간<br>· <b>T1H</b>=515 — ‘1’을 보낼 때 켜 두는 시간<br>· <b>T1L</b>=745 — ‘1’을 보낼 때 꺼 두는 시간<br><br>이 길이가 칩이 기대하는 값과 안 맞으면 0을 1로, 1을 0으로 잘못 읽어 <b>색이 깨집니다.</b> 칩 종류마다 기대 시간이 조금씩 달라, WS2813엔 이 네 값을 직접 지정해 주는 거예요.<br><br>또 하나, 사람은 색을 (빨강, 초록, 파랑) = RGB 순서로 생각하지만 이 LED는 내부적으로 <b>GRB(초록·빨강·파랑) 순서</b>로 데이터를 받습니다. 대부분의 펌웨어에서는 <code>(r, g, b)</code>로 쓰면 되지만, 혹시 빨강·초록이 바뀌어 보이면 순서를 조정하면 돼요.</div></details><div class="callout err"><div class="callout-head">🧯 예상 오류 — timing 누락이 이 장의 1순위</div><div class="callout-body">AI가 준 코드에 <b>timing 인자가 빠진 채</b> 오는 경우가 가장 많습니다. 색이 깨지거나 엉뚱한 칸이 켜지면 코드를 읽기 전에 먼저 <b>Ctrl+F로 ‘timing’을 검색</b>하게 하세요. 없으면 AI에게 “타이밍 값 네 개(280, 515, 515, 745)를 넣어줘”라고 다시 요청하면 됩니다. 이 ‘검색 → 재요청’ 한 동작을 이 장에서 전체가 몸에 익히면 4·5장의 LED 질문이 절반으로 줍니다.</div></div></section><section class="sec" id="ch2-1"><h3 class="sec-title">따라하기</h3><p class="step-head"><b>Step 1.</b> 한 칸만 켜 보기.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 1 · 한 칸 켜기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># WS2813 LED 10개 — 한 칸 켜기
-from machine import Pin
-from neopixel import NeoPixel
-import time
-
-TIMING = (280, 515, 515, 745)        # ★ WS2813 전용 타이밍 (없으면 색이 깨집니다!)
-NUM = 10
-np = NeoPixel(Pin(16), NUM, timing=TIMING)   # 그로브 D16 = GP16
-
-np[0] = (40, 0, 0)                   # 0번 칸 빨강 (밝기는 낮게)
-np.write()                           # write()를 해야 실제로 켜집니다
-time.sleep(2)
-
-np[0] = (0, 0, 0)                    # 끄기
-np.write()</code></pre></div><p class="step-head"><b>Step 2.</b> 전체를 한 색으로 — 반복문으로 모든 칸을 칠하는 <code>fill</code> 함수.</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 2 · 전체 한 색 (fill)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 전체를 한 색으로 — fill 함수 만들기
-from machine import Pin
-from neopixel import NeoPixel
-import time
-
-TIMING = (280, 515, 515, 745)
-NUM = 10
-np = NeoPixel(Pin(16), NUM, timing=TIMING)
-
-def fill(color):
-    for i in range(NUM):
-        np[i] = color
-    np.write()
-
-fill((0, 30, 0))     # 전체 초록
-time.sleep(1)
-fill((0, 0, 30))     # 전체 파랑
-time.sleep(1)
-fill((0, 0, 0))      # 전체 끄기</code></pre></div><p class="step-head"><b>Step 3.</b> 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴).</p><div class="block code-block"><div class="block-head"><span class="block-label">Step 3 · 무지개 10칸</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 10칸에 무지개 펼치기 (HSV로 색상환 한 바퀴)
-from machine import Pin
-from neopixel import NeoPixel
-
-TIMING = (280, 515, 515, 745)
-NUM = 10
-np = NeoPixel(Pin(16), NUM, timing=TIMING)
-BRIGHT = 0.3                          # 밝기 0~1 (낮게 권장)
-
-def hsv_to_rgb(h, s, v):
-    c = v * s
-    x = c * (1 - abs((h / 60) % 2 - 1))
-    m = v - c
-    if   h &lt; 60:  r, g, b = c, x, 0
-    elif h &lt; 120: r, g, b = x, c, 0
-    elif h &lt; 180: r, g, b = 0, c, x
-    elif h &lt; 240: r, g, b = 0, x, c
-    elif h &lt; 300: r, g, b = x, 0, c
-    else:         r, g, b = c, 0, x
-    return (int((r + m) * 255), int((g + m) * 255), int((b + m) * 255))
-
-for i in range(NUM):
-    hue = i / NUM * 360               # 칸마다 색상 조금씩 다르게
-    np[i] = hsv_to_rgb(hue, 1, BRIGHT)
-np.write()</code></pre></div><p class="step-head"><b>Step 4.</b> 켜진 칸 수로 양을 나타내는 <b>게이지</b> — 뒤 장(공기질·날씨)의 핵심 기법이에요.</p><div class="block code-block"><div class="block-head"><span class="block-label">예제 · 게이지 차오르기</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 게이지처럼 켜진 칸 수 조절하기 (뒤의 공기질·날씨 LED의 기초!)
-from machine import Pin
-from neopixel import NeoPixel
-import time
-
-TIMING = (280, 515, 515, 745)
-NUM = 10
-np = NeoPixel(Pin(16), NUM, timing=TIMING)
-
-def gauge(level, on_color=(0, 30, 0)):
-    # level: 0~10, 켤 칸 수
-    for i in range(NUM):
-        np[i] = on_color if i &lt; level else (0, 0, 0)
-    np.write()
-
-for n in range(0, NUM + 1):           # 0칸 → 10칸 차오르기
-    gauge(n)
-    time.sleep(0.2)
-time.sleep(1)
-gauge(0)                              # 모두 끄기</code></pre></div></section><section class="sec" id="ch2-2"><h3 class="sec-title">내 감정 표현하기 (이 장의 작품)</h3><p class="prose">이제 배운 걸 모아 <b>감정 무드등</b>을 만들어요. 색은 ‘무슨 감정인지’, 움직임(숨쉬기·깜빡임·반짝임)은 ‘감정의 느낌·세기’를 나타냅니다. 이런 코드는 손으로 치지 말고, AI에게 아래처럼 <b>설명</b>해 만들면 돼요.</p><div class="callout ask"><div class="callout-head">🙋 발문 — 색만으로 감정이 전달될까</div><div class="callout-body">“빨간불 하나만 보고 이 사람이 <b>화난 건지, 신난 건지</b> 알 수 있을까요? 움직임(느린 숨쉬기 vs 빠른 깜빡임)이 더해지면 뭐가 달라질까요?” — 답을 주지 말고, ‘같은 색·다른 움직임’ 두 가지를 직접 켜서 비교하게 하세요. 색=감정의 종류, 움직임=감정의 세기라는 이 장의 설계 원리를 학생이 스스로 발견하게 됩니다.</div></div><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">① AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 열 칸짜리 LED 바로 내 기분을 표현하는 &#x27;감정 무드등&#x27;이야.
-- LED 바(WS2813)는 16번 핀에 연결했어. LED를 만들 때 타이밍 값 네 개(280, 515, 515, 745)를 꼭 지정해줘. 없으면 색이 깨져.
-- 밝기는 눈이 부시지 않게 낮게(최대 60 정도).
-- 색과 움직임을 조합해 기쁨·평온·화남·신남 네 가지 감정을 표현해줘. 예: 기쁨=따뜻한 노랑이 두근두근 숨쉬기, 평온=파랑이 천천히 숨쉬기, 화남=빨강 깜빡임, 신남=청록이 아무 칸에나 반짝.
-- 버튼은 없으니 코드 맨 아래 변수 하나만 바꾸면 감정을 고를 수 있게 해줘.
-- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><p class="step-head">아래는 <b>완성본</b>이에요. 버튼이 없으니 코드 맨 아래 <code>MOOD</code> 한 줄만 바꿔 기분을 골라요.</p><details class="codefold"><summary>② 전체 코드 · 감정 무드등 (main.py) <span class="fold-hint">· 46줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">② 전체 코드 · 감정 무드등 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># LED로 감정 표현하기 — 색과 움직임으로 기분을 나타내요
-# 버튼이 없으니, 맨 아래 MOOD 한 줄만 바꿔서 내 기분을 골라요.
-from machine import Pin
-from neopixel import NeoPixel
-import time, random
-
-TIMING = (280, 515, 515, 745)   # WS2813 필수!
-NUM = 10
-np = NeoPixel(Pin(16), NUM, timing=TIMING)
-
-def fill(c):
-    for i in range(NUM):
-        np[i] = c
-    np.write()
-
-def pulse(c, times=3, delay=0.02):     # 숨쉬듯 밝아졌다 어두워지기 (delay 작을수록 빠름)
-    for _ in range(times):
-        for b in list(range(0, 60, 4)) + list(range(60, 0, -4)):
-            fill((c[0] * b // 60, c[1] * b // 60, c[2] * b // 60))
-            time.sleep(delay)
-
-def blink(c, times=6):          # 깜빡깜빡
-    for _ in range(times):
-        fill(c); time.sleep(0.15)
-        fill((0, 0, 0)); time.sleep(0.15)
-
-def sparkle(c, times=40):       # 반짝반짝 (랜덤 칸)
-    for _ in range(times):
-        fill((0, 0, 0))
-        np[random.randint(0, NUM - 1)] = c
-        np.write()
-        time.sleep(0.05)
-
-# 감정 프리셋: 색 + 움직임을 골라 함수로 묶었어요
-def joy():     pulse((50, 40, 0), delay=0.012)   # 기쁨: 따뜻한 노랑, 두근두근(빠르게)
-def calm():    pulse((0, 20, 40), delay=0.05)    # 평온: 파랑, 천천히 숨쉬기
-def anger():   blink((60, 0, 0))      # 화남: 빨강 깜빡
-def excited(): sparkle((0, 50, 30))   # 신남: 청록 반짝
-
-MOODS = {&quot;기쁨&quot;: joy, &quot;평온&quot;: calm, &quot;화남&quot;: anger, &quot;신남&quot;: excited}
-
-MOOD = &quot;기쁨&quot;        # ← 여기만 바꿔서 내 기분을 골라요! (기쁨/평온/화남/신남)
-
-while True:
-    MOODS[MOOD]()
-    time.sleep(0.5)</code></pre></div></details><p class="step-head">나만의 감정을 추가해 봐요. 색(<code>(r,g,b)</code>)과 움직임(<code>pulse</code>/<code>blink</code>/<code>sparkle</code>)을 골라 함수 하나만 더 만들면 됩니다. 처음부터 다시 설명할 필요 없이, 같은 대화에서 <b>③ 개선 프롬프트</b>로 이어 가면 돼요.</p><div class="block prompt-block improve-block"><div class="block-head"><span class="prompt-ico">✨</span><span class="block-label">③ 프롬프트 개선 — 감정 추가 (이어서 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">방금 만든 감정 무드등을 이어서 개선해줘.
-- &#x27;슬픔&#x27;과 &#x27;설렘&#x27; 두 감정을 추가해줘. 슬픔은 파란색이 천천히 한 칸씩 흘러내리는 느낌, 설렘은 분홍색이 점점 빨라지며 반짝이는 느낌으로.
-- 밝기는 지금처럼 낮게 유지하고, LED 타이밍 값과 핀 번호도 그대로 둬.
-- 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><div class="callout say"><div class="callout-head">🎙️ 진행 멘트 — 감정 맞히기 미니 갤러리 (5분)</div><div class="callout-body">“완성한 사람은 무드등을 켜 둔 채 자리를 옮겨, <b>옆 사람 무드등이 무슨 감정인지</b> 맞혀 보세요. 만든 사람은 정답을 바로 말하지 말고요.” — 5분이면 충분하고, 못 맞힌 작품이 오히려 좋은 토론거리입니다. “어떻게 바꾸면 전달될까?”를 이어 물으면 자연스럽게 ③ 개선 프롬프트로 넘어갑니다.</div></div></section><section class="sec" id="ch2-3"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 색이 깨지거나 엉뚱한 칸이 켜짐</div><div class="m-row"><span class="m-tag">원인</span><b>timing 인자 누락.</b></div><div class="m-row"><span class="m-tag fix">해결</span><code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다.</div></div><div class="mistake"><div class="m-sym">❌ 색을 정했는데 안 켜짐</div><div class="m-row"><span class="m-tag">원인</span><code>np.write()</code>를 빠뜨림.</div><div class="m-row"><span class="m-tag fix">해결</span>색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요.</div></div><div class="mistake"><div class="m-sym">❌ 10번째 칸에서 에러</div><div class="m-row"><span class="m-tag">원인</span><code>np[10]</code>을 씀 (칸은 0~9).</div><div class="m-row"><span class="m-tag fix">해결</span>10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>.</div></div><div class="mistake"><div class="m-sym">❌ 눈이 부시고 피코가 뜨거움</div><div class="m-row"><span class="m-tag">원인</span>밝기를 너무 높게 줌.</div><div class="m-row"><span class="m-tag fix">해결</span>(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다.</div></div></div></section><section class="sec" id="ch2-4"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>WS2813 LED를 만들 때 꼭 넣어야 하는 인자는?</summary><div class="qa-a"><code>timing=(280, 515, 515, 745)</code>. 없으면 색이 깨집니다.</div></details><details class="qa"><summary>색을 바꾼 뒤 화면(LED)에 반영하려면?</summary><div class="qa-a"><code>np.write()</code>를 호출합니다.</div></details><details class="qa"><summary>10칸 중 다섯 칸만 켜서 ‘50%’를 표현하려면?</summary><div class="qa-a">0~4번 칸을 색으로, 5~9번 칸을 (0,0,0)으로 두고 write. (게이지 방식)</div></details></div></section></div><nav class="pager"><a class="prev" href="ch1.html"><span class="dir">← 이전</span><span class="tt">01. 와이파이 사각지대 찾기</span></a><a class="next" href="ch3.html"><span class="dir">다음 →</span><span class="tt">03. 우리반 공기질 대시보드 (웹)</span></a></nav>
+    <div class="chapter" id="plan"><div class="ch-head"><span class="ch-num">CHAPTER 🗓 운영</span><h2 class="ch-title"><span class="ch-bar"></span>20시간 연수 운영 계획 (4일 × 5시간)</h2><p class="ch-sub">본편 0~7장 + ML 확장판(소리·동작)을 4일 20시간에 담는 표준 진행안입니다. 하루 300분 기준이며, 블록 사이 10분 휴식을 끼워 운영하세요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>하루 단위 목표와 시간 배분을 한눈에 파악한다</li><li>6장 ‘밤새 기록’을 차시 장치로 활용하는 법을 안다</li><li>밀렸을 때 어디를 압축할지(버퍼) 미리 안다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>전체 서사는 <b>출력(LED) → 입력(센서) → 인터넷(받기·보내기) → 머신러닝 → 종합</b>입니다. 설계의 축은 두 가지 — ① 매일 <b>클리프행어</b>로 끝낸다(2장 작품 예고, 6장 밤새 기록, IMU 예고), ② 6장 기록을 <b>2일차 마지막</b>에 두어 3일차 아침이 복습이 아니라 <b>‘데이터 개봉식’</b>이 되게 한다.</p></div><section class="sec" id="plan-0"><h3 class="sec-title">한눈에 보기</h3><div class="concept-grid"><div class="concept"><div class="concept-t">1일차 · 첫 만남</div><div class="concept-d">세팅 → 첫 IoT(와이파이) → LED 기본기. <b>Ch0~Ch2 전반</b></div></div><div class="concept"><div class="concept-t">2일차 · 데이터</div><div class="concept-d">LED 작품 → 공기질(웹·LED) → 날씨 API → <b>시트 기록 시작하고 퇴근</b>. <b>Ch2 후반~Ch6</b></div></div><div class="concept"><div class="concept-t">3일차 · 머신러닝</div><div class="concept-d"><b>데이터 개봉식</b> → 소리 분류(INMP441) → 동작 인식(IMU) 전반</div></div><div class="concept"><div class="concept-t">4일차 · 종합</div><div class="concept-d">동작 인식 완성 → 자유 프로젝트(기획·제작·발표)</div></div></div><div class="callout key"><div class="callout-head">🔑 전날 미리 확인 — 6장 밤새 기록의 성패</div><div class="callout-body">2일차 전까지 <b>① 교실 콘센트·USB 어댑터</b>(휴대폰 충전기면 충분) <b>② 야간 와이파이 차단 여부</b>를 확인하세요. 야간에 막히는 학교라면 6장을 3일차 오전으로 옮기고 <b>‘점심 2~3시간 기록’</b>으로 계획을 바꿉니다 — 목적은 밤샘이 아니라 ‘내가 안 보는 시간의 데이터’입니다.</div></div></section><section class="sec" id="plan-1"><h3 class="sec-title">1일차 — 피코와 첫 만남 (300분)</h3><div style="overflow-x:auto"><table class="plan-table"><tr><th>시간</th><th>내용</th><th>비고</th></tr><tr><td class="t">30분</td><td>OT + 준비물 점검</td><td class="note"><b>그로브 케이블(LED용) vs 암 점퍼 케이블(MQ-2용)</b> 구분을 여기서 확실히. 데이터용 여분 USB 케이블 3~4개 준비</td></tr><tr><td class="t">90분</td><td><b>Ch0 준비하기</b> — Thonny·조립·펌웨어·첫 코드</td><td class="note">MQ-2 노란선→AO 확인 · 전원 스위치 5V. 케이블 불량이 최다 막힘</td></tr><tr><td class="t">120분</td><td><b>Ch1 와이파이 사각지대 찾기</b></td><td class="note">wifi_config.py 저장 습관 — 3·5·6장까지 계속 재사용. 강사 핫스팟이 가장 안전</td></tr><tr><td class="t">60분</td><td><b>Ch2 전반</b> — timing 개념 + 기본 점등·채우기·무지개</td><td class="note">‘timing 없으면 Ctrl+F 검색 → AI에 재요청’ 습관 심기</td></tr></table></div><div class="callout tip"><div class="callout-head">💡 밀렸을 때</div><div class="callout-body">Ch0이 밀리면(가장 흔한 시나리오) <b>Ch2 전반을 통째로 2일차로</b> 미루세요. 2일차의 Ch4를 30분으로 압축하면 흡수됩니다.</div></div></section><section class="sec" id="plan-2"><h3 class="sec-title">2일차 — 데이터의 날: 측정 → 표현 → 인터넷 → 기록 (300분)</h3><div style="overflow-x:auto"><table class="plan-table"><tr><th>시간</th><th>내용</th><th>비고</th></tr><tr><td class="t">10분</td><td>리캡 + 전날 미해결 트러블 일괄 정리</td><td class="note"></td></tr><tr><td class="t">50분</td><td><b>Ch2 후반</b> — 게이지 + 감정 무드등 작품·상호 공유</td><td class="note">첫 ‘내 작품’ 경험 — 공유 시간을 아끼지 말 것</td></tr><tr><td class="t">80분</td><td><b>Ch3 공기질 웹 대시보드</b></td><td class="note">여기서 정한 WARNING 값을 6장 조건부 서식에서 재사용</td></tr><tr><td class="t">40분</td><td><b>Ch4 공기질 LED 게이지</b></td><td class="note">결합 장이라 짧게 — ‘배운 걸 조합하면 새 작품’ 메시지</td></tr><tr><td class="t">75분</td><td><b>Ch5 강수확률 API×LED</b></td><td class="note">‘인터넷에서 받기’ — 다음 블록(보내기)의 발판</td></tr><tr><td class="t">45분</td><td><b>Ch6 공기질 기록 노트</b> — 구글 설정 → 피코 연결 → <b>기록 시작하고 퇴근</b></td><td class="note">URL 자동 반영 상자로 시간 단축. <b>시트에 줄이 쌓이는 걸 확인한 뒤</b> 전원 꽂아 두고 마침. ‘내일 아침에 같이 열어 봐요’로 클리프행어</td></tr></table></div><div class="callout warn"><div class="callout-head">⚠️ 6장 45분 운영의 관건 — 구글 화면</div><div class="callout-body">구글 쪽 설정(15분)은 <b>스크린에 띄워 한 단계씩 같이</b> 가세요. ‘모든 사용자’ 배포·경고 화면 ‘고급’·<b>개인 계정</b>(학교 워크스페이스 ✗) 세 지점에서 손이 올라옵니다. <b>중간 점검(?value=99) 전원 통과</b>를 확인한 뒤 피코 연결로 넘어가면 나머지는 순조롭습니다.</div></div></section><section class="sec" id="plan-3"><h3 class="sec-title">3일차 — 데이터 개봉식 + 머신러닝의 날 (300분)</h3><div style="overflow-x:auto"><table class="plan-table"><tr><th>시간</th><th>내용</th><th>비고</th></tr><tr><td class="t">30분</td><td><b>📊 데이터 개봉식</b> — 6장 ‘쌓인 데이터로 탐구하기’</td><td class="note">“어제 우리가 떠난 뒤 교실은?” — 차트·조건부 서식·MAX/MIN/AVERAGE → <b>결론 한 줄 쓰기</b>(‘우리 교실은 __시에 환기’)</td></tr><tr><td class="t">150분</td><td><b>ML1 소리를 배우는 피코</b> — INMP441 + k-NN 소리 분류</td><td class="note">확장판의 심장. 자기가 고른 소리로 데이터 수집하는 시간을 넉넉히. 정규화·k·확신도 개념</td></tr><tr><td class="t">120분</td><td><b>ML2 동작 인식 전반</b> — IMU 개념 + 6축 읽기 + 물통 플립 데이터 수집 시작</td><td class="note">수집한 데이터로 내일 예측 — 두 번째 클리프행어</td></tr></table></div><div class="callout info"><div class="callout-head">ℹ️ MP3(말하기) 챕터를 재개한다면</div><div class="callout-body">SD 카드가 준비되어 ML+ ‘피코가 말을 한다’를 살리는 경우, <b>ML2 전반 120분 → 60분으로 줄이고</b> 그 자리에 MP3 75분을 넣으세요(ML2 나머지는 4일차로). 듣기→생각→말하기 사이클이 완성되는 대신 4일차 자유 프로젝트가 20분쯤 줄어듭니다.</div></div></section><section class="sec" id="plan-4"><h3 class="sec-title">4일차 — 종합과 자유 프로젝트 (300분)</h3><div style="overflow-x:auto"><table class="plan-table"><tr><th>시간</th><th>내용</th><th>비고</th></tr><tr><td class="t">15분</td><td>리캡</td><td class="note"></td></tr><tr><td class="t">75분</td><td><b>ML2 완성</b> — 물통 플립 학습 → 성공 예측</td><td class="note">성공/실패 데이터를 조별로 모으면 자연스러운 협력 활동</td></tr><tr><td class="t">40분</td><td><b>자유 프로젝트 기획</b> — 7장 아이디어 + 부록 A 카탈로그</td><td class="note">‘일주일 공기질 리포트’ 같은 <b>기록형 작품</b>(6장 응용)도 선택지로. 주제 결정에 10분 이상 쓰지 않기</td></tr><tr><td class="t">110분</td><td><b>제작</b> — 바이브코딩</td><td class="note">LED·센서·API·ML·시트 기록 조합 자유. 순회하며 프롬프트 개선 코칭. 중간 30분쯤 ‘LED에 뭐라도 켜진 사람?’ 점검</td></tr><tr><td class="t">60분</td><td><b>발표·공유 + 정리</b></td><td class="note">발문: “AI에게 뭐라고 설명했나요?” — 프롬프트가 곧 설계도</td></tr></table></div></section><section class="sec" id="plan-5"><h3 class="sec-title">설계 노트 (시간이 왜 이렇게 배분됐나)</h3><div class="concept-grid"><div class="concept"><div class="concept-t">Ch6 45분의 출처</div><div class="concept-d">2일차에서 리캡 5분 + Ch2 10분 + Ch3 10분 + Ch4 5분 + Ch5 15분을 압축해 확보. Ch5·Ch6은 둘 다 ‘피코가 인터넷과 대화’라 연달아 배우면 인지 부하가 오히려 줄어요.</div></div><div class="concept"><div class="concept-t">MP3 보류의 여유</div><div class="concept-d">말하기 챕터 75분이 빠진 자리를 IMU 전반(3일차)에 배분 → 4일차 자유 프로젝트가 185분으로 늘었습니다.</div></div><div class="concept"><div class="concept-t">버퍼</div><div class="concept-d">매일의 리캡과 Ch4(40분)가 사실상 버퍼. 최악의 경우 개봉식을 15분으로, Ch4를 30분으로 압축.</div></div><div class="concept"><div class="concept-t">차시형(학교 수업) 변환</div><div class="concept-d">같은 내용을 정규 수업으로 옮기면 장당 2차시(100분)씩 한 학기 분량. 6장 밤새 기록은 ‘차시 사이 일주일’로 자연 확장되고, 7장 자유 프로젝트+기록 리포트는 수행평가와 연결됩니다.</div></div></div></section></div>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
