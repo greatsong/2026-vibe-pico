@@ -240,6 +240,16 @@ a{color:inherit;text-decoration:none;}
 .block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
 .lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
   background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.urlbox{margin:16px 0;padding:15px 17px;border:2px solid #86efac;border-radius:14px;background:#f0fdf4;}
+.urlbox label{display:block;font-size:13.5px;font-weight:800;margin-bottom:8px;color:#166534;}
+.urlbox input{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:12.5px;padding:9px 12px;
+  border:1.5px solid #bbf7d0;border-radius:9px;background:#fff;color:var(--text);}
+.urlbox input:focus{outline:none;border-color:#16A34A;box-shadow:0 0 0 3px #bbf7d055;}
+.urlbox-msg{margin-top:8px;font-size:12.5px;line-height:1.55;}
+.urlbox-msg:empty{display:none;}
+.ub-ok{color:#166534;} .ub-warn{color:#b45309;}
+.ub-test{display:inline-block;margin-top:4px;font-weight:800;color:#166534;text-decoration:underline;}
+.urlbox small{display:block;margin-top:7px;color:var(--muted);font-size:11.5px;line-height:1.5;}
 .copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
   background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
 .copy-btn:hover{color:var(--accent);border-color:var(--accent);}
@@ -924,6 +934,35 @@ document.querySelectorAll('.block').forEach(block=>{
       const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
     }
   });
+});
+// 웹 앱 주소 자동 반영 (6장 urlbox) — 붙여넣으면 페이지의 WEB_APP_URL 코드가 내 주소로 바뀐다
+document.querySelectorAll('.urlbox').forEach(box=>{
+  const input=box.querySelector('input'); const msg=box.querySelector('.urlbox-msg');
+  const codes=[...document.querySelectorAll('pre code')].filter(c=>c.textContent.indexOf('WEB_APP_URL')!==-1);
+  if(!input||!codes.length) return;
+  codes.forEach(c=>{ if(!c.dataset.orig) c.dataset.orig=c.textContent; });
+  function rehl(c){ try{ if(window.hljs){ c.removeAttribute('data-highlighted'); hljs.highlightElement(c); } }catch(e){} }
+  function apply(){
+    const url=input.value.trim();
+    if(!url){
+      codes.forEach(c=>{ c.textContent=c.dataset.orig; rehl(c); });
+      msg.innerHTML=''; try{localStorage.removeItem('ch6_webapp_url');}catch(e){}
+      return;
+    }
+    if(!/^https:\/\/script\.google\.com\/[A-Za-z0-9_\/.\-]+\/exec$/.test(url)){
+      msg.innerHTML='<span class="ub-warn">⚠ 주소를 다시 확인하세요 — <b>https://script.google.com/…</b>으로 시작해 <b>/exec</b>로 끝나야 해요. (Apps Script 편집기 주소나 디플로이 ID가 아니에요!)</span>';
+      return;
+    }
+    codes.forEach(c=>{
+      c.textContent=c.dataset.orig.replace(/WEB_APP_URL = "[^"]*"/, 'WEB_APP_URL = "'+url+'"');
+      rehl(c);
+    });
+    msg.innerHTML='<span class="ub-ok">✅ 아래 2단계 완성 코드에 주소가 자동으로 들어갔어요 — 이제 <b>복사</b> 버튼만 누르면 됩니다.</span><br>'
+      +'<a class="ub-test" href="'+url+'?value=99" target="_blank" rel="noopener">🧪 브라우저 테스트 열기 (?value=99) — 시트에 줄이 생기면 성공!</a>';
+    try{localStorage.setItem('ch6_webapp_url',url);}catch(e){}
+  }
+  input.addEventListener('input',apply);
+  try{ const saved=localStorage.getItem('ch6_webapp_url'); if(saved){ input.value=saved; apply(); } }catch(e){}
 });
 // 목차 드로어 (모든 화면 폭에서 동일하게 동작)
 const sb=document.getElementById('sidebar'),scrim=document.getElementById('scrim'),mb=document.getElementById('menuBtn');
