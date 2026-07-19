@@ -1083,6 +1083,10 @@ def hub_main():
                  '<span class="n">LIVE</span>'
                  '<span class="tt">🛰️ 오픈 API 라이브 대시보드</span>'
                  '<span class="d">피코 없이 브라우저에서 공개 데이터를 바로 받아 그려 보는 탐구실 11종 (지진·ISS·미세먼지…)</span></a>')
+    cards.append('<a class="linkcard" href="gallery/index.html">'
+                 '<span class="n">GALLERY</span>'
+                 '<span class="tt">🖼️ 연수생 작품 갤러리</span>'
+                 '<span class="d">로그인 없이 닉네임만으로 내 작품을 올리고, 다른 선생님 작품에 좋아요·한 줄 피드백을 남겨보세요.</span></a>')
     return (f'<h2 style="font-size:1.35rem;font-weight:800;margin:6px 0 4px">📚 목차</h2>'
             f'<p style="color:var(--text-soft);font-size:14px;margin:0 0 10px">순서대로 따라가도 되고, 필요한 장만 골라 봐도 됩니다. '
             f'용어가 낯설면 <a class="ilink" href="apxc.html">부록 C · 용어 사전</a>부터 열어 두세요.</p>'
@@ -1101,7 +1105,7 @@ def page(main, title, teacher=False, fname=None, hero=""):
         out = out.replace('<!--MODELINK-->',
                           f'<a class="home" href="../{fname}">학생용 ↗</a>')
         # teacher/ 하위 디렉터리 기준으로 자산·형제 사이트 경로 보정
-        for pre in ("favicon.svg", "dashboards/", "ml_site/", "firmware/"):
+        for pre in ("favicon.svg", "dashboards/", "ml_site/", "firmware/", "gallery/"):
             out = out.replace(f'href="{pre}', f'href="../{pre}')
     else:
         out = out.replace('<!--MODELINK-->',
