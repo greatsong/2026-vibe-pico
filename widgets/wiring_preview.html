@@ -135,8 +135,8 @@ h1{font-size:20px;} .demo-label{color:var(--muted);font-size:13px;margin:30px 0 
 <h1>🔌 배선 위젯 프로토타입</h1>
 <p style="color:var(--muted);font-size:13.5px;">우리 교재 밝은 테마 + pico-makers의 “상세 인터랙티브 안내”. 체크박스를 클릭하며 따라가면 됩니다.</p>
 
-<div class="demo-label">① 소리 챕터용 — 마이크 (아날로그 A1 + INMP441 두 경로)</div>
-<div class="wire" data-ac="#0891B2" data-parts="mic_a,inmp441"></div>
+<div class="demo-label">① 소리 챕터용 — INMP441 전방향 마이크 (I2S)</div>
+<div class="wire" data-ac="#0891B2" data-parts="inmp441"></div>
 
 <div class="demo-label">② MP3 챕터용 — Grove MP3 v4 (출력)</div>
 <div class="wire" data-ac="#7C3AED" data-parts="mp3"></div>
@@ -144,19 +144,8 @@ h1{font-size:20px;} .demo-label{color:var(--muted);font-size:13px;margin:30px 0 
 <script>
 /* ── 부품 데이터베이스 (pico-makers sensors.js 스키마 참고, 우리 부품으로) ── */
 const PARTS = {
-  mic_a: {
-    icon:"🎤", name:"그로브 아날로그 마이크", proto:"아날로그", pc:"#f59e0b",
-    grove:true, port:"A1",
-    note:"쉴드의 A1 포트에 그로브 케이블로 ‘톡’ 꽂으면 끝! (A0은 가스센서가 쓰니 A1)",
-    pins:[
-      {sig:"SIG", pico:"GP27", n:32, wire:"#facc15", label:"노랑", desc:"소리 신호(아날로그)"},
-      {sig:"VCC", pico:"3.3V", n:36, wire:"#ef4444", label:"빨강", desc:"전원"},
-      {sig:"GND", pico:"GND",  n:38, wire:"#64748b", label:"검정", desc:"접지"},
-    ],
-    warn:null,
-  },
   inmp441: {
-    icon:"🎙️", name:"INMP441 마이크 (음질↑)", proto:"I2S", pc:"#06b6d4",
+    icon:"🎙️", name:"INMP441 전방향 마이크 (I2S)", proto:"I2S", pc:"#06b6d4",
     grove:false, port:null,
     note:"23~28번 핀에 거의 나란히 꽂혀요. 7색 리본선이면 가장자리 ‘흰’선은 안 꽂고 그대로 두면 끝(자르지 마세요·재사용).",
     pins:[

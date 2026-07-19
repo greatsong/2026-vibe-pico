@@ -1,18 +1,18 @@
 # MP3 출력 ② — k-NN이 알아맞힌 소리의 '주인공'을 목소리로 (Grove MP3 v4.0 · WT2605CX)
-# 듣기(마이크) → 생각(k-NN) → 말하기(MP3).  ⚠ v4.0은 AT 명령 / 115200 baud!
+# 듣기(INMP441 마이크) → 생각(k-NN) → 말하기(MP3).  ⚠ v4.0은 AT 명령 / 115200 baud!
+# 마이크 점퍼: VDD→3.3V(⚠5V 금지), GND→GND, SCK→GP18, WS→GP19, SD→GP20, L/R→GND
 # ※ 소리 분류 챕터에서 만든 sounds.csv(rms,zcr,crest,label)가 피코에 들어 있어야 해요.
-import time, math
-from machine import ADC, Pin, UART
+import struct, time, math
+from machine import I2S, Pin, UART
 from neopixel import NeoPixel
 
-# ── 마이크 (아날로그 A1) — 소리 챕터와 똑같이 '듣기' · 특징 3개 ──
-mic = ADC(Pin(27))
-WIN_MS = 200       # 한 번에 '0.2초'를 한 덩어리로 (소리 챕터와 동일한 길이!)
+# ── 마이크 (INMP441 · I2S) — 소리 챕터와 똑같이 '듣기' · 특징 3개 ──
+audio = I2S(0, sck=Pin(18), ws=Pin(19), sd=Pin(20),
+            mode=I2S.RX, bits=32, format=I2S.MONO, rate=16000, ibuf=40000)
+N = 2400; raw = bytearray(N * 4)          # 약 0.15초 한 덩어리 (소리 챕터와 동일!)
 def grab():
-    buf = []; t0 = time.ticks_ms()
-    while time.ticks_diff(time.ticks_ms(), t0) < WIN_MS:
-        buf.append(mic.read_u16())
-    return buf
+    audio.readinto(raw)
+    return [x >> 16 for x in struct.unpack("<%di" % N, raw)]
 def features(buf):
     n = len(buf); m = sum(buf) / n; ss = 0.0; zc = 0; peak = 0.0; prev = buf[0] - m
     for v in buf:
@@ -21,9 +21,10 @@ def features(buf):
         if (d >= 0) != (prev >= 0): zc += 1
         prev = d
     r = math.sqrt(ss / n); return r, zc, peak / (r + 1e-9)
-def level(n=120):
-    b = [mic.read_u16() for _ in range(n)]; m = sum(b) / n
-    return math.sqrt(sum((v - m) ** 2 for v in b) / n)
+small = bytearray(512 * 4)
+def level():
+    audio.readinto(small); v = [x >> 16 for x in struct.unpack("<512i", small)]; m = sum(v) / 512
+    return math.sqrt(sum((x - m) ** 2 for x in v) / 512)
 
 # ── MP3 출력기 (Grove MP3 v4.0 · WT2605CX) — '말하기' : AT 명령 ──
 uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1))   # ★ v4.0 = 115200
@@ -64,7 +65,9 @@ def predict(feat, k=5):
 
 # ── 배경소음 → 임계값 ──
 print("조용히… 배경소음 측정 중")
-base = max(level() for _ in range(20)); THRESH = base * 2   # 민감하게(작은 소리도)
+for _ in range(8): level()                              # I2S는 켜진 직후 값이 튀어요 → 워밍업으로 버림
+bg = sorted(level() for _ in range(25)); base = bg[len(bg) // 2]   # 중앙값(튀는 값에 안 휘둘림)
+THRESH = base * 2 + 20   # 반응이 없으면 2→1.5로↓, 너무 잦으면 ↑
 
 # ── ★ '말하기' — 자기 소리 되먹임 방지(말하는 동안 + 잔향까지 귀 닫기) ──
 SPEAK_SEC = 2.5      # 멘트 길이만큼. 음성이 잘리면 늘리세요.
@@ -72,13 +75,13 @@ def say(track):
     at("AT+PLAY=sd0,%d" % track)         # ← 그 소리의 '이름'을 목소리로!
     time.sleep(SPEAK_SEC)
     t0 = time.ticks_ms()
-    while level(120) > THRESH and time.ticks_diff(time.ticks_ms(), t0) < 2000:
+    while level() > THRESH and time.ticks_diff(time.ticks_ms(), t0) < 2000:
         time.sleep(0.05)
 
 CONF_MIN = 0.6       # 확신이 이보다 낮으면 '모르겠어요' → 침묵
 print("준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)")
 while True:
-    if level(120) > THRESH:
+    if level() > THRESH:
         feat = features(grab()); name, conf = predict(feat)
         if conf >= CONF_MIN and name in TRACK:
             print("이건… %s!  (확신 %d%%)" % (name, conf * 100))

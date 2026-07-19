@@ -21,10 +21,11 @@ sys.path.insert(0, os.path.join(ROOT, "sound_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "mp3_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "imu_lesson"))
 from chapter_sound import CHAPTER_SOUND
-from chapter_mp3 import CHAPTER_MP3
 from chapter_imu import CHAPTER_IMU
 
-CHS = [CHAPTER_SOUND, CHAPTER_MP3, CHAPTER_IMU]  # 소리 → 말하기 → 동작
+# MP3(말하기) 챕터는 SD 카드 준비 전까지 보류 — 소리는 LED로 표현하는 구성.
+# 재개하려면: from chapter_mp3 import CHAPTER_MP3 후 CHS 가운데에 끼우면 됩니다.
+CHS = [CHAPTER_SOUND, CHAPTER_IMU]  # 소리 → 동작
 
 nav_all, main_all = [], []
 for c in CHS:
@@ -66,7 +67,7 @@ out = (out.replace("/*NCODE*/", str(ncode)).replace("/*NPROMPT*/", str(nprompt))
 # ── ML 확장판 브랜딩 (메인 책 표지/제목을 별도 사이트용으로 교체) ──
 BRAND = [
   ("라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.",
-   "라즈베리파이 피코 2 WH로 마이크 소리와 IMU 동작 데이터를 모아 k-NN으로 분류하고 LED·MP3 음성으로 말하게 하는 머신러닝 확장판 — 소리 분류·음성 출력·동작 인식까지 복붙 MicroPython 코드 모음."),
+   "라즈베리파이 피코 2 WH로 마이크 소리와 IMU 동작 데이터를 모아 k-NN으로 분류하고 LED 빛으로 표현하는 머신러닝 확장판 — 소리 분류·동작 인식까지 복붙 MicroPython 코드 모음."),
   ("<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>",
    "<title>소리와 동작을 배우는 피코 · 바이브 피지컬 코딩 ML 확장판</title>"),
   # 드로어 브랜드 (TEMPLATE의 .drawer 안)
@@ -94,7 +95,7 @@ BRAND = [
   ('<h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>',
    '<h1>소리와 동작을 배우는 <span class="pk">피</span><span class="pk">코</span> 🔊🤸<br>머신러닝 확장판</h1>'),
   ('<p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>',
-   '<p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → 사람 말로 <b>대답하고</b>(MP3 출력) → 몸의 <b>동작</b>(IMU)까지 알아맞히는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤, 같은 키트로 <b>AI의 듣기·생각·말하기·동작 인식</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠🗣️🤸</p>'),
+   '<p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(INMP441 마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → <b>LED 빛으로 표현하고</b> → 몸의 <b>동작</b>(IMU)까지 알아맞히는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤, 같은 키트로 <b>AI의 듣기·생각·표현·동작 인식</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠💡🤸</p>'),
 ]
 for _a, _b in BRAND:
     out = out.replace(_a, _b)
@@ -129,17 +130,21 @@ try:
 except Exception:
     pass
 
-# 샘플 음성 파일을 사이트에 포함 (웹에서 다운로드용) + 전체 ZIP
+# 샘플 음성 파일을 사이트에 포함 (웹에서 다운로드용) + 전체 ZIP — MP3 챕터가 있을 때만
 import glob, zipfile
 _sdir = os.path.join(ROOT, "ml_site", "samples")
-os.makedirs(_sdir, exist_ok=True)
-_mp3s = sorted(glob.glob(os.path.join(ROOT, "mp3_lesson", "sample_sd", "*.mp3")))
-for _m in _mp3s:
-    shutil.copy(_m, _sdir)
-if _mp3s:
-    with zipfile.ZipFile(os.path.join(_sdir, "sd_voice_samples.zip"), "w") as _z:
-        for _m in _mp3s:
-            _z.write(_m, os.path.basename(_m))
-    print("샘플 음성 %d개 + ZIP → ml_site/samples/" % len(_mp3s))
+if any(c["id"] == "chsay" for c in CHS):
+    os.makedirs(_sdir, exist_ok=True)
+    _mp3s = sorted(glob.glob(os.path.join(ROOT, "mp3_lesson", "sample_sd", "*.mp3")))
+    for _m in _mp3s:
+        shutil.copy(_m, _sdir)
+    if _mp3s:
+        with zipfile.ZipFile(os.path.join(_sdir, "sd_voice_samples.zip"), "w") as _z:
+            for _m in _mp3s:
+                _z.write(_m, os.path.basename(_m))
+        print("샘플 음성 %d개 + ZIP → ml_site/samples/" % len(_mp3s))
+elif os.path.isdir(_sdir):
+    shutil.rmtree(_sdir)
+    print("MP3 챕터 보류 중 — ml_site/samples/ 제거")
 
 print("OK → ml_site/index.html (%d bytes · %d챕터 · %d코드 · %d프롬프트)" % (len(out), len(CHS), ncode, nprompt))

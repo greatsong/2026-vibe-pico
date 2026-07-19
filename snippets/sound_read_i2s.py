@@ -1,4 +1,4 @@
-# 소리 인식 ①(I2S) — INMP441 마이크 값 읽기 (음질 업그레이드 버전)
+# 소리 인식 ①(I2S) — INMP441 전방향 마이크 값 읽기
 # 점퍼 연결: VDD→3.3V(⚠5V 금지), GND→GND, SCK→GP18, WS→GP19, SD→GP20, L/R→GND
 from machine import I2S, Pin
 import struct, math, time
