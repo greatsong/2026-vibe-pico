@@ -59,6 +59,12 @@
 
   const demoApps = [
     {
+      id: nextDemoId(), nickname: "소리요정", category: "머신러닝",
+      title: "휘파람으로 켜는 스마트 조명", url: "https://example.com/demo-pico-ml-whistle",
+      description: "휘파람 소리를 학습시켜 조명을 켜고 끄는 모델을 만들었어요", likes: 4,
+      feedback: [{ nickname: "정하늘", content: "소리 인식 정확도가 신기해요" }],
+    },
+    {
       id: nextDemoId(), nickname: "김쌤", category: "자유 프로젝트",
       title: "우리반 공기질 알림 무드등", url: "https://example.com/demo-pico-air-mood",
       description: "MQ-2 값에 따라 LED 색이 바뀌는 무드등을 만들었어요", likes: 5,
@@ -191,6 +197,44 @@
     return data;
   }
 
+  // 비공개 정보(학교·학번·이름·주도한 일·느낀 점) 저장 — 세특 원천자료.
+  // 이 정보는 학생 화면 어디에도 표시하지 않는다. 갤러리 카드·필터·목록
+  // 어디에서도 pico_apps_private 테이블을 select하지 않는다(코드 전체에
+  // 해당 select 호출이 없음 — 프라이버시는 "조회 자체를 시도하지 않는
+  // 코드"와 "서버가 select를 애초에 허용하지 않는 RLS"로 이중 보장한다).
+  // pico_apps_private 테이블은 RLS에 select 정책이 없어 공개 조회가
+  // 원천적으로 불가능하고, 오직 Supabase 대시보드의 Table Editor(서비스
+  // 롤)에서만 열람할 수 있다 — 자세한 이유는
+  // pico_gallery_migration_v2.sql 상단 주석 참고.
+  //
+  // 마이그레이션(v2)을 아직 실행하지 않은 상태로 배포돼도 갤러리 자체는
+  // 깨지지 않도록(테이블 없음=42P01 등), 여기서 발생하는 오류는 사용자에게
+  // "게시는 완료, 추가 정보 저장은 준비 중"이라는 부드러운 메시지로만
+  // 알리고 콘솔에 상세를 남긴다. 공개 게시(pico_apps insert)는 이 함수가
+  // 호출되기 전에 이미 성공한 뒤이므로, 여기서 실패해도 작품 자체는
+  // 갤러리에 남아 있다.
+  async function insertPrivateInfo(appId, info) {
+    if (!useSupabase) {
+      // 데모 모드: 실제 저장소가 없으므로 성공으로 간주하고 콘솔에만 기록한다.
+      console.info("[데모 모드] 비공개 정보는 저장되지 않습니다:", { appId, ...info });
+      return { ok: true };
+    }
+    const { error } = await supabaseClient.from("pico_apps_private").insert([{
+      app_id: appId,
+      school: info.school,
+      student_no: info.studentNo,
+      student_name: info.studentName,
+      my_work: info.myWork,
+      learned: info.learned,
+    }]);
+    if (error) {
+      // 42P01 = undefined_table (마이그레이션 v2 미실행), 그 외는 제약 위반 등.
+      console.error("비공개 정보 저장 실패 (app_id=" + appId + "):", error);
+      return { ok: false, error };
+    }
+    return { ok: true };
+  }
+
   async function insertFeedback(appId, nickname, content) {
     if (!useSupabase) {
       const app = demoApps.find((a) => a.id === appId);
@@ -232,7 +276,7 @@
   // ---------------------------------------------------------
   // 5. 상태 & 필터
   // ---------------------------------------------------------
-  const CATEGORIES = ["자유 프로젝트", "오픈 API", "수업 응용", "기타"];
+  const CATEGORIES = ["자유 프로젝트", "오픈 API", "수업 응용", "머신러닝", "기타"];
   let filterCategory = "all";
 
   // ---------------------------------------------------------
@@ -262,6 +306,7 @@
     if (cat === "자유 프로젝트") return "cat-free";
     if (cat === "오픈 API") return "cat-api";
     if (cat === "수업 응용") return "cat-lesson";
+    if (cat === "머신러닝") return "cat-ml";
     return "cat-etc";
   }
 
@@ -446,9 +491,15 @@
       const title = $("#f-title").value.trim();
       const url = $("#f-url").value.trim();
       const description = $("#f-desc").value.trim();
+      const school = $("#f-school").value.trim();
+      const studentNo = $("#f-student-no").value.trim();
+      const studentName = $("#f-student-name").value.trim();
+      const myWork = $("#f-my-work").value.trim();
+      const learned = $("#f-learned").value.trim();
       const consent = $("#f-consent").checked;
 
-      if (!nickname || !category || !title || !url || !description) {
+      if (!nickname || !category || !title || !url || !description ||
+          !school || !studentNo || !studentName || !myWork || !learned) {
         return showFormMsg("모든 필수 항목(*)을 입력해주세요.");
       }
       if (!consent) {
@@ -460,19 +511,41 @@
       if (nickname.length > 20 || title.length > 40 || description.length > 80) {
         return showFormMsg("입력 길이가 너무 길어요. 조금 줄여주세요.");
       }
+      if (school.length > 30 || studentNo.length > 10 || studentName.length > 10) {
+        return showFormMsg("학교·학번·이름 입력 길이가 너무 길어요. 조금 줄여주세요.");
+      }
+      if (myWork.length > 250 || learned.length > 250) {
+        return showFormMsg("주도적으로 한 일 · 배우고 느낀 점은 250자를 넘을 수 없어요. 조금 줄여주세요.");
+      }
 
-      const bannedHit = findBannedWord(nickname) || findBannedWord(title) || findBannedWord(description);
+      const bannedHit = findBannedWord(nickname) || findBannedWord(title) || findBannedWord(description) ||
+        findBannedWord(studentName) || findBannedWord(myWork) || findBannedWord(learned);
       if (bannedHit) {
-        return showFormMsg("닉네임·제목·소개 중 부적절한 표현이 포함되어 있어요. 확인 후 다시 제출해주세요.");
+        return showFormMsg("입력하신 내용 중 부적절한 표현이 포함되어 있어요. 확인 후 다시 제출해주세요.");
       }
 
       const submitBtn = form.querySelector(".btn-primary");
       submitBtn.disabled = true;
       try {
-        await insertApp({ nickname, category, title, url, description });
+        // 1단계: 공개 필드만 pico_apps에 게시. 여기가 성공하면 이미 갤러리에
+        // 노출된 것이므로, 이후 비공개 정보 저장이 실패해도 재시도를
+        // "다시 제출"이 아니라 "추가 정보만 다시 보내기"로 안내해야 한다.
+        const newApp = await insertApp({ nickname, category, title, url, description });
         form.reset();
-        showFormMsg("게시 완료! 갤러리 탭에서 확인해보세요.", "ok");
+        $("#f-school").value = "당곡고";
         renderGallery();
+
+        // 2단계: 비공개 정보(학교·학번·이름·소감)를 pico_apps_private에 저장.
+        // 실패해도 공개 게시(1단계)는 이미 완료된 상태이므로 사용자에게
+        // 그 점을 분명히 알리고, 상세 원인은 콘솔에만 남긴다.
+        const privateResult = await insertPrivateInfo(newApp.id, {
+          school, studentNo, studentName, myWork, learned,
+        });
+        if (privateResult.ok) {
+          showFormMsg("게시 완료! 갤러리 탭에서 확인해보세요.", "ok");
+        } else {
+          showFormMsg("게시는 완료됐어요. 다만 추가 정보 저장은 아직 준비 중이에요 — 작품은 이미 갤러리에 올라갔으니 걱정 마시고, 선생님께 알려주세요.", "error");
+        }
       } catch (err) {
         console.error(err);
         showFormMsg("게시 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.");

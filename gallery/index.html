@@ -33,7 +33,7 @@
     <summary>❓ 처음이신가요? — 30초 사용법</summary>
     <ol>
       <li><b>둘러보기</b> — 카드의 <b>바로가기</b>를 누르면 그 작품이 새 창에서 열립니다.</li>
-      <li><b>골라 보기</b> — 위 구분 칩(자유 프로젝트 / 오픈 API / 수업 응용 / 기타)으로 원하는 것만 모아 보기.</li>
+      <li><b>골라 보기</b> — 위 구분 칩(자유 프로젝트 / 오픈 API / 수업 응용 / 머신러닝 / 기타)으로 원하는 것만 모아 보기.</li>
       <li><b>응원하기</b> — <b>♡ 좋아요</b> + <b>한 줄 피드백</b> 남기기.</li>
       <li><b>내 작품 올리기</b> — <b>📮 작품 등록</b> 탭 → 닉네임·구분·제목·URL·소개 → <b>갤러리에 게시하기</b>.</li>
     </ol>
@@ -54,6 +54,7 @@
         <button class="chip-btn" data-category="자유 프로젝트" type="button">자유 프로젝트</button>
         <button class="chip-btn" data-category="오픈 API" type="button">오픈 API</button>
         <button class="chip-btn" data-category="수업 응용" type="button">수업 응용</button>
+        <button class="chip-btn" data-category="머신러닝" type="button">머신러닝</button>
         <button class="chip-btn" data-category="기타" type="button">기타</button>
       </div>
 
@@ -68,8 +69,8 @@
 
       <form id="submitForm" class="form-card" novalidate>
         <div class="field">
-          <label for="f-nickname">닉네임(작성자) * <span class="hint">(학교와 이름 — 예: 당곡고 석리송)</span></label>
-          <input id="f-nickname" type="text" maxlength="20" placeholder="예: 당곡고 석리송" required>
+          <label for="f-nickname">닉네임(공개 별칭) * <span class="hint">(갤러리에 공개 표시돼요)</span></label>
+          <input id="f-nickname" type="text" maxlength="20" placeholder="예: 피코탐험가" required>
         </div>
 
         <div class="field">
@@ -79,6 +80,7 @@
             <option value="자유 프로젝트">자유 프로젝트</option>
             <option value="오픈 API">오픈 API</option>
             <option value="수업 응용">수업 응용</option>
+            <option value="머신러닝">머신러닝</option>
             <option value="기타">기타</option>
           </select>
         </div>
@@ -96,6 +98,36 @@
         <div class="field">
           <label for="f-desc">한 줄 소개 *</label>
           <input id="f-desc" type="text" maxlength="80" placeholder="어떤 작품인지 한 줄로 소개해주세요" required>
+        </div>
+
+        <div class="callout warn private-notice">
+          <div class="callout-head">🔒 아래 항목은 선생님만 볼 수 있어요</div>
+          <div class="callout-body">학교·학번·이름과 소감은 생활기록부(세특) 참고 자료로만 쓰이며, 갤러리 화면에는 절대 공개되지 않아요. 갤러리에는 위 닉네임만 표시됩니다.</div>
+        </div>
+
+        <div class="field">
+          <label for="f-school">학교 *</label>
+          <input id="f-school" type="text" maxlength="30" placeholder="당곡고" value="당곡고" required>
+        </div>
+
+        <div class="field">
+          <label for="f-student-no">학번 *</label>
+          <input id="f-student-no" type="text" maxlength="10" placeholder="20301" required>
+        </div>
+
+        <div class="field">
+          <label for="f-student-name">이름 *</label>
+          <input id="f-student-name" type="text" maxlength="10" placeholder="석리송" required>
+        </div>
+
+        <div class="field">
+          <label for="f-my-work">내가 주도적으로 한 일 * <span class="hint">(200자 내외)</span></label>
+          <textarea id="f-my-work" maxlength="250" rows="3" placeholder="이 작품에서 내가 직접 기획하거나 해결한 부분을 적어주세요" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="f-learned">배우고 느낀 점 * <span class="hint">(200자 내외)</span></label>
+          <textarea id="f-learned" maxlength="250" rows="3" placeholder="이 작품을 만들며 배우거나 느낀 점을 적어주세요" required></textarea>
         </div>
 
         <label class="consent-row">
@@ -134,7 +166,7 @@
       <summary>피드백 <span class="fb-count">(0)</span></summary>
       <ul class="fb-list"></ul>
       <form class="fb-form">
-        <input type="text" class="fb-nickname" maxlength="16" placeholder="예: 당곡고 석리송" required>
+        <input type="text" class="fb-nickname" maxlength="16" placeholder="예: 피코탐험가" required>
         <input type="text" class="fb-content" maxlength="60" placeholder="한 줄 피드백을 남겨주세요" required>
         <button type="submit" class="btn-small">남기기</button>
       </form>
