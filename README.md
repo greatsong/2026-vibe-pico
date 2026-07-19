@@ -17,9 +17,9 @@
 - **Chapter 3 — 우리반 공기질 대시보드 (웹)** (`ch3.html`): MQ-2 · ADC · 이동평균 · 임계값 · 다크 테마
 - **Chapter 4 — 우리반 공기질 실시간 확인 (LED)** (`ch4.html`): 센서값 → 10칸 LED 게이지 (물리 출력)
 - **Chapter 5 — 강수확률 물리 대시보드 (API×LED)** (`ch5.html`): Open-Meteo 강수확률 → 10 LED + 웹 (바이브코딩)
-- **Chapter 6 — 자유 프로젝트** (`ch6.html`): 조합 아이디어 + 프롬프트 틀
+- **Chapter 6 — 우리반 공기질 기록 노트 (센서 → 구글 시트)** (`ch6.html`): Apps Script 웹앱 + 피코(무설치 socket+ssl) 데이터 로깅 · 밤새 기록 → 차트·조건부 서식 탐구
+- **Chapter 7 — 자유 프로젝트** (`ch7.html`): 조합 아이디어 + 프롬프트 틀
 - **부록 A — 오픈 API 예제 모음** (`apx.html`): 과목별 10가지 API를 피코 10칸 LED로 (미세먼지·지진·ISS·낮길이·우주날씨·분자량·생물·천문사진·에너지·CO₂) · 갤러리는 날씨까지 11종
-- **부록 B — 심화: 센서 데이터를 구글 시트에 쌓기** (`apxb.html`): Apps Script 웹앱 + 피코(무설치 socket+ssl)로 데이터 로깅
 - **부록 C — 용어 사전** (`apxc.html`): 프롬프트·본문에서 쓰는 용어를 한 줄씩 정리 (프롬프트에는 코드 대신 정확한 낱말을 쓴다는 원칙)
 
 각 코드/프롬프트 블록의 **복사** 버튼으로 바로 가져다 쓸 수 있습니다.
@@ -41,8 +41,8 @@
 | 경로 | 설명 |
 |---|---|
 | `index.html` | **허브 페이지 · 학생용** — 히어로 + 챕터 링크카드 목차 (GitHub Pages가 그대로 서빙) |
-| `ch0.html` ~ `ch6.html` | 챕터별 페이지 (하단에 이전/다음 이동 버튼) |
-| `apx.html` / `apxb.html` / `apxc.html` | 부록 A(오픈 API) / 부록 B(구글 시트) / 부록 C(용어 사전) |
+| `ch0.html` ~ `ch7.html` | 챕터별 페이지 (하단에 이전/다음 이동 버튼) |
+| `apx.html` / `apxc.html` | 부록 A(오픈 API) / 부록 C(용어 사전) — 옛 `apxb.html`은 6장으로 승격, 리다이렉트 스텁만 생성 |
 | `teacher/` | **강사용 미러** — 허브(`teacher/index.html`) + 챕터 페이지, 강사노트(진행 멘트·발문·예상 오류) 포함 |
 | `build_site.py` | 페이지 생성 스크립트 (콘텐츠 정의 + 렌더러 + 디자인 TEMPLATE, `snippets/` 읽음) |
 | `build_ml_site.py` | ML 확장판(`ml_site/`) 빌더 — build_site.py의 TEMPLATE·렌더러 재사용 |
