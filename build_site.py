@@ -1100,6 +1100,85 @@ def render_item(it, accent):
                 f'<div class="prompt-body">{esc(it["text"])}</div></div>')
     return ""
 
+def _plan_table(rows):
+    """운영 계획 시간표 한 개 — rows: (시간, 내용, 비고)"""
+    tr = "".join(f'<tr><td class="t">{t}</td><td>{c}</td><td class="note">{n}</td></tr>'
+                 for t, c, n in rows)
+    return ('<div style="overflow-x:auto"><table class="plan-table">'
+            '<tr><th>시간</th><th>내용</th><th>비고</th></tr>' + tr + '</table></div>')
+
+# 강사용 전용 페이지 — CHAPTERS에 넣지 않고 build(teacher=True)에서만 렌더한다.
+PLAN_PAGE = {
+  "id": "plan", "num": "🗓 운영", "title": "20시간 연수 운영 계획 (4일 × 5시간)", "accent": "#D97706",
+  "subtitle": "본편 0~7장 + ML 확장판(소리·동작)을 4일 20시간에 담는 표준 진행안입니다. 하루 300분 기준이며, 블록 사이 10분 휴식을 끼워 운영하세요.",
+  "goals": [
+    "하루 단위 목표와 시간 배분을 한눈에 파악한다",
+    "6장 ‘밤새 기록’을 차시 장치로 활용하는 법을 안다",
+    "밀렸을 때 어디를 압축할지(버퍼) 미리 안다",
+  ],
+  "why": "전체 서사는 <b>출력(LED) → 입력(센서) → 인터넷(받기·보내기) → 머신러닝 → 종합</b>입니다. 설계의 축은 두 가지 — ① 매일 <b>클리프행어</b>로 끝낸다(2장 작품 예고, 6장 밤새 기록, IMU 예고), ② 6장 기록을 <b>2일차 마지막</b>에 두어 3일차 아침이 복습이 아니라 <b>‘데이터 개봉식’</b>이 되게 한다.",
+  "sections": [
+    {"title": "한눈에 보기", "items": [
+      {"type": "concept", "items": [
+        {"t": "1일차 · 첫 만남", "d": "세팅 → 첫 IoT(와이파이) → LED 기본기. <b>Ch0~Ch2 전반</b>"},
+        {"t": "2일차 · 데이터", "d": "LED 작품 → 공기질(웹·LED) → 날씨 API → <b>시트 기록 시작하고 퇴근</b>. <b>Ch2 후반~Ch6</b>"},
+        {"t": "3일차 · 머신러닝", "d": "<b>데이터 개봉식</b> → 소리 분류(INMP441) → 동작 인식(IMU) 전반"},
+        {"t": "4일차 · 종합", "d": "동작 인식 완성 → 자유 프로젝트(기획·제작·발표)"},
+      ]},
+      {"type": "callout", "kind": "key", "title": "전날 미리 확인 — 6장 밤새 기록의 성패",
+       "html": "2일차 전까지 <b>① 교실 콘센트·USB 어댑터</b>(휴대폰 충전기면 충분) <b>② 야간 와이파이 차단 여부</b>를 확인하세요. 야간에 막히는 학교라면 6장을 3일차 오전으로 옮기고 <b>‘점심 2~3시간 기록’</b>으로 계획을 바꿉니다 — 목적은 밤샘이 아니라 ‘내가 안 보는 시간의 데이터’입니다."},
+    ]},
+    {"title": "1일차 — 피코와 첫 만남 (300분)", "items": [
+      {"type": "raw", "html": _plan_table([
+        ("30분", "OT + 준비물 점검", "<b>그로브 케이블(LED용) vs 암 점퍼 케이블(MQ-2용)</b> 구분을 여기서 확실히. 데이터용 여분 USB 케이블 3~4개 준비"),
+        ("90분", "<b>Ch0 준비하기</b> — Thonny·조립·펌웨어·첫 코드", "MQ-2 노란선→AO 확인 · 전원 스위치 5V. 케이블 불량이 최다 막힘"),
+        ("120분", "<b>Ch1 와이파이 사각지대 찾기</b>", "wifi_config.py 저장 습관 — 3·5·6장까지 계속 재사용. 강사 핫스팟이 가장 안전"),
+        ("60분", "<b>Ch2 전반</b> — timing 개념 + 기본 점등·채우기·무지개", "‘timing 없으면 Ctrl+F 검색 → AI에 재요청’ 습관 심기"),
+      ])},
+      {"type": "callout", "kind": "tip", "title": "밀렸을 때",
+       "html": "Ch0이 밀리면(가장 흔한 시나리오) <b>Ch2 전반을 통째로 2일차로</b> 미루세요. 2일차의 Ch4를 30분으로 압축하면 흡수됩니다."},
+    ]},
+    {"title": "2일차 — 데이터의 날: 측정 → 표현 → 인터넷 → 기록 (300분)", "items": [
+      {"type": "raw", "html": _plan_table([
+        ("10분", "리캡 + 전날 미해결 트러블 일괄 정리", ""),
+        ("50분", "<b>Ch2 후반</b> — 게이지 + 감정 무드등 작품·상호 공유", "첫 ‘내 작품’ 경험 — 공유 시간을 아끼지 말 것"),
+        ("80분", "<b>Ch3 공기질 웹 대시보드</b>", "여기서 정한 WARNING 값을 6장 조건부 서식에서 재사용"),
+        ("40분", "<b>Ch4 공기질 LED 게이지</b>", "결합 장이라 짧게 — ‘배운 걸 조합하면 새 작품’ 메시지"),
+        ("75분", "<b>Ch5 강수확률 API×LED</b>", "‘인터넷에서 받기’ — 다음 블록(보내기)의 발판"),
+        ("45분", "<b>Ch6 공기질 기록 노트</b> — 구글 설정 → 피코 연결 → <b>기록 시작하고 퇴근</b>", "URL 자동 반영 상자로 시간 단축. <b>시트에 줄이 쌓이는 걸 확인한 뒤</b> 전원 꽂아 두고 마침. ‘내일 아침에 같이 열어 봐요’로 클리프행어"),
+      ])},
+      {"type": "callout", "kind": "warn", "title": "6장 45분 운영의 관건 — 구글 화면",
+       "html": "구글 쪽 설정(15분)은 <b>스크린에 띄워 한 단계씩 같이</b> 가세요. ‘모든 사용자’ 배포·경고 화면 ‘고급’·<b>개인 계정</b>(학교 워크스페이스 ✗) 세 지점에서 손이 올라옵니다. <b>중간 점검(?value=99) 전원 통과</b>를 확인한 뒤 피코 연결로 넘어가면 나머지는 순조롭습니다."},
+    ]},
+    {"title": "3일차 — 데이터 개봉식 + 머신러닝의 날 (300분)", "items": [
+      {"type": "raw", "html": _plan_table([
+        ("30분", "<b>📊 데이터 개봉식</b> — 6장 ‘쌓인 데이터로 탐구하기’", "“어제 우리가 떠난 뒤 교실은?” — 차트·조건부 서식·MAX/MIN/AVERAGE → <b>결론 한 줄 쓰기</b>(‘우리 교실은 __시에 환기’)"),
+        ("150분", "<b>ML1 소리를 배우는 피코</b> — INMP441 + k-NN 소리 분류", "확장판의 심장. 자기가 고른 소리로 데이터 수집하는 시간을 넉넉히. 정규화·k·확신도 개념"),
+        ("120분", "<b>ML2 동작 인식 전반</b> — IMU 개념 + 6축 읽기 + 물통 플립 데이터 수집 시작", "수집한 데이터로 내일 예측 — 두 번째 클리프행어"),
+      ])},
+      {"type": "callout", "kind": "info", "title": "MP3(말하기) 챕터를 재개한다면",
+       "html": "SD 카드가 준비되어 ML+ ‘피코가 말을 한다’를 살리는 경우, <b>ML2 전반 120분 → 60분으로 줄이고</b> 그 자리에 MP3 75분을 넣으세요(ML2 나머지는 4일차로). 듣기→생각→말하기 사이클이 완성되는 대신 4일차 자유 프로젝트가 20분쯤 줄어듭니다."},
+    ]},
+    {"title": "4일차 — 종합과 자유 프로젝트 (300분)", "items": [
+      {"type": "raw", "html": _plan_table([
+        ("15분", "리캡", ""),
+        ("75분", "<b>ML2 완성</b> — 물통 플립 학습 → 성공 예측", "성공/실패 데이터를 조별로 모으면 자연스러운 협력 활동"),
+        ("40분", "<b>자유 프로젝트 기획</b> — 7장 아이디어 + 부록 A 카탈로그", "‘일주일 공기질 리포트’ 같은 <b>기록형 작품</b>(6장 응용)도 선택지로. 주제 결정에 10분 이상 쓰지 않기"),
+        ("110분", "<b>제작</b> — 바이브코딩", "LED·센서·API·ML·시트 기록 조합 자유. 순회하며 프롬프트 개선 코칭. 중간 30분쯤 ‘LED에 뭐라도 켜진 사람?’ 점검"),
+        ("60분", "<b>발표·공유 + 정리</b>", "발문: “AI에게 뭐라고 설명했나요?” — 프롬프트가 곧 설계도"),
+      ])},
+    ]},
+    {"title": "설계 노트 (시간이 왜 이렇게 배분됐나)", "items": [
+      {"type": "concept", "items": [
+        {"t": "Ch6 45분의 출처", "d": "2일차에서 리캡 5분 + Ch2 10분 + Ch3 10분 + Ch4 5분 + Ch5 15분을 압축해 확보. Ch5·Ch6은 둘 다 ‘피코가 인터넷과 대화’라 연달아 배우면 인지 부하가 오히려 줄어요."},
+        {"t": "MP3 보류의 여유", "d": "말하기 챕터 75분이 빠진 자리를 IMU 전반(3일차)에 배분 → 4일차 자유 프로젝트가 185분으로 늘었습니다."},
+        {"t": "버퍼", "d": "매일의 리캡과 Ch4(40분)가 사실상 버퍼. 최악의 경우 개봉식을 15분으로, Ch4를 30분으로 압축."},
+        {"t": "차시형(학교 수업) 변환", "d": "같은 내용을 정규 수업으로 옮기면 장당 2차시(100분)씩 한 학기 분량. 6장 밤새 기록은 ‘차시 사이 일주일’로 자연 확장되고, 7장 자유 프로젝트+기록 리포트는 수행평가와 연결됩니다."},
+      ]},
+    ]},
+  ],
+}
+
 BASE_TITLE = "데이터로 탐구하는 피코 바이브 피지컬 코딩"
 
 def nav_html():
@@ -1154,6 +1233,11 @@ def pager_html(idx):
 def hub_main():
     """허브(index.html) 본문 — 히어로 + 챕터 링크카드 목차."""
     cards = []
+    if TEACHER:
+        cards.append('<a class="linkcard" href="plan.html">'
+                     '<span class="n">🗓 운영</span>'
+                     '<span class="tt">20시간 연수 운영 계획 (강사 전용)</span>'
+                     '<span class="d">4일 × 5시간 표준 진행안 — 하루별 시간표, 6장 밤새 기록 운영법, 밀렸을 때 버퍼까지.</span></a>')
     for c in CHAPTERS:
         cards.append(f'<a class="linkcard" href="{c["id"]}.html">'
                      f'<span class="n">CHAPTER {esc(c["num"])}</span>'
@@ -1206,6 +1290,14 @@ def build(teacher=False):
         html_out = page(chapter_main(c) + pager_html(i), title,
                         teacher=teacher, fname=f'{c["id"]}.html')
         with open(os.path.join(outdir, f'{c["id"]}.html'), "w", encoding="utf-8") as f:
+            f.write(html_out)
+
+    # 강사 전용 — 연수 운영 계획 페이지 (CHAPTERS 밖이라 드로어 목차에는 없음, 허브 카드로 진입)
+    if teacher:
+        html_out = page(chapter_main(PLAN_PAGE),
+                        f'연수 운영 계획 · {BASE_TITLE} (강사용)',
+                        teacher=True, fname="index.html")  # '학생용 ↗'은 학생 허브로
+        with open(os.path.join(outdir, "plan.html"), "w", encoding="utf-8") as f:
             f.write(html_out)
 
     # 옛 부록 B(apxb.html) → 본문 6장으로 승격됨. 배포된 옛 링크를 위한 리다이렉트 스텁.
@@ -1481,6 +1573,11 @@ a{color:inherit;text-decoration:none;}
 .block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
 .lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
   background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.plan-table{width:100%;border-collapse:collapse;margin:12px 0 6px;font-size:13.5px;line-height:1.62;min-width:520px;}
+.plan-table th,.plan-table td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top;}
+.plan-table th{background:var(--green-soft);font-weight:800;white-space:nowrap;}
+.plan-table td.t{white-space:nowrap;font-weight:800;color:#b45309;}
+.plan-table td.note{color:var(--text-soft);font-size:12.5px;}
 .urlbox{margin:16px 0;padding:15px 17px;border:2px solid #86efac;border-radius:14px;background:#f0fdf4;}
 .urlbox label{display:block;font-size:13.5px;font-weight:800;margin-bottom:8px;color:#166534;}
 .urlbox input{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:12.5px;padding:9px 12px;
