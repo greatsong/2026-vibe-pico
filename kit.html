@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="robots" content="noindex">
+<title>확장 부품 가이드 · 키트에서 골라 쓰는 자유 프로젝트 부품</title>
+<meta name="description" content="라즈베리파이 피코 2 WH + 그로브 쉴드 환경에서, 케플러 키트의 부품을 골라 쓰는 자유 프로젝트 확장 가이드 — 배선표·바이브코딩 프롬프트·검증용 MicroPython 코드.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+<style>
+/* ============================================================
+   피코 바이브 피지컬 코딩 · 웹 교재 스타일
+   디자인 계열: 2026-snui 웹 교재 (따뜻한 크림·골드)
+   ============================================================ */
+:root{
+  --gold:#f4b400; --accent:#e8930c;
+  --bg:#fffdf7; --card:#fff6e0;
+  --border:#f0e2bc; --border-soft:#f7edcf;
+  --text:#3a2e1a; --text-soft:#6b5836; --muted:#9a8b6a;
+  --blue:#4c8df6; --blue-ink:#2f6bd6; --blue-soft:#eef3ff;
+  --green:#54a24b; --green-soft:#eef6e8;
+  --red:#e45756; --red-soft:#fdeeee;
+  --teal:#3ba6a0; --teal-ink:#2b7a75; --teal-soft:#e9f6f5;
+  --violet:#b279a2; --violet-soft:#f8f0f5;
+  --code-bg:#2a2318; --code-text:#f0e8d6;
+  --radius:0.9rem; --radius-sm:0.7rem;
+  --shadow:0 1px 4px rgba(180,140,20,.1);
+  --shadow-lg:0 8px 24px rgba(180,140,20,.16);
+  --maxw:960px;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
+  --mono:'SFMono-Regular','D2Coding',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15.5px;}
+a{color:inherit;text-decoration:none;}
+.ilink{color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:var(--blue);}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,253,247,.9);
+  backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);}
+.topbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.topbar .brand{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;font-size:15px;min-width:0;}
+.topbar .brand .brand-emoji{font-size:17px;}
+.topbar .spacer{flex:1;}
+.topbar .badge{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--accent);white-space:nowrap;}
+.topbar a.home{color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap;}
+.topbar a.home:hover{color:var(--text);}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 96px;}
+.main{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px clamp(20px,5vw,52px) 48px;box-shadow:var(--shadow);}
+.hero{padding:10px 0 26px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.eyebrow{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.hero h1{font-size:clamp(26px,4.5vw,36px);font-weight:800;letter-spacing:-.03em;margin:8px 0 0;line-height:1.28;}
+.under{width:64px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffd766);margin:.6rem 0 1.1rem;}
+.hero p{font-size:15px;color:var(--text-soft);margin:0 0 20px;max-width:680px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 15px;font-size:13px;color:var(--text-soft);}
+.stat b{font-size:15px;color:var(--text);font-weight:800;}
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+.chapter{padding-top:24px;scroll-margin-top:70px;}
+.ch-head{margin:34px 0 8px;}
+.ch-num{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;background:linear-gradient(180deg,var(--gold),var(--accent));}
+.ch-sub{color:var(--text-soft);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:12px;scroll-margin-top:70px;}
+.sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.idea-d code,td code,th code{
+  font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:#7a5a1e;}
+.goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin:14px 0;max-width:720px;box-shadow:var(--shadow);}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;color:var(--accent);}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);padding:14px 18px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;color:var(--text-soft);}
+.why p{margin:0;font-size:14px;}
+.callout{border:1px solid var(--border);border-left:4px solid var(--muted);background:var(--card);
+  border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;max-width:720px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.tip .callout-head{color:var(--blue-ink);}
+.callout.warn{border-left-color:var(--accent);background:var(--card);}
+.callout.warn .callout-head{color:#b45309;}
+.callout.key{border-left-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff);}
+.callout.key .callout-head{color:#a06a08;}
+.callout.check{border-left-color:var(--green);background:var(--green-soft);}
+.callout.check .callout-head{color:#3d7a37;}
+.callout.err{border-left-color:var(--red);background:var(--red-soft);}
+.callout.err .callout-head{color:#c23b3a;}
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
+.idea-d{line-height:1.7;}
+/* 배선표 */
+table.wt{border-collapse:collapse;font-size:13px;margin:12px 0;max-width:720px;width:100%;background:#fff;}
+.wt th,.wt td{border:1px solid var(--border);padding:7px 12px;text-align:left;line-height:1.5;}
+.wt th{background:var(--card);font-size:12.5px;font-weight:800;color:var(--text-soft);}
+.wire{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15);}
+.w-y{background:#f4c400;} .w-w{background:#f6f4ee;} .w-r{background:#e45756;} .w-k{background:#3a3a3a;}
+/* 부품 카드 헤더 */
+.part{border:1px solid var(--border);border-radius:var(--radius);padding:4px 22px 20px;margin:26px 0;background:#fffefb;box-shadow:var(--shadow);}
+.part-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 4px;}
+.part-emoji{font-size:26px;}
+.part-title{font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.pbadge{font-size:11px;font-weight:800;border-radius:999px;padding:2px 10px;border:1px solid var(--border);background:var(--card);color:var(--text-soft);white-space:nowrap;}
+.pbadge.lv1{border-color:#cde8c9;background:var(--green-soft);color:#3d7a37;}
+.pbadge.lv2{border-color:#cfe0ff;background:var(--blue-soft);color:var(--blue-ink);}
+.pbadge.lv3{border-color:#ecd9e6;background:var(--violet-soft);color:#8a5578;}
+.part-sub{font-size:13.5px;color:var(--text-soft);margin:2px 0 8px;max-width:700px;}
+/* 코드/프롬프트 블록 */
+.block{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--card);border-bottom:1px solid var(--border);}
+.block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:var(--code-bg);}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:var(--code-text);}
+.code-block .block-head{background:#211b10;border-bottom-color:#3b3222;}
+.code-block .block-label{color:#e8dcc0;}
+.code-block .lang-tag{color:#c9b98c;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn{color:#e8dcc0;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn:hover{color:#fff;border-color:#7a6338;}
+.code-block .copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+.prompt-block{border-color:#cfe8e4;}
+.prompt-block .block-head{background:var(--teal-soft);border-bottom-color:#cfe8e4;}
+.prompt-block .block-label{color:var(--teal-ink);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#d7f0ea;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;background:#1c2b26;}
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;}
+.pico-accent{background:linear-gradient(120deg,var(--gold),var(--accent));-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-weight:900;}
+.pk{background:linear-gradient(120deg,var(--gold),var(--accent));color:#fff;font-weight:900;
+  border-radius:7px;padding:0 .26em;margin:0 .02em;}
+@media(max-width:640px){
+  body{font-size:15px;}
+  .main{padding:26px 16px 36px;}
+  .topbar .inner{padding:9px 12px;gap:8px;}
+  .topbar .brand{font-size:13.5px;}
+  .topbar a.home{display:none;}
+  .hero h1{font-size:24px;}
+  .part{padding:2px 14px 16px;}
+  table.wt{font-size:12px;}
+  .wt th,.wt td{padding:6px 8px;}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner">
+  <a class="brand" href="index.html"><span class="brand-emoji">🧰🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <span class="spacer"></span>
+  <a class="home" href="index.html">← 교재 목차</a>
+  <span class="badge">확장 부품 가이드</span>
+</div></div>
+<div class="wrap">
+<main class="main">
+
+<div class="hero">
+  <span class="eyebrow">Free Project · Expansion Kit</span>
+  <h1>🧰 확장 부품 가이드<br>키트에서 골라 쓰는 자유 프로젝트 부품</h1>
+  <div class="under"></div>
+  <p>자유 프로젝트(7장)를 위해 <b>확장 부품 파우치</b>가 준비되어 있어요. 여기 있는 부품은 전부 <b>피코 2 WH + 그로브 쉴드</b>의 번호 핀 소켓에 <b>암수 점퍼 케이블</b>로 바로 연결할 수 있는 것만 골랐습니다. 부품마다 <b>배선표 → AI 프롬프트 → 확인용 코드</b> 순서로 쓰면 돼요.</p>
+  <div class="stats">
+    <div class="stat"><b>8</b> 확장 부품</div>
+    <div class="stat"><b>8</b> 바이브코딩 프롬프트</div>
+    <div class="stat"><b>8</b> 확인용 코드</div>
+  </div>
+</div>
+
+<div class="goals"><div class="goals-t">🎯 이 페이지 사용법 — 3단계</div><ul>
+  <li><b>① 배선표</b>대로 연결하고 (쉴드 전원 스위치는 <b>항상 3.3V!</b>)</li>
+  <li><b>② 확인용 코드</b>를 복사해 올려서 부품이 살아 있는지 먼저 확인한 다음</li>
+  <li><b>③ AI 프롬프트</b>를 복사해 내 아이디어에 맞게 고쳐서 바이브코딩을 시작합니다</li>
+</ul></div>
+
+<div class="why"><div class="why-t">💡 왜 이 부품들만 골랐나요?</div>
+<p>키트에는 부품이 60가지도 넘지만, 우리 방식(그로브 쉴드 + 점퍼)과 맞는 건 <b>"전원 2줄 + 신호 1~2줄이면 끝나는 완성형 모듈"</b>이에요. 저항을 조합해 회로를 설계해야 하는 부품(낱개 LED·트랜지스터·7세그먼트 등)은 이번 프로젝트 범위 밖이라 뺐습니다. 자세한 이유는 맨 아래 <a class="ilink" href="#skip">"키트에 있지만 쓰지 않는 부품"</a>을 보세요.</p></div>
+
+<!-- ============ 목차 ============ -->
+<div class="linkgrid">
+  <a class="linkcard" href="#rules"><span class="n">먼저 읽기</span><span class="tt">🔌 연결 규칙 &amp; 핀 배정 지도</span><span class="d">핀 소켓 두 줄 · 점퍼 색 약속 · 그로브 소켓은 LED·MQ-2만</span></a>
+  <a class="linkcard" href="#servo"><span class="n">부품 1 · 강력 추천</span><span class="tt">⚙️ 서보 모터 (SG90)</span><span class="d">데이터를 '바늘'로 가리키는 첫 움직임</span></a>
+  <a class="linkcard" href="#dht"><span class="n">부품 2</span><span class="tt">🌡️ DHT11 온습도 센서</span><span class="d">공기질 기록에 온도·습도 열 추가</span></a>
+  <a class="linkcard" href="#sonic"><span class="n">부품 3</span><span class="tt">📏 초음파 거리 센서</span><span class="d">거리를 재는 박쥐의 눈</span></a>
+  <a class="linkcard" href="#pir"><span class="n">부품 4</span><span class="tt">🕵️ PIR 동작 감지 센서</span><span class="d">움직임 감지 → 기록·알림</span></a>
+  <a class="linkcard" href="#buzzer"><span class="n">부품 5</span><span class="tt">🔊 패시브 부저</span><span class="d">소리로 알려주는 알림</span></a>
+  <a class="linkcard" href="#lcd"><span class="n">부품 6</span><span class="tt">📟 I2C LCD1602</span><span class="d">폰 없이 데이터를 보여주는 화면</span></a>
+  <a class="linkcard" href="#mpu"><span class="n">부품 7</span><span class="tt">🤸 MPU6050 (6축 센서)</span><span class="d">기울기·움직임 — ML 교재와 연결</span></a>
+  <a class="linkcard" href="#ir"><span class="n">부품 8</span><span class="tt">📺 적외선 리모콘</span><span class="d">리모콘으로 내 작품 조종하기</span></a>
+  <a class="linkcard" href="#ideas"><span class="n">마무리</span><span class="tt">💡 조합 프로젝트 아이디어</span><span class="d">부품 2~3개를 엮으면 작품이 됩니다</span></a>
+</div>
+
+<!-- ============ 연결 규칙 ============ -->
+<section class="sec" id="rules"><h3 class="sec-title">🔌 먼저 읽기 — 연결 규칙 &amp; 핀 배정 지도</h3>
+
+<div class="concept-grid">
+  <div class="concept"><div class="concept-t">① 핀 소켓 두 줄이 정답지</div><div class="concept-d">쉴드에는 피코의 <b>모든 핀이 GP 번호 그대로</b> 암핀 소켓 두 줄로 나와 있어요. USB를 위로 두면 <b>왼쪽 줄</b>(GP0~GP15 쪽), <b>오른쪽 줄</b>(GP16~GP28·3V3·GND 쪽). 키트 부품은 이 핀 소켓에 <b>암수 점퍼</b>(수 핀 쪽 → 쉴드 구멍, 암 구멍 쪽 → 부품 핀)로 연결합니다. 위치가 헷갈리면 쉴드에 <b>인쇄된 GP 번호</b>가 정답!</div></div>
+  <div class="concept"><div class="concept-t">② 점퍼 색 약속</div><div class="concept-d"><span class="wire w-y"></span>노랑 = 신호 &nbsp;<span class="wire w-w"></span>흰색 = 둘째 신호<br><span class="wire w-r"></span>빨강 = 3V3(전원) &nbsp;<span class="wire w-k"></span>검정 = GND<br>전기적으로는 아무 색이나 동작하지만, 약속을 지키면 배선 점검이 5초로 끝나요.</div></div>
+  <div class="concept"><div class="concept-t">③ 전원은 3V3만 — VBUS 금지</div><div class="concept-d">빨강 점퍼는 언제나 <b>오른쪽 줄 위쪽의 3V3</b> 구멍에. 그보다 더 위에 있는 <code>VBUS</code>는 5V라서 <b>절대 헷갈리면 안 돼요!</b> 쉴드의 전원 스위치도 <b>항상 3.3V</b> 고정. 5V가 꼭 필요하면 선생님과 함께!</div></div>
+</div>
+
+<div class="callout tip"><div class="callout-head">💡 그로브 소켓은 딱 두 부품만 씁니다</div><div class="callout-body">그로브 케이블용 소켓은 교재 기본 부품인 <b>WS2813 LED 바(D16 소켓)</b>와 <b>MQ-2 가스센서(A0 소켓 + 그로브→암점퍼 변환 케이블)</b> 전용이에요 — 기본 배선 그대로 두면 됩니다. 이 페이지의 키트 부품을 그로브 소켓에 꽂으려고 애쓰지 마세요!</div></div>
+
+<p class="prose"><b>핀 배정 지도</b> — 교재에서 이미 쓰는 핀(LED·가스센서)은 그대로 두고, 남는 핀에 확장 부품을 배치합니다. 같은 핀에 배정된 부품끼리는 <b>동시에 쓸 수 없으니</b> 프로젝트 계획 때 확인하세요.</p>
+
+<table class="wt">
+  <tr><th>연결 자리</th><th>핀</th><th>배정</th></tr>
+  <tr><td>그로브 <code>D16</code> 소켓</td><td>GP16</td><td>🚦 WS2813 LED 바 <b>(교재 기본 — 건드리지 않기)</b></td></tr>
+  <tr><td>그로브 <code>A0</code> 소켓</td><td>GP26</td><td>💨 MQ-2 가스센서 <b>(교재 기본 — 건드리지 않기)</b></td></tr>
+  <tr><td>핀 소켓 (오른쪽 줄)</td><td>GP18 / GP19</td><td>⚙️ 서보 <i>또는</i> 📏 초음파 <i>또는</i> 🔊 부저 (셋 중 하나)</td></tr>
+  <tr><td>핀 소켓 (오른쪽 줄)</td><td>GP20</td><td>🌡️ DHT11 <i>또는</i> 🕵️ PIR (둘 중 하나)</td></tr>
+  <tr><td>핀 소켓 (왼쪽 줄)</td><td>GP4 / GP5</td><td>📟 LCD1602 + 🤸 MPU6050 — I2C 버스라 <b>둘을 같이</b> 연결 가능</td></tr>
+  <tr><td>핀 소켓 (왼쪽 줄 맨 위)</td><td>GP1</td><td>📺 적외선 수신기</td></tr>
+  <tr><td>핀 소켓 (오른쪽 줄)</td><td>GP27 · GP28</td><td>여유 아날로그 — 수위 센서·조이스틱 등 (아래 참고)</td></tr>
+</table>
+
+<div class="callout key"><div class="callout-head">🔑 AI에게 코드를 부탁할 때, 이 사실을 꼭 알려주세요</div><div class="callout-body">AI는 여러분의 배선을 볼 수 없어요. 그래서 프롬프트마다 <b>[하드웨어]</b> 줄에 핀 번호가 적혀 있습니다. 포트를 바꿔 꽂았다면 프롬프트의 핀 번호도 같이 바꿔야 해요. LED를 함께 쓸 때는 <code>timing=(280,515,515,745)</code>도 잊지 말고요!</div></div>
+</section>
+
+<!-- ============ 부품 1: 서보 ============ -->
+<section class="sec" id="servo">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">⚙️</span><span class="part-title">부품 1 · 서보 모터 (SG90)</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">핀 소켓 GP18</span></div>
+  <p class="part-sub">지금까지는 데이터를 <b>빛(LED)</b>으로만 표현했죠. 서보는 0~180도로 정확히 움직이는 작은 모터예요. 데이터를 <b>바늘이 가리키는 아날로그 게이지</b>로 바꿀 수 있는, 이 파우치에서 가장 추천하는 부품입니다.</p>
+
+  <table class="wt">
+    <tr><th>부품 핀 (서보 선 색)</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>주황 (신호)</td><td>핀 소켓 <code>GP18</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>빨강 (전원)</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>갈색 (접지)</td><td>핀 소켓 <code>GND</code> — GP18 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+  <p class="prose">서보 케이블 끝은 <b>암(구멍) 커넥터</b>예요. 커넥터 구멍과 쉴드 핀 소켓 양쪽에 다 꽂히도록 <b>수수(양쪽 핀) 점퍼 3개</b>를 쓰세요.</p>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 서보가 0° → 90° → 180°로 움직이면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># SG90 서보 — 각도 제어 (핀 소켓 GP18)
+from machine import Pin, PWM
+import time
+
+servo = PWM(Pin(18))
+servo.freq(50)                        # 서보는 50Hz(20ms 주기) 신호를 사용해요
+
+def angle(deg):
+    # 0도 = 0.5ms 펄스, 180도 = 2.5ms 펄스 → duty_u16(0~65535)로 환산
+    us = 500 + int(deg) * 2000 // 180
+    servo.duty_u16(us * 65535 // 20000)
+
+angle(0);   time.sleep(1)
+angle(90);  time.sleep(1)
+angle(180); time.sleep(1)
+angle(90)                             # 가운데로 복귀
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 강수확률 바늘 게이지</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코는 5장 코드로 Open-Meteo에서 오늘 강수확률(%)을 받아오고 있어.
+[하드웨어] SG90 서보가 GP18에 연결돼 있어 (50Hz PWM, 0도=0.5ms·180도=2.5ms 펄스). 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결해. 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마.
+[작업] 오늘 강수확률 0~100%를 서보 각도 0~180도로 바꿔서, 종이 눈금판 위에서 바늘이 오늘 비 올 확률을 가리키는 아날로그 날씨 게이지를 만들어 줘. 좌표는 5장처럼 코드 상단 LAT, LON 변수(기본 37.5665, 126.9780)로 두고 우리 학교 좌표로 바꿀 수 있게 해 줘.
+[제약] 데이터 갱신은 30분마다, 외부 라이브러리는 쓰지 말고, 갱신할 때 바늘이 부드럽게(1도씩) 움직이게.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 꾸미기 팁</div><div class="callout-body">두꺼운 종이에 부채꼴 눈금판(☀️ 0% ~ ☔ 100%)을 그리고 서보 날개에 바늘을 붙이면 진짜 '아날로그 날씨 시계'가 됩니다. 3.3V에서는 힘이 살짝 약하지만 종이 바늘을 돌리기엔 충분해요.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 2: DHT11 ============ -->
+<section class="sec" id="dht">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🌡️</span><span class="part-title">부품 2 · DHT11 온습도 센서</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">핀 소켓 GP20</span></div>
+  <p class="part-sub">온도와 습도를 한 번에 재는 파란 그물 모양 센서. 6장 구글 시트 기록에 <b>온도·습도 열을 추가</b>하면, 가스 농도와 온습도의 관계까지 탐구할 수 있어요.</p>
+
+  <table class="wt">
+    <tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>DATA (신호)</td><td>핀 소켓 <code>GP20</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP20에서 <b>두 칸 위</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 2초마다 온도·습도가 찍히면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># DHT11 온습도 — 2초마다 읽기 (핀 소켓 GP20)
+import dht, time
+from machine import Pin
+
+sensor = dht.DHT11(Pin(20))
+
+while True:
+    time.sleep(2)                     # DHT11은 최소 2초 간격으로만 읽을 수 있어요
+    try:
+        sensor.measure()
+        print("온도:", sensor.temperature(), "°C   습도:", sensor.humidity(), "%")
+    except OSError:
+        print("읽기 실패 — 신호선이 GP20(노랑)에 잘 꽂혔는지 확인!")
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 공기질 기록 노트에 온습도 추가</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코는 6장 코드로 1분마다 MQ-2 가스값을 구글 시트(Apps Script 웹 앱)에 기록하고 있어.
+[하드웨어] MQ-2는 아날로그 GP26, DHT11 온습도 센서는 GP20에 새로 연결했어 (MicroPython 내장 dht 모듈 사용, 최소 2초 간격). 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결해. 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마.
+[작업] 기록할 때 가스값과 함께 온도(°C)·습도(%)도 같은 줄에 보내도록 코드를 고쳐 줘. Apps Script 쪽에서 받을 파라미터 이름도 알려줘.
+[제약] Apps Script 웹 앱 URL은 코드 상단 WEB_APP_URL 변수에 저장하고, urequests 응답은 매 전송마다 반드시 close(). DHT11 읽기 OSError는 try/except로 잡아 그 값만 건너뛰고, 기록 간격은 그대로 1분.
+[출력] 고친 main.py 전체와, Apps Script에서 수정할 부분을 나눠서 줘.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 3: 초음파 ============ -->
+<section class="sec" id="sonic">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">📏</span><span class="part-title">부품 3 · 초음파 거리 센서 (HC-SR04)</span><span class="pbadge lv2">난이도 ★★☆</span><span class="pbadge">핀 소켓 GP18·GP19</span></div>
+  <p class="part-sub">눈처럼 생긴 두 개의 원통에서 초음파를 쏘고(TRIG) 메아리를 받아(ECHO) 거리를 잽니다. 박쥐와 같은 원리! 신호가 2개지만 GP18·GP19가 핀 소켓에서 <b>아래위로 나란한 칸</b>이라 배선은 어렵지 않아요.</p>
+
+  <table class="wt">
+    <tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>TRIG (쏘기)</td><td>핀 소켓 <code>GP18</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>ECHO (받기)</td><td>핀 소켓 <code>GP19</code> — GP18 <b>바로 위 칸</b></td><td><span class="wire w-w"></span>흰색</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP18 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 손을 가까이/멀리 하면 숫자가 변하면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 초음파 거리 측정 (핀 소켓 GP18=TRIG, GP19=ECHO)
+from machine import Pin, time_pulse_us
+import time
+
+trig = Pin(18, Pin.OUT)
+echo = Pin(19, Pin.IN)
+
+def distance_cm():
+    trig.value(0); time.sleep_us(2)
+    trig.value(1); time.sleep_us(10)   # 10µs 동안 초음파 발사!
+    trig.value(0)
+    t = time_pulse_us(echo, 1, 30000)  # 메아리가 돌아온 시간(µs), 최대 30ms 대기
+    if t < 0:
+        return None                    # 시간 초과 = 측정 실패
+    return t * 0.0343 / 2              # 소리 속도(343m/s)로 왕복→편도 거리 환산
+
+while True:
+    d = distance_cm()
+    print("거리: %.1f cm" % d if d else "측정 실패 — 배선과 방향을 확인해 보세요")
+    time.sleep(0.3)
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 거리 게이지 &amp; 접근 경보</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코에서 초음파 센서로 거리를 재는 distance_cm() 함수가 돌아가고 있어.
+[하드웨어] 초음파 센서는 TRIG=GP18, ECHO=GP19. 열 칸 LED 바(WS2813)는 16번 핀이고 만들 때 timing=(280,515,515,745) 지정이 꼭 필요해.
+[작업] 거리 10~100cm를 LED 10칸 게이지로 표시해 줘 (가까울수록 많이 켜지고 초록→노랑→빨강으로). 20cm 안으로 들어오면 전체를 빨갛게 깜빡이는 '접근 경보'도 넣어 줘.
+[제약] 0.2초마다 측정, 측정 실패(None)일 때는 LED를 끄고 넘어가기, LED 밝기는 채널당 40 이하.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체.</div></div>
+
+  <div class="callout warn"><div class="callout-head">⚠️ 값이 이상하다면</div><div class="callout-body">HC-SR04는 원래 5V용이라, 3.3V에서는 <b>측정 가능 거리가 짧아지거나 가끔 실패</b>할 수 있어요. "측정 실패"가 계속 뜨면 센서를 벽처럼 평평한 곳을 향하게 해 보고, 그래도 안 되면 선생님과 함께 확인하세요.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 4: PIR ============ -->
+<section class="sec" id="pir">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🕵️</span><span class="part-title">부품 4 · PIR 동작 감지 센서 (HC-SR501)</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">핀 소켓 GP20</span></div>
+  <p class="part-sub">돔 모양 흰 렌즈로 사람이나 동물의 <b>움직임(적외선 변화)</b>을 감지합니다. 복도 자동등, 교실 출입 카운터, 우리 반 보안 시스템의 핵심 부품.</p>
+
+  <table class="wt">
+    <tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>OUT (가운데)</td><td>핀 소켓 <code>GP20</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP20에서 <b>두 칸 위</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 손을 흔들면 "움직임 감지!"가 뜨면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># PIR 동작 감지 (핀 소켓 GP20)
+from machine import Pin
+import time
+
+pir = Pin(20, Pin.IN)
+
+print("센서 안정화 중... 30초만 가만히 기다려 주세요")
+time.sleep(30)                        # PIR은 켜진 직후엔 오작동해요 — 워밍업 필수!
+print("감시 시작 👀")
+
+while True:
+    if pir.value() == 1:
+        print("🚨 움직임 감지!", time.ticks_ms() // 1000, "초")
+        time.sleep(2)                 # 한 번 감지하면 잠시 쉬기
+    time.sleep(0.1)
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 교실 출입 기록기</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코는 6장 방식으로 구글 시트(Apps Script 웹 앱)에 데이터를 기록할 수 있어.
+[하드웨어] PIR 동작 감지 센서가 GP20에 연결돼 있어 (움직이면 1, 평소엔 0). 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결해. 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마.
+[작업] 움직임이 감지될 때마다 감지 순번과 부팅 후 경과 시간(초)을 구글 시트에 한 줄씩 기록하는 '교실 출입 기록기'를 만들어 줘. 같은 사람이 계속 서 있을 때 중복 기록되지 않게, 한 번 기록하면 10초는 쉬어.
+[제약] Apps Script 웹 앱 URL은 코드 상단 WEB_APP_URL 변수에 저장하고, urequests 응답은 반드시 close(). 켜진 뒤 30초는 워밍업으로 기록하지 말기. 와이파이 전송 실패해도 프로그램이 멈추지 않게.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 너무 예민하거나 둔하다면</div><div class="callout-body">센서 옆의 주황색 나사 2개가 <b>감도</b>와 <b>감지 유지 시간</b> 조절용이에요. 드라이버로 살살 돌려 보세요. 사람이 없는데도 계속 감지되면 감도를 낮추면 됩니다.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 5: 부저 ============ -->
+<section class="sec" id="buzzer">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🔊</span><span class="part-title">부품 5 · 패시브 부저</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">핀 소켓 GP18</span></div>
+  <p class="part-sub">지금까지 작품은 '보는 것'뿐이었죠. 부저를 더하면 <b>소리로 알려주는</b> 작품이 됩니다. 패시브 부저는 주파수를 바꿔 <b>멜로디</b>까지 연주할 수 있어요. (키트엔 2개가 있어요 — 밑면이 뚫려 있고 기판이 보이는 쪽이 패시브입니다.)</p>
+
+  <table class="wt">
+    <tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>+ (긴 다리)</td><td>핀 소켓 <code>GP18</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>− (짧은 다리)</td><td>핀 소켓 <code>GND</code> — GP18 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — '도미솔도' 멜로디가 나오면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 패시브 부저로 멜로디 (핀 소켓 GP18)
+from machine import Pin, PWM
+import time
+
+buzzer = PWM(Pin(18))
+NOTES = {"도":262, "레":294, "미":330, "파":349,
+         "솔":392, "라":440, "시":494, "높은도":523}
+
+def play(name, sec=0.3):
+    buzzer.freq(NOTES[name])
+    buzzer.duty_u16(3000)             # 소리 켜기 (숫자를 키우면 더 커져요)
+    time.sleep(sec)
+    buzzer.duty_u16(0)                # 소리 끄기
+    time.sleep(0.05)
+
+for n in ["도", "미", "솔", "높은도"]:
+    play(n)
+buzzer.deinit()                       # 다 쓰면 PWM 정리
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 공기질 경보음</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코는 4장 코드로 MQ-2 가스값을 읽어 LED 게이지로 표시하고 있어.
+[하드웨어] MQ-2는 아날로그 GP26, 패시브 부저는 GP18 (PWM으로 주파수를 바꿔 소리 냄), 열 칸 LED(WS2813)는 16번 핀에 timing=(280,515,515,745).
+[작업] 가스값이 WARNING 기준을 넘으면 '삐-삐-' 2번, DANGER 기준을 넘으면 사이렌처럼 높낮이가 오르내리는 경보음이 울리게 해 줘. 정상으로 돌아오면 '띠링' 하고 안심음 한 번.
+[제약] 경보음은 5초에 한 번만 (계속 울리면 시끄러우니까). 소리 크기는 duty_u16 3000 정도로 하고, 각 음이 끝나면 반드시 duty_u16(0)으로 부저를 꺼. LED 밝기는 채널당 40 이하.
+[출력] 기존 LED 기능을 유지한 채 부저 기능을 더한 완결형 main.py 전체.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 6: LCD ============ -->
+<section class="sec" id="lcd">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">📟</span><span class="part-title">부품 6 · I2C LCD1602 화면</span><span class="pbadge lv2">난이도 ★★☆</span><span class="pbadge">핀 소켓 GP4·GP5 (I2C)</span></div>
+  <p class="part-sub">16글자 × 2줄을 표시하는 초록 화면. 지금까지는 값을 보려면 Thonny나 폰이 필요했지만, LCD가 있으면 <b>피코 혼자서도 숫자를 보여주는 독립 측정기</b>가 됩니다. 뒷면의 I2C 변환 기판 덕분에 선 4개면 끝!</p>
+
+  <table class="wt">
+    <tr><th>부품 핀 (뒷면 기판)</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>SCL</td><td>핀 소켓 <code>GP5</code> (왼쪽 줄 위쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>SDA</td><td>핀 소켓 <code>GP4</code> — GP5 <b>바로 위 칸</b></td><td><span class="wire w-w"></span>흰색</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP5 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 화면에 두 줄 글자가 나오면 성공 (드라이버 포함 완결형)</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># I2C LCD1602 — 글자 출력 (핀 소켓 GP4=SDA · GP5=SCL을 I2C로 사용)
+# 외부 라이브러리 없이 동작하는 초간단 드라이버 포함!
+from machine import I2C, Pin
+import time
+
+i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=100000)
+devs = i2c.scan()
+if not devs:
+    raise RuntimeError("LCD 못 찾음 — SDA(GP4)/SCL(GP5) 배선을 확인하세요")
+ADDR = 0x27 if 0x27 in devs else (0x3F if 0x3F in devs else devs[0])
+
+# ---- LCD1602 미니 드라이버 (PCF8574 방식) ----
+def _w4(d):                            # 4비트 + 백라이트 켠 채로 E펄스
+    i2c.writeto(ADDR, bytes([d | 0x0C, d | 0x08]))
+def _cmd(c):                           # 명령 보내기
+    _w4(c & 0xF0); _w4((c << 4) & 0xF0); time.sleep_ms(2)
+def _chr(c):                           # 글자 보내기 (RS=1)
+    _w4((c & 0xF0) | 1); _w4(((c << 4) & 0xF0) | 1)
+def lcd_init():
+    time.sleep_ms(50)
+    for c in (0x33, 0x32, 0x28, 0x0C, 0x06, 0x01):
+        _cmd(c)
+def lcd_print(text, line=0):           # line 0=윗줄, 1=아랫줄 (영문·숫자만!)
+    _cmd(0x80 + (0x40 if line else 0))
+    for ch in text[:16]:
+        _chr(ord(ch))
+# ---------------------------------------------
+
+lcd_init()
+lcd_print("Hello, Pico!")
+lcd_print("Vibe Coding :)", 1)
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 들고 다니는 공기질 측정기</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코에는 I2C LCD1602 드라이버(lcd_init, lcd_print 함수)가 이미 돌아가고 있어. 아래에 그 코드를 붙여 줄게. (← 위 확인용 코드를 함께 붙여넣으세요)
+[하드웨어] LCD는 I2C(0) SDA=GP4·SCL=GP5, MQ-2 가스센서는 아날로그 GP26. LCD는 영문·숫자만 표시 가능하고 한 줄 16글자야.
+[작업] 윗줄에는 "GAS: 1234" 처럼 실시간 가스값을, 아랫줄에는 값에 따라 "GOOD / OPEN WINDOW! / DANGER!!" 상태 문구를 보여주는 휴대용 공기질 측정기를 만들어 줘.
+[제약] 1초마다 갱신, 화면 깜빡임이 심하지 않게 값이 바뀔 때만 다시 쓰기.
+[출력] 드라이버 포함, 복사해서 바로 돌아가는 완결형 main.py 전체.</div></div>
+
+  <div class="callout err"><div class="callout-head">🔧 화면에 아무것도 안 보여요!</div><div class="callout-body">① 백라이트만 켜지고 글자가 없다면 → 뒷면의 <b>파란 사각형 나사(가변저항)</b>를 드라이버로 천천히 돌려 보세요. 글자 진하기 조절이에요. ② 3.3V에서는 화면이 연할 수 있어요 — 그래도 안 보이면 5V 전원이 필요한 개체이니 선생님과 함께 연결하세요. ③ <code>LCD 못 찾음</code> 에러면 SDA/SCL이 바뀌어 꽂힌 경우가 대부분!</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 7: MPU6050 ============ -->
+<section class="sec" id="mpu">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🤸</span><span class="part-title">부품 7 · MPU6050 6축 기울기 센서</span><span class="pbadge lv2">난이도 ★★☆</span><span class="pbadge">핀 소켓 GP4·GP5 (I2C)</span></div>
+  <p class="part-sub">기울기·가속도·회전을 한 번에 재는 센서. 사실 이 부품은 <b>전용 교재가 따로 있어요</b> — <a class="ilink" href="ml_site/index.html">머신러닝 특별편(ml_site)</a>의 '동작 인식' 챕터가 이 센서로 뒤집기 동작을 학습시킵니다. 여기서는 맛보기만!</p>
+
+  <table class="wt">
+    <tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>SCL</td><td>핀 소켓 <code>GP5</code> (왼쪽 줄 위쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>SDA</td><td>핀 소켓 <code>GP4</code> — GP5 <b>바로 위 칸</b></td><td><span class="wire w-w"></span>흰색</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP5 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 센서를 기울이면 숫자가 변하면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># MPU6050 — 가속도 값 읽기 맛보기 (핀 소켓 GP4=SDA · GP5=SCL을 I2C로 사용)
+from machine import I2C, Pin
+import time, struct
+
+i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
+if 0x68 not in i2c.scan():
+    raise RuntimeError("MPU6050 못 찾음 — SCL/SDA 배선과 3.3V 스위치 확인")
+
+i2c.writeto_mem(0x68, 0x6B, b"\x00")   # 잠에서 깨우기 — 이 줄이 없으면 값이 0!
+time.sleep(0.1)
+
+while True:
+    ax, ay, az = struct.unpack(">hhh", i2c.readfrom_mem(0x68, 0x3B, 6))
+    print("가속도  x:%6d   y:%6d   z:%6d" % (ax, ay, az))
+    time.sleep(0.2)
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 기울기 수평계</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코에서 MPU6050의 가속도 값(x, y, z)을 읽는 코드가 돌아가고 있어.
+[하드웨어] MPU6050은 I2C(0) SDA=GP4·SCL=GP5, 주소 0x68 (깨우기: 레지스터 0x6B에 0x00). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 필요.
+[작업] 보드를 좌우로 기울이면 LED 불빛이 물방울처럼 기운 쪽으로 흘러가는 '수평계'를 만들어 줘. 완전히 수평이면 가운데 두 칸만 초록색으로.
+[제약] 0.05초마다 갱신해서 부드럽게, 밝기는 낮게(40 이하).
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 더 깊이 가고 싶다면</div><div class="callout-body">이 센서로 <b>내 동작을 AI에게 학습시키는</b> 전체 과정(데이터 수집 → 학습 → 예측)이 <a class="ilink" href="ml_site/index.html">머신러닝 특별편</a>에 준비되어 있어요. 자유 프로젝트를 '동작 인식 작품'으로 만들고 싶다면 그쪽 교재를 따라가세요.</div></div>
+</div>
+</section>
+
+<!-- ============ 부품 8: IR ============ -->
+<section class="sec" id="ir">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">📺</span><span class="part-title">부품 8 · 적외선 수신기 + 리모콘</span><span class="pbadge lv3">난이도 ★★★</span><span class="pbadge">핀 소켓 GP1</span></div>
+  <p class="part-sub">TV 리모콘과 같은 원리로, 버튼마다 다른 적외선 신호를 보냅니다. 이걸 해석하면 <b>리모콘으로 조종하는 작품</b>이 돼요. 신호 해석(디코딩)이 조금 까다로우니, 확인용 코드로 신호가 오는지만 보고 해석은 AI에게 맡기는 걸 추천!</p>
+
+  <table class="wt">
+    <tr><th>부품 핀 (앞면 기준)</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>OUT / Y (신호)</td><td>핀 소켓 <code>GP1</code> (왼쪽 줄 맨 위쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP1 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 리모콘 버튼을 누르면 "신호 감지!"가 뜨면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 적외선 수신 맛보기 — 신호가 오는지만 확인 (핀 소켓 GP1 = 신호)
+from machine import Pin
+import time
+
+ir = Pin(1, Pin.IN)                   # 신호 없을 땐 1, 신호 오면 0으로 떨어져요
+
+print("리모콘을 수신기 쪽으로 향하고 아무 버튼이나 눌러 보세요!")
+while True:
+    if ir.value() == 0:
+        print("📡 신호 감지!", time.ticks_ms(), "ms")
+        time.sleep(0.3)               # 연속 감지 방지
+</code></pre></div>
+
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 리모콘 무드등 (NEC 해석은 AI에게)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 내 피코의 GP1에 적외선 수신기가 붙어 있고, 리모콘 버튼을 누르면 신호가 감지되는 것까지 확인했어.
+[하드웨어] 수신기 신호는 GP1 (평소 1, 신호 때 0으로 떨어지는 NEC 방식 리모콘). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 필요.
+[작업] NEC 프로토콜을 해석해서 (외부 라이브러리 없이, 핀 인터럽트와 시간 측정으로) 어떤 버튼이 눌렸는지 코드값을 출력하게 해 줘. 그리고 숫자 1~5 버튼에 각각 다른 LED 색(빨강·주황·초록·파랑·보라)이 켜지고, 0 버튼은 끄기가 되는 리모콘 무드등을 만들어 줘.
+[제약] 먼저 '버튼 코드 알아내기 모드'로 각 버튼의 코드값을 출력해 주는 코드부터 주고, 내가 코드값을 알려주면 무드등 완성본을 줘. LED 밝기는 채널당 40 이하.
+[출력] 각 단계마다 복사해서 바로 돌아가는 완결형 main.py 전체.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 이 부품이 바이브코딩 연습에 최고인 이유</div><div class="callout-body">적외선 해석은 사람이 직접 짜기엔 까다롭지만 AI는 잘 짭니다. 대신 <b>"먼저 버튼 코드를 알아내는 코드부터"</b>라고 단계를 나눠 요청하는 게 핵심이에요. 한 번에 다 만들어 달라고 하면 내 리모콘의 코드값을 AI가 알 수 없으니까요. 이게 바로 프롬프트를 '설계'하는 감각!</div></div>
+</div>
+</section>
+
+<!-- ============ 간단 부품 ============ -->
+<section class="sec" id="etc"><h3 class="sec-title">🎒 보너스 — 파우치의 나머지 간단 부품</h3>
+<p class="prose">아래 부품들은 배선이 아주 간단해서 표만 보고도 바로 쓸 수 있어요. 확인용 코드는 <b>가스센서(3장)·버튼 코드와 같은 방식</b>입니다.</p>
+<div class="concept-grid">
+  <div class="concept"><div class="concept-t">💧 수위 센서</div><div class="concept-d">신호(S) → 핀 소켓 <code>GP27</code>, VCC → <code>3V3</code>, GND → <code>GND</code>. 물에 잠긴 깊이만큼 <code>ADC(Pin(27)).read_u16()</code> 값이 커져요. 화분 물주기 알리미에 딱!</div></div>
+  <div class="concept"><div class="concept-t">👆 정전식 터치 모듈</div><div class="concept-d">신호 → 핀 소켓 <code>GP20</code>, VCC → <code>3V3</code>, GND → <code>GND</code>. 만지면 1이 되는 '스위치'. <code>Pin(20, Pin.IN).value()</code>로 읽어요. 버튼보다 미래적인 입력!</div></div>
+  <div class="concept"><div class="concept-t">🕹️ 조이스틱</div><div class="concept-d">VRx → 핀 소켓 <code>GP27</code>, VRy → 핀 소켓 <code>GP28</code>, VCC → <code>3V3</code>, GND → <code>GND</code>. 아날로그 값 2개로 상하좌우를 읽어요. LED 불빛을 조이스틱으로 움직여 보세요.</div></div>
+</div>
+</section>
+
+<!-- ============ 조합 아이디어 ============ -->
+<section class="sec" id="ideas"><h3 class="sec-title">💡 조합 프로젝트 아이디어 — 부품 2~3개면 작품이 됩니다</h3>
+<div class="idea-grid">
+  <div class="idea"><div class="idea-t">☔ 아날로그 날씨 시계</div><div class="idea-d"><b>서보 + LED</b> — 서보 바늘은 강수확률을, LED 열 칸은 기온을 표시. 5장 코드에서 출발.</div></div>
+  <div class="idea"><div class="idea-t">🏠 우리 반 종합 기상청</div><div class="idea-d"><b>DHT11 + MQ-2 + LCD</b> — 온도·습도·가스를 LCD에 번갈아 표시하고 구글 시트에 기록. 3·6장 코드에서 출발.</div></div>
+  <div class="idea"><div class="idea-t">🚨 도서관 정숙 지킴이</div><div class="idea-d"><b>PIR + 부저 + LED</b> — 쉬는 시간이 아닌데 움직임이 감지되면 LED 경고, 계속되면 부저.</div></div>
+  <div class="idea"><div class="idea-t">🅿️ 주차 도우미</div><div class="idea-d"><b>초음파 + LED + 부저</b> — 자전거·의자가 가까워질수록 LED가 차오르고, 20cm 안이면 삐삐삐!</div></div>
+  <div class="idea"><div class="idea-t">🎮 리모콘 만능 조종기</div><div class="idea-d"><b>IR + 서보 + LED</b> — 리모콘 버튼으로 무드등 색을 바꾸고, 볼륨 버튼으로 서보 각도 조종.</div></div>
+  <div class="idea"><div class="idea-t">🌱 화분 지킴이</div><div class="idea-d"><b>수위 센서 + LCD + 부저</b> — 물이 부족하면 LCD에 "WATER ME!", 부저로 알림, 시트에 기록.</div></div>
+</div>
+
+<div class="callout check"><div class="callout-head">✅ 프로젝트 계획 체크리스트</div><div class="callout-body">① 내 부품들의 핀이 <a class="ilink" href="#rules">핀 배정 지도</a>에서 겹치지 않나요? ② 프롬프트의 [하드웨어] 줄에 핀 번호를 전부 적었나요? ③ LED를 쓴다면 <code>timing=(280,515,515,745)</code>를 명시했나요? ④ 확인용 코드로 부품이 하나씩 살아 있는지 먼저 확인했나요? — 이 네 가지면 AI가 만든 코드가 한 번에 돌아갈 확률이 확 올라갑니다.</div></div>
+</section>
+
+<!-- ============ 쓰지 않는 부품 ============ -->
+<section class="sec" id="skip"><h3 class="sec-title">📦 키트에 있지만 이번엔 쓰지 않는 부품 (왜?)</h3>
+<p class="prose">키트의 나머지 부품이 나쁜 게 아니에요. 다만 <b>브레드보드에 저항·트랜지스터로 회로를 설계하는 지식</b>이 먼저 필요해서, 완성형 모듈을 점퍼 몇 가닥으로 바로 연결하는 우리 프로젝트와는 결이 다를 뿐입니다.</p>
+<table class="wt">
+  <tr><th>부품</th><th>쓰지 않는 이유</th></tr>
+  <tr><td>낱개 LED · 저항 80개 · 콘덴서 · 트랜지스터 · 다이오드</td><td>전류 계산과 회로 설계가 필요한 <b>전자회로 학습용</b> — 다음 기회에!</td></tr>
+  <tr><td>LED 매트릭스 · 7세그먼트 · LED 막대</td><td>핀이 8~16개 필요해 점퍼가 뒤엉키는 배선이 됨. 표현은 WS2813 LED 바가 이미 상위호환</td></tr>
+  <tr><td>4×4 키패드</td><td>GPIO 8개 필요 + 우리 작품의 입력은 웹 대시보드가 담당</td></tr>
+  <tr><td>RFID (MFRC522)</td><td>SPI 통신에 신호선 5개가 필요해 배선이 복잡 — 도전하고 싶다면 선생님과 함께</td></tr>
+  <tr><td>DC 모터 · 펌프 · 팬 · 릴레이</td><td>모터 드라이버 회로와 별도 전원(18650)이 필요 — 움직임은 서보로 충분</td></tr>
+  <tr><td>키트의 Pico W 보드</td><td>우리 보드는 <b>Pico 2 WH</b>! 펌웨어(uf2)가 서로 달라 섞이면 "코드가 안 올라가요" 사태의 주범</td></tr>
+</table>
+</section>
+
+<footer>
+  라즈베리파이 피코 2 WH · 그로브 쉴드 · MicroPython · Thonny &nbsp;·&nbsp; 확장 부품 가이드 (자유 프로젝트용 별책)<br>
+  LED → 그로브 D16 소켓(GP16) · MQ-2 → 그로브 A0 소켓(GP26) · 키트 부품 → 핀 소켓 + 암수 점퍼 · 쉴드 전원 스위치는 항상 3.3V &nbsp;·&nbsp; <a class="ilink" href="ch7.html">← 7장 자유 프로젝트로 돌아가기</a>
+</footer>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
+document.querySelectorAll('.block').forEach(block=>{
+  const btn=block.querySelector('.copy-btn'); if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const code=block.querySelector('code');
+    const body=block.querySelector('.prompt-body');
+    const text=code?code.textContent:(body?body.textContent:'');
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
+  });
+});
+</script>
+</body>
+</html>

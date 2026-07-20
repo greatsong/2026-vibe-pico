@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="robots" content="noindex">
+<title>프로젝트 샘플 5 · 교재 부품 × 키트 부품 조합 자유 프로젝트</title>
+<meta name="description" content="라즈베리파이 피코 2 WH + 그로브 쉴드 + 케플러 키트 부품을 조합한 자유 프로젝트 샘플 5종 — 스토리·배선표·3단계 바이브코딩 프롬프트·확인용 MicroPython 코드.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+<style>
+/* ============================================================
+   피코 바이브 피지컬 코딩 · 웹 교재 스타일
+   디자인 계열: 2026-snui 웹 교재 (따뜻한 크림·골드)
+   ============================================================ */
+:root{
+  --gold:#f4b400; --accent:#e8930c;
+  --bg:#fffdf7; --card:#fff6e0;
+  --border:#f0e2bc; --border-soft:#f7edcf;
+  --text:#3a2e1a; --text-soft:#6b5836; --muted:#9a8b6a;
+  --blue:#4c8df6; --blue-ink:#2f6bd6; --blue-soft:#eef3ff;
+  --green:#54a24b; --green-soft:#eef6e8;
+  --red:#e45756; --red-soft:#fdeeee;
+  --teal:#3ba6a0; --teal-ink:#2b7a75; --teal-soft:#e9f6f5;
+  --violet:#b279a2; --violet-soft:#f8f0f5;
+  --code-bg:#2a2318; --code-text:#f0e8d6;
+  --radius:0.9rem; --radius-sm:0.7rem;
+  --shadow:0 1px 4px rgba(180,140,20,.1);
+  --shadow-lg:0 8px 24px rgba(180,140,20,.16);
+  --maxw:960px;
+  --font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Roboto,sans-serif;
+  --mono:'SFMono-Regular','D2Coding',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15.5px;}
+a{color:inherit;text-decoration:none;}
+.ilink{color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+.ilink:hover{color:var(--blue);}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,253,247,.9);
+  backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);
+  border-bottom:1px solid var(--border);}
+.topbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.topbar .brand{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;font-size:15px;min-width:0;}
+.topbar .brand .brand-emoji{font-size:17px;}
+.topbar .spacer{flex:1;}
+.topbar .badge{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--card);color:var(--accent);white-space:nowrap;}
+.topbar a.home{color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap;}
+.topbar a.home:hover{color:var(--text);}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 96px;}
+.main{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px clamp(20px,5vw,52px) 48px;box-shadow:var(--shadow);}
+.hero{padding:10px 0 26px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.eyebrow{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.hero h1{font-size:clamp(26px,4.5vw,36px);font-weight:800;letter-spacing:-.03em;margin:8px 0 0;line-height:1.28;}
+.under{width:64px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffd766);margin:.6rem 0 1.1rem;}
+.hero p{font-size:15px;color:var(--text-soft);margin:0 0 20px;max-width:680px;}
+.stats{display:flex;gap:10px;flex-wrap:wrap;}
+.stat{display:flex;align-items:baseline;gap:7px;background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 15px;font-size:13px;color:var(--text-soft);}
+.stat b{font-size:15px;color:var(--text);font-weight:800;}
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:18px 0;}
+.linkcard{display:block;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s;}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.linkcard .n{display:block;font-size:.72rem;font-weight:800;color:var(--accent);letter-spacing:.06em;}
+.linkcard .tt{display:block;font-weight:800;margin:4px 0 2px;}
+.linkcard .d{display:block;font-size:.85rem;color:var(--text-soft);line-height:1.55;}
+.chapter{padding-top:24px;scroll-margin-top:70px;}
+.ch-head{margin:34px 0 8px;}
+.ch-num{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.ch-title{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+.ch-bar{width:5px;height:26px;border-radius:3px;flex:0 0 5px;background:linear-gradient(180deg,var(--gold),var(--accent));}
+.ch-sub{color:var(--text-soft);font-size:14.5px;margin:0 0 6px;max-width:680px;}
+.sec{padding-top:12px;scroll-margin-top:70px;}
+.sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
+.prose{font-size:14.5px;margin:12px 0;max-width:720px;}
+.prose code,.callout-body code,.concept-d code,.steps code,.idea-d code,td code,th code{
+  font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:#7a5a1e;}
+.goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;margin:14px 0;max-width:720px;box-shadow:var(--shadow);}
+.goals-t{font-weight:800;font-size:14px;margin-bottom:8px;color:var(--accent);}
+.goals ul{margin:0;padding-left:20px;}
+.goals li{font-size:13.5px;margin:4px 0;}
+.why{background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);padding:14px 18px;margin:14px 0;max-width:720px;}
+.why-t{font-weight:800;font-size:14px;margin-bottom:6px;color:var(--text-soft);}
+.why p{margin:0;font-size:14px;}
+.callout{border:1px solid var(--border);border-left:4px solid var(--muted);background:var(--card);
+  border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;max-width:720px;}
+.callout-head{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.callout-body{font-size:13.5px;}
+.callout.tip{border-left-color:var(--blue);background:var(--blue-soft);}
+.callout.tip .callout-head{color:var(--blue-ink);}
+.callout.warn{border-left-color:var(--accent);background:var(--card);}
+.callout.warn .callout-head{color:#b45309;}
+.callout.key{border-left-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff);}
+.callout.key .callout-head{color:#a06a08;}
+.callout.check{border-left-color:var(--green);background:var(--green-soft);}
+.callout.check .callout-head{color:#3d7a37;}
+.callout.err{border-left-color:var(--red);background:var(--red-soft);}
+.callout.err .callout-head{color:#c23b3a;}
+.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
+.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
+.idea-d{line-height:1.7;}
+/* 배선표 */
+table.wt{border-collapse:collapse;font-size:13px;margin:12px 0;max-width:720px;width:100%;background:#fff;}
+.wt th,.wt td{border:1px solid var(--border);padding:7px 12px;text-align:left;line-height:1.5;}
+.wt th{background:var(--card);font-size:12.5px;font-weight:800;color:var(--text-soft);}
+.wire{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15);}
+.w-y{background:#f4c400;} .w-w{background:#f6f4ee;} .w-r{background:#e45756;} .w-k{background:#3a3a3a;}
+/* 부품 카드 헤더 */
+.part{border:1px solid var(--border);border-radius:var(--radius);padding:4px 22px 20px;margin:26px 0;background:#fffefb;box-shadow:var(--shadow);}
+.part-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 4px;}
+.part-emoji{font-size:26px;}
+.part-title{font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.pbadge{font-size:11px;font-weight:800;border-radius:999px;padding:2px 10px;border:1px solid var(--border);background:var(--card);color:var(--text-soft);white-space:nowrap;}
+.pbadge.lv1{border-color:#cde8c9;background:var(--green-soft);color:#3d7a37;}
+.pbadge.lv2{border-color:#cfe0ff;background:var(--blue-soft);color:var(--blue-ink);}
+.pbadge.lv3{border-color:#ecd9e6;background:var(--violet-soft);color:#8a5578;}
+.part-sub{font-size:13.5px;color:var(--text-soft);margin:2px 0 8px;max-width:700px;}
+/* 코드/프롬프트 블록 */
+.block{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;overflow:hidden;background:#fff;max-width:840px;}
+.block-head{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--card);border-bottom:1px solid var(--border);}
+.block-label{font-size:12.5px;font-weight:800;color:var(--text-soft);flex:1;min-width:0;}
+.lang-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);
+  background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;letter-spacing:.04em;}
+.copy-btn{font-family:var(--font);font-size:11.5px;font-weight:800;color:var(--text-soft);cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 11px;transition:.15s;flex:0 0 auto;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+.code-block pre{margin:0;padding:16px 18px;overflow-x:auto;background:var(--code-bg);}
+.code-block code{font-family:var(--mono);font-size:13px;line-height:1.62;background:none;padding:0;color:var(--code-text);}
+.code-block .block-head{background:#211b10;border-bottom-color:#3b3222;}
+.code-block .block-label{color:#e8dcc0;}
+.code-block .lang-tag{color:#c9b98c;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn{color:#e8dcc0;background:#3b3222;border-color:#4d4230;}
+.code-block .copy-btn:hover{color:#fff;border-color:#7a6338;}
+.code-block .copy-btn.done{color:#fff;border-color:var(--green);background:var(--green);}
+.prompt-block{border-color:#cfe8e4;}
+.prompt-block .block-head{background:var(--teal-soft);border-bottom-color:#cfe8e4;}
+.prompt-block .block-label{color:var(--teal-ink);}
+.prompt-ico{font-size:15px;}
+.prompt-body{font-family:var(--mono);font-size:13px;line-height:1.7;color:#d7f0ea;
+  white-space:pre-wrap;word-break:break-word;padding:15px 18px;background:#1c2b26;}
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;}
+.pico-accent{background:linear-gradient(120deg,var(--gold),var(--accent));-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-weight:900;}
+.pk{background:linear-gradient(120deg,var(--gold),var(--accent));color:#fff;font-weight:900;
+  border-radius:7px;padding:0 .26em;margin:0 .02em;}
+@media(max-width:640px){
+  body{font-size:15px;}
+  .main{padding:26px 16px 36px;}
+  .topbar .inner{padding:9px 12px;gap:8px;}
+  .topbar .brand{font-size:13.5px;}
+  .topbar a.home{display:none;}
+  .hero h1{font-size:24px;}
+  .part{padding:2px 14px 16px;}
+  table.wt{font-size:12px;}
+  .wt th,.wt td{padding:6px 8px;}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner">
+  <a class="brand" href="index.html"><span class="brand-emoji">🛠️🔌</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩</a>
+  <span class="spacer"></span>
+  <a class="home" href="kit.html">← 확장 부품 가이드</a>
+  <span class="badge">프로젝트 샘플 5</span>
+</div></div>
+<div class="wrap">
+<main class="main">
+
+<div class="hero">
+  <span class="eyebrow">Free Project · Project Samples</span>
+  <h1>바이브코딩 프로젝트 샘플 5<br>그대로 만들어도, 재료로 뜯어써도 좋습니다</h1>
+  <div class="under"></div>
+  <p>교재 기본 부품(LED 바·MQ-2 가스센서·와이파이)과 확장 키트 부품을 조합한 프로젝트 샘플 5종입니다. 안내된 순서 그대로 따라 만들어도 되고, 마음에 드는 조합만 골라 나만의 아이디어에 재료로 써도 좋아요. 처음이라면 부품별 배선표와 확인 코드를 모아 둔 <a class="ilink" href="kit.html">확장 부품 가이드</a>를 먼저 훑어보는 걸 추천합니다.</p>
+  <div class="stats"><div class="stat"><b>5</b> 프로젝트</div><div class="stat"><b>15</b> 바이브코딩 프롬프트</div><div class="stat"><b>난이도</b> ★☆☆~★★★</div></div>
+</div>
+<div class="goals"><div class="goals-t">🎯 샘플 사용법 — 3단계</div><ul>
+  <li><b>① 프로젝트 고르기</b> — 난이도와 필요한 부품을 보고 마음에 드는 걸 고릅니다 (부품을 바꿔도 괜찮아요)</li>
+  <li><b>② 1단계부터 순서대로</b> — 각 단계의 프롬프트를 그대로 AI에게 건네며 하나씩 완성해 갑니다</li>
+  <li><b>③ 3단계까지 완주</b> — 기록·데이터가 쌓이니, 그걸로 탐구 보고서까지 이어서 써 봅니다</li>
+</ul></div>
+<div class="linkgrid">
+  <a class="linkcard" href="#proj1"><span class="n">프로젝트 1 · 난이도 ★☆☆</span><span class="tt">💨 환기 타이머는 이제 그만! 우리 반 공기 알리미</span><span class="d">MQ-2 가스센서로 교실 공기질을 감지해 LED 신호등과 부저로 환기 타이밍을 알려줍니다.</span></a>
+  <a class="linkcard" href="#proj2"><span class="n">프로젝트 2 · 난이도 ★☆☆</span><span class="tt">☔ 우산 챙겨! 현관 앞 날씨 신호등</span><span class="d">Open-Meteo API로 받은 강수확률을 LED 게이지와 LCD 숫자로 동시에 보여줍니다.</span></a>
+  <a class="linkcard" href="#proj3"><span class="n">프로젝트 3 · 난이도 ★★☆</span><span class="tt">🪑 지금 자리 있어요? 스터디룸 실시간 알리미</span><span class="d">PIR 센서로 움직임을 감지해 스터디룸이 비었는지 실시간으로 알려줍니다.</span></a>
+  <a class="linkcard" href="#proj4"><span class="n">프로젝트 4 · 난이도 ★★☆</span><span class="tt">🗑️ 넘치기 전에 말해줘! 분리수거함 만땅 알리미</span><span class="d">초음파 센서로 쓰레기통 채움 정도를 측정해 게이지로 보여주고 구글 시트에 기록합니다.</span></a>
+  <a class="linkcard" href="#proj5"><span class="n">프로젝트 5 · 난이도 ★★★</span><span class="tt">🗳️ 리모콘으로 5초 학급회의 — 실시간 교실 투표기</span><span class="d">IR 리모콘 버튼으로 무기명 투표를 하고 LED 막대그래프로 득표를 실시간 공개합니다.</span></a>
+  <a class="linkcard" href="#jumper"><span class="n">먼저 읽기</span><span class="tt">0️⃣ 점퍼 케이블 3분 완성</span><span class="d">핀 소켓 위치 · 색 약속 · 연결 3계명</span></a>
+<a class="linkcard" href="kit.html"><span class="n">먼저 보기</span><span class="tt">🧰 확장 부품 가이드</span><span class="d">부품별 배선표·확인 코드·프롬프트</span></a>
+</div>
+
+<section class="sec" id="jumper">
+<h3 class="sec-title">0️⃣ 먼저 읽기 — 점퍼 케이블, 3분이면 친해져요</h3>
+<p class="prose">키트 부품에는 그로브 커넥터가 없어서, <b>암수 점퍼 케이블</b>로 쉴드의 <b>번호 핀 소켓</b>에 직접 연결합니다. 케이블 연결이 처음이라면 긴장될 수 있지만, 알아야 할 규칙은 딱 세 가지뿐이에요.</p>
+<div class="concept-grid">
+  <div class="concept"><div class="concept-t">① 핀 소켓 두 줄이 정답지</div><div class="concept-d">쉴드에는 피코의 <b>모든 핀이 GP 번호 그대로</b> 암핀 소켓 두 줄로 나와 있어요. USB를 위로 두면 <b>왼쪽 줄</b>(GP0~GP15 쪽), <b>오른쪽 줄</b>(GP16~GP28·3V3·GND 쪽). 위치가 헷갈리면 쉴드에 <b>인쇄된 GP 번호</b>를 읽으세요 — 그게 정답입니다.</div></div>
+  <div class="concept"><div class="concept-t">② 암수 점퍼 꽂는 방향</div><div class="concept-d"><b>수(뾰족한 핀) 쪽 → 쉴드의 소켓 구멍</b>에, <b>암(구멍) 쪽 → 부품의 핀</b>에 끼웁니다. 힘 주지 않아도 부드럽게 들어가요. 안 들어가면 방향이 반대인 거예요.</div></div>
+  <div class="concept"><div class="concept-t">③ 색 약속</div><div class="concept-d"><span class="wire w-y"></span>노랑 = 신호 &nbsp;<span class="wire w-w"></span>흰색 = 둘째 신호<br><span class="wire w-r"></span>빨강 = 3V3(전원) &nbsp;<span class="wire w-k"></span>검정 = GND<br>전기적으로는 아무 색이나 동작하지만, 약속을 지키면 배선 점검이 5초로 끝나요.</div></div>
+</div>
+<div class="callout key"><div class="callout-head">🔑 GND와 3V3는 이렇게 찾아요</div><div class="callout-body"><b>GND 구멍은 핀 줄 곳곳에 여러 개</b> 있어서 아무거나 가까운 걸 쓰면 됩니다 — 각 프로젝트 배선도에 제일 가까운 GND를 표시해 뒀어요. <b>3V3는 오른쪽 줄 위쪽에 하나</b>인데, 그보다 더 위에 있는 <code>VBUS</code>는 5V라서 <b>절대 헷갈리면 안 돼요!</b> 빨강 점퍼는 언제나 3V3.</div></div>
+<div class="callout warn"><div class="callout-head">⚠️ 연결 3계명 — 이것만 지키면 사고 없어요</div><div class="callout-body">① 꽂거나 뺄 때는 <b>USB 케이블부터 뽑기</b> &nbsp;② 켜기 전에 <b>"빨강이 3V3, 검정이 GND"</b>를 소리 내어 확인 &nbsp;③ 헷갈리면 폰으로 배선 사진을 찍어 배선표와 대조. 신호선을 옆 칸에 잘못 꽂은 정도는 값이 이상하게 나올 뿐 대부분 괜찮지만, <b>3V3와 GND가 뒤바뀌면 부품이 상할 수 있으니</b> ②가 제일 중요합니다.</div></div>
+<div class="callout tip"><div class="callout-head">💡 그럼 그로브 소켓은 언제 쓰나요?</div><div class="callout-body">그로브 케이블이 소켓에 꽂히는 부품 전용이에요 — 우리 수업에선 <b>LED 바(D16)</b>와 <b>MQ-2(A0 소켓, 그로브→암점퍼 변환 케이블)</b> 둘뿐입니다. 키트 부품을 그로브 소켓에 꽂으려고 애쓰지 마세요. (그로브-점퍼 변환 케이블이 있다면 같은 GP핀이 나오는 소켓을 써도 코드는 동일하게 동작해요.)</div></div>
+</section>
+
+<section class="sec" id="proj1">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">💨</span><span class="part-title">프로젝트 1 · 환기 타이머는 이제 그만! 우리 반 공기 알리미</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">패시브 부저</span></div>
+  <p class="part-sub">교실 공기가 나빠지면 LED 신호등이 먼저 알고, 부저가 환기 담당을 부릅니다</p>
+  <p class="prose">점심시간이 끝난 5교시 교실, 창문은 닫혀 있고 공기는 점점 탁해지는데 아무도 눈치채지 못한 적 있지 않나요? 사람의 코는 서서히 나빠지는 공기에는 둔감해서, 정작 환기가 필요한 순간을 놓치기 쉽습니다. 이 프로젝트는 MQ-2 가스센서가 교실 공기를 쉬지 않고 감시하고, LED 바 10칸이 초록·노랑·빨강 신호등 게이지로 오염도를 한눈에 보여줍니다. 빨강 구간에 들어서는 순간 부저가 "삑삑" 두 번 울리면, 창가 자리 친구가 자연스럽게 창문을 여는 환기 담당이 되지요. 교탁 위에 올려두면 우리 반만의 공기 관제탑이 완성되고, 구글 시트 기록까지 붙이면 '우리 반 공기질의 하루' 데이터까지 손에 넣을 수 있습니다.</p>
+  <p class="step-head"><b>🧩 준비물</b></p>
+  <table class="wt"><tr><th>부품</th><th>연결 위치</th><th>메모</th></tr>
+    <tr><td>MQ-2 가스센서 (교재 기본)</td><td>그로브 A0 소켓 = GP26 (그로브→암점퍼 변환 케이블, 기본 연결)</td><td>이미 연결돼 있어요. read_u16()으로 0~65535 값을 읽습니다. 전원 후 2~3분 예열해야 값이 안정됩니다.</td></tr>
+    <tr><td>WS2813 LED 바 10칸 (교재 기본)</td><td>그로브 D16 = GP16</td><td>이미 연결돼 있어요. timing=(280,515,515,745) 지정 필수, 밝기는 채널당 40 이하로 유지하세요.</td></tr>
+    <tr><td>패시브 부저 (케플러 키트)</td><td>핀 소켓 GP18 + GND (점퍼 2개)</td><td>암수 점퍼 케이블 2개로 핀 소켓에 연결합니다. PWM duty_u16 약 3000으로 울리고, 다 쓰면 반드시 duty 0으로 꺼야 해요.</td></tr>
+  </table>
+  <p class="step-head"><b>🔌 새로 연결할 배선</b> — 교재 기본 부품(LED·MQ-2)은 이미 연결돼 있어요</p>
+  <div class="figure"><svg class="hw-svg" viewBox="0 0 960 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="공기 알리미 배선도: 부저를 핀 소켓 GP18과 GND에 점퍼로 연결"><text x="24" y="30" font-size="12.5" font-weight="800" fill="#6b5836">점퍼 색 약속 (추천)</text><rect x="190" y="19" width="14" height="14" rx="4" fill="#f4c400" stroke="#c79a00" stroke-width="1.2"/><text x="210" y="31" font-size="11.5" fill="#6b5836">노랑 = 신호</text><rect x="318" y="19" width="14" height="14" rx="4" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.2"/><text x="338" y="31" font-size="11.5" fill="#6b5836">흰색 = 둘째 신호</text><rect x="446" y="19" width="14" height="14" rx="4" fill="#e45756" stroke="#c23b3a" stroke-width="1.2"/><text x="466" y="31" font-size="11.5" fill="#6b5836">빨강 = 3V3(전원)</text><rect x="574" y="19" width="14" height="14" rx="4" fill="#3a3a3a" stroke="#111111" stroke-width="1.2"/><text x="594" y="31" font-size="11.5" fill="#6b5836">검정 = GND</text><text x="24" y="52" font-size="10.5" fill="#9a8b6a">키트 부품은 그로브 소켓이 아니라, 피코의 모든 핀이 번호 그대로 나와 있는 ‘핀 소켓 두 줄’에 점퍼로 연결해요.</text><rect x="30" y="100" width="230" height="315" rx="12" fill="#2e7d4f"/><text x="42" y="120" font-size="10.5" font-weight="800" fill="#d7f0dd">그로브 쉴드 (USB가 위)</text><rect x="129.0" y="88" width="32" height="16" rx="3" fill="#9aa1ad"/><text x="145.0" y="80" font-size="9" font-weight="700" fill="#9a8b6a" text-anchor="middle">USB ↑ 컴퓨터</text><rect x="112" y="122" width="66" height="272" rx="6" fill="#1d6b3f"/><text x="145" y="260" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">피코</text><text x="145" y="274" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">2 WH</text><rect x="96" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><text x="90" y="250" font-size="8.5" font-weight="700" fill="#cfe8d8" text-anchor="end" transform="rotate(-90 90 250)">왼쪽 핀 줄</text><text x="202" y="220" font-size="8.5" font-weight="700" fill="#cfe8d8" transform="rotate(90 202 220)">오른쪽 핀 줄</text><rect x="176" y="319.5" width="17" height="52.599999999999994" rx="4" fill="none" stroke="#e8930c" stroke-width="2.5"/><rect x="44" y="387" width="44" height="18" rx="3" fill="#fff" stroke="#3ba6a0" stroke-width="1.5"/><text x="66" y="399.5" font-size="8.5" font-weight="800" fill="#2b7a75" text-anchor="middle">D16</text><text x="44" y="429" font-size="8.5" fill="#9a8b6a">그로브 소켓 — LED(D16)·MQ-2(A0)만</text><rect x="30" y="445" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="461" font-size="10" font-weight="700" fill="#2b7a75">🚦 LED 바 → 그로브 D16 소켓 (기본 연결)</text><rect x="30" y="477" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="493" font-size="10" font-weight="700" fill="#2b7a75">💨 MQ-2 → 그로브 A0 소켓 + 변환 케이블 (기본 연결)</text><text x="320" y="118" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (아래쪽)</text><rect x="416" y="132" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="147.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="151.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP19</text><rect x="416" y="172" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#f4c400" stroke-width="3"/><circle cx="444.0" cy="187.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="187.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP18</text><text x="406" y="199.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">+ 신호</text><rect x="416" y="212" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#3a3a3a" stroke-width="3"/><circle cx="444.0" cy="227.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="227.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GND</text><text x="406" y="239.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">− (바로 아래 칸!)</text><rect x="416" y="252" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="267.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="271.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP17</text><path d="M198,345.79999999999995 C 260,345.79999999999995 290,200 314,200" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M472,187.0 C542,187.0 626,226 696,226" fill="none" stroke="#c79a00" stroke-width="6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,226 696,226" fill="none" stroke="#f4c400" stroke-width="3.6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,250 696,250" fill="none" stroke="#111111" stroke-width="6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,250 696,250" fill="none" stroke="#3a3a3a" stroke-width="3.6" stroke-linecap="round"/><rect x="700" y="180" width="236" height="92" rx="10" fill="#fffdf7" stroke="#c9b98c" stroke-width="1.8"/><text x="714" y="203" font-size="14" font-weight="800" fill="#3a2e1a">🔊 패시브 부저</text><circle cx="700" cy="226" r="6" fill="#f4c400" stroke="#c79a00" stroke-width="1.5"/><text x="716" y="230.5" font-size="12" font-weight="700" fill="#5a4a28">+ 신호 → GP18 <tspan font-size="10" fill="#9a8b6a">노랑 점퍼</tspan></text><circle cx="700" cy="250" r="6" fill="#3a3a3a" stroke="#111111" stroke-width="1.5"/><text x="716" y="254.5" font-size="12" font-weight="700" fill="#5a4a28">− → GND <tspan font-size="10" fill="#9a8b6a">검정 점퍼</tspan></text><rect x="700" y="158" width="76" height="18" rx="9" fill="#e8930c"/><text x="709" y="171.5" font-size="10.5" font-weight="800" fill="#fff">새로 연결!</text></svg><p style="margin:7px 2px 0;font-size:12px;color:#9a8b6a;line-height:1.7">🔌 <b>연결 순서</b> — ① USB를 뽑는다 ② <b>암수 점퍼</b>의 <b>수(핀) 쪽을 쉴드 핀 소켓</b>에, <b>암(구멍) 쪽을 부품 핀</b>에 꽂는다 ③ 켜기 전에 <b>빨강=3V3 · 검정=GND</b>인지 한 번 더 확인! 점퍼 색은 달라도 동작하지만, 색 약속을 지키면 실수가 확 줄어요. 핀 소켓 위치는 쉴드에 <b>인쇄된 GP 번호</b>로 꼭 다시 확인하세요.</p></div>
+                <table class="wt"><tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>부저 + (SIG)</td><td>핀 소켓 <code>GP18</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>부저 − (GND)</td><td>핀 소켓 <code>GND</code> — GP18 <b>바로 아래 칸</b></td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <p class="step-head"><b>1단계 · 부저 소리 내보기</b> — 핀 소켓(GP18·GND)에 연결한 패시브 부저로 '삑삑' 알람음을 내고, 소리를 확실히 끄는 법까지 확인합니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 부저 알람음 테스트</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 라즈베리파이 피코 2 WH에 그로브 쉴드를 끼우고, 쉴드의 번호 핀 소켓에 암수 점퍼 케이블로 패시브 부저를 방금 연결했어요(+ 신호는 GP18, −는 GP18 바로 아래 GND). 아직 아무 코드도 없습니다.
+[하드웨어] 패시브 부저는 18번 핀(PWM). 이 단계에서는 부저만 사용해요.
+[작업] 부저가 880Hz로 0.15초 울리고 0.1초 쉬는 '삑삑' 2회 알람음을 3초 간격으로 반복 재생하게 해 주세요. 소리를 낼 때는 duty_u16을 약 3000으로, 소리를 끝낼 때는 반드시 duty_u16(0)으로 꺼 주세요.
+[제약] 외부 라이브러리 금지(machine, time만). 프로그램을 Ctrl+C로 멈춰도 부저가 계속 울리지 않도록 try/finally로 마지막에 duty 0 처리해 주세요.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <p class="step-head"><b>2단계 · 신호등 게이지 + 빨강 구간 알람 완성</b> — MQ-2 값을 LED 10칸 초록·노랑·빨강 게이지로 보여주고, 빨강 구간에 '진입하는 순간에만' 부저가 두 번 울리는 알람 상태 관리를 완성합니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 신호등 게이지 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코에서 1단계 부저 알람음 테스트까지 성공했어요. 교재 기본 배선인 MQ-2 가스센서와 LED 바는 원래 연결돼 있습니다.
+[하드웨어] MQ-2 가스센서는 26번 핀(ADC, read_u16으로 0~65535). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요. 패시브 부저는 18번 핀(PWM, duty_u16 약 3000, 끝나면 duty 0).
+[작업] MQ-2 값을 20000~50000 범위 기준으로 0~10칸으로 환산해 LED 게이지로 표시해 주세요. 1~6칸은 초록, 7~8칸은 노랑, 9~10칸은 빨강으로요. 게이지가 9칸 이상(빨강 구간)에 처음 진입하는 순간에만 부저를 두 번 울리고, 6칸 이하로 내려와야 알람이 다시 활성화되게(히스테리시스) 상태 변수를 관리해 주세요. 콘솔에는 원시값과 칸 수를 출력해 주세요.
+[제약] 1초마다 갱신. LED 밝기는 채널당 40 이하. 센서 읽기 실패는 try/except로 건너뛰기. 외부 라이브러리 금지(machine, neopixel, time만).
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 센서에 입김을 불었을 때 게이지가 빨강까지 차오르며 부저가 딱 두 번 울리면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 우리 반 공기 알리미 — 2단계 핵심 조합 확인용
+from machine import Pin, ADC, PWM
+from neopixel import NeoPixel
+import time
+
+mq2 = ADC(Pin(26))                                   # MQ-2 가스센서 (A0)
+np = NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))  # timing 누락 시 색이 깨져요!
+buzzer = PWM(Pin(18))
+buzzer.duty_u16(0)                                   # 시작할 때 소리를 확실히 꺼 둡니다
+
+LOW, HIGH = 20000, 50000   # 게이지 0칸~10칸 기준값 (교실에서 실측해 조정하세요)
+
+def beep_twice():
+    # 빨강 구간 진입을 알리는 '삑삑' 두 번
+    for _ in range(2):
+        buzzer.freq(880)
+        buzzer.duty_u16(3000)
+        time.sleep(0.15)
+        buzzer.duty_u16(0)   # 다 쓰면 반드시 duty 0!
+        time.sleep(0.1)
+
+def show_gauge(level):
+    # 켜진 칸 수만큼 초록(1~6) / 노랑(7~8) / 빨강(9~10)으로 표시해요
+    for i in range(10):
+        if i &lt; level:
+            if i &lt; 6:
+                np[i] = (0, 40, 0)
+            elif i &lt; 8:
+                np[i] = (40, 30, 0)
+            else:
+                np[i] = (40, 0, 0)
+        else:
+            np[i] = (0, 0, 0)
+    np.write()
+
+alarmed = False   # 알람 상태 변수 — 빨강 구간에 '처음' 들어갈 때만 울리게 합니다
+
+try:
+    while True:
+        try:
+            raw = mq2.read_u16()
+        except Exception:
+            time.sleep(1)        # 센서 읽기 실패 시 이번 회차는 건너뜁니다
+            continue
+
+        # 원시값을 0~10칸으로 환산합니다
+        level = (raw - LOW) * 10 // (HIGH - LOW)
+        level = max(0, min(10, level))
+        show_gauge(level)
+        print("원시값:", raw, "/ 칸 수:", level, "/ 알람:", alarmed)
+
+        if level &gt;= 9 and not alarmed:
+            beep_twice()         # 빨강 진입 순간에만 울립니다
+            alarmed = True
+        elif level &lt;= 6:
+            alarmed = False      # 초록까지 내려와야 다음 알람이 준비돼요 (히스테리시스)
+
+        time.sleep(1)
+finally:
+    buzzer.duty_u16(0)           # Ctrl+C로 멈춰도 부저는 반드시 꺼 둡니다</code></pre></div>
+
+  <p class="step-head"><b>3단계 · 구글 시트에 '우리 반 공기질의 하루' 기록</b> — 와이파이에 연결해 1분마다 측정값과 구간(초록/노랑/빨강)을 구글 시트에 자동 기록하고, 알람 발생 횟수까지 남기는 최종 완성판을 만듭니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 구글 시트 기록 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 MQ-2 값을 LED 신호등 게이지로 표시하고 빨강 구간 진입 시 부저를 두 번 울리는 것까지 완성했어요. 6장에서 만든 구글 Apps Script 웹 앱 URL로 GET 파라미터를 보내면 시트에 한 줄씩 기록됩니다.
+[하드웨어] MQ-2 가스센서는 26번 핀(ADC). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요. 패시브 부저는 18번 핀(PWM). 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마세요.
+[작업] 기존 게이지·알람 동작은 1초 주기로 그대로 유지하면서, 1분마다 원시값·칸 수·구간 이름(green/yellow/red)·직전 1분 동안의 알람 발생 횟수를 Apps Script URL에 GET 파라미터로 전송해 주세요. 시작할 때 와이파이에 연결하고, 연결 성공 시 LED를 파랑으로 한 번 깜빡여 주세요.
+[제약] 전송 실패(예외)해도 게이지·알람은 멈추지 않고 계속 동작해야 해요. urequests 응답은 반드시 close() 처리. LED 밝기는 채널당 40 이하. 외부 라이브러리 금지(machine, neopixel, network, urequests, time만). URL은 코드 상단 WEB_APP_URL 변수로 분리해 주세요.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 임계값은 '우리 교실 실측'으로 정하세요</div><div class="callout-body">MQ-2는 전원을 켜고 2~3분은 예열 중이라 값이 높게 나옵니다. 예열이 끝난 뒤 평소 교실 값과 창문을 닫고 사람이 많을 때 값을 콘솔로 몇 분씩 관찰해서 LOW/HIGH를 정해야 게이지가 의미 있게 움직여요. 코드의 20000~50000은 출발점일 뿐입니다.</div></div>
+  <div class="callout warn"><div class="callout-head">⚠️ 부저가 끊임없이 울린다면 상태 변수를 의심하세요</div><div class="callout-body">빨강 구간에 머무는 동안 매초 울린다면 alarmed 같은 상태 변수가 없거나 리셋 조건이 잘못된 거예요. '9칸 이상 진입 시 울림 → 6칸 이하로 내려와야 재무장' 구조(히스테리시스)면 경계값 근처에서 값이 흔들려도 알람이 도배되지 않습니다. 프로그램을 멈출 땐 duty_u16(0)이 실행됐는지도 확인하세요.</div></div>
+  <div class="callout warn"><div class="callout-head">⚠️ LED 색이 이상하면 timing부터 확인</div><div class="callout-body">게이지 색이 무작위로 깨져 보인다면 십중팔구 NeoPixel 생성 시 timing=(280,515,515,745)가 빠진 겁니다. 밝기도 채널당 40을 넘기면 눈이 아플 뿐 아니라 전류를 많이 먹으니 40 이하로 유지하세요.</div></div>
+
+  <div class="callout key"><div class="callout-head">🚀 더 나아가기</div><div class="callout-body">핀 소켓 GP20에 DHT11 온습도 센서를 추가하면 '공기 탁함 + 후덥지근함'을 함께 판단하는 종합 쾌적도 알리미로 업그레이드할 수 있어요. 5장에서 배운 Open-Meteo API로 바깥 기온을 받아와 '지금 환기하면 추울지'까지 알려주는 스마트 환기 비서도 가능합니다. 3장 피코 웹 대시보드를 붙여 스마트폰으로 실시간 게이지를 확인하게 만들면 발표 시연 효과가 확실합니다.</div></div>
+  <div class="callout check"><div class="callout-head">🔬 탐구 보고서·세특으로 연결</div><div class="callout-body">구글 시트에 쌓인 1분 단위 데이터를 시간대별 꺾은선그래프로 그려 '점심 직후·청소 시간·하교 전' 공기질 패턴을 비교하면 훌륭한 탐구보고서가 됩니다. 독립변인을 '창문 개방 여부'나 '재실 인원 수'로 설정하고 같은 시간대의 측정값 평균을 비교하면 환기 효과를 정량적으로 검증할 수 있어요. 알람 임계값을 실측 데이터의 평균+표준편차 방식으로 정하는 과정을 기록하면 센서 보정과 통계 개념을 연결한 세특 소재로 발전합니다.</div></div>
+</div>
+</section>
+
+<section class="sec" id="proj2">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">☔</span><span class="part-title">프로젝트 2 · 우산 챙겨! 현관 앞 날씨 신호등</span><span class="pbadge lv1">난이도 ★☆☆</span><span class="pbadge">I2C LCD1602</span></div>
+  <p class="part-sub">강수확률을 LED 게이지와 LCD 숫자로 — 신발 신으면서 0.5초 만에 우산 결정!</p>
+  <p class="prose">아침에 스마트폰을 꺼내 날씨 앱을 열고, 광고를 닫고, 시간대별 예보를 스크롤하는 데 평균 20초가 걸립니다. 그런데 정작 필요한 정보는 "우산을 챙길까 말까" 단 하나죠. 이 프로젝트는 피코가 와이파이로 Open-Meteo API에서 강수확률과 기온을 받아와, LED 바 10칸을 강수확률 게이지로 켜고 LCD1602에는 'RAIN 70%'처럼 핵심 숫자만 띄워 줍니다. 완성해서 현관이나 교실 문 앞에 두면, 지나가면서 흘깃 보는 것만으로 파란 불이면 맑음, 빨간 게이지가 길게 켜져 있으면 우산을 집어 들게 됩니다. 같은 데이터를 '한눈에 감으로 읽는 LED'와 '정확한 숫자로 읽는 LCD' 두 매체로 동시에 표현하면서, 데이터 시각화가 왜 매체 선택의 문제인지 몸으로 배우게 돼요.</p>
+
+  <p class="step-head"><b>🧩 준비물</b></p>
+  <table class="wt"><tr><th>부품</th><th>연결 위치</th><th>메모</th></tr>
+    <tr><td>라즈베리파이 피코 2 WH (내장 와이파이)</td><td>내장</td><td>wifi_config.py의 SSID/PW로 접속해 Open-Meteo API를 호출합니다</td></tr>
+    <tr><td>WS2813 LED 바 10칸 (교재 기본)</td><td>그로브 D16 = GP16</td><td>강수확률 게이지. timing=(280,515,515,745) 필수, 밝기 채널당 40 이하</td></tr>
+    <tr><td>I2C LCD1602 (케플러 키트)</td><td>핀 소켓 GP4(SDA)·GP5(SCL)·3V3·GND (점퍼 4개)</td><td>주소 0x27 또는 0x3F. 영문·숫자만, 한 줄 16글자. 확장 가이드의 미니 드라이버 사용</td></tr>
+  </table>
+
+  <p class="step-head"><b>🔌 새로 연결할 배선</b> — 교재 기본 부품(LED·MQ-2)은 이미 연결돼 있어요</p>
+  <div class="figure"><svg class="hw-svg" viewBox="0 0 960 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="날씨 신호등 배선도: LCD1602를 핀 소켓 GP4·GP5·3V3·GND에 점퍼로 연결"><text x="24" y="30" font-size="12.5" font-weight="800" fill="#6b5836">점퍼 색 약속 (추천)</text><rect x="190" y="19" width="14" height="14" rx="4" fill="#f4c400" stroke="#c79a00" stroke-width="1.2"/><text x="210" y="31" font-size="11.5" fill="#6b5836">노랑 = 신호</text><rect x="318" y="19" width="14" height="14" rx="4" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.2"/><text x="338" y="31" font-size="11.5" fill="#6b5836">흰색 = 둘째 신호</text><rect x="446" y="19" width="14" height="14" rx="4" fill="#e45756" stroke="#c23b3a" stroke-width="1.2"/><text x="466" y="31" font-size="11.5" fill="#6b5836">빨강 = 3V3(전원)</text><rect x="574" y="19" width="14" height="14" rx="4" fill="#3a3a3a" stroke="#111111" stroke-width="1.2"/><text x="594" y="31" font-size="11.5" fill="#6b5836">검정 = GND</text><text x="24" y="52" font-size="10.5" fill="#9a8b6a">키트 부품은 그로브 소켓이 아니라, 피코의 모든 핀이 번호 그대로 나와 있는 ‘핀 소켓 두 줄’에 점퍼로 연결해요.</text><rect x="30" y="100" width="230" height="315" rx="12" fill="#2e7d4f"/><text x="42" y="120" font-size="10.5" font-weight="800" fill="#d7f0dd">그로브 쉴드 (USB가 위)</text><rect x="129.0" y="88" width="32" height="16" rx="3" fill="#9aa1ad"/><text x="145.0" y="80" font-size="9" font-weight="700" fill="#9a8b6a" text-anchor="middle">USB ↑ 컴퓨터</text><rect x="112" y="122" width="66" height="272" rx="6" fill="#1d6b3f"/><text x="145" y="260" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">피코</text><text x="145" y="274" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">2 WH</text><rect x="96" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><text x="90" y="250" font-size="8.5" font-weight="700" fill="#cfe8d8" text-anchor="end" transform="rotate(-90 90 250)">왼쪽 핀 줄</text><text x="202" y="220" font-size="8.5" font-weight="700" fill="#cfe8d8" transform="rotate(90 202 220)">오른쪽 핀 줄</text><rect x="92" y="174.3" width="17" height="52.599999999999994" rx="4" fill="none" stroke="#e8930c" stroke-width="2.5"/><rect x="176" y="121.5" width="17" height="65.8" rx="4" fill="none" stroke="#e45756" stroke-width="2.5"/><rect x="44" y="387" width="44" height="18" rx="3" fill="#fff" stroke="#3ba6a0" stroke-width="1.5"/><text x="66" y="399.5" font-size="8.5" font-weight="800" fill="#2b7a75" text-anchor="middle">D16</text><text x="44" y="429" font-size="8.5" fill="#9a8b6a">그로브 소켓 — LED(D16)·MQ-2(A0)만</text><rect x="30" y="445" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="461" font-size="10" font-weight="700" fill="#2b7a75">🚦 LED 바 → 그로브 D16 소켓 (기본 연결)</text><text x="320" y="118" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 왼쪽 핀 줄 (위쪽)</text><rect x="416" y="132" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="147.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="151.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP3</text><rect x="416" y="172" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#b3a98f" stroke-width="3"/><circle cx="444.0" cy="187.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="187.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP4</text><text x="406" y="199.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">SDA</text><rect x="416" y="212" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#f4c400" stroke-width="3"/><circle cx="444.0" cy="227.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="227.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP5</text><text x="406" y="239.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">SCL</text><rect x="416" y="252" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#3a3a3a" stroke-width="3"/><circle cx="444.0" cy="267.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="267.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GND</text><text x="406" y="279.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">GND (바로 아래 칸!)</text><text x="320" y="440" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (맨 위)</text><rect x="416" y="454" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="466.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="466.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VBUS</text><text x="406" y="478.5" font-size="9.5" font-weight="700" fill="#c23b3a" text-anchor="end">5V — 오늘은 금지!</text><rect x="416" y="485" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="497.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="501.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VSYS</text><rect x="416" y="516" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="528.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="532.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GND</text><rect x="416" y="547" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="559.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="563.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">3V3_EN</text><rect x="416" y="578" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#e45756" stroke-width="3"/><circle cx="442.0" cy="590.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="590.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">3V3</text><text x="406" y="602.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">빨강 점퍼는 여기!</text><path d="M90,200.6 C 60,260.6 240,200 314,200" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M198,154.4 C 260,154.4 290,520 314,520" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#c79a00" stroke-width="6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#f4c400" stroke-width="3.6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,250 696,250" fill="none" stroke="#b3a98f" stroke-width="6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,250 696,250" fill="none" stroke="#f6f4ee" stroke-width="3.6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,274 696,274" fill="none" stroke="#c23b3a" stroke-width="6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,274 696,274" fill="none" stroke="#e45756" stroke-width="3.6" stroke-linecap="round"/><path d="M472,267.0 C542,267.0 626,298 696,298" fill="none" stroke="#111111" stroke-width="6" stroke-linecap="round"/><path d="M472,267.0 C542,267.0 626,298 696,298" fill="none" stroke="#3a3a3a" stroke-width="3.6" stroke-linecap="round"/><rect x="700" y="180" width="236" height="140" rx="10" fill="#fffdf7" stroke="#c9b98c" stroke-width="1.8"/><text x="714" y="203" font-size="14" font-weight="800" fill="#3a2e1a">📟 I2C LCD1602</text><circle cx="700" cy="226" r="6" fill="#f4c400" stroke="#c79a00" stroke-width="1.5"/><text x="716" y="230.5" font-size="12" font-weight="700" fill="#5a4a28">SCL → GP5 <tspan font-size="10" fill="#9a8b6a">노랑 점퍼</tspan></text><circle cx="700" cy="250" r="6" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.5"/><text x="716" y="254.5" font-size="12" font-weight="700" fill="#5a4a28">SDA → GP4 <tspan font-size="10" fill="#9a8b6a">흰색 점퍼</tspan></text><circle cx="700" cy="274" r="6" fill="#e45756" stroke="#c23b3a" stroke-width="1.5"/><text x="716" y="278.5" font-size="12" font-weight="700" fill="#5a4a28">VCC → 3V3 <tspan font-size="10" fill="#9a8b6a">빨강 점퍼</tspan></text><circle cx="700" cy="298" r="6" fill="#3a3a3a" stroke="#111111" stroke-width="1.5"/><text x="716" y="302.5" font-size="12" font-weight="700" fill="#5a4a28">GND → GND <tspan font-size="10" fill="#9a8b6a">검정 점퍼</tspan></text><rect x="700" y="158" width="76" height="18" rx="9" fill="#e8930c"/><text x="709" y="171.5" font-size="10.5" font-weight="800" fill="#fff">새로 연결!</text></svg><p style="margin:7px 2px 0;font-size:12px;color:#9a8b6a;line-height:1.7">🔌 <b>연결 순서</b> — ① USB를 뽑는다 ② <b>암수 점퍼</b>의 <b>수(핀) 쪽을 쉴드 핀 소켓</b>에, <b>암(구멍) 쪽을 부품 핀</b>에 꽂는다 ③ 켜기 전에 <b>빨강=3V3 · 검정=GND</b>인지 한 번 더 확인! 점퍼 색은 달라도 동작하지만, 색 약속을 지키면 실수가 확 줄어요. 핀 소켓 위치는 쉴드에 <b>인쇄된 GP 번호</b>로 꼭 다시 확인하세요.</p></div>
+                <table class="wt"><tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>SCL</td><td>핀 소켓 <code>GP5</code> (왼쪽 줄 위쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>SDA</td><td>핀 소켓 <code>GP4</code> — GP5 바로 위 칸</td><td><span class="wire w-w"></span>흰색</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP5 바로 아래 칸</td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <p class="step-head"><b>1단계 · LCD1602 첫 글자 띄우기</b> — 암수 점퍼 케이블로 연결한 LCD1602의 I2C 주소를 확인하고, 원하는 글자를 두 줄에 띄울 수 있다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — LCD 첫 글자 띄우기</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코 2 WH에 I2C LCD1602를 방금 처음 연결했고, 아직 아무 코드도 없는 상태야. 확장 가이드의 미니 드라이버(lcd_init, lcd_print)는 내가 복사해서 붙여넣을 수 있어.
+[하드웨어] I2C LCD1602(PCF8574)는 I2C(0, sda=Pin(4), scl=Pin(5)), 주소는 드라이버가 i2c.scan()으로 0x27/0x3F를 자동 인식해. 드라이버 함수 시그니처는 lcd_init(), lcd_print(text, line=0)이야. 이 형태 그대로 호출해.
+[작업] 시작할 때 i2c.scan() 결과를 출력해서 실제 주소를 알려주고, LCD 첫 줄에 'HELLO DANGGOK', 둘째 줄에 1초마다 1씩 늘어나는 카운터 숫자를 표시해 줘.
+[제약] 외부 라이브러리 금지(내장 machine·time만). LCD는 영문·숫자 16자 이내. 미니 드라이버 붙여넣을 위치를 주석으로 표시하고, I2C 통신 실패는 try/except로 잡아서 한국어 안내를 출력해 줘.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <p class="step-head"><b>2단계 · 날씨 게이지 조합 완성</b> — Open-Meteo API에서 강수확률·기온을 받아, LED 바 게이지와 LCD 숫자 표시를 동시에 완성한다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 날씨 게이지 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 LCD1602에 글자를 띄우는 것까지 성공한 상태야. 5장에서 배운 Open-Meteo API를 그대로 쓸 거야.
+[하드웨어] 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하. I2C LCD1602는 sda=GP4, scl=GP5, 주소는 하드코딩하지 말고 i2c.scan()으로 자동 인식(0x27/0x3F), 함수는 lcd_init()·lcd_print(text, line=0) 미니 드라이버를 그대로 사용해. 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마.
+[작업] Open-Meteo에서 우리 학교(위도 37.49, 경도 126.92)의 현재 기온과 앞으로 1시간 강수확률을 받아와, 강수확률 10%당 LED 1칸씩 켜는 게이지(50% 미만 파랑, 50% 이상 빨강)를 만들고, LCD 첫 줄에 'RAIN 70%', 둘째 줄에 'TEMP 23.5C' 형식으로 표시해 줘.
+[제약] 갱신은 10분에 1번, urequests 응답은 매 호출마다 반드시 close(). 외부 라이브러리 금지(내장 network·urequests·neopixel·machine·time만). API 호출 실패 시 try/except로 잡고 LCD에 'API ERROR'를 띄운 뒤 다음 주기에 재시도해 줘.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — LED 게이지가 강수확률만큼 켜지고 LCD에 RAIN/TEMP 숫자가 뜨면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># ── 확장 가이드의 미니 드라이버(i2c 설정 + lcd_init, lcd_print)를 이 위에 붙여넣으세요 ──
+import network
+import urequests
+import time
+from machine import Pin
+from neopixel import NeoPixel
+from wifi_config import SSID, PW
+
+# LED 바 10칸 — timing을 빼먹으면 색이 깨져요!
+np = NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))
+
+# 와이파이에 연결합니다
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PW)
+while not wlan.isconnected():
+    print("와이파이 연결 중...")
+    time.sleep(1)
+print("연결 완료! IP:", wlan.ifconfig()[0])
+
+lcd_init()  # LCD를 깨웁니다 (0x27/0x3F 주소는 드라이버가 자동 인식해요)
+
+# 우리 학교 근처 좌표로 현재 기온 + 1시간 강수확률을 요청합니다
+URL = ("https://api.open-meteo.com/v1/forecast"
+       "?latitude=37.49&amp;longitude=126.92"
+       "&amp;current=temperature_2m"
+       "&amp;hourly=precipitation_probability&amp;forecast_hours=1")
+
+def get_weather():
+    r = urequests.get(URL)
+    data = r.json()
+    r.close()  # 메모리를 아끼려면 꼭 닫아 주세요
+    temp = data["current"]["temperature_2m"]
+    rain = data["hourly"]["precipitation_probability"][0]
+    return rain, temp
+
+def show_gauge(rain):
+    lit = round(rain / 10)          # 강수확률 10%당 LED 1칸
+    for i in range(10):
+        if i &lt; lit:
+            # 50% 미만은 파랑(여유), 50% 이상은 빨강(우산!)
+            np[i] = (0, 0, 40) if rain &lt; 50 else (40, 0, 0)
+        else:
+            np[i] = (0, 0, 0)
+    np.write()
+
+while True:
+    try:
+        rain, temp = get_weather()
+        show_gauge(rain)
+        lcd_print("RAIN {:&gt;3}%".format(int(rain)), 0)
+        lcd_print("TEMP {:&gt;5}C".format(temp), 1)
+        print("강수확률", rain, "% / 기온", temp, "C")
+    except Exception as e:
+        print("데이터 읽기 실패:", e)   # 다음 주기에 다시 시도합니다
+        try:
+            lcd_print("API ERROR       ", 0)  # LCD에도 실패를 알려 줍니다
+        except Exception:
+            pass  # LCD 통신까지 안 되면 콘솔 안내만 남깁니다
+    time.sleep(600)  # 10분마다 갱신 (테스트할 때는 10초로 줄여 보세요)</code></pre></div>
+
+  <p class="step-head"><b>3단계 · 구글 시트 기록까지 최종 완성</b> — 매 갱신마다 예보 데이터를 구글 시트에 자동 기록해, 나중에 '예보 vs 실제'를 비교할 데이터를 쌓는다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 구글 시트 기록 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 10분마다 Open-Meteo에서 강수확률·기온을 받아 LED 게이지와 LCD에 표시하는 main.py가 잘 돌아가는 상태야. 6장에서 만든 구글 Apps Script 웹 앱 URL이 있어.
+[하드웨어] 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하. I2C LCD1602는 sda=GP4, scl=GP5, 주소는 하드코딩하지 말고 i2c.scan()으로 자동 인식(0x27/0x3F), lcd_init()·lcd_print(text, line=0) 미니 드라이버를 그대로 사용해. 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마.
+[작업] 갱신 성공 때마다 내 Apps Script 웹 앱 URL에 GET 파라미터(?rain=70&amp;temp=23.5)로 값을 보내 시트에 기록하고, 강수확률이 70% 이상이면 LED 게이지 전체를 3번 깜빡여서 '우산 필수' 경고를 추가해 줘. LCD 둘째 줄 끝에는 기록 성공 시 'OK', 실패 시 'X'를 붙여 줘.
+[제약] Apps Script URL은 코드 상단 WEB_APP_URL 변수에 저장하고, urequests 응답은 반드시 close(). 시트 전송 실패가 나도 LED·LCD 표시는 멈추지 않게 try/except를 분리해 줘. 외부 라이브러리 금지, 갱신 주기는 10분 유지, LCD는 영문·숫자 16자 이내.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="callout warn"><div class="callout-head">⚠️ LCD에 아무것도 안 나와요</div><div class="callout-body">십중팔구 I2C 주소 문제예요. REPL에서 I2C(0, sda=Pin(4), scl=Pin(5)).scan()을 실행해 보세요. [39]가 나오면 0x27, [63]이 나오면 0x3F입니다. 빈 목록 []이면 배선 문제이니 노랑(SDA→GP4)·흰색(SCL→GP5)이 바뀌지 않았는지, 빨강·검정 전원선이 단단히 꽂혔는지 확인하세요.</div></div>
+  <div class="callout warn"><div class="callout-head">⚠️ LED 색이 이상하게 알록달록해요</div><div class="callout-body">NeoPixel을 만들 때 timing=(280,515,515,745)를 빼먹은 거예요. WS2813은 이 타이밍이 없으면 데이터가 깨져서 무지개색 노이즈가 나타납니다. 코드 첫 부분의 NeoPixel(...) 줄을 다시 확인하세요.</div></div>
+  <div class="callout tip"><div class="callout-head">💡 테스트할 땐 갱신 주기를 줄이세요</div><div class="callout-body">10분에 1번 갱신이면 코드가 맞는지 확인하는 데 너무 오래 걸리죠. 개발 중에는 time.sleep(10)으로 줄이고, 완성 후에 600으로 되돌리세요. 단, 몇 초 간격으로 너무 자주 호출하면 API 서버에 부담을 주니 최종본은 꼭 10분으로!</div></div>
+
+  <div class="callout key"><div class="callout-head">🚀 더 나아가기</div><div class="callout-body">강수확률 70% 이상일 때 패시브 부저(GP18, PWM duty_u16 약 3000)로 짧은 알림음을 울려 '소리'라는 세 번째 매체를 추가해 보세요. DHT11(GP20)을 달면 LCD 둘째 줄에 실내 온도를 함께 띄워 '밖 예보 vs 우리 집 실측'을 나란히 비교할 수 있습니다. Open-Meteo의 daily 파라미터로 내일 최저·최고 기온까지 받아와 버튼 대신 시간대별로 화면을 번갈아 보여 주는 것도 좋아요.</div></div>
+  <div class="callout check"><div class="callout-head">🔬 탐구 보고서·세특으로 연결</div><div class="callout-body">3단계에서 쌓은 구글 시트 데이터로 '예보 강수확률 vs 실제 강수 여부'를 2주간 비교하면, 강수확률이 몇 % 이상일 때 실제로 비가 왔는지 나만의 '우산 임계값'을 스프레드시트 그래프로 도출할 수 있습니다. 또 친구 10명에게 LED 게이지만 보여줄 때와 LCD 숫자만 보여줄 때 '우산 챙길지' 판단 시간을 초시계로 측정해 비교하면, 직관적 시각화와 정밀한 수치 표현의 정보 전달력 차이를 다룬 데이터 시각화 탐구보고서가 됩니다. API의 JSON 구조에서 필요한 값만 골라내는 과정(current와 hourly 배열의 차이)을 정리하면 정보과학 세특 소재로도 훌륭해요.</div></div>
+</div>
+</section>
+
+<section class="sec" id="proj3">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🪑</span><span class="part-title">프로젝트 3 · 지금 자리 있어요? 스터디룸 실시간 알리미</span><span class="pbadge lv2">난이도 ★★☆</span><span class="pbadge">PIR HC-SR501</span></div>
+  <p class="part-sub">문 앞 헛걸음 끝! PIR과 LED 신호등이 알려주는 '빈 방' 실시간 안내</p>
+  <p class="prose">점심시간마다 스터디룸 앞까지 갔다가 "아, 누가 쓰고 있네..." 하고 돌아온 적 있지 않나요? 이 프로젝트는 PIR 인체감지 센서가 방 안의 움직임을 지켜보다가, 문 앞 LED 바를 '사용 중=빨강 / 비어 있음=초록'으로 바꿔 주는 스터디룸 신호등이에요. 핵심은 "마지막 감지 후 일정 시간 조용하면 빈 방"이라고 판단하는 시간 기반 로직인데, 사람이 잠깐 가만히 있어도 바로 초록으로 바뀌지 않게 만드는 게 진짜 실력이랍니다. 여기에 3장에서 배운 피코 웹 대시보드를 붙이면 교실에서 폰으로 미리 확인할 수 있고, 6장의 구글 시트 자동 기록까지 연결하면 시간대별 이용 기록이 데이터로 차곡차곡 쌓여요. 완성되면 여러분 학교의 스터디룸 문 앞에 진짜로 걸어 둘 수 있는, 데이터까지 남기는 스마트 시설물이 됩니다!</p>
+
+  <p class="step-head"><b>🧩 준비물</b></p>
+  <table class="wt"><tr><th>부품</th><th>연결 위치</th><th>메모</th></tr>
+    <tr><td>PIR 인체감지 센서 HC-SR501</td><td>핀 소켓 GP20·3V3·GND (점퍼 3개)</td><td>케플러 키트 부품. 암수 점퍼 케이블 3개로 연결, 전원 후 30초 워밍업 필요</td></tr>
+    <tr><td>WS2813 LED 바 10칸</td><td>D16 (GP16)</td><td>교재 기본 부품(이미 연결됨). timing=(280,515,515,745) 필수, 밝기는 채널당 40 이하</td></tr>
+  </table>
+
+  <p class="step-head"><b>🔌 새로 연결할 배선</b> — 교재 기본 부품(LED·MQ-2)은 이미 연결돼 있어요</p>
+  <div class="figure"><svg class="hw-svg" viewBox="0 0 960 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="스터디룸 알리미 배선도: PIR을 핀 소켓 GP20·3V3·GND에 점퍼로 연결"><text x="24" y="30" font-size="12.5" font-weight="800" fill="#6b5836">점퍼 색 약속 (추천)</text><rect x="190" y="19" width="14" height="14" rx="4" fill="#f4c400" stroke="#c79a00" stroke-width="1.2"/><text x="210" y="31" font-size="11.5" fill="#6b5836">노랑 = 신호</text><rect x="318" y="19" width="14" height="14" rx="4" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.2"/><text x="338" y="31" font-size="11.5" fill="#6b5836">흰색 = 둘째 신호</text><rect x="446" y="19" width="14" height="14" rx="4" fill="#e45756" stroke="#c23b3a" stroke-width="1.2"/><text x="466" y="31" font-size="11.5" fill="#6b5836">빨강 = 3V3(전원)</text><rect x="574" y="19" width="14" height="14" rx="4" fill="#3a3a3a" stroke="#111111" stroke-width="1.2"/><text x="594" y="31" font-size="11.5" fill="#6b5836">검정 = GND</text><text x="24" y="52" font-size="10.5" fill="#9a8b6a">키트 부품은 그로브 소켓이 아니라, 피코의 모든 핀이 번호 그대로 나와 있는 ‘핀 소켓 두 줄’에 점퍼로 연결해요.</text><rect x="30" y="100" width="230" height="315" rx="12" fill="#2e7d4f"/><text x="42" y="120" font-size="10.5" font-weight="800" fill="#d7f0dd">그로브 쉴드 (USB가 위)</text><rect x="129.0" y="88" width="32" height="16" rx="3" fill="#9aa1ad"/><text x="145.0" y="80" font-size="9" font-weight="700" fill="#9a8b6a" text-anchor="middle">USB ↑ 컴퓨터</text><rect x="112" y="122" width="66" height="272" rx="6" fill="#1d6b3f"/><text x="145" y="260" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">피코</text><text x="145" y="274" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">2 WH</text><rect x="96" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><text x="90" y="250" font-size="8.5" font-weight="700" fill="#cfe8d8" text-anchor="end" transform="rotate(-90 90 250)">왼쪽 핀 줄</text><text x="202" y="220" font-size="8.5" font-weight="700" fill="#cfe8d8" transform="rotate(90 202 220)">오른쪽 핀 줄</text><rect x="176" y="279.9" width="17" height="52.599999999999994" rx="4" fill="none" stroke="#e8930c" stroke-width="2.5"/><rect x="176" y="121.5" width="17" height="65.8" rx="4" fill="none" stroke="#e45756" stroke-width="2.5"/><rect x="44" y="387" width="44" height="18" rx="3" fill="#fff" stroke="#3ba6a0" stroke-width="1.5"/><text x="66" y="399.5" font-size="8.5" font-weight="800" fill="#2b7a75" text-anchor="middle">D16</text><text x="44" y="429" font-size="8.5" fill="#9a8b6a">그로브 소켓 — LED(D16)·MQ-2(A0)만</text><rect x="30" y="445" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="461" font-size="10" font-weight="700" fill="#2b7a75">🚦 LED 바 → 그로브 D16 소켓 (기본 연결)</text><text x="320" y="118" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (아래쪽)</text><rect x="416" y="132" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#3a3a3a" stroke-width="3"/><circle cx="444.0" cy="147.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="147.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GND</text><text x="406" y="159.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">GND (두 칸 위!)</text><rect x="416" y="172" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="187.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="191.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP21</text><rect x="416" y="212" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#f4c400" stroke-width="3"/><circle cx="444.0" cy="227.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="227.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP20</text><text x="406" y="239.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">OUT</text><rect x="416" y="252" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="267.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="271.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP19</text><text x="320" y="440" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (맨 위)</text><rect x="416" y="454" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="466.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="466.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VBUS</text><text x="406" y="478.5" font-size="9.5" font-weight="700" fill="#c23b3a" text-anchor="end">5V — 오늘은 금지!</text><rect x="416" y="485" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="497.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="501.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VSYS</text><rect x="416" y="516" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="528.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="532.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GND</text><rect x="416" y="547" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="559.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="563.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">3V3_EN</text><rect x="416" y="578" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#e45756" stroke-width="3"/><circle cx="442.0" cy="590.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="590.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">3V3</text><text x="406" y="602.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">빨강 점퍼는 여기!</text><path d="M198,306.2 C 260,306.2 290,200 314,200" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M198,154.4 C 260,154.4 290,520 314,520" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#c79a00" stroke-width="6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#f4c400" stroke-width="3.6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,250 696,250" fill="none" stroke="#c23b3a" stroke-width="6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,250 696,250" fill="none" stroke="#e45756" stroke-width="3.6" stroke-linecap="round"/><path d="M472,147.0 C542,147.0 626,274 696,274" fill="none" stroke="#111111" stroke-width="6" stroke-linecap="round"/><path d="M472,147.0 C542,147.0 626,274 696,274" fill="none" stroke="#3a3a3a" stroke-width="3.6" stroke-linecap="round"/><rect x="700" y="180" width="236" height="116" rx="10" fill="#fffdf7" stroke="#c9b98c" stroke-width="1.8"/><text x="714" y="203" font-size="14" font-weight="800" fill="#3a2e1a">🕵️ PIR 동작감지</text><circle cx="700" cy="226" r="6" fill="#f4c400" stroke="#c79a00" stroke-width="1.5"/><text x="716" y="230.5" font-size="12" font-weight="700" fill="#5a4a28">OUT → GP20 <tspan font-size="10" fill="#9a8b6a">노랑 점퍼</tspan></text><circle cx="700" cy="250" r="6" fill="#e45756" stroke="#c23b3a" stroke-width="1.5"/><text x="716" y="254.5" font-size="12" font-weight="700" fill="#5a4a28">VCC → 3V3 <tspan font-size="10" fill="#9a8b6a">빨강 점퍼</tspan></text><circle cx="700" cy="274" r="6" fill="#3a3a3a" stroke="#111111" stroke-width="1.5"/><text x="716" y="278.5" font-size="12" font-weight="700" fill="#5a4a28">GND → GND <tspan font-size="10" fill="#9a8b6a">검정 점퍼</tspan></text><rect x="700" y="158" width="76" height="18" rx="9" fill="#e8930c"/><text x="709" y="171.5" font-size="10.5" font-weight="800" fill="#fff">새로 연결!</text></svg><p style="margin:7px 2px 0;font-size:12px;color:#9a8b6a;line-height:1.7">🔌 <b>연결 순서</b> — ① USB를 뽑는다 ② <b>암수 점퍼</b>의 <b>수(핀) 쪽을 쉴드 핀 소켓</b>에, <b>암(구멍) 쪽을 부품 핀</b>에 꽂는다 ③ 켜기 전에 <b>빨강=3V3 · 검정=GND</b>인지 한 번 더 확인! 점퍼 색은 달라도 동작하지만, 색 약속을 지키면 실수가 확 줄어요. 핀 소켓 위치는 쉴드에 <b>인쇄된 GP 번호</b>로 꼭 다시 확인하세요.</p></div>
+                <table class="wt"><tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>OUT</td><td>핀 소켓 <code>GP20</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP20에서 두 칸 위</td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <p class="step-head"><b>1단계 · PIR 센서 눈 뜨게 하기</b> — PIR을 핀 소켓(GP20·3V3·GND)에 연결하고, 30초 워밍업 후 움직임을 제대로 감지하는지 셸 출력으로 확인해요. 손을 흔들면 '감지!', 가만히 있으면 '조용...'이 뜨면 성공!</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — PIR 동작 감지 확인</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코는 아직 아무 코드도 실행하지 않은 상태예요. 케플러 키트의 PIR 인체감지 센서를 처음 연결해서 동작을 확인하려고 해요.
+[하드웨어] PIR HC-SR501의 OUT은 20번 핀(GP20, 디지털 입력)에 연결되어 있어요.
+[작업] 전원 후 30초 워밍업 카운트다운을 셸에 출력한 뒤, 0.5초마다 PIR 값을 읽어 움직임이 감지되면 "감지!", 아니면 "조용..."을 경과 시간과 함께 출력해 줘.
+[제약] 외부 라이브러리 금지(machine, time만 사용). 워밍업 30초 동안에는 감지 판정을 하지 말 것.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <p class="step-head"><b>2단계 · '조용하면 빈 방' 시간 로직 + LED 신호등</b> — 마지막 감지 시각을 기억해 두었다가, 일정 시간 조용하면 초록(비어 있음), 그 전까지는 빨강(사용 중)으로 LED 바를 켜는 핵심 로직을 완성해요.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 빈 방 판정 로직 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 PIR 값을 읽어 셸에 감지 여부를 출력하는 데 성공했어요. 이제 '마지막 감지 후 일정 시간 조용하면 빈 방'이라고 판단하는 로직과 LED 신호등을 붙이려고 해요.
+[하드웨어] PIR HC-SR501의 OUT은 20번 핀(GP20). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요.
+[작업] 움직임이 감지될 때마다 마지막 감지 시각을 갱신하고, 마지막 감지 후 30초(변수 EMPTY_AFTER로 쉽게 조절)가 지나면 LED 10칸을 초록으로, 그 전까지는 빨강으로 켜 줘. 빨강일 때는 '빈 방 판정까지 남은 시간'에 비례해 켜지는 칸 수가 줄어들게 해 줘.
+[제약] LED 밝기는 채널당 40 이하. 갱신 주기 0.5초. 전원 후 30초 워밍업 동안은 파란색 카운트다운 게이지를 표시하고 감지 판정 금지. 외부 라이브러리 금지(machine, neopixel, time만).
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 손을 흔들면 빨강, 30초 조용하면 초록으로 바뀌면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 스터디룸 알리미 2단계 확인용 — PIR + 시간 로직 + LED 신호등
+from machine import Pin
+from neopixel import NeoPixel
+import time
+
+# WS2813은 timing을 꼭 지정해야 색이 깨지지 않아요
+np = NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))
+pir = Pin(20, Pin.IN)
+
+EMPTY_AFTER = 30  # 마지막 감지 후 이만큼(초) 조용하면 '빈 방' (실전은 180 이상 추천)
+
+def fill(r, g, b, n=10):
+    # 앞에서부터 n칸만 켜고 나머지는 꺼요 (밝기는 40 이하!)
+    for i in range(10):
+        np[i] = (r, g, b) if i &lt; n else (0, 0, 0)
+    np.write()
+
+# PIR는 전원 후 30초 워밍업이 필요해요 — 파란 게이지로 카운트다운!
+print("PIR 워밍업 중... 30초만 기다려 주세요")
+for sec in range(30, 0, -1):
+    fill(0, 0, 30, (sec + 2) // 3)
+    time.sleep(1)
+print("워밍업 완료! 감지를 시작합니다")
+
+last_motion = time.time()  # 마지막으로 움직임을 본 시각
+
+while True:
+    try:
+        if pir.value() == 1:
+            last_motion = time.time()  # 감지되면 시각 갱신!
+
+        quiet = time.time() - last_motion  # 조용해진 지 몇 초?
+
+        if quiet &lt; EMPTY_AFTER:
+            # 사용 중: 빨강. 조용할수록 칸이 줄어 '곧 비워질 예감'까지 보여줘요
+            remain = EMPTY_AFTER - quiet
+            n = max(1, min(10, remain * 10 // EMPTY_AFTER + 1))
+            fill(40, 0, 0, n)
+            print("사용 중 | 마지막 감지", quiet, "초 전")
+        else:
+            fill(0, 40, 0)  # 비어 있음: 초록 10칸
+            print("비어 있음 |", quiet, "초째 조용")
+    except Exception as e:
+        print("오류 발생, 계속 진행:", e)
+
+    time.sleep(0.5)</code></pre></div>
+
+  <p class="step-head"><b>3단계 · 폰 대시보드 + 구글 시트 기록으로 최종 완성</b> — 교실에서 폰으로 접속해 현재 상태를 확인하는 웹 대시보드를 띄우고, 상태가 바뀌는 순간마다 구글 시트에 시각과 상태를 자동 기록해 이용 패턴 데이터를 쌓아요.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 대시보드·시트 기록 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 PIR+LED로 '사용 중=빨강 / 비어 있음=초록' 신호등 동작에 성공했어요. 이제 교실에서 폰으로 확인하는 웹 대시보드와 구글 시트 자동 기록까지 붙여서 최종 완성하려고 해요.
+[하드웨어] PIR HC-SR501의 OUT은 20번 핀(GP20). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하. 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마세요. 구글 시트는 코드 상단 WEB_APP_URL 변수에 저장한 Apps Script 웹 앱 URL로 GET 파라미터를 전송해요.
+[작업] 폰으로 피코 IP에 접속하면 현재 상태(사용 중/비어 있음), 마지막 감지 후 경과 시간, 오늘 상태가 바뀐 횟수를 큼직하게 보여주는 대시보드 페이지를 띄워 줘. 상태가 '사용 중↔비어 있음'으로 바뀌는 순간에만 구글 시트로 상태와 경과 시간을 전송해 줘. LED 신호등 동작은 2단계 그대로 유지.
+[제약] 시트 전송은 상태 변경 순간에만(같은 상태 반복 전송 금지). urequests 응답은 반드시 close할 것. 소켓은 논블로킹(setblocking(False) 또는 settimeout)으로 처리해 접속이 없어도 LED·PIR 루프가 계속 돌게 할 것. 와이파이·전송 실패는 try/except로 건너뛰고 LED와 대시보드는 계속 동작할 것. 외부 라이브러리 금지(network, socket, urequests, machine, neopixel, time만).
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="callout warn"><div class="callout-head">⚠️ 켜자마자 '감지!'가 계속 떠도 놀라지 마세요</div><div class="callout-body">PIR는 전원 후 30초 동안 값이 제멋대로 튀는 워밍업 시간이 있어요. 이때의 감지는 전부 가짜이니, 코드처럼 워밍업 카운트다운을 넣어 그 동안의 판정을 무시하는 게 정석입니다. 워밍업 후에도 오검출이 잦다면 센서 옆 주황색 가변저항(감도)을 시계 반대 방향으로 살짝 돌려 보세요.</div></div>
+  <div class="callout tip"><div class="callout-head">💡 EMPTY_AFTER 값이 이 프로젝트의 '두뇌'예요</div><div class="callout-body">테스트할 땐 30초가 편하지만, 실제 스터디룸에선 책 읽는 사람이 몇 분씩 가만히 있기도 해요. 값이 너무 짧으면 사람이 있는데 초록이 되는 '유령 빈 방' 오판이 생깁니다. 180초(3분)부터 시작해서 직접 실험하며 최적값을 찾아보세요 — 이 튜닝 과정 자체가 훌륭한 탐구 소재예요.</div></div>
+  <div class="callout tip"><div class="callout-head">💡 센서 위치가 절반을 결정해요</div><div class="callout-body">PIR는 정면보다 '가로질러 지나가는' 움직임에 민감해요. 문 쪽이 아니라 책상 쪽을 비스듬히 향하게 두고, 히터·에어컨 바람이 직접 닿는 자리는 피하세요(온도 변화를 사람으로 착각해요). LED 바는 문 밖에서 잘 보이게 종이컵이나 반투명 파일로 감싸면 은은한 신호등이 됩니다.</div></div>
+
+  <div class="callout key"><div class="callout-head">🚀 더 나아가기</div><div class="callout-body">핀 소켓 GP18에 패시브 부저를 추가하면 '방이 비는 순간' 짧은 멜로디로 알려주는 알림 기능을 만들 수 있어요. 핀 소켓 GP4/GP5(I2C)에 LCD1602를 달아 문 앞에 "IN USE" / "EMPTY"와 경과 시간을 영문으로 표시하면 폰 없이도 확인 가능한 완성형 안내판이 됩니다. 구글 시트에 쌓인 기록으로 '요일·시간대별 혼잡 예보'를 대시보드에 띄우면 진짜 서비스에 한 걸음 더 가까워져요.</div></div>
+  <div class="callout check"><div class="callout-head">🔬 탐구 보고서·세특으로 연결</div><div class="callout-body">EMPTY_AFTER를 30초·1분·3분·5분으로 바꿔 가며 '사람이 있는데 초록으로 오판한 비율'과 '비었는데 빨강이 유지된 시간'을 측정하면, 오판율과 반응 속도가 서로 트레이드오프 관계임을 데이터로 보일 수 있어요. 일주일간 구글 시트에 쌓인 상태 변경 기록을 시간대별 이용률 그래프(히트맵)로 그려 '우리 학교 학습공간 이용 패턴 분석' 보고서로 발전시켜 보세요. PIR의 감지 거리·각도를 줄자로 실측해 센서 사양표와 비교하는 실험을 곁들이면 센서 특성 이해까지 담긴 탄탄한 세특 소재가 됩니다.</div></div>
+</div>
+</section>
+
+<section class="sec" id="proj4">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🗑️</span><span class="part-title">프로젝트 4 · 넘치기 전에 말해줘! 분리수거함 만땅 알리미</span><span class="pbadge lv2">난이도 ★★☆</span><span class="pbadge">초음파 HC-SR04</span></div>
+  <p class="part-sub">초음파로 잰 거리를 채움률 퍼센트로 바꿔, LED 게이지와 구글 시트가 청소 타이밍을 알려주는 스마트 수거함</p>
+  <p class="prose">"어? 또 넘쳤네…" 분리수거함이 산처럼 쌓이고 나서야 비우러 가는 일, 우리 교실에서 흔한 풍경이죠. 이 프로젝트는 뚜껑 안쪽에 초음파 센서를 붙여 쓰레기 표면까지의 거리를 재고, 음속(약 343m/s)을 이용한 거리 환산으로 통이 몇 퍼센트 찼는지 계산해요. 열 칸 LED 바가 채움 정도를 게이지로 보여주다가, 80%를 넘는 순간 구글 시트에 시각과 함께 자동 기록됩니다. 몇 주 데이터가 쌓이면 "우리 반은 수요일 점심 직후에 제일 빨리 찬다" 같은 패턴이 보이고, 청소 당번은 감이 아니라 데이터로 움직이게 돼요. 교실 뒤에서 조용히 반짝이는 LED 게이지, 상상만 해도 근사하지 않나요?</p>
+  <p class="step-head"><b>🧩 준비물</b></p>
+  <table class="wt"><tr><th>부품</th><th>연결 위치</th><th>메모</th></tr>
+  <tr><td>초음파 센서 HC-SR04</td><td>핀 소켓 GP18(TRIG)·GP19(ECHO)·3V3·GND (점퍼 4개)</td><td>뚜껑 안쪽에서 쓰레기 표면까지 거리를 측정. 신호선이 2개(TRIG·ECHO)라 점퍼 4개로 핀 소켓에 연결해요</td></tr>
+  <tr><td>WS2813 LED 바 10칸</td><td>D16 (GP16) — 교재 기본 배선</td><td>채움률을 10칸 게이지로 표시. timing=(280,515,515,745) 필수, 밝기는 채널당 40 이하</td></tr>
+  <tr><td>와이파이 + 구글 시트</td><td>내장 (wifi_config.py)</td><td>80% 초과 시 Apps Script 웹 앱 URL로 GET 전송해 시각·채움률 자동 기록</td></tr>
+  </table>
+  <p class="step-head"><b>🔌 새로 연결할 배선</b> — 교재 기본 부품(LED·MQ-2)은 이미 연결돼 있어요</p>
+  <div class="figure"><svg class="hw-svg" viewBox="0 0 960 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분리수거함 알리미 배선도: 초음파를 핀 소켓 GP18·GP19·3V3·GND에 점퍼로 연결"><text x="24" y="30" font-size="12.5" font-weight="800" fill="#6b5836">점퍼 색 약속 (추천)</text><rect x="190" y="19" width="14" height="14" rx="4" fill="#f4c400" stroke="#c79a00" stroke-width="1.2"/><text x="210" y="31" font-size="11.5" fill="#6b5836">노랑 = 신호</text><rect x="318" y="19" width="14" height="14" rx="4" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.2"/><text x="338" y="31" font-size="11.5" fill="#6b5836">흰색 = 둘째 신호</text><rect x="446" y="19" width="14" height="14" rx="4" fill="#e45756" stroke="#c23b3a" stroke-width="1.2"/><text x="466" y="31" font-size="11.5" fill="#6b5836">빨강 = 3V3(전원)</text><rect x="574" y="19" width="14" height="14" rx="4" fill="#3a3a3a" stroke="#111111" stroke-width="1.2"/><text x="594" y="31" font-size="11.5" fill="#6b5836">검정 = GND</text><text x="24" y="52" font-size="10.5" fill="#9a8b6a">키트 부품은 그로브 소켓이 아니라, 피코의 모든 핀이 번호 그대로 나와 있는 ‘핀 소켓 두 줄’에 점퍼로 연결해요.</text><rect x="30" y="100" width="230" height="315" rx="12" fill="#2e7d4f"/><text x="42" y="120" font-size="10.5" font-weight="800" fill="#d7f0dd">그로브 쉴드 (USB가 위)</text><rect x="129.0" y="88" width="32" height="16" rx="3" fill="#9aa1ad"/><text x="145.0" y="80" font-size="9" font-weight="700" fill="#9a8b6a" text-anchor="middle">USB ↑ 컴퓨터</text><rect x="112" y="122" width="66" height="272" rx="6" fill="#1d6b3f"/><text x="145" y="260" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">피코</text><text x="145" y="274" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">2 WH</text><rect x="96" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><text x="90" y="250" font-size="8.5" font-weight="700" fill="#cfe8d8" text-anchor="end" transform="rotate(-90 90 250)">왼쪽 핀 줄</text><text x="202" y="220" font-size="8.5" font-weight="700" fill="#cfe8d8" transform="rotate(90 202 220)">오른쪽 핀 줄</text><rect x="176" y="306.29999999999995" width="17" height="52.599999999999994" rx="4" fill="none" stroke="#e8930c" stroke-width="2.5"/><rect x="176" y="121.5" width="17" height="65.8" rx="4" fill="none" stroke="#e45756" stroke-width="2.5"/><rect x="44" y="387" width="44" height="18" rx="3" fill="#fff" stroke="#3ba6a0" stroke-width="1.5"/><text x="66" y="399.5" font-size="8.5" font-weight="800" fill="#2b7a75" text-anchor="middle">D16</text><text x="44" y="429" font-size="8.5" fill="#9a8b6a">그로브 소켓 — LED(D16)·MQ-2(A0)만</text><rect x="30" y="445" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="461" font-size="10" font-weight="700" fill="#2b7a75">🚦 LED 바 → 그로브 D16 소켓 (기본 연결)</text><text x="320" y="118" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (아래쪽)</text><rect x="416" y="132" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="147.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="151.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP20</text><rect x="416" y="172" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#b3a98f" stroke-width="3"/><circle cx="444.0" cy="187.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="187.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP19</text><text x="406" y="199.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">ECHO</text><rect x="416" y="212" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#f4c400" stroke-width="3"/><circle cx="444.0" cy="227.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="227.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP18</text><text x="406" y="239.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">TRIG</text><rect x="416" y="252" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#3a3a3a" stroke-width="3"/><circle cx="444.0" cy="267.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="267.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GND</text><text x="406" y="279.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">GND (바로 아래 칸!)</text><text x="320" y="440" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (맨 위)</text><rect x="416" y="454" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="466.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="466.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VBUS</text><text x="406" y="478.5" font-size="9.5" font-weight="700" fill="#c23b3a" text-anchor="end">5V — 오늘은 금지!</text><rect x="416" y="485" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="497.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="501.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VSYS</text><rect x="416" y="516" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="528.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="532.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GND</text><rect x="416" y="547" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="559.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="563.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">3V3_EN</text><rect x="416" y="578" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#e45756" stroke-width="3"/><circle cx="442.0" cy="590.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="590.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">3V3</text><text x="406" y="602.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">빨강 점퍼는 여기!</text><path d="M198,332.6 C 260,332.6 290,200 314,200" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M198,154.4 C 260,154.4 290,520 314,520" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#c79a00" stroke-width="6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,226 696,226" fill="none" stroke="#f4c400" stroke-width="3.6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,250 696,250" fill="none" stroke="#b3a98f" stroke-width="6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,250 696,250" fill="none" stroke="#f6f4ee" stroke-width="3.6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,274 696,274" fill="none" stroke="#c23b3a" stroke-width="6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,274 696,274" fill="none" stroke="#e45756" stroke-width="3.6" stroke-linecap="round"/><path d="M472,267.0 C542,267.0 626,298 696,298" fill="none" stroke="#111111" stroke-width="6" stroke-linecap="round"/><path d="M472,267.0 C542,267.0 626,298 696,298" fill="none" stroke="#3a3a3a" stroke-width="3.6" stroke-linecap="round"/><rect x="700" y="180" width="236" height="140" rx="10" fill="#fffdf7" stroke="#c9b98c" stroke-width="1.8"/><text x="714" y="203" font-size="14" font-weight="800" fill="#3a2e1a">📏 초음파 HC-SR04</text><circle cx="700" cy="226" r="6" fill="#f4c400" stroke="#c79a00" stroke-width="1.5"/><text x="716" y="230.5" font-size="12" font-weight="700" fill="#5a4a28">TRIG → GP18 <tspan font-size="10" fill="#9a8b6a">노랑 점퍼</tspan></text><circle cx="700" cy="250" r="6" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.5"/><text x="716" y="254.5" font-size="12" font-weight="700" fill="#5a4a28">ECHO → GP19 <tspan font-size="10" fill="#9a8b6a">흰색 점퍼</tspan></text><circle cx="700" cy="274" r="6" fill="#e45756" stroke="#c23b3a" stroke-width="1.5"/><text x="716" y="278.5" font-size="12" font-weight="700" fill="#5a4a28">VCC → 3V3 <tspan font-size="10" fill="#9a8b6a">빨강 점퍼</tspan></text><circle cx="700" cy="298" r="6" fill="#3a3a3a" stroke="#111111" stroke-width="1.5"/><text x="716" y="302.5" font-size="12" font-weight="700" fill="#5a4a28">GND → GND <tspan font-size="10" fill="#9a8b6a">검정 점퍼</tspan></text><rect x="700" y="158" width="76" height="18" rx="9" fill="#e8930c"/><text x="709" y="171.5" font-size="10.5" font-weight="800" fill="#fff">새로 연결!</text></svg><p style="margin:7px 2px 0;font-size:12px;color:#9a8b6a;line-height:1.7">🔌 <b>연결 순서</b> — ① USB를 뽑는다 ② <b>암수 점퍼</b>의 <b>수(핀) 쪽을 쉴드 핀 소켓</b>에, <b>암(구멍) 쪽을 부품 핀</b>에 꽂는다 ③ 켜기 전에 <b>빨강=3V3 · 검정=GND</b>인지 한 번 더 확인! 점퍼 색은 달라도 동작하지만, 색 약속을 지키면 실수가 확 줄어요. 핀 소켓 위치는 쉴드에 <b>인쇄된 GP 번호</b>로 꼭 다시 확인하세요.</p></div>
+                <table class="wt"><tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>TRIG</td><td>핀 소켓 <code>GP18</code> (오른쪽 줄 아래쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>ECHO</td><td>핀 소켓 <code>GP19</code> — GP18 바로 위 칸</td><td><span class="wire w-w"></span>흰색</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP18 바로 아래 칸</td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+
+  <p class="step-head"><b>1단계 · 초음파로 거리 재보기</b> — HC-SR04가 정상 연결됐는지 확인하고, 손바닥을 가까이/멀리 움직이며 거리(cm)가 실시간으로 바뀌는지 봅니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 거리 측정 확인</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코에 초음파 센서를 처음 연결했고, 거리 측정이 되는지부터 확인하고 싶어.
+[하드웨어] 초음파 HC-SR04: TRIG=GP18(출력), ECHO=GP19(입력). machine.time_pulse_us로 에코 시간을 재고 음속 343m/s로 환산해 줘.
+[작업] 0.5초마다 거리를 cm 단위로 측정해서 "거리: 23.4 cm"처럼 셸에 출력해 줘. 측정 원리(트리거 10us 펄스 → 에코 왕복 시간 → 거리 = 시간 × 0.0343 / 2)를 주석으로 설명해 줘.
+[제약] time_pulse_us 타임아웃은 30000us로 하고, -1이나 -2가 나오면 "측정 실패"를 출력하고 건너뛰기. 외부 라이브러리 금지.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <p class="step-head"><b>2단계 · 채움률 계산 + LED 게이지 완성</b> — 5회 반복 측정의 중앙값으로 거리를 안정화하고, 빈 통~가득 기준으로 채움률(%)을 계산해 LED 10칸 게이지로 표시합니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 채움률 게이지 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 초음파로 거리를 잘 재고 있어. 이제 분리수거함 채움률 게이지를 만들 거야.
+[하드웨어] 초음파 HC-SR04: TRIG=GP18, ECHO=GP19. 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요. 밝기는 채널당 40 이하.
+[작업] (1) 거리를 5회 측정해 중앙값 사용 (2) EMPTY_CM=40, FULL_CM=5 상수로 채움률 0~100% 계산 (3) 10%당 LED 1칸씩 켜기: 50% 미만 초록, 50~79% 주황, 80% 이상 빨강 (4) 셸에 거리와 퍼센트 출력.
+[제약] 1초마다 갱신, 측정 실패 시 try/except로 건너뛰고 LED는 이전 상태 유지, 외부 라이브러리 금지.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 손을 센서에 가까이 대면 LED가 빨강까지 차오르면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">from machine import Pin, time_pulse_us
+import neopixel
+import time
+
+# 내 수거함에 맞게 두 값을 꼭 조정하세요!
+EMPTY_CM = 40.0  # 빈 통: 센서에서 바닥까지 거리(cm)
+FULL_CM = 5.0    # 가득: 쓰레기 표면까지 최소 거리(cm)
+
+trig = Pin(18, Pin.OUT)
+echo = Pin(19, Pin.IN)
+np = neopixel.NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))
+
+def measure_once():
+    # 10us 트리거 펄스 → 에코 왕복 시간 → 거리 환산
+    trig.value(0); time.sleep_us(2)
+    trig.value(1); time.sleep_us(10)
+    trig.value(0)
+    us = time_pulse_us(echo, 1, 30000)  # 30ms 넘으면 음수 반환
+    if us &lt; 0:
+        return None
+    return us * 0.0343 / 2  # 음속 343m/s, 왕복이라 2로 나눠요
+
+def measure_median(n=5):
+    # 5회 재서 중앙값 사용 — 튀는 값에 훨씬 강합니다
+    vals = []
+    for _ in range(n):
+        try:
+            d = measure_once()
+            if d is not None:
+                vals.append(d)
+        except Exception:
+            pass
+        time.sleep_ms(60)
+    if not vals:
+        return None
+    vals.sort()
+    return vals[len(vals) // 2]
+
+def show_gauge(pct):
+    lit = round(pct / 10)  # 10%당 1칸
+    for i in range(10):
+        if i &lt; lit:
+            if pct &gt;= 80:
+                np[i] = (40, 0, 0)    # 빨강: 비울 때!
+            elif pct &gt;= 50:
+                np[i] = (40, 20, 0)   # 주황: 슬슬 주의
+            else:
+                np[i] = (0, 40, 0)    # 초록: 여유
+        else:
+            np[i] = (0, 0, 0)
+    np.write()
+
+while True:
+    d = measure_median()
+    if d is None:
+        print("측정 실패 — TRIG/ECHO 배선을 확인하세요")
+    else:
+        pct = (EMPTY_CM - d) / (EMPTY_CM - FULL_CM) * 100
+        pct = max(0, min(100, pct))
+        print("거리 {:.1f}cm -&gt; 채움 {:.0f}%".format(d, pct))
+        show_gauge(pct)
+    time.sleep(1)</code></pre></div>
+
+  <p class="step-head"><b>3단계 · 80% 넘으면 구글 시트에 자동 기록</b> — 와이파이에 연결하고, 채움률이 80%를 처음 넘는 순간 구글 시트에 시각·거리·채움률을 기록해 '요일별 만땅 패턴' 데이터를 쌓습니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 구글 시트 자동 기록</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 초음파 채움률을 LED 게이지로 잘 보여주고 있어. 이제 6장에서 배운 구글 시트 자동 기록을 붙일 거야.
+[하드웨어] 초음파 HC-SR04: TRIG=GP18, ECHO=GP19. 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하. 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마. 구글 시트는 코드 상단 WEB_APP_URL 변수에 저장한 Apps Script 웹 앱 URL로 GET 파라미터(distance, percent) 전송.
+[작업] 기존 게이지 동작을 유지하면서, 채움률이 80%를 '넘어가는 순간' 한 번만 시트에 기록해 줘. 75% 아래로 내려가면(비웠으면) 다시 기록 가능 상태로 초기화(히스테리시스). 기록 성공/실패를 셸에 출력.
+[제약] urequests 응답은 사용 후 반드시 close, 와이파이·전송 실패는 try/except로 처리하고 게이지는 멈추지 않기, 갱신 주기 2초, 외부 라이브러리 금지.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+
+  <div class="callout warn"><div class="callout-head">⚠️ 거리가 항상 '측정 실패'라면 TRIG/ECHO가 바뀐 것</div><div class="callout-body">노랑(TRIG=GP18)과 흰색(ECHO=GP19)이 뒤바뀌면 에코 신호가 영영 오지 않아 타임아웃만 납니다. 배선을 다시 확인하고, 센서 앞 30cm쯤에 책을 세워두고 테스트하면 값이 안정적으로 나오는지 금방 알 수 있어요.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 EMPTY_CM 보정은 '진짜 빈 통'으로</div><div class="callout-body">채움률이 이상하게 나오는 원인 1위는 EMPTY_CM을 대충 넣은 것이에요. 통을 완전히 비운 뒤 셸에 찍히는 거리 값을 10번쯤 보고 그 중앙값을 EMPTY_CM으로 넣으세요. 초음파는 좁은 통 벽에 반사되면 값이 튀니, 센서를 뚜껑 정중앙에 붙이는 게 좋습니다.</div></div>
+
+  <div class="callout tip"><div class="callout-head">💡 시트 기록은 '넘는 순간 한 번만'</div><div class="callout-body">80% 이상인 동안 매초 기록하면 시트가 같은 줄로 도배됩니다. '이미 알렸는지' 플래그 변수를 두고, 75% 아래로 내려갔을 때만 플래그를 풀어주는 히스테리시스를 쓰면 비운 뒤 다시 찼을 때만 새 기록이 남아요.</div></div>
+
+  <div class="callout key"><div class="callout-head">🚀 더 나아가기</div><div class="callout-body">D18을 초음파가 쓰고 있으니 부저는 못 달지만, I2C 포트(GP4/GP5)의 LCD1602를 추가해 "FULL 85% - EMPTY ME!" 같은 영문 메시지를 띄우면 멀리서도 상태가 보여요. 3장에서 배운 피코 웹 대시보드를 붙이면 교실 어느 자리에서든 스마트폰으로 채움률을 확인할 수 있고, 종이·플라스틱 두 통에 각각 설치해 어느 쪽이 먼저 차는지 경쟁 구도(?)를 만들어도 재미있습니다.</div></div>
+
+  <div class="callout check"><div class="callout-head">🔬 탐구 보고서·세특으로 연결</div><div class="callout-body">탐구의 핵심은 오차 실험이에요. 같은 거리를 1회 측정 vs 5회 중앙값으로 각각 50번씩 기록해 표준편차를 비교하면 "반복 측정과 중앙값이 왜 필요한가"를 수치로 증명할 수 있고, 기온에 따라 음속이 변하는 점(약 331+0.6T m/s)을 이용해 겨울·여름 측정값 차이를 이론과 비교해도 좋습니다. 구글 시트에 2~3주 쌓인 기록을 요일·시간대별로 집계해 "만땅 도달 시각" 그래프를 그리면, 청소 당번 배치를 데이터 기반으로 제안하는 생활 밀착형 탐구보고서가 완성됩니다.</div></div>
+</div>
+</section>
+
+<section class="sec" id="proj5">
+<div class="part">
+  <div class="part-head"><span class="part-emoji">🗳️</span><span class="part-title">프로젝트 5 · 리모콘으로 5초 학급회의 — 실시간 교실 투표기</span><span class="pbadge lv3">난이도 ★★★</span><span class="pbadge">IR 수신기+리모콘</span></div>
+  <p class="part-sub">NEC 적외선 펄스를 직접 해석해 만드는 무기명 전자 투표 시스템</p>
+  <p class="prose">"체육대회 반티, A안이야 B안이야?" 손들기 투표는 눈치가 보이고, 종이 투표는 세는 데 10분이 걸려요. 그래서 TV 리모콘처럼 생긴 IR 리모콘을 무기명 투표 버튼으로 바꿔 봅니다. 1번 버튼을 누르면 A안, 2번 버튼을 누르면 B안에 표가 들어가고, 교탁 위 LED 바 10칸이 빨강과 파랑 두 진영으로 갈라지며 득표 비율을 실시간 막대그래프처럼 보여줘요. 리모콘이 쏘는 적외선은 사실 0과 1의 펄스 신호(NEC 프로토콜)인데, 이걸 여러분이 직접 해석한다는 게 이 프로젝트의 진짜 멋진 부분이에요. 투표가 끝나면 결과가 구글 시트에 자동 기록되니, 나중에 "그때 몇 표였더라?" 하는 딴말도 안 나옵니다.</p>
+  <p class="step-head"><b>🧩 준비물</b></p>
+  <table class="wt"><tr><th>부품</th><th>연결 위치</th><th>메모</th></tr>
+    <tr><td>IR 수신기 + 리모콘 (케플러 키트)</td><td>핀 소켓 GP1·3V3·GND (점퍼 3개)</td><td>NEC 방식. 평소 신호선이 1이고, 적외선이 들어오면 0으로 떨어져요. 리모콘마다 버튼 코드가 달라서 1단계에서 직접 알아냅니다.</td></tr>
+    <tr><td>WS2813 LED 바 10칸 (교재 기본)</td><td>그로브 D16 (GP16)</td><td>이미 연결돼 있어요. timing=(280,515,515,745) 지정 필수, 밝기는 채널당 40 이하로.</td></tr>
+    <tr><td>와이파이 (피코 내장)</td><td>-</td><td>wifi_config.py의 SSID/PW 사용. 3단계에서 구글 시트(Apps Script 웹 앱 URL) 기록에 써요.</td></tr>
+  </table>
+  <p class="step-head"><b>🔌 새로 연결할 배선</b> — 교재 기본 부품(LED·MQ-2)은 이미 연결돼 있어요</p>
+  <div class="figure"><svg class="hw-svg" viewBox="0 0 960 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="교실 투표기 배선도: IR 수신기를 핀 소켓 GP1·3V3·GND에 점퍼로 연결"><text x="24" y="30" font-size="12.5" font-weight="800" fill="#6b5836">점퍼 색 약속 (추천)</text><rect x="190" y="19" width="14" height="14" rx="4" fill="#f4c400" stroke="#c79a00" stroke-width="1.2"/><text x="210" y="31" font-size="11.5" fill="#6b5836">노랑 = 신호</text><rect x="318" y="19" width="14" height="14" rx="4" fill="#f6f4ee" stroke="#b3a98f" stroke-width="1.2"/><text x="338" y="31" font-size="11.5" fill="#6b5836">흰색 = 둘째 신호</text><rect x="446" y="19" width="14" height="14" rx="4" fill="#e45756" stroke="#c23b3a" stroke-width="1.2"/><text x="466" y="31" font-size="11.5" fill="#6b5836">빨강 = 3V3(전원)</text><rect x="574" y="19" width="14" height="14" rx="4" fill="#3a3a3a" stroke="#111111" stroke-width="1.2"/><text x="594" y="31" font-size="11.5" fill="#6b5836">검정 = GND</text><text x="24" y="52" font-size="10.5" fill="#9a8b6a">키트 부품은 그로브 소켓이 아니라, 피코의 모든 핀이 번호 그대로 나와 있는 ‘핀 소켓 두 줄’에 점퍼로 연결해요.</text><rect x="30" y="100" width="230" height="315" rx="12" fill="#2e7d4f"/><text x="42" y="120" font-size="10.5" font-weight="800" fill="#d7f0dd">그로브 쉴드 (USB가 위)</text><rect x="129.0" y="88" width="32" height="16" rx="3" fill="#9aa1ad"/><text x="145.0" y="80" font-size="9" font-weight="700" fill="#9a8b6a" text-anchor="middle">USB ↑ 컴퓨터</text><rect x="112" y="122" width="66" height="272" rx="6" fill="#1d6b3f"/><text x="145" y="260" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">피코</text><text x="145" y="274" font-size="10" font-weight="800" fill="#eaf7ee" text-anchor="middle">2 WH</text><rect x="96" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="96" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="124.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="137.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="150.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="164.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="177.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="190.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="203.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="216.89999999999998" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="230.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="243.3" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="256.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="269.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="282.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="296.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="309.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="322.5" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="335.7" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="348.9" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="362.1" width="9" height="9" rx="2" fill="#0f3d22"/><rect x="180" y="375.29999999999995" width="9" height="9" rx="2" fill="#0f3d22"/><text x="90" y="250" font-size="8.5" font-weight="700" fill="#cfe8d8" text-anchor="end" transform="rotate(-90 90 250)">왼쪽 핀 줄</text><text x="202" y="220" font-size="8.5" font-weight="700" fill="#cfe8d8" transform="rotate(90 202 220)">오른쪽 핀 줄</text><rect x="92" y="121.5" width="17" height="39.4" rx="4" fill="none" stroke="#e8930c" stroke-width="2.5"/><rect x="176" y="121.5" width="17" height="65.8" rx="4" fill="none" stroke="#e45756" stroke-width="2.5"/><rect x="44" y="387" width="44" height="18" rx="3" fill="#fff" stroke="#3ba6a0" stroke-width="1.5"/><text x="66" y="399.5" font-size="8.5" font-weight="800" fill="#2b7a75" text-anchor="middle">D16</text><text x="44" y="429" font-size="8.5" fill="#9a8b6a">그로브 소켓 — LED(D16)·MQ-2(A0)만</text><rect x="30" y="445" width="238" height="24" rx="9" fill="#e9f6f5" stroke="#3ba6a0" stroke-width="1" stroke-dasharray="5 4"/><text x="40" y="461" font-size="10" font-weight="700" fill="#2b7a75">🚦 LED 바 → 그로브 D16 소켓 (기본 연결)</text><text x="320" y="118" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 왼쪽 핀 줄 (맨 위)</text><rect x="416" y="132" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="444.0" cy="147.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="151.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GP0</text><rect x="416" y="172" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#f4c400" stroke-width="3"/><circle cx="444.0" cy="187.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="187.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GP1</text><text x="406" y="199.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">OUT</text><rect x="416" y="212" width="56" height="30" rx="5" fill="#2b2b2b" stroke="#3a3a3a" stroke-width="3"/><circle cx="444.0" cy="227.0" r="5" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="227.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">GND</text><text x="406" y="239.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">GND (바로 아래 칸!)</text><text x="320" y="440" font-size="12.5" font-weight="800" fill="#6b5836">🔍 확대 — 오른쪽 핀 줄 (맨 위)</text><rect x="416" y="454" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="466.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="466.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VBUS</text><text x="406" y="478.5" font-size="9.5" font-weight="700" fill="#c23b3a" text-anchor="end">5V — 오늘은 금지!</text><rect x="416" y="485" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="497.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="501.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">VSYS</text><rect x="416" y="516" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="528.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="532.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">GND</text><rect x="416" y="547" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#c9b98c" stroke-width="1.2"/><circle cx="442.0" cy="559.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="563.5" font-size="11.5" fill="#9a8b6a" text-anchor="end">3V3_EN</text><rect x="416" y="578" width="52" height="24" rx="5" fill="#2b2b2b" stroke="#e45756" stroke-width="3"/><circle cx="442.0" cy="590.0" r="4" fill="#111" stroke="#555" stroke-width="1.5"/><text x="406" y="590.5" font-size="13" font-weight="800" fill="#3a2e1a" text-anchor="end">3V3</text><text x="406" y="602.5" font-size="9.5" font-weight="700" fill="#3d7a37" text-anchor="end">빨강 점퍼는 여기!</text><path d="M90,141.2 C 60,201.2 240,200 314,200" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M198,154.4 C 260,154.4 290,520 314,520" fill="none" stroke="#c9b98c" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M472,187.0 C542,187.0 626,226 696,226" fill="none" stroke="#c79a00" stroke-width="6" stroke-linecap="round"/><path d="M472,187.0 C542,187.0 626,226 696,226" fill="none" stroke="#f4c400" stroke-width="3.6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,250 696,250" fill="none" stroke="#c23b3a" stroke-width="6" stroke-linecap="round"/><path d="M468,590.0 C538,590.0 626,250 696,250" fill="none" stroke="#e45756" stroke-width="3.6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,274 696,274" fill="none" stroke="#111111" stroke-width="6" stroke-linecap="round"/><path d="M472,227.0 C542,227.0 626,274 696,274" fill="none" stroke="#3a3a3a" stroke-width="3.6" stroke-linecap="round"/><rect x="700" y="180" width="236" height="116" rx="10" fill="#fffdf7" stroke="#c9b98c" stroke-width="1.8"/><text x="714" y="203" font-size="14" font-weight="800" fill="#3a2e1a">📺 IR 수신기</text><circle cx="700" cy="226" r="6" fill="#f4c400" stroke="#c79a00" stroke-width="1.5"/><text x="716" y="230.5" font-size="12" font-weight="700" fill="#5a4a28">OUT → GP1 <tspan font-size="10" fill="#9a8b6a">노랑 점퍼</tspan></text><circle cx="700" cy="250" r="6" fill="#e45756" stroke="#c23b3a" stroke-width="1.5"/><text x="716" y="254.5" font-size="12" font-weight="700" fill="#5a4a28">VCC → 3V3 <tspan font-size="10" fill="#9a8b6a">빨강 점퍼</tspan></text><circle cx="700" cy="274" r="6" fill="#3a3a3a" stroke="#111111" stroke-width="1.5"/><text x="716" y="278.5" font-size="12" font-weight="700" fill="#5a4a28">GND → GND <tspan font-size="10" fill="#9a8b6a">검정 점퍼</tspan></text><rect x="700" y="158" width="76" height="18" rx="9" fill="#e8930c"/><text x="709" y="171.5" font-size="10.5" font-weight="800" fill="#fff">새로 연결!</text></svg><p style="margin:7px 2px 0;font-size:12px;color:#9a8b6a;line-height:1.7">🔌 <b>연결 순서</b> — ① USB를 뽑는다 ② <b>암수 점퍼</b>의 <b>수(핀) 쪽을 쉴드 핀 소켓</b>에, <b>암(구멍) 쪽을 부품 핀</b>에 꽂는다 ③ 켜기 전에 <b>빨강=3V3 · 검정=GND</b>인지 한 번 더 확인! 점퍼 색은 달라도 동작하지만, 색 약속을 지키면 실수가 확 줄어요. 핀 소켓 위치는 쉴드에 <b>인쇄된 GP 번호</b>로 꼭 다시 확인하세요.</p></div>
+                <table class="wt"><tr><th>부품 핀</th><th>쉴드의 어느 구멍에?</th><th>점퍼 색 (추천)</th></tr>
+    <tr><td>OUT (S)</td><td>핀 소켓 <code>GP1</code> (왼쪽 줄 맨 위쪽)</td><td><span class="wire w-y"></span>노랑</td></tr>
+    <tr><td>VCC</td><td>핀 소켓 <code>3V3</code> (오른쪽 줄 위쪽 · VBUS 5V 금지!)</td><td><span class="wire w-r"></span>빨강</td></tr>
+    <tr><td>GND</td><td>핀 소켓 <code>GND</code> — GP1 바로 아래 칸</td><td><span class="wire w-k"></span>검정</td></tr>
+  </table>
+  <p class="step-head"><b>1단계 · 리모콘 버튼 코드 알아내기</b> — NEC 적외선 신호 32비트를 해석해서, 버튼을 누를 때마다 어떤 명령 코드가 오는지 16진수로 출력해 봅니다. 여기서 알아낸 1번·2번 버튼 코드를 2단계에서 그대로 씁니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 리모콘 코드 확인</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코에 IR 수신기를 방금 연결했고, 리모콘 버튼마다 어떤 코드가 오는지 처음 확인하려고 해요.
+[하드웨어] IR 수신기 OUT은 1번 핀(GP1)이고, 평소에는 1, 적외선 신호가 올 때 0이 되는 NEC 방식이에요.
+[작업] machine.time_pulse_us로 NEC 신호(9ms 리드 펄스 → 4.5ms 공백 → 32비트, 공백 길이로 0/1 구분)를 해석해서, 버튼을 누를 때마다 명령 코드를 16진수로 출력해 줘. 꾹 누를 때 오는 반복 코드는 '반복'이라고만 표시해 줘.
+[제약] 외부 라이브러리 금지(내장 machine·time만), 잘못된 신호는 검증 바이트(명령 XOR 반전명령 == 0xFF)로 걸러서 조용히 무시, 타임아웃 예외는 try/except로 처리.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+  <p class="step-head"><b>2단계 · 투표 집계 + LED 막대그래프</b> — 1번=A안, 2번=B안으로 표를 집계하고, LED 바 10칸을 득표 비율에 따라 빨강/파랑 두 진영으로 나눠 실시간 막대그래프를 만듭니다. 0.8초 쿨다운으로 연타(부정 투표)를 막는 게 핵심이에요.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 투표 집계 완성</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 IR 리모콘의 NEC 신호를 해석해 버튼 명령 코드를 출력하는 데 성공한 상태예요. 1번 버튼 코드는 0x45, 2번은 0x46이에요(제가 알아낸 실제 값으로 바꿔서 요청하세요).
+[하드웨어] IR 수신기 OUT은 1번 핀(GP1, NEC 방식). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하.
+[작업] 1번 버튼이 오면 A안 +1, 2번 버튼이 오면 B안 +1로 집계하고, LED 10칸을 득표 비율만큼 왼쪽부터 빨강(A안)·나머지 파랑(B안)으로 채워 실시간 막대그래프처럼 보여줘. 표가 들어올 때마다 현재 득표수도 출력해 줘.
+[제약] 같은 표가 0.8초 안에 연달아 들어오면 연타로 보고 무시(반복 코드도 무시), 외부 라이브러리 금지, 신호 해석 실패는 try/except로 조용히 넘기기.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+  <div class="block code-block"><div class="block-head"><span class="block-label">확인용 코드 — 리모콘 1·2번을 누를 때마다 LED 막대가 빨강/파랑 두 진영으로 갈리면 성공</span><span class="lang-tag">MicroPython</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 2단계 확인용 — IR 리모콘 투표 + LED 실시간 막대그래프
+from machine import Pin, time_pulse_us
+from neopixel import NeoPixel
+import time
+
+ir = Pin(1, Pin.IN)  # IR 수신기 (핀 소켓 GP1)
+np = NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))  # timing 빼면 색 깨져요!
+
+BTN_A = 0x45  # 1번 버튼 코드 (1단계에서 출력된 내 리모콘 값으로 바꾸세요)
+BTN_B = 0x46  # 2번 버튼 코드
+
+votes_a, votes_b = 0, 0
+last_vote = 0  # 연타 방지용 마지막 투표 시각
+
+def read_nec():
+    """NEC 적외선 신호 32비트를 해석해 명령 코드를 돌려줍니다."""
+    try:
+        if time_pulse_us(ir, 0, 100000) &lt; 8000:  # 9ms 리드 펄스 확인
+            return None
+        if time_pulse_us(ir, 1, 6000) &lt; 4000:    # 4.5ms 공백 (반복 코드는 여기서 걸러져요)
+            return None
+        data = 0
+        for _ in range(32):  # 공백 길이가 길면 1, 짧으면 0
+            if time_pulse_us(ir, 0, 2000) &lt; 0:
+                return None
+            space = time_pulse_us(ir, 1, 3000)
+            if space &lt; 0:
+                return None
+            data = (data &gt;&gt; 1) | (0x80000000 if space &gt; 1000 else 0)
+        cmd = (data &gt;&gt; 16) &amp; 0xFF   # 명령 바이트
+        inv = (data &gt;&gt; 24) &amp; 0xFF   # 반전 바이트 (오류 검증용)
+        return cmd if (cmd ^ inv) == 0xFF else None
+    except OSError:
+        return None
+
+def show_bar():
+    """득표 비율만큼 왼쪽은 빨강(A안), 오른쪽은 파랑(B안)으로 채웁니다."""
+    total = votes_a + votes_b
+    np.fill((0, 0, 0))
+    if total &gt; 0:
+        n_a = round(votes_a / total * 10)
+        for i in range(10):
+            np[i] = (30, 0, 0) if i &lt; n_a else (0, 0, 30)
+    np.write()
+
+print("투표 시작! 리모콘 1번=A안, 2번=B안")
+while True:
+    cmd = read_nec()
+    if cmd is None:
+        continue
+    now = time.ticks_ms()
+    if time.ticks_diff(now, last_vote) &lt; 800:  # 0.8초 안 연타는 무효표!
+        continue
+    if cmd == BTN_A:
+        votes_a += 1
+    elif cmd == BTN_B:
+        votes_b += 1
+    else:
+        continue  # 1·2번 외 버튼은 무시해요
+    last_vote = now
+    print("현재 득표 → A안:", votes_a, "/ B안:", votes_b)
+    show_bar()</code></pre></div>
+  <p class="step-head"><b>3단계 · 결과를 구글 시트에 박제하기</b> — 리모콘의 확인(OK) 버튼을 '투표 마감' 버튼으로 지정해, 마감 순간의 시각·A안 득표·B안 득표·총 투표수가 구글 시트에 자동 기록되는 최종 완성본을 만듭니다.</p>
+  <div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 프롬프트 — 투표 결과 기록</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">[맥락] 피코가 리모콘 1번/2번 버튼으로 A안·B안 표를 집계하고 LED 바 10칸으로 득표 비율을 보여주는 상태예요. 6장에서 만든 구글 시트 Apps Script 웹 앱 URL이 있어요.
+[하드웨어] IR 수신기 OUT은 1번 핀(GP1, NEC 방식). 열 칸 LED 바(WS2813)는 16번 핀, timing=(280,515,515,745) 지정 필요, 밝기는 채널당 40 이하. 와이파이는 wifi_config.py에 저장된 WIFI_SSID, WIFI_PASSWORD를 from wifi_config import WIFI_SSID, WIFI_PASSWORD로 불러와서 연결하고, 코드에 이름/비번을 직접 쓰거나 새 변수로 재정의하지 마세요.
+[작업] 리모콘 확인(OK) 버튼(코드 0x40 — 제 리모콘 값으로 교체)을 누르면 투표를 마감하고, 코드 상단 WEB_APP_URL 변수에 저장한 Apps Script URL에 GET 파라미터(a=A안 득표, b=B안 득표, total=합계)로 결과를 전송해 줘. 전송 성공 시 이긴 쪽 색으로 LED 전체가 3번 깜빡이는 축하 효과를 넣고, 다시 새 투표를 시작할 수 있게 득표를 0으로 초기화해 줘.
+[제약] 와이파이 연결은 시작할 때 한 번만, urequests 응답은 반드시 close(), 전송 실패해도 프로그램이 죽지 않게 try/except, 연타 방지 0.8초 쿨다운 유지, 외부 라이브러리 금지.
+[출력] 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div>
+  <div class="callout tip"><div class="callout-head">💡 버튼 코드는 리모콘마다 달라요</div><div class="callout-body">예제의 0x45, 0x46은 흔한 값일 뿐, 내 리모콘과 다를 수 있어요. 반드시 1단계 코드로 1번·2번 버튼을 눌러 실제 출력되는 코드를 확인한 뒤 BTN_A, BTN_B 상수를 바꿔 넣으세요. 아무 반응이 없다면 리모콘의 얇은 절연 필름(배터리 탭)을 뽑았는지부터 확인!</div></div>
+  <div class="callout warn"><div class="callout-head">⚠️ 형광등도 적외선을 쏩니다</div><div class="callout-body">가끔 버튼을 안 눌렀는데 표가 들어간다면 조명·햇빛의 적외선 노이즈예요. 검증 바이트(cmd XOR inv == 0xFF) 확인 덕분에 대부분 걸러지지만, 그래도 오작동하면 수신기를 창문·형광등 반대 방향으로 돌려 보세요. NEC 프로토콜에 오류 검증이 왜 들어있는지 몸으로 이해하게 됩니다.</div></div>
+  <div class="callout tip"><div class="callout-head">💡 꾹 누르기 ≠ 여러 표</div><div class="callout-body">버튼을 꾹 누르면 리모콘은 '반복 코드'라는 짧은 신호를 계속 보내는데, 우리 코드는 4.5ms 공백 검사에서 이를 걸러내요. 여기에 0.8초 쿨다운까지 이중 방어! 쿨다운을 0으로 바꿔 연타해 보면 방어 로직이 왜 필요한지 바로 보여요.</div></div>
+  <div class="callout key"><div class="callout-head">🚀 더 나아가기</div><div class="callout-body">패시브 부저(GP18)를 추가해 표가 들어올 때마다 '삑' 접수음을, 마감 때는 짧은 팡파르를 울려 보세요. 리모콘 숫자 버튼을 3·4번까지 확장하면 4지선다 투표기가 되고, LED 10칸을 4색으로 나누는 비율 계산이 새로운 도전이 됩니다. LCD1602(GP4/GP5)를 달아 "A:12 B:7"처럼 득표수를 문자로 보여주면 교실 뒤에서도 잘 보이는 진짜 개표 방송 화면이 완성돼요.</div></div>
+  <div class="callout check"><div class="callout-head">🔬 탐구 보고서·세특으로 연결</div><div class="callout-body">time_pulse_us로 측정한 펄스·공백 길이를 수백 개 수집해 구글 시트에 기록하고 히스토그램을 그리면, NEC 규격(562.5µs/1687.5µs)과 실측값의 오차 분포를 분석하는 '오실로스코프 없는 프로토콜 분석' 보고서가 됩니다. 연타 방지 쿨다운 시간(0.2·0.5·0.8·1.5초)을 변인으로 두고 10명이 투표할 때의 오입력률과 투표 소요 시간을 비교하면 사용성과 정확성의 트레이드오프를 데이터로 논할 수 있어요. 수신 거리(1~7m)와 각도(0°~60°)에 따른 신호 성공률을 측정해 등고선 그래프로 그리면 적외선 통신의 물리적 한계까지 탐구가 확장됩니다.</div></div>
+</div>
+</section>
+
+<footer>
+  라즈베리파이 피코 2 WH · 그로브 쉴드 · MicroPython · Thonny &nbsp;·&nbsp; 프로젝트 샘플 5 (자유 프로젝트용 별책)<br>
+  기획·집필·검수: 에이전트팀 (팀장 페이블) &nbsp;·&nbsp; <a class="ilink" href="kit.html">🧰 확장 부품 가이드</a> · <a class="ilink" href="ch7.html">7장 자유 프로젝트</a>
+</footer>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+// 코드 하이라이트 (실패해도 아래 복사 기능은 계속 동작하도록 보호)
+try{
+  if(window.hljs){ document.querySelectorAll('pre code').forEach(el=>{ try{hljs.highlightElement(el);}catch(e){} }); }
+}catch(e){}
+// 복사 — clipboard API → 실패 시 execCommand 폴백
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+function flash(btn, msg, good){
+  btn.textContent=msg; if(good) btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('done'); }, 1400);
+}
+document.querySelectorAll('.block').forEach(block=>{
+  const btn=block.querySelector('.copy-btn'); if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const code=block.querySelector('code');
+    const body=block.querySelector('.prompt-body');
+    const text=code?code.textContent:(body?body.textContent:'');
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text); flash(btn,'복사됨',true);
+      }else{
+        const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+      }
+    }catch(e){
+      const ok=fallbackCopy(text); flash(btn, ok?'복사됨':'복사 실패', ok);
+    }
+  });
+});
+</script>
+</body>
+</html>

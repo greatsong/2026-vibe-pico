@@ -357,7 +357,7 @@ while True:
     time.sleep(0.5)</code></pre></div><p class="step-head"><b>Step 4.</b> 이제 완성형 대시보드를 만들어요. 이런 긴 코드는 손으로 치지 않아요 — AI에게 아래처럼 <b>상황과 목표를 설명</b>하면 만들어 줍니다.</p><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">① AI에게 이렇게 설명하세요 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이 피코 2 W에서 돌아가는 마이크로파이썬(MicroPython) 코드를 만들어줘. 우리 반 공기질 실시간 대시보드야.
 - 가스센서(MQ-2)는 아날로그 입력인 26번 핀(그로브 A0 포트)에 연결했어. 읽으면 0~65535 사이 숫자가 나오고, 가스가 짙을수록 값이 커져.
 - 값이 출렁이지 않게 여러 번 읽어 평균(이동 평균)으로 안정시켜줘.
-- 와이파이 정보는 설정 파일(wifi_config.py)에서 불러와.
+- 와이파이 정보는 반드시 from wifi_config import WIFI_SSID, WIFI_PASSWORD 로 불러오고, 코드 안에 이름·비밀번호를 직접 쓰거나 새 변수로 다시 정의하지 마.
 - 피코가 외부 라이브러리 설치 없이 작은 웹서버(80번 포트)가 되게 하고, 브라우저가 &#x27;/data&#x27; 주소에서 JSON으로 최신 값을 받아 자동 갱신하며, Chart.js로 실시간 그래프를 그려줘.
 - 기준값(임계값)으로 안전/주의/위험 세 단계를 나눠 색으로 표시해줘. 기준값은 코드 위쪽에서 쉽게 바꿀 수 있게. 화면은 다크 테마로.
 - 같은 와이파이의 스마트폰에서 접속할 수 있게 하고, 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><p class="step-head">직접 만들지 않아도, 아래 <b>완성본</b>을 복사해 main.py로 저장하면 이동 평균·임계값·다크 테마 그래프가 모두 들어간 모니터가 됩니다. (wifi_config.py 필요)</p><details class="codefold"><summary>② 전체 코드 · MQ-2 실시간 대시보드 (main.py) <span class="fold-hint">· 269줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">② 전체 코드 · MQ-2 실시간 대시보드 (main.py)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python">import network
