@@ -75,7 +75,7 @@ a{color:inherit;text-decoration:none;}
 .sec{padding-top:12px;scroll-margin-top:70px;}
 .sec-title{font-size:17px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em;padding-top:16px;border-top:1px solid var(--border);}
 .prose{font-size:14.5px;margin:12px 0;max-width:720px;}
-.prose code,.callout-body code,.concept-d code,.steps code,.idea-d code,td code,th code{
+.prose code,.callout-body code,.concept-d code,.steps code,td code,th code{
   font-family:var(--mono);font-size:12.5px;background:var(--card);border:1px solid var(--border);
   border-radius:5px;padding:1px 6px;color:#7a5a1e;}
 .goals{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--border);
@@ -101,11 +101,10 @@ a{color:inherit;text-decoration:none;}
 .callout.check .callout-head{color:#3d7a37;}
 .callout.err{border-left-color:var(--red);background:var(--red-soft);}
 .callout.err .callout-head{color:#c23b3a;}
-.concept-grid,.idea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
-.concept,.idea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
-.concept-t,.idea-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
-.concept-d,.idea-d{font-size:13px;color:var(--text-soft);}
-.idea-d{line-height:1.7;}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:14px 0;max-width:760px;}
+.concept{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;}
+.concept-t{font-weight:800;font-size:13.5px;margin-bottom:5px;}
+.concept-d{font-size:13px;color:var(--text-soft);}
 /* 배선표 */
 table.wt{border-collapse:collapse;font-size:13px;margin:12px 0;max-width:720px;width:100%;background:#fff;}
 .wt th,.wt td{border:1px solid var(--border);padding:7px 12px;text-align:left;line-height:1.5;}
@@ -206,7 +205,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
   <a class="linkcard" href="#lcd"><span class="n">부품 6</span><span class="tt">📟 I2C LCD1602</span><span class="d">폰 없이 데이터를 보여주는 화면</span></a>
   <a class="linkcard" href="#mpu"><span class="n">부품 7</span><span class="tt">🤸 MPU6050 (6축 센서)</span><span class="d">기울기·움직임 — ML 교재와 연결</span></a>
   <a class="linkcard" href="#ir"><span class="n">부품 8</span><span class="tt">📺 적외선 리모콘</span><span class="d">리모콘으로 내 작품 조종하기</span></a>
-  <a class="linkcard" href="#ideas"><span class="n">마무리</span><span class="tt">💡 조합 프로젝트 아이디어</span><span class="d">부품 2~3개를 엮으면 작품이 됩니다</span></a>
+  <a class="linkcard" href="#check"><span class="n">마무리</span><span class="tt">✅ 프로젝트 계획 체크리스트</span><span class="d">시작 전에 네 가지만 확인하세요</span></a>
 </div>
 
 <!-- ============ 연결 규칙 ============ -->
@@ -584,16 +583,9 @@ while True:
 </div>
 </section>
 
-<!-- ============ 조합 아이디어 ============ -->
-<section class="sec" id="ideas"><h3 class="sec-title">💡 조합 프로젝트 아이디어 — 부품 2~3개면 작품이 됩니다</h3>
-<div class="idea-grid">
-  <div class="idea"><div class="idea-t">☔ 아날로그 날씨 시계</div><div class="idea-d"><b>서보 + LED</b> — 서보 바늘은 강수확률을, LED 열 칸은 기온을 표시. 5장 코드에서 출발.</div></div>
-  <div class="idea"><div class="idea-t">🏠 우리 반 종합 기상청</div><div class="idea-d"><b>DHT11 + MQ-2 + LCD</b> — 온도·습도·가스를 LCD에 번갈아 표시하고 구글 시트에 기록. 3·6장 코드에서 출발.</div></div>
-  <div class="idea"><div class="idea-t">🚨 도서관 정숙 지킴이</div><div class="idea-d"><b>PIR + 부저 + LED</b> — 쉬는 시간이 아닌데 움직임이 감지되면 LED 경고, 계속되면 부저.</div></div>
-  <div class="idea"><div class="idea-t">🅿️ 주차 도우미</div><div class="idea-d"><b>초음파 + LED + 부저</b> — 자전거·의자가 가까워질수록 LED가 차오르고, 20cm 안이면 삐삐삐!</div></div>
-  <div class="idea"><div class="idea-t">🎮 리모콘 만능 조종기</div><div class="idea-d"><b>IR + 서보 + LED</b> — 리모콘 버튼으로 무드등 색을 바꾸고, 볼륨 버튼으로 서보 각도 조종.</div></div>
-  <div class="idea"><div class="idea-t">🌱 화분 지킴이</div><div class="idea-d"><b>수위 센서 + LCD + 부저</b> — 물이 부족하면 LCD에 "WATER ME!", 부저로 알림, 시트에 기록.</div></div>
-</div>
+<!-- ============ 프로젝트 계획 체크리스트 ============ -->
+<section class="sec" id="check"><h3 class="sec-title">✅ 프로젝트를 시작하기 전에</h3>
+<p class="prose">부품을 하나씩 살려 봤다면, 이제 두세 개를 엮어 작품을 만들 차례예요. 부품을 조합한 <b>완성형 프로젝트 5개</b>는 <a class="ilink" href="kit_projects.html">키트 확장 프로젝트</a> 별책에 배선도·단계별 프롬프트까지 갖춰 정리해 두었습니다.</p>
 
 <div class="callout check"><div class="callout-head">✅ 프로젝트 계획 체크리스트</div><div class="callout-body">① 내 부품들의 핀이 <a class="ilink" href="#rules">핀 배정 지도</a>에서 겹치지 않나요? ② 프롬프트의 [하드웨어] 줄에 핀 번호를 전부 적었나요? ③ LED를 쓴다면 <code>timing=(280,515,515,745)</code>를 명시했나요? ④ 확인용 코드로 부품이 하나씩 살아 있는지 먼저 확인했나요? — 이 네 가지면 AI가 만든 코드가 한 번에 돌아갈 확률이 확 올라갑니다.</div></div>
 </section>
