@@ -1,5 +1,6 @@
 .DS_Store
 *.png
+*.bak
 __pycache__/
 .gstack/
 _workspace/
