@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>01. 와이파이 사각지대 찾기 · 데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
-<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 학습 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 /* ============================================================
@@ -527,7 +527,7 @@ if ip:
 - 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘.</div></div><div class="callout tip"><div class="callout-head">💡 바이브코딩 팁</div><div class="callout-body">받은 코드를 올리기 전에 ① 신호 기준값(-60·-78 등)이 우리 환경에 맞는지 ② LED를 함께 쓴다면 <code>timing</code> 인자가 들어 있는지 확인하세요. (LED와 <code>timing</code>은 <b>2장</b>에서 자세히 배워요 — 지금은 화면만으로도 충분합니다.) 기준값은 직접 돌아다니며 ‘강한 곳/약한 곳’ RSSI를 보고 조정하면 더 정확해요.</div></div><div class="callout info"><div class="callout-head">ℹ️ 들고 다니려면 — 전원 준비</div><div class="callout-body">사각지대를 찾으려면 피코를 들고 돌아다녀야 해요. 노트북에 USB로 연결한 채 움직이거나, <b>보조배터리(파워뱅크)</b>에 USB로 연결하면 선 없이 교실 곳곳의 신호를 잴 수 있어요. 측정 위치를 바꿀 때마다 몇 초 기다렸다가 값을 읽으세요.</div></div></section><section class="sec" id="ch1-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 계속 연결 중... 에서 멈춤</div><div class="m-row"><span class="m-tag">원인</span>5GHz 와이파이이거나 비밀번호 오타.</div><div class="m-row"><span class="m-tag fix">해결</span>피코는 <b>2.4GHz</b> 와이파이만 됩니다. 5GHz 전용이면 안 돼요. SSID/비번 대소문자도 정확히 확인하세요.</div></div><div class="mistake"><div class="m-sym">❌ 브라우저에서 주소가 안 열림</div><div class="m-row"><span class="m-tag">원인</span>스마트폰이 피코와 <b>다른 와이파이</b>에 있음.</div><div class="m-row"><span class="m-tag fix">해결</span>스마트폰을 피코와 <b>같은 와이파이</b>에 연결하세요. 학교망은 기기 간 통신이 막힌 경우도 있어, 휴대폰 핫스팟이 가장 확실합니다.</div></div><div class="mistake"><div class="m-sym">❌ RSSI가 0 또는 이상한 값</div><div class="m-row"><span class="m-tag">원인</span>연결 전에 status를 읽음.</div><div class="m-row"><span class="m-tag fix">해결</span><code>wlan.isconnected()</code>가 참이 된 뒤에 읽어야 합니다. (위 코드는 이미 연결 후 읽습니다)</div></div></div></section><section class="sec" id="ch1-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>RSSI가 -50과 -80 중 어느 쪽이 더 좋은 신호인가요?</summary><div class="qa-a">-50입니다. 0에 가까울수록 강한 신호예요.</div></details><details class="qa"><summary>그래프는 피코가 그리나요, 브라우저가 그리나요?</summary><div class="qa-a">브라우저가 그립니다. 피코는 <code>/data</code>로 숫자만 보내고, Chart.js가 화면에 그려요. 그래서 피코의 부담이 적습니다.</div></details><details class="qa"><summary>wifi_config.py를 따로 두는 이유는?</summary><div class="qa-a">비밀번호를 코드 본문과 분리해 관리하기 쉽고, 여러 코드가 같은 설정을 재사용할 수 있어서요.</div></details></div></section></div><nav class="pager"><a class="prev" href="ch0.html"><span class="dir">← 이전</span><span class="tt">00. 준비하기</span></a><a class="next" href="ch2.html"><span class="dir">다음 →</span><span class="tt">02. LED로 내 감정 표현하기</span></a></nav>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
-      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 수업과 개인 학습에 자유롭게 활용할 수 있습니다.
     </footer>
 </main>
 </div>

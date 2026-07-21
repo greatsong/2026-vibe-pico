@@ -100,7 +100,7 @@ HW_FIGURE = '''<div class="figure"><svg class="hw-svg" viewBox="0 0 780 256" xml
   <circle cx="588" cy="193" r="12" fill="#b45309"/>
   <circle cx="588" cy="193" r="6" fill="#e8a45c"/>
   <text x="612" y="189" font-size="12.5" font-weight="700" fill="#2b2d3a">MQ-2 가스센서 (핀헤더형)</text>
-  <text x="612" y="207" font-size="10.5" fill="#8a8fa6">암 점퍼 케이블 → A0 = GP26 · 노랑→AO</text>
+  <text x="612" y="207" font-size="10.5" fill="#8a8fa6">암 점퍼 케이블 → A0 포트 = GP26 · 노랑→센서 AO 핀</text>
 
   <!-- 범례 -->
   <text x="20" y="244" font-size="10.5" fill="#a7adc0">● 그로브 포트  ·  LED → D16(GP16, 디지털·그로브 케이블)  ·  MQ-2 → A0(GP26, 아날로그·암 점퍼 케이블)</text>
@@ -254,7 +254,7 @@ CHAPTERS = [
         "Windows 또는 macOS 컴퓨터",
       ]},
       {"type": "callout", "kind": "warn", "title": "USB 케이블 주의",
-       "html": "세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 연수 현장에서 제일 흔한 막힘 지점입니다."},
+       "html": "세상에는 ‘충전만 되는’ USB 케이블이 의외로 많아요. 피코가 컴퓨터에 인식되지 않으면, 가장 먼저 <b>다른 케이블</b>로 바꿔 보세요. 이게 제일 흔한 막힘 지점이에요."},
       {"type": "teacher", "kind": "say", "title": "진행 멘트 — 준비물 점검 (2분)",
        "html": "“책상 위 준비물이 다 있는지 <b>옆 사람과 서로</b> 확인해 주세요. 하나라도 없으면 지금 손 들어 주세요.” — 케이블 불량이 가장 흔하니 <b>데이터용 여분 케이블을 3~4개</b> 미리 챙겨 두면 진행이 매끄럽습니다. 그리고 <b>그로브 케이블(LED용)</b>과 <b>암 점퍼 케이블(MQ-2용)</b>을 미리 구분하게 해 주세요 — 여기서 헷갈리면 조립 단계가 밀립니다."},
     ]},
@@ -277,13 +277,13 @@ CHAPTERS = [
       {"type": "steps", "items": [
         {"t": "피코를 그로브 쉴드에 꽂기", "d": "핀 방향을 맞춰 피코를 쉴드에 끝까지 눌러 끼웁니다. <b>USB 단자가 쉴드 바깥쪽을 향하도록</b> 방향을 확인하세요. 한 줄이라도 핀이 어긋나면 안 됩니다."},
         {"t": "LED 바 → D16 포트", "d": "WS2813 LED 바의 그로브 케이블을 쉴드의 <b>D16</b> 포트에 꽂습니다. (코드에서는 GP16)"},
-        {"t": "MQ-2 센서 → A0 포트 (암 점퍼 케이블)", "d": "MQ-2는 <b>그로브 모듈이 아니라서</b> 케이블이 달라요. <b>그로브 암 점퍼 케이블</b>의 그로브 쪽을 쉴드의 <b>A0</b> 포트에 꽂고, 반대쪽 암 단자를 센서 핀 글자를 보며 하나씩: <b>빨강 → VCC · 검정 → GND · 노랑 → AO</b>. <b>흰선과 센서의 DO 핀은 아무 데도 안 꽂고 비워 둡니다.</b> (코드에서는 GP26 / ADC0)"},
+        {"t": "MQ-2 센서 → A0 포트 (암 점퍼 케이블)", "d": "MQ-2는 <b>그로브 모듈이 아니라서</b> 케이블이 달라요. <b>그로브 암 점퍼 케이블</b>의 그로브 쪽을 쉴드의 <b>A0</b> 포트에 꽂고, 반대쪽 암 단자를 <b>센서에 새겨진 핀 글자</b>를 보며 하나씩: <b>빨강 → VCC · 검정 → GND · 노랑 → 센서의 AO 핀</b>. <b>흰선과 센서의 DO 핀은 아무 데도 안 꽂고 비워 둡니다.</b> 여기서 AO는 쉴드가 아니라 <b>센서 쪽 핀 이름</b>이에요 — 쉴드에는 그로브 커넥터만 통째로 꽂으면 끝. (코드에서는 GP26 / ADC0)"},
         {"t": "USB로 컴퓨터에 연결", "d": "USB 케이블로 피코와 컴퓨터를 연결합니다. (펌웨어를 처음 설치할 때는 0.4의 BOOTSEL 순서를 따르세요)"},
       ]},
       {"type": "callout", "kind": "warn", "title": "꽂는 위치를 헷갈리지 마세요",
        "html": "D16(디지털)과 A0(아날로그)는 쓰임이 다릅니다. LED는 <b>D16</b>, 가스센서는 <b>A0</b>. 반대로 꽂으면 값이 이상하거나 LED가 안 켜져요."},
-      {"type": "callout", "kind": "warn", "title": "MQ-2의 AO와 DO — 노란선은 반드시 AO에",
-       "html": "MQ-2 핀은 <b>VCC · GND · DO · AO</b> 네 개예요. 우리가 읽는 건 <b>AO(아날로그 출력)</b> — 노란선이 <b>DO</b>에 꽂히면 값이 0이나 65535 근처에 붙어 움직이지 않습니다. 3장에서 값이 이상하면 <b>제일 먼저 노란선이 AO에 있는지</b> 보세요. (센서 보드의 파란 네모(가변저항)는 DO 감도 조절용이라 우리 실습과는 무관해요.)"},
+      {"type": "callout", "kind": "warn", "title": "MQ-2의 AO와 DO — 노란선은 반드시 센서의 AO 핀에",
+       "html": "MQ-2 핀은 <b>VCC · GND · DO · AO</b> 네 개예요. 우리가 읽는 건 <b>AO(아날로그 출력)</b> — 노란선이 <b>DO</b>에 꽂히면 값이 0이나 65535 근처에 붙어 움직이지 않습니다. 3장에서 값이 이상하면 <b>제일 먼저 노란선이 센서의 AO 핀에 있는지</b> 보세요. 그리고 이름이 닮아 정말 헷갈리기 쉬운데 — 쉴드의 <b>A0</b>(에이·<b>제로</b>)는 그로브 케이블을 통째로 꽂는 <b>포트</b>이고, 센서의 <b>AO</b>(에이·<b>오</b>)는 노란선 한 가닥을 꽂는 <b>핀</b>입니다. 노란선이 갈 곳은 쉴드가 아니라 센서예요. (센서 보드의 파란 네모(가변저항)는 DO 감도 조절용이라 우리 실습과는 무관해요.)"},
       {"type": "callout", "kind": "warn", "title": "쉴드 모서리의 전원 스위치는 5V에",
        "html": "그로브 쉴드에는 포트 전원을 고르는 <b>3V3 ↔ 5V 스위치</b>가 있어요. 이 교재의 부품은 <b>5V</b> 쪽에 두면 모두 잘 동작합니다. LED는 양쪽 다 되지만, ML 확장판에서 쓰는 <b>MP3 모듈은 5V가 아니면 부팅을 못 해요</b>. (아날로그 포트 A0~A2는 스위치와 상관없이 항상 3.3V라 가스센서는 어느 쪽이든 괜찮습니다.)"},
     ]},
@@ -319,7 +319,7 @@ CHAPTERS = [
         {"q": "보드 LED를 코드에서 어떻게 가리켰나요?", "a": "<code>Pin(\"LED\", Pin.OUT)</code> — 피코 보드에 내장된 LED를 출력 모드로 잡았습니다."},
       ]},
       {"type": "callout", "kind": "info", "title": "다음 장부터 — AI에게 시키는 ‘바이브코딩’",
-       "html": "이 연수에서는 긴 코드를 손으로 다 치지 않고, <b>AI에게 우리말로 설명해 코드를 받습니다.</b> AI 도구가 처음이라면: <a class=\"ilink\" href=\"https://claude.ai\" target=\"_blank\" rel=\"noopener\"><b>claude.ai</b></a>(또는 쓰는 AI)에 접속 → 로그인 → <b>새 대화</b> → 교재의 ‘<b>AI에게 이렇게 설명하세요</b>’ 프롬프트를 복사해 붙여넣고 Enter. 받은 코드를 Thonny 편집기에 붙여넣어 <b>▶ 실행</b>하면 돼요."},
+       "html": "이 교재에서는 긴 코드를 손으로 다 치지 않고, <b>AI에게 우리말로 설명해 코드를 받습니다.</b> AI 도구가 처음이라면: <a class=\"ilink\" href=\"https://claude.ai\" target=\"_blank\" rel=\"noopener\"><b>claude.ai</b></a>(또는 쓰는 AI)에 접속 → 로그인 → <b>새 대화</b> → 교재의 ‘<b>AI에게 이렇게 설명하세요</b>’ 프롬프트를 복사해 붙여넣고 Enter. 받은 코드를 Thonny 편집기에 붙여넣어 <b>▶ 실행</b>하면 돼요."},
     ]},
   ],
 },
@@ -414,7 +414,7 @@ CHAPTERS = [
     ]},
     {"title": "핵심 개념 — timing이 진짜 중요해요", "items": [
       {"type": "callout", "kind": "key", "title": "WS2813은 timing 인자가 필수",
-       "html": "우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이번 연수의 모든 LED 코드 첫 줄에 들어갑니다."},
+       "html": "우리가 쓰는 LED는 <b>WS2813</b> 계열이라, MicroPython NeoPixel의 <b>기본 타이밍과 안 맞습니다.</b> 그대로 두면 색이 깨지거나 엉뚱한 칸이 켜져요. 그래서 반드시 이렇게 만듭니다:<br><br><code>TIMING = (280, 515, 515, 745)</code><br><code>np = NeoPixel(Pin(16), 10, timing=TIMING)</code><br><br>이 네 숫자는 0/1 신호의 길이(나노초)예요. 이 교재의 모든 LED 코드 첫 줄에 들어갑니다."},
       {"type": "callout", "kind": "info", "title": "LED가 60개짜리로 왔다면?",
        "html": "바꿀 곳은 <b>딱 한 줄</b>이에요. 코드 위쪽의 <code>NUM = 10</code>을 <code>NUM = 60</code>으로 바꾸면 끝입니다. (timing·핀은 그대로) <code>fill</code>·무지개·게이지·감정 무드등 모두 <code>NUM</code>을 기준으로 돌아서 자동으로 60칸에 맞춰집니다. 단, 60칸을 밝게 켜면 전류를 많이 먹으니 밝기는 더 낮춰 주세요."},
       {"type": "concept", "items": [
@@ -454,7 +454,7 @@ CHAPTERS = [
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
-        {"sym": "색이 깨지거나 엉뚱한 칸이 켜짐", "cause": "<b>timing 인자 누락.</b>", "fix": "<code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. 이번 연수 LED 문제의 1순위 원인입니다."},
+        {"sym": "색이 깨지거나 엉뚱한 칸이 켜짐", "cause": "<b>timing 인자 누락.</b>", "fix": "<code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code> 처럼 timing을 꼭 넣으세요. LED 색이 깨지는 문제의 1순위 원인입니다."},
         {"sym": "색을 정했는데 안 켜짐", "cause": "<code>np.write()</code>를 빠뜨림.", "fix": "색을 바꾼 뒤에는 항상 <code>np.write()</code>를 호출하세요."},
         {"sym": "10번째 칸에서 에러", "cause": "<code>np[10]</code>을 씀 (칸은 0~9).", "fix": "10개의 인덱스는 0부터 9까지입니다. 마지막 칸은 <code>np[9]</code>."},
         {"sym": "눈이 부시고 피코가 뜨거움", "cause": "밝기를 너무 높게 줌.", "fix": "(255,…) 대신 (30,…) 수준으로 낮추세요. 10칸을 풀 밝기로 켜면 전류도 많이 먹습니다."},
@@ -483,14 +483,14 @@ CHAPTERS = [
     {"title": "배선 — MQ-2 연결하기", "items": [
       {"type": "text", "html": "센서값을 읽기 전에, MQ-2 가스센서를 먼저 연결해요. MQ-2는 2장의 LED와 달리 <b>그로브 모듈이 아니라 핀헤더형</b>이라, <b>그로브 암(Female) 점퍼 케이블</b>로 잇습니다. (피코·쉴드까지 포함한 전체 조립 그림은 <a class=\"ilink\" href=\"ch0.html#ch0-2\">0장 · 하드웨어 조립</a>을 참고하세요.)"},
       {"type": "callout", "kind": "key", "title": "MQ-2 → 그로브 A0 포트 (암 점퍼 케이블)",
-       "html": "<b>그로브 암 점퍼 케이블</b>의 그로브 커넥터 쪽을 쉴드의 <b>A0</b> 포트(=GP26, 아날로그)에 꽂고, 반대쪽 까만 <b>암 단자 4가닥</b>을 센서 핀에 새겨진 글자를 보며 하나씩 꽂아요:<br><br>· <b>빨강 → VCC</b><br>· <b>검정 → GND</b><br>· <b>노랑 → AO</b> (아날로그 출력 — 우리가 읽는 값)<br>· 흰선 &amp; 센서의 <b>DO</b> 핀 → <b>아무 데도 안 꽂고 비워 둠</b><br><br><code>gas_sensor = ADC(Pin(26))</code>"},
+       "html": "<b>그로브 암 점퍼 케이블</b>의 그로브 커넥터 쪽을 쉴드의 <b>A0</b> 포트(=GP26, 아날로그)에 꽂고, 반대쪽 까만 <b>암 단자 4가닥</b>을 <b>센서에 새겨진 핀 글자</b>를 보며 하나씩 꽂아요:<br><br>· <b>빨강 → 센서의 VCC 핀</b><br>· <b>검정 → 센서의 GND 핀</b><br>· <b>노랑 → 센서의 AO 핀</b> (아날로그 출력 — 우리가 읽는 값)<br>· 흰선 &amp; 센서의 <b>DO</b> 핀 → <b>아무 데도 안 꽂고 비워 둠</b><br><br>⚠️ 이름이 닮았지만 서로 달라요 — 쉴드의 <b>A0</b>(에이·<b>제로</b>)는 그로브 케이블을 <b>통째로</b> 꽂는 포트이고, 센서의 <b>AO</b>(에이·<b>오</b>)는 노란선 <b>한 가닥</b>을 꽂는 핀이에요. 쉴드에는 노란선을 꽂을 낱개 핀이 없습니다.<br><br><code>gas_sensor = ADC(Pin(26))</code>"},
       {"type": "steps", "items": [
         {"t": "그로브 커넥터를 A0 포트에", "d": "암 점퍼 케이블의 그로브 쪽을 쉴드 <b>A0</b>(=GP26) 포트에 꽂습니다. LED(D16)와 헷갈리지 마세요 — 가스센서는 <b>아날로그 A0</b>."},
-        {"t": "빨강·검정·노랑 3가닥을 센서에", "d": "센서 보드에 인쇄된 글자를 보며 <b>빨강→VCC · 검정→GND · 노랑→AO</b>. 네 핀 중 노란선을 <b>AO</b>에 꽂는 게 이 배선의 핵심이에요."},
+        {"t": "빨강·검정·노랑 3가닥을 센서에", "d": "센서 보드에 인쇄된 글자를 보며 <b>빨강→VCC · 검정→GND · 노랑→AO</b>. 센서 네 핀 중 노란선을 <b>센서의 AO 핀</b>(쉴드의 A0 포트와 다른 곳!)에 꽂는 게 이 배선의 핵심이에요."},
         {"t": "흰선과 DO는 비워 두기", "d": "케이블의 흰선, 그리고 센서의 <b>DO</b> 핀은 아무 데도 연결하지 않습니다. 우리는 아날로그 출력(AO)만 읽어요."},
       ]},
-      {"type": "callout", "kind": "warn", "title": "노란선은 반드시 AO — DO 아님",
-       "html": "MQ-2 핀은 <b>VCC · GND · DO · AO</b> 네 개예요. 노란선이 <b>DO</b>(디지털)에 잘못 꽂히면 값이 <b>0이나 65535에 붙어</b> 꿈쩍도 안 합니다. 아래 ‘따라하기’에서 값이 이상하면 <b>제일 먼저 노란선이 AO에 있는지</b> 확인하세요. (센서 보드의 파란 네모=가변저항은 DO 감도 조절용이라 우리 실습과는 무관해요.)"},
+      {"type": "callout", "kind": "warn", "title": "노란선은 반드시 센서의 AO 핀에 — DO 아님",
+       "html": "MQ-2 핀은 <b>VCC · GND · DO · AO</b> 네 개예요. 노란선이 <b>DO</b>(디지털)에 잘못 꽂히면 값이 <b>0이나 65535에 붙어</b> 꿈쩍도 안 합니다. 아래 ‘따라하기’에서 값이 이상하면 <b>제일 먼저 노란선이 센서의 AO 핀에 있는지</b> 확인하세요. (센서 보드의 파란 네모=가변저항은 DO 감도 조절용이라 우리 실습과는 무관해요.)"},
     ]},
     {"title": "핵심 개념", "items": [
       {"type": "concept", "items": [
@@ -509,7 +509,7 @@ CHAPTERS = [
        "html": "대시보드 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다.)"},
     ]},
     {"title": "따라하기", "items": [
-      {"type": "step_head", "html": "<b>Step 1.</b> 값 한 번 읽기. (그로브 <b>A0</b> 포트 + 센서 쪽 <b>노란선이 AO</b>에 꽂혔는지 확인!)"},
+      {"type": "step_head", "html": "<b>Step 1.</b> 값 한 번 읽기. (그로브 <b>A0</b> 포트 + <b>노란선이 센서의 AO 핀</b>에 꽂혔는지 확인!)"},
       {"type": "code", "label": "Step 1 · 한 번 읽기", "lang": "python", "file": "snippets/ch3_01_read.py"},
       {"type": "step_head", "html": "<b>Step 2.</b> 반복해서 읽고, Thonny <b>플로터</b>로 그래프 보기. (셸 옆 ‘Plotter’ 켜기)"},
       {"type": "code", "label": "Step 2 · 반복 읽기 (플로터)", "lang": "python", "file": "snippets/ch3_02_loop.py"},
@@ -532,7 +532,7 @@ CHAPTERS = [
     ]},
     {"title": "자주 하는 실수", "items": [
       {"type": "mistakes", "items": [
-        {"sym": "값이 늘 0이거나 65535에 붙어 있음", "cause": "센서를 A0가 아닌 다른 포트에 꽂았거나, 노란선이 센서의 <b>DO</b>에 꽂힘.", "fix": "그로브 쪽이 <b>A0(=GP26)</b>인지, 센서 쪽 <b>노란선이 AO</b>(DO 아님!)인지 확인하세요. 빨강→VCC·검정→GND도 함께 점검."},
+        {"sym": "값이 늘 0이거나 65535에 붙어 있음", "cause": "센서를 A0가 아닌 다른 포트에 꽂았거나, 노란선이 센서의 <b>DO</b>에 꽂힘.", "fix": "그로브 쪽이 <b>A0(=GP26)</b>인지, <b>노란선이 센서의 AO 핀</b>(DO 아님!)인지 확인하세요. 빨강→VCC·검정→GND도 함께 점검."},
         {"sym": "켜자마자 ‘위험’으로 뜸", "cause": "예열 전이라 값이 큼.", "fix": "1~2분 기다리세요. 그래도 항상 위험이면 코드 맨 위 <code>SAFE_MAX</code>·<code>WARN_MAX</code> 숫자를 우리 환경에 맞게 올리세요."},
         {"sym": "‘❌ Wi-Fi 연결 실패’만 뜨고 멈춤", "cause": "SSID·비밀번호 오타 또는 5GHz 망.", "fix": "<code>wifi_config.py</code>의 따옴표 안 이름·비밀번호를 정확히(대소문자) 확인하고 <b>2.4GHz</b> 망인지 보세요. 고친 뒤 ⏹ 정지 → 다시 ▶ 실행."},
         {"sym": "ImportError: wifi_config", "cause": "<code>wifi_config.py</code>가 피코에 없음.", "fix": "main.py와 같은 위치에 <code>wifi_config.py</code> 파일을 새로 만들어 두 줄만 적으세요. <code>WIFI_SSID = \"와이파이이름\"</code> / <code>WIFI_PASSWORD = \"비밀번호\"</code> (위 핵심 개념의 안내 참고)."},
@@ -540,7 +540,7 @@ CHAPTERS = [
     ]},
     {"title": "스스로 점검하기", "items": [
       {"type": "check", "items": [
-        {"q": "MQ-2는 그로브의 어느 포트에 꽂나요?", "a": "A0 (= GP26 = ADC0). 아날로그 포트입니다. MQ-2는 핀헤더형이라 <b>그로브 암 점퍼 케이블</b>로 잇고, 센서 쪽은 <b>노랑→AO</b>(DO 아님)·빨강→VCC·검정→GND예요."},
+        {"q": "MQ-2는 그로브의 어느 포트에 꽂나요?", "a": "A0 (= GP26 = ADC0). 아날로그 포트입니다. MQ-2는 핀헤더형이라 <b>그로브 암 점퍼 케이블</b>로 잇고, 센서 쪽은 <b>노랑→센서의 AO 핀</b>(DO 아님)·빨강→VCC·검정→GND예요. 쉴드의 A0(포트)와 센서의 AO(핀)는 이름만 닮은 다른 곳!"},
         {"q": "값을 안정시키는 read_average는 무엇을 하나요?", "a": "여러 번(기본 10번) 읽어 평균을 냅니다. 출렁임이 줄어요."},
         {"q": "임계값은 어디서나 같은 숫자를 쓰면 되나요?", "a": "아니요. 센서·환경마다 기준이 달라, 우리 교실에서 직접 보고 보정해야 합니다."},
       ]},
@@ -625,7 +625,7 @@ CHAPTERS = [
        "html": "화면에 띄우고 “API가 뭔지 <b>동사무소에서 등본 떼기</b>로 봅시다”라며 <b>위 줄(비유)을 먼저 클릭</b>해 신청서→등본 흐름을 보여 주세요. 그다음 “피코도 똑같습니다”라며 <b>아래 줄(피코)</b>을 클릭 — 신청서가 위도·경도로, 등본이 강수확률로 바뀔 뿐 흐름이 같다는 걸 짚습니다. 마지막에 학생들도 각자 두 줄을 눌러 보게 하세요. 여기에 3분을 쓰면 뒤의 URL 파라미터 설명이 훨씬 빨라집니다."},
       {"type": "linkbtn", "href": "https://open-meteo.com", "label": "open-meteo.com — 무료 날씨 API (키 불필요)"},
       {"type": "callout", "kind": "info", "title": "설치 없이 바로 됩니다",
-       "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (연수 현장에서 모두가 패키지를 설치하다 막히는 일을 피하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
+       "html": "이번 장 코드는 피코에 <b>기본 내장된 <code>socket</code> + <code>ssl</code></b>만 써서 인터넷에 접속해요. 그래서 <b>추가 설치가 필요 없습니다</b> — 복사해서 바로 실행하면 됩니다. (패키지를 따로 설치하다 막히는 일 없이, 누구나 곧바로 실행할 수 있게 하려고 이렇게 했어요.)<br><br>혹시 코드를 더 짧게 쓰고 싶다면 <code>requests</code> 모듈을 설치하는 방법도 있는데, 그 버전은 Step 3 아래에 따로 실어 뒀습니다."},
       {"type": "callout", "kind": "info", "title": "먼저 — 와이파이 정보 파일 만들기 (wifi_config.py)",
        "html": "이 장의 코드는 와이파이 정보를 <code>wifi_config.py</code>에서 불러옵니다. <b>main.py와 같은 위치</b>에 이 파일을 새로 만들고 두 줄만 적어 저장하세요.<br><br><code>WIFI_SSID = \"우리_와이파이_이름\"</code><br><code>WIFI_PASSWORD = \"비밀번호\"</code><br><br>(피코는 <b>2.4GHz</b> 와이파이만 됩니다. 이름·비밀번호를 정확히.)"},
       {"type": "dig", "title": "HTTPS와 인증서 — 코드의 CERT_NONE은 무슨 뜻일까?",
@@ -1157,7 +1157,7 @@ PLAN_PAGE = {
     {"title": "1일차 — 피코와 첫 만남 (300분)", "items": [
       _plan_table([
         ("30분", "OT + 준비물 점검", "<b>그로브 케이블(LED용) vs 암 점퍼 케이블(MQ-2용)</b> 구분을 여기서 확실히. 데이터용 여분 USB 케이블 3~4개 준비"),
-        ("90분", "<b>Ch0 준비하기</b> — Thonny·조립·펌웨어·첫 코드", "MQ-2 노란선→AO 확인 · 전원 스위치 5V. 케이블 불량이 최다 막힘"),
+        ("90분", "<b>Ch0 준비하기</b> — Thonny·조립·펌웨어·첫 코드", "MQ-2 노란선→센서 AO 핀 확인 · 전원 스위치 5V. 케이블 불량이 최다 막힘"),
         ("120분", "<b>Ch1 와이파이 사각지대 찾기</b>", "wifi_config.py 저장 습관 — 3·5·6장까지 계속 재사용. 강사 핫스팟이 가장 안전"),
         ("60분", "<b>Ch2 전반</b> — timing 개념 + 기본 점등·채우기·무지개", "‘timing 없으면 Ctrl+F 검색 → AI에 재요청’ 습관 심기"),
       ]),
@@ -1364,7 +1364,7 @@ TEMPLATE = r'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>
-<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 학습 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 /* ============================================================
@@ -1695,7 +1695,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
     /*MAIN*/
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
-      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 수업과 개인 학습에 자유롭게 활용할 수 있습니다.
     </footer>
 </main>
 </div>

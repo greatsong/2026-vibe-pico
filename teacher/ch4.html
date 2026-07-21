@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>04. 우리반 공기질, 실시간으로 확인하기 (LED) · 데이터로 탐구하는 피코 바이브 피지컬 코딩 (강사용)</title>
-<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 연수 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
+<meta name="description" content="라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 학습 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 /* ============================================================
@@ -392,7 +392,7 @@ while True:
 - 복사해서 바로 돌아가는 완결형 main.py 전체를 한 번에 줘. 받은 코드에 타이밍 값이 들어 있는지 내가 확인할게.</div></div></section><section class="sec" id="ch4-2"><h3 class="sec-title">자주 하는 실수</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 색이 깨지거나 엉뚱한 칸이 켜짐</div><div class="m-row"><span class="m-tag">원인</span><b>timing 인자 누락.</b></div><div class="m-row"><span class="m-tag fix">해결</span><code>NeoPixel(Pin(16), 10, timing=(280,515,515,745))</code>로 만드세요. LED 문제의 1순위 원인입니다.</div></div><div class="mistake"><div class="m-sym">❌ 늘 빨강이거나 늘 초록</div><div class="m-row"><span class="m-tag">원인</span>임계값이 우리 환경과 안 맞음.</div><div class="m-row"><span class="m-tag fix">해결</span>앞 장에서 본 평소 값을 참고해 <code>SAFE_MAX</code>·<code>WARN_MAX</code>를 조정하고, 예열(1~2분)도 기다리세요.</div></div><div class="mistake"><div class="m-sym">❌ LED가 너무 빨리 깜빡여 어지러움</div><div class="m-row"><span class="m-tag">원인</span>읽기·갱신 주기가 짧음.</div><div class="m-row"><span class="m-tag fix">해결</span>이동 평균 횟수를 늘리거나 <code>sleep</code> 시간을 늘리세요.</div></div></div></section><section class="sec" id="ch4-3"><h3 class="sec-title">스스로 점검하기</h3><div class="checks"><details class="qa"><summary>센서값을 LED 칸 수로 바꾸는 방법은?</summary><div class="qa-a">값을 0~10 범위로 비례 변환해, 그 수만큼 칸을 켭니다. (게이지)</div></details><details class="qa"><summary>웹(3장)과 LED(4장)는 무엇이 같고 무엇이 다른가요?</summary><div class="qa-a">같은 센서값을 쓰지만, 웹은 폰으로 ‘원격’ 확인, LED는 폰 없이 ‘물리적으로’ 흘끗 확인합니다.</div></details><details class="qa"><summary>위험 상태를 더 눈에 띄게 하려면?</summary><div class="qa-a">빨강으로 칠하고 깜빡이게 합니다. (멀리서도 알아챔)</div></details></div></section></div><nav class="pager"><a class="prev" href="ch3.html"><span class="dir">← 이전</span><span class="tt">03. 우리반 공기질 대시보드 (웹)</span></a><a class="next" href="ch5.html"><span class="dir">다음 →</span><span class="tt">05. 강수확률 물리 대시보드 (API×LED)</span></a></nav>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
-      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 연수·수업에 자유롭게 활용할 수 있습니다.
+      LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 수업과 개인 학습에 자유롭게 활용할 수 있습니다.
     </footer>
 </main>
 </div>
