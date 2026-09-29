@@ -6,6 +6,7 @@ import os, re, sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 from parts import PI_BUY
+from figs_pi import FIG_SSH_CMD, FIG_PROMPT
 
 _txt = open(os.path.join(_HERE, "solar", "solar_apx_final.md"), encoding="utf-8").read()
 P = {int(m.group(1)): m.group(2).strip() for m in re.finditer(r"### 블록 (\d+)\n(.*?)(?=\n### 블록 |\Z)", _txt, re.S)}
@@ -47,6 +48,7 @@ CHAPTER_APXPI = {
   "extra": "",
   "sections": [
     {"title": "A. 준비물", "items": [
+      {"type": "callout", "kind": "key", "title": "첫 판정까지 가는 길", "html": "처음에는 <b>A → B → C·D → E·F → G → I → J → K</b>만 따라 하면 판정 페이지가 열려요. <b>H 업데이트, L 자동 실행, M 주소 고정</b>은 필요할 때 해요. 전원을 뽑기 전에는 늘 <b>N</b>처럼 안전하게 꺼요."},
       {"type": "text", "html": P[2]},
       {"type": "raw", "html": PI_BUY},
       {"type": "check_list", "items": [
@@ -64,16 +66,11 @@ CHAPTER_APXPI = {
         {"t": "전원은 아직", "d": "microSD를 굽고 넣은 뒤(E 단계) 마지막에 전원을 연결해요."},
       ]},
     ]},
-    {"title": "C. PC에 Raspberry Pi Imager 설치", "items": [
+    {"title": "C·D. Imager 설치와 운영체제 굽기", "items": [
+      {"type": "text", "html": P[4]},
       {"type": "linkbtn", "href": "https://www.raspberrypi.com/software/", "label": "Raspberry Pi Imager 내려받기 (공식)"},
       {"type": "steps", "items": [
-        {"t": "Windows", "d": "<code>.exe</code> 설치 파일을 받아 실행해요."},
-        {"t": "macOS", "d": "<code>.dmg</code> 파일을 열고 Imager를 응용 프로그램 폴더로 끌어 넣어요."},
-      ]},
-    ]},
-    {"title": "D. microSD에 운영체제 굽기", "items": [
-      {"type": "text", "html": P[4]},
-      {"type": "steps", "items": [
+        {"t": "Imager 설치", "d": "위 링크에서 Windows는 <code>.exe</code>를 받아 실행하고, Mac은 <code>.dmg</code>를 열어 Imager를 응용 프로그램 폴더로 끌어 넣어요."},
         {"t": "장치(Device)", "d": "<b>Raspberry Pi 5</b>를 골라요."},
         {"t": "운영체제(OS)", "d": "<b>Raspberry Pi OS (other)</b> → <b>Raspberry Pi OS Lite (64-bit)</b>를 골라요."},
         {"t": "저장장치(Storage)", "d": "카드 리더에 꽂은 microSD를 골라요. <b>시스템 드라이브 제외(Exclude system drives)</b>는 켜 둬요. PC의 하드디스크를 고르면 지워져요."},
@@ -99,13 +96,34 @@ CHAPTER_APXPI = {
       {"type": "callout", "kind": "tip", "title": "응답이 없으면", "html": "공유기 관리 페이지(보통 공유기 아래 라벨에 주소가 있어요)의 연결 기기 목록에서 <code>bird-3</code>을 찾거나, 휴대폰 네트워크 검색 앱(예: Fing)에서 제조사가 Raspberry Pi인 기기를 찾아 IP 주소를 적어요. 그다음부터는 <code>bird-3.local</code> 대신 그 IP 주소를 써요."},
     ]},
     {"title": "G. PC에서 SSH로 접속하기", "items": [
-      {"type": "text", "html": P[6]},
+      {"type": "text", "html": P[15]},
+      {"type": "steps", "items": [
+        {"t": "터미널 열기", "d": "Windows는 시작 버튼을 누르고 <b>PowerShell</b>을 입력해 열어요. Mac은 <b>Cmd+Space</b>를 누르고 <b>터미널</b>을 입력해 열어요."},
+        {"t": "명령 입력", "d": "아래 명령을 붙여 넣고, <code>사용자이름</code>과 <code>bird-3</code>을 D 단계에서 정한 것으로 고친 뒤 Enter를 눌러요."},
+        {"t": "yes 입력", "d": "처음 한 번 '계속 연결할까요?'라는 질문이 나오면 <b>yes</b>를 끝까지 입력하고 Enter를 눌러요."},
+        {"t": "비밀번호", "d": "입력해도 화면에 아무것도 나오지 않아요. 그대로 입력하고 Enter를 눌러요."},
+      ]},
+      {"type": "raw", "html": "<div class='ecofig'>" + FIG_SSH_CMD + "</div>"},
       {"type": "code", "label": "PC에서 (사용자이름과 bird-3을 바꿔서)", "lang": "bash", "code": "ssh 사용자이름@bird-3.local"},
-      {"type": "step_head", "html": "처음 접속할 때"},
-      _out("The authenticity of host 'bird-3.local (192.168.0.23)' can't be established.\nED25519 key fingerprint is SHA256:…\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\n사용자이름@bird-3.local's password:        ← 입력해도 보이지 않아요\n사용자이름@bird-3:~ $"),
-      {"type": "callout", "kind": "tip", "title": "Windows에서 ssh를 찾을 수 없다고 나오면", "html": "PowerShell에서 <code>ssh -V</code>를 입력해 버전이 나오는지 봐요. 안 나오면 <b>설정 → 시스템 → 선택적 기능 → 기능 추가</b>에서 <b>OpenSSH 클라이언트</b>를 설치하고 PowerShell을 다시 열어요."},
+      {"type": "step_head", "html": "처음 접속할 때 화면"},
+      _out("The authenticity of host 'bird-3.local (192.168.0.23)' can't be established.\nED25519 key fingerprint is SHA256:…\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\n사용자이름@bird-3.local's password:        ← 입력해도 보이지 않아요\n사용자이름@bird-3:~ $                     ← 접속 성공"),
+      {"type": "text", "html": P[6]},
+      {"type": "raw", "html": "<div class='ecofig'>" + FIG_PROMPT + "</div>"},
+      {"type": "concept", "items": [
+        {"t": "붙여 넣기", "d": "Windows는 Ctrl+V 또는 마우스 오른쪽 클릭, Mac은 Cmd+V"},
+        {"t": "↑ 키", "d": "방금 입력한 명령을 다시 불러와요"},
+        {"t": "Ctrl+C", "d": "실행 중인 프로그램을 멈춰요 (복사가 아니에요)"},
+        {"t": "exit", "d": "접속을 끝내요. 다시 접속할 때는 같은 ssh 명령을 입력해요"},
+      ]},
+      {"type": "mistakes", "items": [
+        {"sym": "'ssh' … 인식되지 않습니다", "cause": "Windows에 SSH 프로그램이 없음", "fix": "<b>설정 → 시스템 → 선택적 기능 → 기능 추가</b>에서 <b>OpenSSH 클라이언트</b>를 설치하고 PowerShell을 다시 열어요."},
+        {"sym": "Could not resolve hostname", "cause": "PC가 bird-3.local이라는 이름을 찾지 못함", "fix": "F 단계에서 찾은 IP 주소로 <code>ssh 사용자이름@192.168.0.23</code>처럼 접속해요."},
+        {"sym": "Connection timed out", "cause": "라즈베리파이가 아직 켜지는 중이거나, PC가 다른 Wi-Fi에 있거나, AP 격리", "fix": "3분 기다린 뒤 다시 하고, PC가 같은 공유기에 있는지 봐요. 그래도 안 되면 M 단계를 봐요."},
+        {"sym": "Connection refused", "cause": "D 단계에서 SSH를 켜지 않음", "fix": "Imager의 원격 접속에서 SSH를 켜고 microSD를 다시 구워요."},
+        {"sym": "Permission denied", "cause": "사용자 이름이나 비밀번호가 다름", "fix": "적어 둔 사용자 이름과 비밀번호를 다시 확인해요."},
+      ]},
     ]},
-    {"title": "H. 업데이트", "items": [
+    {"title": "H. 업데이트 (필요할 때)", "items": [
       {"type": "text", "html": P[7]},
       {"type": "code", "label": "라즈베리파이 SSH 창에서 (한 줄씩)", "lang": "bash", "code": "sudo apt update\nsudo apt full-upgrade -y\nsudo reboot"},
       {"type": "callout", "kind": "info", "title": "다시 접속하기", "html": "<code>sudo reboot</code>를 하면 SSH 연결이 끊겨요. 1분쯤 뒤 G 단계의 <code>ssh</code> 명령으로 다시 접속해요."},
@@ -115,7 +133,7 @@ CHAPTER_APXPI = {
       {"type": "code", "label": "라즈베리파이 SSH 창에서 (한 줄씩)", "lang": "bash", "code": "mkdir -p ~/bird\ncd ~/bird\npython3 -m venv venv\nsource venv/bin/activate"},
       {"type": "step_head", "html": "예상 화면"},
       _out("(venv) 사용자이름@bird-3:~/bird $"),
-      {"type": "callout", "kind": "key", "title": "새로 접속할 때마다", "html": "SSH로 다시 접속하면 <code>cd ~/bird</code>와 <code>source venv/bin/activate</code>를 먼저 입력해요. 줄 앞에 <code>(venv)</code>가 없으면 설치한 패키지를 찾지 못해요."},
+      {"type": "callout", "kind": "key", "title": "새로 접속할 때마다", "html": "SSH로 다시 접속하면 <code>cd ~/bird</code>와 <code>source venv/bin/activate</code>를 먼저 입력해요. 줄 앞에 <code>(venv)</code>가 없으면 설치한 패키지를 찾지 못하고, pip를 쓰면 <code>externally-managed-environment</code> 오류가 나요."},
     ]},
     {"title": "J. BirdNET과 Flask 설치", "items": [
       {"type": "text", "html": P[9]},
@@ -130,7 +148,7 @@ CHAPTER_APXPI = {
       _out("판정할 새 7종: 물까치, 까치, 직박구리, 참새, 멧비둘기, 박새, 큰부리까마귀\n브라우저에서 여세요 →  http://192.168.0.23:8000   (피코 코드의 SERVER에도 이 주소)\n * Running on http://192.168.0.23:8000"),
       {"type": "callout", "kind": "tip", "title": "확인", "html": "PC 브라우저에서 <code>http://192.168.0.23:8000</code>(화면에 나온 주소)을 열어 '새소리 판정 서버' 페이지가 보이면 성공이에요. 서버를 멈출 때는 SSH 창에서 <b>Ctrl+C</b>를 눌러요."},
     ]},
-    {"title": "L. 전원만 켜면 서버가 시작되게 (자동 실행)", "items": [
+    {"title": "L. 전원만 켜면 서버가 시작되게 (필요할 때)", "items": [
       {"type": "text", "html": P[11]},
       {"type": "steps", "items": [
         {"t": "손으로 켠 서버 끄기", "d": "K 단계의 서버가 돌고 있으면 <b>Ctrl+C</b>로 멈춰요."},
@@ -141,10 +159,10 @@ CHAPTER_APXPI = {
       {"type": "code", "label": "② 등록·시작·확인 (한 줄씩)", "lang": "bash", "code": "sudo systemctl daemon-reload\nsudo systemctl enable --now bird\nsystemctl status bird --no-pager"},
       {"type": "step_head", "html": "예상 화면 (일부)"},
       _out("● bird.service - BirdNET bird sound server\n     Loaded: loaded (/etc/systemd/system/bird.service; enabled; preset: enabled)\n     Active: active (running) since …"),
-      {"type": "code", "label": "자주 쓰는 명령", "lang": "bash", "code": "journalctl -u bird -f          # 서버가 쓰는 글 보기 (Ctrl+C로 나와도 서버는 계속 돌아요)\nsudo systemctl restart bird    # bird_server.py를 고친 뒤 다시 시작\nsudo systemctl stop bird       # 멈추기\nsudo systemctl disable bird    # 자동 실행 없애기"},
+      {"type": "code", "label": "자주 쓰는 명령", "lang": "bash", "code": "journalctl -u bird -f          # 서버가 쓰는 글 보기 (Ctrl+C로 나와도 서버는 계속 돌아요)\nsudo systemctl restart bird    # bird_server.py를 고친 뒤 다시 시작"},
       {"type": "callout", "kind": "warn", "title": "active (running)이 아니면", "html": "<code>cat /etc/systemd/system/bird.service</code>로 파일을 열어 <code>User=</code>와 경로에 내 사용자 이름이 들어갔는지 봐요. <code>journalctl -u bird -n 30</code>으로 오류 메시지를 확인해요."},
     ]},
-    {"title": "M. 주소 고정과 AP 격리", "items": [
+    {"title": "M. 주소 고정과 AP 격리 (필요할 때)", "items": [
       {"type": "text", "html": P[12]},
       {"type": "code", "label": "라즈베리파이에서: 내 IP와 Wi-Fi MAC 주소 보기", "lang": "bash", "code": "hostname -I\nnmcli device show wlan0 | grep -E 'HWADDR|IP4.ADDRESS'"},
       {"type": "steps", "items": [
@@ -152,22 +170,18 @@ CHAPTER_APXPI = {
         {"t": "AP 격리 확인", "d": "PC에서 <code>ping 라즈베리파이IP</code>를 했을 때 응답이 없는데 공유기 목록에는 보이면, 공유기의 AP 격리(무선 격리)를 꺼 달라고 관리자에게 요청하거나 수업용 공유기를 따로 써요."},
       ]},
     ]},
-    {"title": "N. 온도·전원 확인과 안전하게 끄기", "items": [
+    {"title": "N. 안전하게 끄기", "items": [
       {"type": "text", "html": P[13]},
-      {"type": "code", "label": "라즈베리파이에서", "lang": "bash", "code": "vcgencmd measure_temp\nvcgencmd get_throttled\nsudo poweroff"},
-      _out("temp=48.3'C\nthrottled=0x0          ← 0x0이면 전원 부족·과열 기록이 없어요"),
+      {"type": "code", "label": "라즈베리파이에서", "lang": "bash", "code": "sudo poweroff"},
       {"type": "callout", "kind": "info", "title": "다시 켜기", "html": "LED가 빨간색이 된 뒤 전원을 뽑아요. 전원을 다시 꽂으면 켜지고, 전원이 꽂힌 채 꺼져 있을 때는 보드의 전원 버튼을 눌러 켜요. 자동 실행(L)을 설정했다면 서버도 저절로 시작돼요."},
     ]},
     {"title": "O·P. 이럴 때는", "items": [
       {"type": "text", "html": P[14]},
       {"type": "code", "label": "PC에서: 운영체제를 다시 구운 뒤 접속 경고가 나올 때", "lang": "bash", "code": "ssh-keygen -R bird-3.local"},
       {"type": "mistakes", "items": [
-        {"sym": "ping bird-3.local에 응답이 없어요", "cause": "첫 부팅 중, Wi-Fi 이름·비밀번호 오타, 지역 설정 잘못, AP 격리", "fix": "3분 더 기다린 뒤 다시 해요. 공유기 목록에도 없으면 D 단계부터 다시 구워요. 목록에는 있는데 응답이 없으면 M 단계의 AP 격리를 봐요."},
-        {"sym": "Permission denied (password)", "cause": "사용자 이름이나 비밀번호가 D 단계와 다름", "fix": "적어 둔 사용자 이름을 확인하고, 비밀번호는 보이지 않아도 그대로 입력해요."},
         {"sym": "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED", "cause": "microSD를 다시 구워 라즈베리파이의 신분 정보가 바뀜", "fix": "PC에서 <code>ssh-keygen -R bird-3.local</code>을 실행하고 다시 접속해요."},
-        {"sym": "error: externally-managed-environment", "cause": "가상환경을 켜지 않고 pip를 실행함", "fix": "<code>cd ~/bird</code>, <code>source venv/bin/activate</code> 뒤 다시 설치해요."},
         {"sym": "Address already in use", "cause": "자동 실행 서버가 이미 8000번을 쓰는데 손으로 또 켬", "fix": "손으로 켤 필요가 없어요. 고친 뒤에는 <code>sudo systemctl restart bird</code>를 써요."},
-        {"sym": "번개 표시·느려짐, throttled가 0x0이 아님", "cause": "전원 부족이나 과열", "fix": "공식 27W 어댑터와 팬 케이스를 쓰고, 팬 선이 꽂혔는지 봐요."},
+        {"sym": "번개 표시·느려짐, throttled가 0x0이 아님", "cause": "전원 부족이나 과열", "fix": "<code>vcgencmd get_throttled</code>가 <code>0x0</code>이 아니면 전원 부족이나 과열 기록이 있는 거예요. 공식 27W 어댑터와 팬 케이스를 쓰고, 팬 선이 꽂혔는지 봐요."},
       ]},
     ]},
   ],

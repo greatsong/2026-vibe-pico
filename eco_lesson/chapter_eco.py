@@ -42,7 +42,7 @@ _FLOW = ("<div style='margin:14px 0 6px;padding:14px 16px;border:1px solid var(-
          "<div style='display:flex;flex-wrap:wrap;gap:8px'>"
          + "".join(f"<div style='flex:1;min-width:112px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 8px;text-align:center'>"
                    f"<div style='font-size:11px;font-weight:800;color:#0F766E'>{n}</div><div style='font-size:13px;font-weight:700'>{t}</div></div>"
-                   for n, t in (("준비", "조립·확인"), ("①", "예시 모으기"), ("②", "물까치 탐지기"), ("③", "채점·기준 정하기"), ("④", "여러 새 구분"), ("⑤⑥", "현장·시간 그래프")))
+                   for n, t in (("준비", "조립·확인"), ("①", "예시 모으기"), ("②", "물까치 탐지기"), ("③", "채점·기준 정하기"), ("④⑤", "현장·시간 그래프")))
          + "</div></div>")
 
 _HERO = ("<figure style='margin:0 0 10px'><img src='../eco_lesson/img/hero_mulkkachi.jpg' alt='학교 화단 벤치 위의 관측기와 나뭇가지의 물까치 두 마리' "
@@ -57,7 +57,7 @@ def _out(text):                     # 예상 화면
 
 _AUDIO = ("<div style='display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px'>"
           + "".join(f"<a class='linkbtn' href='../eco_lesson/audio/{f}' download>🔊 {f} · {t}</a>"
-                    for f, t in (("0001.mp3", "물까치인가 봐요"), ("0002.mp3", "까치인가 봐요"), ("0003.mp3", "직박구리인가 봐요")))
+                    for f, t in (("0001.mp3", "물까치인가 봐요"),))
           + "</div>")
 
 _APPS = '''function doGet(e) {
@@ -74,7 +74,7 @@ CHAPTER_ECO = {
     "마이크·microSD·시계·MP3를 쉴드에 꽂아 관측기를 조립한다",
     "3초 동안 들은 소리를 숫자 25개(특징)로 바꾼다",
     "물까치와 헷갈릴 만한 소리의 예시를 모아 k-NN으로 물까치 후보를 찾는다",
-    "예시로 쓰지 않은 녹음으로 재현율과 오판을 채점하고 기준을 정한다",
+    "예시로 쓰지 않은 소리를 탐지기에 들려주고 재현율과 오판을 세어 기준을 정한다",
     "관측 기록으로 물까치가 나타난 시간을 그래프로 본다",
   ],
   "why": P[1],
@@ -115,7 +115,7 @@ CHAPTER_ECO = {
     {"title": "조립 ③ 시계·MP3·LED·버튼", "items": [
       {"type": "text", "html": P[7]},
       {"type": "raw", "html": _AUDIO},
-      {"type": "callout", "kind": "key", "title": "MP3용 microSD 준비", "html": "말하기 장에서 쓰던 카드에는 휘파람·박수 음성이 들어 있어요. 그대로 두면 번호가 섞이니 <b>포맷부터</b> 해요.<br>① 카드를 <b>FAT32</b>로 포맷해요. Windows는 카드 우클릭 → 포맷 → FAT32, Mac은 디스크 유틸리티 → 지우기 → MS-DOS(FAT)예요. 32GB 이하 카드가 편해요.<br>② 위 세 파일을 카드 <b>맨 위 폴더</b>에 <code>0001.mp3</code> → <code>0002.mp3</code> → <code>0003.mp3</code> 순서로 <b>한 개씩</b> 복사해요. 이 모듈은 파일 이름이 아니라 복사한 순서로 번호를 매기는 경우가 많아요.<br>③ Mac에서 복사했다면 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행해 숨김 파일을 지워요. 숨김 파일이 있으면 번호가 한 칸씩 밀려요.<br>④ 엉뚱한 음성이 나오면 카드를 다시 포맷하고 ②부터 다시 해요."},
+      {"type": "callout", "kind": "key", "title": "MP3용 microSD 준비", "html": "말하기 장에서 쓰던 카드에는 휘파람·박수 음성이 들어 있어요. 그대로 두면 번호가 섞이니 <b>포맷부터</b> 해요.<br>① 카드를 <b>FAT32</b>로 포맷해요. Windows는 카드 우클릭 → 포맷 → FAT32, Mac은 디스크 유틸리티 → 지우기 → MS-DOS(FAT)예요. 32GB 이하 카드가 편해요.<br>② 위 파일 <code>0001.mp3</code>를 카드 <b>맨 위 폴더</b>에 복사해요. 다른 새 이름은 ML3장에서 이어서 넣어요.<br>③ Mac에서 복사했다면 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행해 숨김 파일을 지워요. 숨김 파일이 있으면 번호가 한 칸씩 밀려요.<br>④ 엉뚱한 음성이 나오면 카드를 다시 포맷하고 ②부터 다시 해요."},
       {"type": "steps", "items": [
         {"t": "시계", "d": "DS3231 → <b>I2C0</b> (Grove–STEMMA QT 케이블), 뒷면에 CR1220"},
         {"t": "MP3", "d": "Grove MP3 v4.0 → <b>UART0</b>(말하기 장과 같아요). 스피커는 모듈의 스피커 단자에 꽂고, 위에서 준비한 microSD를 넣어요. 녹음용 카드와 다른 카드예요."},
@@ -146,7 +146,6 @@ CHAPTER_ECO = {
       {"type": "code", "label": "코드 ⓪ · 부품 확인과 시계 맞추기", "lang": "python", "file": "snippets/eco_0_check.py"},
       {"type": "step_head", "html": "예상 화면"},
       _out("① SD 카드   OK  남은 공간 29810 MB\n② 시계      OK  2026-10-01 07:15:03  ← 지금 시각과 같은지 확인하세요\n③ 마이크    조용할 때 크기 31. 이제 3초 동안 박수를 쳐 보세요\n③ 마이크    OK  박수 크기 2140\n④ MP3       1번 파일을 틀어요. '물까치인가 봐요'가 들리면 OK\n⑤ 버튼      5초 안에 버튼을 한 번 누르세요\n⑤ 버튼      OK\n⑥ LED       빨강 → 초록 → 파랑으로 켜졌다면 OK\n⑦ 판단 속도 3초 동안 아무 소리나 들려주세요\n⑦ 판단 속도 특징 계산 ○○○ ms · 남은 메모리 ○○○ KB · 조각 8개\n안전하게 끝났어요. 이제 전원을 뽑아도 됩니다."),
-      {"type": "callout", "kind": "warn", "title": "④와 ⑥은 직접 확인해요", "html": "④와 ⑥은 코드가 판정하지 않고 늘 같은 안내를 표시해요. ④는 스피커에서 '물까치인가 봐요'가 들리는지, ⑥은 LED가 빨강·초록·파랑으로 켜지는지 직접 보고 확인해요."},
       {"type": "callout", "kind": "tip", "title": "⑦의 두 숫자를 적어 두세요", "html": "특징 계산 시간은 3초 녹음이 끝난 뒤 숫자 25개를 계산하는 데 걸린 시간이에요. SD 저장, 예시 비교, MP3 재생 시간은 들어 있지 않아요. 남은 메모리는 예시를 불러오기 전에 측정한 값이라, 탐지기에서는 예시가 차지하는 만큼 더 줄어요. 교재를 만들 때는 실물 피코에서 측정하지 못한 값이에요."},
     ]},
     {"title": "① 물까치 예시 모으기", "items": [
@@ -180,24 +179,18 @@ CHAPTER_ECO = {
     {"title": "③ 채점하고 기준 정하기", "items": [
       {"type": "text", "html": P[13]},
       {"type": "steps", "items": [
-        {"t": "녹음 모으기", "d": "탐지기가 저장한 WAV, 휴대폰 녹음, 공개 녹음 가운데 <b>예시로 쓰지 않은 녹음</b>을 모아요."},
-        {"t": "채점 폴더 만들기", "d": "PC에 폴더 하나를 만들고 그 안에 <code>시험/물까치</code>, <code>시험/다른 새</code>, <code>시험/말소리</code> … 폴더를 만들어 WAV를 나눠 넣어요."},
-        {"t": "피코 예시 복사", "d": "녹음용 SD의 <code>eco/examples.csv</code>를 카드 리더로 꺼내 그 폴더에 복사해요."},
-        {"t": "PC 준비", "d": "코드 ③은 피코가 아니라 PC에서 실행해요. Thonny 오른쪽 아래 인터프리터를 <b>'이 컴퓨터의 Python'</b>으로 바꾸고, <b>도구 → 패키지 관리</b>에서 <code>numpy</code>를 한 번 설치해요."},
-        {"t": "채점 실행", "d": "코드 ③을 그 폴더에 <code>eco_pc_score.py</code>로 저장하고 실행해요. 명령 창을 쓴다면 <code>python eco_pc_score.py 폴더이름</code>(안 되면 <code>python3</code>)이에요."},
-        {"t": "기준 정하기", "d": "표를 보고 MIN_VOTES를 고른 뒤 탐지기 코드에 적어요."},
-        {"t": "(선택) WAV로 만든 예시와 비교", "d": "같은 폴더에 <code>학습/물까치</code>, <code>학습/다른 새</code> … 폴더를 만들어 WAV를 넣으면 그 녹음으로 만든 예시(<code>examples_pc.csv</code>)도 함께 채점해요. 이쪽이 더 좋으면 SD의 <code>examples.csv</code>를 <code>examples_pico.csv</code>로 이름을 바꿔 보관하고 <code>examples_pc.csv</code>를 <code>examples.csv</code> 이름으로 넣어요."},
+        {"t": "소리 준비", "d": "예시로 쓰지 않은 물까치 녹음 5개 이상, 다른 새와 생활 소리 5개 이상을 휴대폰에 준비해요. 3초쯤 되는 짧은 소리가 좋아요."},
+        {"t": "들려주기", "d": "코드 ②를 켜 둔 채 하나씩 틀고, 소리 사이에는 10초쯤 쉬어요. 틀 때마다 <b>시각</b>과 무엇을 틀었는지 종이에 적어요."},
+        {"t": "정답 적기", "d": "버튼으로 끝낸 뒤 녹음용 SD의 <code>eco/decisions.csv</code>를 PC로 옮겨 스프레드시트로 열어요. 맨 오른쪽에 <code>truth</code> 열을 만들고, 적어 둔 시각과 <code>time</code> 열을 맞춰 물까치면 1, 아니면 0을 적어 CSV로 저장해요. 소리 하나에 줄이 두 개 생기면 둘 다 같은 값을 적고, 줄이 없는 소리는 감지되지 않은 거예요."},
+        {"t": "채점 도구 실행", "d": "코드 ③을 <code>decisions.csv</code>와 같은 폴더에 저장하고, <code>MAGPIE_PLAYED</code>와 <code>OTHER_PLAYED</code>에 틀어 준 물까치 수와 다른 소리 수를 적은 뒤 Thonny의 '이 컴퓨터의 Python'으로 실행해요. 설치할 것은 없어요."},
+        {"t": "기준 정하기", "d": "표를 보고 MIN_VOTES를 고른 뒤 코드 ②에 적어요."},
       ]},
-      {"type": "code", "label": "코드 ③ · PC 채점 도구 (PC에서 실행 · numpy 필요)", "lang": "python", "file": "snippets/eco_pc_score.py", "fold": True},
-      _out("시험 녹음: 물까치 10개, 그 밖의 소리 27개\n\n[피코에서 모은 예시 (examples.csv)] {'물까치': 12, '다른 새': 12, '말소리': 8, '배경': 8, '기타': 8}\nMIN_VOTES | 재현율(물까치 녹음 가운데 찾은 비율) | 오판(다른 소리를 물까치라고 한 비율)\n    1     |  0.90  |  0.67\n    2     |  0.80  |  0.37\n    3     |  0.70  |  0.30\n    4     |  0.70  |  0.15\n    5     |  0.60  |  0.07\n    6     |  0.30  |  0.00\n    7     |  0.00  |  0.00\n    8     |  0.00  |  0.00\n    9     |  0.00  |  0.00"),
-      {"type": "callout", "kind": "info", "title": "이 표는 어떤 조건의 결과일까", "html": "교재를 만들 때 모의 피코에 공개 녹음(새소리·생활 소리)과 합성 말소리를 들려주어 예시 48개를 모으고, 예시에 쓰지 않은 녹음으로 코드 ③을 실행한 결과예요. 시험 녹음은 물까치 10개와 그 밖의 소리 27개였어요. 녹음이 적어서 한 개만 달라져도 재현율이 0.10씩 바뀌어요. 앞의 '얼마나 잘 맞힐까?'에 나온 오판 13%는 같은 녹음을 나눠 쓴 조건이라 이 표보다 낮아요. 우리 학교에서 모은 녹음으로 다시 채점하면 결과가 달라져요."},
+      {"type": "code", "label": "코드 ③ · 채점 도구 (PC에서 실행 · 설치할 것 없음)", "lang": "python", "file": "snippets/eco_pc_compare.py", "fold": True},
+      {"type": "step_head", "html": "예상 화면 (교재를 만들 때 모의 시험: 물까치 8번, 다른 소리 14번)"},
+      _out("decisions.csv: 판정 22줄 (물까치 8 · 다른 소리 14)\n\n방식                       | 재현율 | 오판\n피코만 MIN_VOTES 1          |  1.00  | 0.93\n피코만 MIN_VOTES 2          |  1.00  | 0.50\n피코만 MIN_VOTES 3          |  0.62  | 0.36\n피코만 MIN_VOTES 4          |  0.62  | 0.21\n피코만 MIN_VOTES 5          |  0.38  | 0.07\n…"),
       {"type": "callout", "kind": "mini", "title": "탐구 과제", "html": P[14]},
     ]},
-    {"title": "④ 여러 새 구분하기 (2단계)", "items": [
-      {"type": "text", "html": P[15]},
-      {"type": "code", "label": "코드 ④ · 여러 새 구분", "lang": "python", "file": "snippets/eco_3_species.py"},
-    ]},
-    {"title": "⑤ 현장으로 — 배터리와 자동 시작", "items": [
+    {"title": "④ 현장으로 — 배터리와 자동 시작", "items": [
       {"type": "text", "html": P[16]},
       {"type": "steps", "items": [
         {"t": "main.py로 저장", "d": "코드 ②를 Thonny에서 <code>main.py</code>라는 이름으로 피코에 저장"},
@@ -209,14 +202,14 @@ CHAPTER_ECO = {
       ]},
       {"type": "callout", "kind": "warn", "title": "사람 목소리가 저장될 수 있어요", "html": "탐지기는 소리가 날 때마다 3초를 SD 카드에 녹음하고, 물까치 후보가 아니면 지워요. 그래서 대화가 들리는 곳에 두면 판단 결과와 상관없이 대화가 잠시 녹음되고, 잘못 판단하면 파일로 남아요. 설치 사실을 알렸다고 대화 녹음이 허용되는 것은 아니므로 대화가 들리지 않는 곳에 설치해요. 사람 목소리가 든 파일은 공유하지 않고 바로 지워요."},
     ]},
-    {"title": "⑥ 물까치는 언제 나타났을까", "items": [
+    {"title": "⑤ 물까치는 언제 나타났을까", "items": [
       {"type": "text", "html": P[17]},
       {"type": "steps", "items": [
         {"t": "안전하게 끝내기", "d": "버튼을 눌러 LED가 꺼지면 USB 전원을 뽑아요."},
         {"t": "카드 옮기기", "d": "Pmod에서 녹음용 microSD를 빼 카드 리더로 PC에 연결하고, 카드의 <code>eco</code> 폴더를 PC에 복사해요."},
-        {"t": "그래프 그리기", "d": "코드 ⑤를 복사한 <code>eco</code> 폴더 옆에 <code>eco_pc_timeline.py</code>로 저장하고, Thonny의 '이 컴퓨터의 Python'으로 실행해요. <code>matplotlib</code>는 도구 → 패키지 관리에서 설치해요. 그래프는 <code>eco/timeline_hour.png</code>에 저장돼요."},
+        {"t": "그래프 그리기", "d": "코드 ④를 복사한 <code>eco</code> 폴더 옆에 <code>eco_pc_timeline.py</code>로 저장하고, Thonny의 '이 컴퓨터의 Python'으로 실행해요. <code>matplotlib</code>는 도구 → 패키지 관리에서 설치해요. 그래프는 <code>eco/timeline_hour.png</code>에 저장돼요."},
       ]},
-      {"type": "code", "label": "코드 ⑤ · 시간 그래프 (PC에서 실행 · matplotlib 필요)", "lang": "python", "file": "snippets/eco_pc_timeline.py", "fold": True},
+      {"type": "code", "label": "코드 ④ · 시간 그래프 (PC에서 실행 · matplotlib 필요)", "lang": "python", "file": "snippets/eco_pc_timeline.py", "fold": True},
       {"type": "callout", "kind": "info", "title": "구글 시트로 보내기 (선택)", "html": P[18]},
       {"type": "code", "label": "Apps Script (구글 시트 → 확장 프로그램 → Apps Script에 붙여 넣고 웹 앱으로 배포)", "lang": "javascript", "code": _APPS},
     ]},

@@ -1,4 +1,4 @@
-# 물까치 찾기 ⑤ — 물까치가 언제 나타났을까? (컴퓨터의 파이썬으로 실행)
+# 물까치 찾기 ④ — 물까치가 언제 나타났을까? (컴퓨터의 파이썬으로 실행)
 # 준비: pip install matplotlib   ·   사용: python eco_pc_timeline.py eco   (SD 카드의 eco 폴더를 복사해 온 것)
 # found.csv(물까치 후보 기록)와 decisions.csv(모든 판단 기록)를 읽어 시간대별 그래프를 그려요.
 import csv, os, sys

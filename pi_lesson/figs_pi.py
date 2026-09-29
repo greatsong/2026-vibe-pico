@@ -14,7 +14,7 @@ FIG_NET = ('<svg viewBox="0 0 1000 470" role="img" aria-label="그림 1. 실시�
            '<text class="tb" x="135" y="90" text-anchor="middle">피코 관측기 (ML2)</text>'
            '<text class="ts" x="135" y="114" text-anchor="middle">마이크 · microSD · MP3 · 버튼</text>'
            '<text class="t" x="135" y="142" text-anchor="middle">3초 듣기 → k-NN 표 세기</text>'
-           '<text class="tm" x="135" y="168" text-anchor="middle">eco_4_server.py</text>'
+           '<text class="tm" x="135" y="168" text-anchor="middle">eco_5_server.py</text>'
            '<text class="ts" x="135" y="192" text-anchor="middle">LED 보라 = Pi에게 묻는 중</text>'
            # 공유기
            '<rect class="mod" x="385" y="80" width="200" height="110" rx="12"/>'
@@ -56,3 +56,52 @@ FIG_NET = ('<svg viewBox="0 0 1000 470" role="img" aria-label="그림 1. 실시�
            '<line x1="620" y1="360" x2="660" y2="360" stroke="#b91c4a" stroke-width="2.2" marker-end="url(#pb)"/><text class="ts" x="668" y="364">돌려받는 것</text>'
            '<line x1="620" y1="390" x2="660" y2="390" class="c-jump"/><text class="ts" x="668" y="394">손으로 옮기는 카드</text>'
            '</svg>')
+
+# 부록 G: SSH 명령 풀어 보기
+_K = '#b91c4a'
+def _chip(x, w, txt, mono=True, fill='#fff7f9'):
+    cls = 'tm' if mono else 't'
+    return (f'<rect x="{x}" y="40" width="{w}" height="46" rx="8" fill="{fill}" stroke="{_K}" stroke-width="1.4"/>'
+            f'<text class="{cls}" x="{x + w / 2}" y="69" text-anchor="middle" style="font-size:18px">{txt}</text>')
+def _note(x, y, lines):
+    return "".join(f'<text class="ts" x="{x}" y="{y + 18 * i}" text-anchor="middle">{t}</text>' for i, t in enumerate(lines))
+def _tick(x):
+    return f'<line x1="{x}" y1="88" x2="{x}" y2="112" stroke="{_K}" stroke-width="1.4"/>'
+
+FIG_SSH_CMD = ('<svg viewBox="0 0 1000 250" role="img" aria-label="그림. SSH 접속 명령 풀어 보기. ssh는 접속 명령, 띄어쓰기 한 칸, student는 D 단계에서 정한 사용자 이름, @는 붙여 쓰는 기호, bird-3은 D 단계에서 정한 호스트 이름, .local은 같은 공유기 안에서 찾으라는 뜻이다. bird-3.local 대신 IP 주소를 써도 된다.">'
+               + _chip(40, 90, 'ssh') + _chip(180, 150, 'student') + _chip(340, 50, '@') + _chip(400, 150, 'bird-3') + _chip(560, 120, '.local')
+               + '<text class="ts" x="155" y="69" text-anchor="middle">한 칸</text>'
+               + _tick(85) + _tick(255) + _tick(365) + _tick(475) + _tick(620)
+               + _note(85, 132, ['접속 명령', '(늘 같아요)']) + _note(255, 132, ['사용자 이름', 'D 단계에서 정한 것'])
+               + _note(365, 132, ['붙여 써요', '띄어쓰기 없음']) + _note(475, 132, ['호스트 이름', 'D 단계에서 정한 것'])
+               + _note(620, 132, ['같은 공유기', '안에서 찾기'])
+               + '<rect x="720" y="40" width="250" height="120" rx="10" fill="#f4f1e8" stroke="#b9b3a0"/>'
+               + '<text class="tb" x="845" y="66" text-anchor="middle">.local이 안 되면</text>'
+               + '<text class="tm" x="845" y="96" text-anchor="middle">ssh student@192.168.0.23</text>'
+               + '<text class="ts" x="845" y="122" text-anchor="middle">F 단계에서 찾은 IP 주소를</text>'
+               + '<text class="ts" x="845" y="140" text-anchor="middle">호스트 이름 자리에 써요</text>'
+               + '<text class="ts" x="40" y="215">예시의 student와 bird-3은 우리 모둠이 정한 사용자 이름과 호스트 이름으로 바꿔요.</text>'
+               + '</svg>')
+
+# 부록 G: 프롬프트 읽기 (PC일 때와 라즈베리파이일 때)
+def _line(y, parts):
+    x = 40; out = []
+    for txt, col in parts:
+        w = 11.2 * len(txt)
+        out.append(f'<text x="{x}" y="{y}" style="font-family:ui-monospace,Menlo,monospace;font-size:18px;fill:{col}">{txt}</text>')
+        x += w
+    return "".join(out)
+FIG_PROMPT = ('<svg viewBox="0 0 1000 330" role="img" aria-label="그림. 프롬프트 읽기. PC의 PowerShell은 PS C:\\Users\\이름> 처럼 보이고, 접속 뒤에는 student@bird-3:~ $ 처럼 바뀐다. student는 사용자 이름, bird-3은 라즈베리파이 이름, 물결표는 내 홈 폴더, 달러 기호는 명령을 기다린다는 뜻이다. 가상환경을 켜면 앞에 (venv)가 붙고 ~/bird는 지금 있는 폴더다.">'
+              '<rect x="20" y="20" width="960" height="290" rx="12" fill="#1b2420"/>'
+              '<text x="40" y="52" style="font-size:13px;fill:#9fb3aa">접속 전 (PC · Windows PowerShell)</text>'
+              + _line(80, [('PS C:\\Users\\hong> ', '#e8e3d3'), ('ssh student@bird-3.local', '#ffd479')]) +
+              '<text x="40" y="124" style="font-size:13px;fill:#9fb3aa">접속 뒤 (라즈베리파이)</text>'
+              + _line(152, [('student', '#7fd1ff'), ('@', '#e8e3d3'), ('bird-3', '#ff9fb8'), (':', '#e8e3d3'), ('~', '#b7f59a'), (' $ ', '#e8e3d3')]) +
+              '<text x="330" y="152" style="font-size:13px;fill:#7fd1ff">student = 사용자 이름</text>'
+              '<text x="330" y="172" style="font-size:13px;fill:#ff9fb8">bird-3 = 라즈베리파이 이름 (여기서 명령이 실행돼요)</text>'
+              '<text x="330" y="192" style="font-size:13px;fill:#b7f59a">~ = 지금 있는 폴더 (내 홈 폴더)   $ = 명령을 기다려요</text>'
+              '<text x="40" y="232" style="font-size:13px;fill:#9fb3aa">가상환경을 켜고 bird 폴더로 옮긴 뒤</text>'
+              + _line(262, [('(venv) ', '#ffd479'), ('student', '#7fd1ff'), ('@', '#e8e3d3'), ('bird-3', '#ff9fb8'), (':', '#e8e3d3'), ('~/bird', '#b7f59a'), (' $ ', '#e8e3d3')]) +
+              '<text x="470" y="262" style="font-size:13px;fill:#ffd479">(venv) = 가상환경이 켜져 있어요</text>'
+              '<text x="470" y="284" style="font-size:13px;fill:#b7f59a">~/bird = 지금 bird 폴더에 있어요</text>'
+              '</svg>')

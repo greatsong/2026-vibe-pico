@@ -1,5 +1,5 @@
 # bird_server.py — 라즈베리파이 5에서 실행하는 새소리 판정 서버 (BirdNET)
-# 부록 R의 설치를 마친 뒤, 가상환경을 켠 상태에서:  python bird_server.py
+# 부록 K까지 설치를 마친 뒤, 가상환경을 켠 상태에서:  python bird_server.py
 # 하는 일
 #  1) 브라우저 페이지(http://Pi주소:8000)에서 WAV 파일을 올리면 BirdNET으로 다시 판정해요 (2차 판정)
 #  2) 피코가 3초 WAV를 보내면(/judge) 판정해서 "판정 가장높은새 신뢰도"를 돌려줘요 (실시간 판정)

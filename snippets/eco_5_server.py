@@ -1,4 +1,4 @@
-# 물까치 찾기 ④ — 라즈베리파이에게 물어보기 (피코 k-NN + BirdNET)
+# 물까치 찾기 ⑤ — 라즈베리파이에게 물어보기 (피코 k-NN + BirdNET)
 # 소리가 나면 피코가 3초를 듣고 k-NN 표를 센 뒤, 그 WAV를 Wi-Fi로 라즈베리파이 5의 서버(bird_server.py)에 보내요.
 # BirdNET이 새 이름과 신뢰도를 돌려주면, 그 새의 MP3를 틀고 server.csv에 피코 표 수와 함께 기록해요.
 # server.csv로 '피코만 / BirdNET만 / 피코가 거른 뒤 BirdNET' 세 방식을 나중에 비교할 수 있어요.
