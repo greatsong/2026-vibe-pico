@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>소리를 배우는 피코 · 바이브 피지컬 코딩 ML 확장판</title>
-<meta name="description" content="라즈베리파이 피코 2 WH로 마이크 소리를 모아 k-NN으로 분류하고 LED 빛과 MP3 음성으로 표현하며, 학교 주변의 물까치 소리를 찾는 관측기까지 만드는 머신러닝 확장판 — 복붙 MicroPython 코드 모음.">
+<meta name="description" content="라즈베리파이 피코 2 WH로 마이크 소리를 모아 k-NN으로 분류하고 LED 빛과 MP3 음성으로 표현하며, 학교 주변의 물까치 소리를 찾고 라즈베리파이 5의 BirdNET으로 확인하는 관측기까지 만드는 머신러닝 확장판 — 복붙 코드 모음.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 <style>
 /* ============================================================
@@ -328,7 +328,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="sidebar">
   <div class="brand"><span class="brand-emoji">🐣🔊</span> 바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩<small>머신러닝 확장판 · 소리편</small></div>
-  <div class="nav-ch"><a href="#chml" class="nav-ch-link" data-target="chml"><span class="nav-dot"></span>ML. 소리를 배우는 피코 — 머신러닝 첫걸음</a><div class="nav-secs"><a href="#chml-0" class="nav-sec" data-target="chml-0">시작하기 전에 — 준비물과 순서</a><a href="#chml-1" class="nav-sec" data-target="chml-1">핵심 개념 — 기계가 소리를 배운다는 것</a><a href="#chml-2" class="nav-sec" data-target="chml-2">하드웨어 준비 — INMP441 마이크 연결하기 (회로 구성도)</a><a href="#chml-3" class="nav-sec" data-target="chml-3">따라하기 ① 소리를 잡아 특징 뽑기</a><a href="#chml-4" class="nav-sec" data-target="chml-4">따라하기 ② 내 소리 직접 모으기 (혼자, 콘솔 키)</a><a href="#chml-5" class="nav-sec" data-target="chml-5">따라하기 ③ 3D 산점도로 눈으로 보기 (Plotly)</a><a href="#chml-6" class="nav-sec" data-target="chml-6">따라하기 ④ k-NN으로 예측 → LED로 표현</a><a href="#chml-7" class="nav-sec" data-target="chml-7">★ 다양하게 실험해보기 — 무엇이든 가르쳐 보세요</a><a href="#chml-8" class="nav-sec" data-target="chml-8">모의 테스트 — 하드웨어 없이 브라우저에서 체험</a><a href="#chml-9" class="nav-sec" data-target="chml-9">심화 — FFT 주파수밴드로 음색까지 (성능 끌어올리기)</a><a href="#chml-10" class="nav-sec" data-target="chml-10">자주 하는 실수</a><a href="#chml-11" class="nav-sec" data-target="chml-11">스스로 점검하기</a><a href="#chml-12" class="nav-sec" data-target="chml-12">수업/학습 시나리오</a></div></div><div class="nav-ch"><a href="#chsay" class="nav-ch-link" data-target="chsay"><span class="nav-dot"></span>ML+. 피코가 말을 한다 — 소리의 주인공을 목소리로</a><div class="nav-secs"><a href="#chsay-0" class="nav-sec" data-target="chsay-0">0단계 · 시작하기 전에 (준비물 점검)</a><a href="#chsay-1" class="nav-sec" data-target="chsay-1">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</a><a href="#chsay-2" class="nav-sec" data-target="chsay-2">1단계 · 모듈 연결하기 (배선)</a><a href="#chsay-3" class="nav-sec" data-target="chsay-3">2단계 · 음성 파일 만들어 SD카드에 넣기</a><a href="#chsay-4" class="nav-sec" data-target="chsay-4">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</a><a href="#chsay-5" class="nav-sec" data-target="chsay-5">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</a><a href="#chsay-6" class="nav-sec" data-target="chsay-6">★ 더 해보기 — 입에 성격을 입히자</a><a href="#chsay-7" class="nav-sec" data-target="chsay-7">자주 하는 실수</a><a href="#chsay-8" class="nav-sec" data-target="chsay-8">스스로 점검하기</a><a href="#chsay-9" class="nav-sec" data-target="chsay-9">수업/학습 시나리오</a><a href="#chsay-10" class="nav-sec" data-target="chsay-10">🎛️ 피날레 — 소리 ML 컨트롤 센터 (모든 걸 한 화면에서)</a></div></div><div class="nav-ch"><a href="#chbird" class="nav-ch-link" data-target="chbird"><span class="nav-dot"></span>ML2. 물까치를 찾는 피코 — 소리로 새를 알아보는 관측기</a><div class="nav-secs"><a href="#chbird-0" class="nav-sec" data-target="chbird-0">시작하기 전에 — 흐름과 기대치</a><a href="#chbird-1" class="nav-sec" data-target="chbird-1">준비물</a><a href="#chbird-2" class="nav-sec" data-target="chbird-2">조립 전에 전체 모습 보기</a><a href="#chbird-3" class="nav-sec" data-target="chbird-3">조립 ① 쉴드 스위치와 microSD</a><a href="#chbird-4" class="nav-sec" data-target="chbird-4">조립 ② 마이크</a><a href="#chbird-5" class="nav-sec" data-target="chbird-5">조립 ③ 시계·MP3·LED·버튼</a><a href="#chbird-6" class="nav-sec" data-target="chbird-6">전체 연결 확인</a><a href="#chbird-7" class="nav-sec" data-target="chbird-7">프로그램 준비</a><a href="#chbird-8" class="nav-sec" data-target="chbird-8">⓪ 부품 확인</a><a href="#chbird-9" class="nav-sec" data-target="chbird-9">① 물까치 예시 모으기</a><a href="#chbird-10" class="nav-sec" data-target="chbird-10">② 물까치 탐지기</a><a href="#chbird-11" class="nav-sec" data-target="chbird-11">③ 채점하고 기준 정하기</a><a href="#chbird-12" class="nav-sec" data-target="chbird-12">④ 여러 새 구분하기 (2단계)</a><a href="#chbird-13" class="nav-sec" data-target="chbird-13">⑤ 현장으로 — 배터리와 자동 시작</a><a href="#chbird-14" class="nav-sec" data-target="chbird-14">⑥ 물까치는 언제 나타났을까</a><a href="#chbird-15" class="nav-sec" data-target="chbird-15">문제 해결과 확인</a><a href="#chbird-16" class="nav-sec" data-target="chbird-16">다음 장 미리 보기</a></div></div>
+  <div class="nav-ch"><a href="#chml" class="nav-ch-link" data-target="chml"><span class="nav-dot"></span>ML. 소리를 배우는 피코 — 머신러닝 첫걸음</a><div class="nav-secs"><a href="#chml-0" class="nav-sec" data-target="chml-0">시작하기 전에 — 준비물과 순서</a><a href="#chml-1" class="nav-sec" data-target="chml-1">핵심 개념 — 기계가 소리를 배운다는 것</a><a href="#chml-2" class="nav-sec" data-target="chml-2">하드웨어 준비 — INMP441 마이크 연결하기 (회로 구성도)</a><a href="#chml-3" class="nav-sec" data-target="chml-3">따라하기 ① 소리를 잡아 특징 뽑기</a><a href="#chml-4" class="nav-sec" data-target="chml-4">따라하기 ② 내 소리 직접 모으기 (혼자, 콘솔 키)</a><a href="#chml-5" class="nav-sec" data-target="chml-5">따라하기 ③ 3D 산점도로 눈으로 보기 (Plotly)</a><a href="#chml-6" class="nav-sec" data-target="chml-6">따라하기 ④ k-NN으로 예측 → LED로 표현</a><a href="#chml-7" class="nav-sec" data-target="chml-7">★ 다양하게 실험해보기 — 무엇이든 가르쳐 보세요</a><a href="#chml-8" class="nav-sec" data-target="chml-8">모의 테스트 — 하드웨어 없이 브라우저에서 체험</a><a href="#chml-9" class="nav-sec" data-target="chml-9">심화 — FFT 주파수밴드로 음색까지 (성능 끌어올리기)</a><a href="#chml-10" class="nav-sec" data-target="chml-10">자주 하는 실수</a><a href="#chml-11" class="nav-sec" data-target="chml-11">스스로 점검하기</a><a href="#chml-12" class="nav-sec" data-target="chml-12">수업/학습 시나리오</a></div></div><div class="nav-ch"><a href="#chsay" class="nav-ch-link" data-target="chsay"><span class="nav-dot"></span>ML+. 피코가 말을 한다 — 소리의 주인공을 목소리로</a><div class="nav-secs"><a href="#chsay-0" class="nav-sec" data-target="chsay-0">0단계 · 시작하기 전에 (준비물 점검)</a><a href="#chsay-1" class="nav-sec" data-target="chsay-1">핵심 개념 — ‘출력기’가 마지막 한 칸을 채운다</a><a href="#chsay-2" class="nav-sec" data-target="chsay-2">1단계 · 모듈 연결하기 (배선)</a><a href="#chsay-3" class="nav-sec" data-target="chsay-3">2단계 · 음성 파일 만들어 SD카드에 넣기</a><a href="#chsay-4" class="nav-sec" data-target="chsay-4">3단계 · 모듈만 따로 테스트 (소리부터 확인!)</a><a href="#chsay-5" class="nav-sec" data-target="chsay-5">4단계 · 분류 결과를 ‘목소리’로 (메인 완성)</a><a href="#chsay-6" class="nav-sec" data-target="chsay-6">★ 더 해보기 — 입에 성격을 입히자</a><a href="#chsay-7" class="nav-sec" data-target="chsay-7">자주 하는 실수</a><a href="#chsay-8" class="nav-sec" data-target="chsay-8">스스로 점검하기</a><a href="#chsay-9" class="nav-sec" data-target="chsay-9">수업/학습 시나리오</a><a href="#chsay-10" class="nav-sec" data-target="chsay-10">🎛️ 피날레 — 소리 ML 컨트롤 센터 (모든 걸 한 화면에서)</a></div></div><div class="nav-ch"><a href="#chbird" class="nav-ch-link" data-target="chbird"><span class="nav-dot"></span>ML2. 물까치를 찾는 피코 — 소리로 새를 알아보는 관측기</a><div class="nav-secs"><a href="#chbird-0" class="nav-sec" data-target="chbird-0">시작하기 전에 — 흐름과 기대치</a><a href="#chbird-1" class="nav-sec" data-target="chbird-1">준비물</a><a href="#chbird-2" class="nav-sec" data-target="chbird-2">조립 전에 전체 모습 보기</a><a href="#chbird-3" class="nav-sec" data-target="chbird-3">조립 ① 쉴드 스위치와 microSD</a><a href="#chbird-4" class="nav-sec" data-target="chbird-4">조립 ② 마이크</a><a href="#chbird-5" class="nav-sec" data-target="chbird-5">조립 ③ 시계·MP3·LED·버튼</a><a href="#chbird-6" class="nav-sec" data-target="chbird-6">전체 연결 확인</a><a href="#chbird-7" class="nav-sec" data-target="chbird-7">프로그램 준비</a><a href="#chbird-8" class="nav-sec" data-target="chbird-8">⓪ 부품 확인</a><a href="#chbird-9" class="nav-sec" data-target="chbird-9">① 물까치 예시 모으기</a><a href="#chbird-10" class="nav-sec" data-target="chbird-10">② 물까치 탐지기</a><a href="#chbird-11" class="nav-sec" data-target="chbird-11">③ 채점하고 기준 정하기</a><a href="#chbird-12" class="nav-sec" data-target="chbird-12">④ 여러 새 구분하기 (2단계)</a><a href="#chbird-13" class="nav-sec" data-target="chbird-13">⑤ 현장으로 — 배터리와 자동 시작</a><a href="#chbird-14" class="nav-sec" data-target="chbird-14">⑥ 물까치는 언제 나타났을까</a><a href="#chbird-15" class="nav-sec" data-target="chbird-15">문제 해결과 확인</a><a href="#chbird-16" class="nav-sec" data-target="chbird-16">다음 장 미리 보기</a></div></div><div class="nav-ch"><a href="#chpi" class="nav-ch-link" data-target="chpi"><span class="nav-dot"></span>ML3. 물까치를 확인하는 라즈베리파이 — BirdNET 판정 서버</a><div class="nav-secs"><a href="#chpi-0" class="nav-sec" data-target="chpi-0">시작하기 전에 — 흐름과 기대치</a><a href="#chpi-1" class="nav-sec" data-target="chpi-1">준비물</a><a href="#chpi-2" class="nav-sec" data-target="chpi-2">서버 켜기</a><a href="#chpi-3" class="nav-sec" data-target="chpi-3">① 2차 판정 — 모아 둔 소리 다시 판정하기</a><a href="#chpi-4" class="nav-sec" data-target="chpi-4">② 실시간 판정 — 피코가 묻고 라즈베리파이가 답하기</a><a href="#chpi-5" class="nav-sec" data-target="chpi-5">③ 세 방식 비교하기</a><a href="#chpi-6" class="nav-sec" data-target="chpi-6">현장에서 쓸 때</a><a href="#chpi-7" class="nav-sec" data-target="chpi-7">문제 해결과 확인</a><a href="#chpi-8" class="nav-sec" data-target="chpi-8">정리</a></div></div><div class="nav-ch"><a href="#apxpi" class="nav-ch-link" data-target="apxpi"><span class="nav-dot"></span>부록. 라즈베리파이 5 세팅 A to Z — 모니터 없이 PC에서</a><div class="nav-secs"><a href="#apxpi-0" class="nav-sec" data-target="apxpi-0">A. 준비물</a><a href="#apxpi-1" class="nav-sec" data-target="apxpi-1">B. 조립</a><a href="#apxpi-2" class="nav-sec" data-target="apxpi-2">C. PC에 Raspberry Pi Imager 설치</a><a href="#apxpi-3" class="nav-sec" data-target="apxpi-3">D. microSD에 운영체제 굽기</a><a href="#apxpi-4" class="nav-sec" data-target="apxpi-4">E·F. 첫 부팅과 주소 찾기</a><a href="#apxpi-5" class="nav-sec" data-target="apxpi-5">G. PC에서 SSH로 접속하기</a><a href="#apxpi-6" class="nav-sec" data-target="apxpi-6">H. 업데이트</a><a href="#apxpi-7" class="nav-sec" data-target="apxpi-7">I. 작업 폴더와 가상환경</a><a href="#apxpi-8" class="nav-sec" data-target="apxpi-8">J. BirdNET과 Flask 설치</a><a href="#apxpi-9" class="nav-sec" data-target="apxpi-9">K. 서버 받고 첫 실행</a><a href="#apxpi-10" class="nav-sec" data-target="apxpi-10">L. 전원만 켜면 서버가 시작되게 (자동 실행)</a><a href="#apxpi-11" class="nav-sec" data-target="apxpi-11">M. 주소 고정과 AP 격리</a><a href="#apxpi-12" class="nav-sec" data-target="apxpi-12">N. 온도·전원 확인과 안전하게 끄기</a><a href="#apxpi-13" class="nav-sec" data-target="apxpi-13">O·P. 이럴 때는</a></div></div>
 </aside>
 <div class="wrap">
 <main class="main">
@@ -336,11 +336,11 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color
       <span class="eyebrow">라즈베리파이 피코 2 WH · MicroPython · 바이브코딩</span>
       <h1>소리를 배우는 <span class="pk">피</span><span class="pk">코</span> 🔊🐦<br>머신러닝 확장판</h1>
       <div class="under"></div>
-      <p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(INMP441 마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → <b>LED 빛과 MP3 음성으로 표현하고</b> → 학교 주변의 <b>물까치</b> 소리를 찾는 관측기까지 만드는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤 <b>AI의 듣기·생각·표현</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠💡🐦</p>
+      <p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(INMP441 마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → <b>LED 빛과 MP3 음성으로 표현하고</b> → 학교 주변의 <b>물까치</b> 소리를 찾고 <b>라즈베리파이 5</b>의 BirdNET으로 확인하는 관측기까지 만드는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤 <b>AI의 듣기·생각·표현</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠💡🐦</p>
       <div class="stats">
-        <div class="stat"><b>3</b>개 챕터</div>
-        <div class="stat"><b>20</b>개 코드 블록</div>
-        <div class="stat"><b>5</b>개 AI 프롬프트</div>
+        <div class="stat"><b>5</b>개 챕터</div>
+        <div class="stat"><b>36</b>개 코드 블록</div>
+        <div class="stat"><b>6</b>개 AI 프롬프트</div>
       </div>
       <a class="ml-cta" href="../">
         <span class="ml-cta-emoji">🐣🔌</span>
@@ -2240,7 +2240,456 @@ print(&quot;주의: 후보 횟수는 새의 수가 아니에요. 같은 새가 �
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   sheet.appendRow([new Date(), e.parameter.time, e.parameter.label, e.parameter.votes]);
   return ContentService.createTextOutput(&quot;ok&quot;);
-}</code></pre></div></section><section class="sec" id="chbird-15"><h3 class="sec-title">문제 해결과 확인</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ① SD 카드 실패</div><div class="m-row"><span class="m-tag">원인</span>SPI0 헤더 선이 바뀌었거나, 카드가 exFAT</div><div class="m-row"><span class="m-tag fix">해결</span>그림 2를 보고 양 끝 이름을 다시 맞추고, 카드를 <b>FAT32</b>로 포맷해요.</div></div><div class="mistake"><div class="m-sym">❌ ③ 마이크 소리가 작음</div><div class="m-row"><span class="m-tag">원인</span>D20·A2 케이블이 바뀌었거나 L/R 선이 빠짐</div><div class="m-row"><span class="m-tag fix">해결</span>그림 3대로 다시 꽂고 L/R이 GND에 연결됐는지 확인해요.</div></div><div class="mistake"><div class="m-sym">❌ MP3가 조용함</div><div class="m-row"><span class="m-tag">원인</span>쉴드 스위치가 3.3V, 또는 MP3용 SD에 파일이 없음</div><div class="m-row"><span class="m-tag fix">해결</span>스위치를 <b>5V</b>로, 모듈용 SD에 0001.mp3를 넣어요.</div></div><div class="mistake"><div class="m-sym">❌ 시계가 멈춘 적이 있어요</div><div class="m-row"><span class="m-tag">원인</span>CR1220 전지가 없거나 시계를 맞춘 적이 없음</div><div class="m-row"><span class="m-tag fix">해결</span>전지를 넣고 Thonny로 연결해 코드 ⓪을 다시 실행해요.</div></div><div class="mistake"><div class="m-sym">❌ 예시가 부족해요</div><div class="m-row"><span class="m-tag">원인</span>이름표가 하나뿐이거나 이름표마다 3개 미만</div><div class="m-row"><span class="m-tag fix">해결</span>코드 ①로 이름표마다 10개 이상 모아요.</div></div><div class="mistake"><div class="m-sym">❌ 아무 소리에나 물까치라고 함</div><div class="m-row"><span class="m-tag">원인</span>물까치 예시만 많고 헷갈릴 만한 소리 예시가 적음</div><div class="m-row"><span class="m-tag fix">해결</span>다른 새·배경·기타 예시를 늘리고, 채점해서 MIN_VOTES를 올려요.</div></div><div class="mistake"><div class="m-sym">❌ 배터리로 돌리다 저절로 꺼짐</div><div class="m-row"><span class="m-tag">원인</span>보조배터리가 전기를 적게 쓰는 기기를 끊음</div><div class="m-row"><span class="m-tag fix">해결</span>Always On 기능이 있는 배터리를 써요.</div></div></div><div class="checks"><details class="qa"><summary>물까치 예시만 모으면 안 되는 이유는?</summary><div class="qa-a">가까운 예시가 모두 물까치뿐이라, 어떤 소리를 들려줘도 물까치라고 답하게 돼요.</div></details><details class="qa"><summary>MIN_VOTES를 올리면 무엇이 달라지나요?</summary><div class="qa-a">오판은 줄고, 놓치는 물까치는 늘어요.</div></details><details class="qa"><summary>채점은 왜 예시로 쓰지 않은 녹음으로 하나요?</summary><div class="qa-a">예시로 쓴 녹음은 피코가 거의 같은 예시를 이미 가지고 있어서, 점수가 실제보다 높게 나와요.</div></details><details class="qa"><summary>후보 횟수가 물까치 수와 같나요?</summary><div class="qa-a">아니에요. 같은 무리가 여러 번 울 수 있고, 잘못 판단한 것도 섞여 있어요.</div></details></div></section><section class="sec" id="chbird-16"><h3 class="sec-title">다음 장 미리 보기</h3><p class="prose">다음 장에서는 피코가 저장한 후보 WAV를 PC의 BirdNET으로 다시 확인하는 2차 판정을 해요. 미리 한 시험에서 BirdNET은 다른 새를 물까치로 잘못 판단한 비율이 1%였어요. 그 뒤에는 피코가 라즈베리파이 서버로 소리를 보내 실시간으로 판정받는 방법도 다뤄요.</p></section></div>
+}</code></pre></div></section><section class="sec" id="chbird-15"><h3 class="sec-title">문제 해결과 확인</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ① SD 카드 실패</div><div class="m-row"><span class="m-tag">원인</span>SPI0 헤더 선이 바뀌었거나, 카드가 exFAT</div><div class="m-row"><span class="m-tag fix">해결</span>그림 2를 보고 양 끝 이름을 다시 맞추고, 카드를 <b>FAT32</b>로 포맷해요.</div></div><div class="mistake"><div class="m-sym">❌ ③ 마이크 소리가 작음</div><div class="m-row"><span class="m-tag">원인</span>D20·A2 케이블이 바뀌었거나 L/R 선이 빠짐</div><div class="m-row"><span class="m-tag fix">해결</span>그림 3대로 다시 꽂고 L/R이 GND에 연결됐는지 확인해요.</div></div><div class="mistake"><div class="m-sym">❌ MP3가 조용함</div><div class="m-row"><span class="m-tag">원인</span>쉴드 스위치가 3.3V, 또는 MP3용 SD에 파일이 없음</div><div class="m-row"><span class="m-tag fix">해결</span>스위치를 <b>5V</b>로, 모듈용 SD에 0001.mp3를 넣어요.</div></div><div class="mistake"><div class="m-sym">❌ 시계가 멈춘 적이 있어요</div><div class="m-row"><span class="m-tag">원인</span>CR1220 전지가 없거나 시계를 맞춘 적이 없음</div><div class="m-row"><span class="m-tag fix">해결</span>전지를 넣고 Thonny로 연결해 코드 ⓪을 다시 실행해요.</div></div><div class="mistake"><div class="m-sym">❌ 예시가 부족해요</div><div class="m-row"><span class="m-tag">원인</span>이름표가 하나뿐이거나 이름표마다 3개 미만</div><div class="m-row"><span class="m-tag fix">해결</span>코드 ①로 이름표마다 10개 이상 모아요.</div></div><div class="mistake"><div class="m-sym">❌ 아무 소리에나 물까치라고 함</div><div class="m-row"><span class="m-tag">원인</span>물까치 예시만 많고 헷갈릴 만한 소리 예시가 적음</div><div class="m-row"><span class="m-tag fix">해결</span>다른 새·배경·기타 예시를 늘리고, 채점해서 MIN_VOTES를 올려요.</div></div><div class="mistake"><div class="m-sym">❌ 배터리로 돌리다 저절로 꺼짐</div><div class="m-row"><span class="m-tag">원인</span>보조배터리가 전기를 적게 쓰는 기기를 끊음</div><div class="m-row"><span class="m-tag fix">해결</span>Always On 기능이 있는 배터리를 써요.</div></div></div><div class="checks"><details class="qa"><summary>물까치 예시만 모으면 안 되는 이유는?</summary><div class="qa-a">가까운 예시가 모두 물까치뿐이라, 어떤 소리를 들려줘도 물까치라고 답하게 돼요.</div></details><details class="qa"><summary>MIN_VOTES를 올리면 무엇이 달라지나요?</summary><div class="qa-a">오판은 줄고, 놓치는 물까치는 늘어요.</div></details><details class="qa"><summary>채점은 왜 예시로 쓰지 않은 녹음으로 하나요?</summary><div class="qa-a">예시로 쓴 녹음은 피코가 거의 같은 예시를 이미 가지고 있어서, 점수가 실제보다 높게 나와요.</div></details><details class="qa"><summary>후보 횟수가 물까치 수와 같나요?</summary><div class="qa-a">아니에요. 같은 무리가 여러 번 울 수 있고, 잘못 판단한 것도 섞여 있어요.</div></details></div></section><section class="sec" id="chbird-16"><h3 class="sec-title">다음 장 미리 보기</h3><p class="prose">다음 장에서는 피코가 저장한 후보 WAV를 라즈베리파이 5의 BirdNET으로 다시 확인하는 2차 판정을 해요. 미리 한 시험에서 BirdNET은 다른 새를 물까치로 잘못 판단한 비율이 1%였어요. 이어서 피코가 라즈베리파이 서버로 소리를 보내 실시간으로 판정받는 방법도 다뤄요.</p></section></div><div class="chapter" id="chpi"><div class="ch-head"><span class="ch-num">CHAPTER ML3</span><h2 class="ch-title"><span class="ch-bar"></span>물까치를 확인하는 라즈베리파이 — BirdNET 판정 서버</h2><p class="ch-sub">라즈베리파이 5를 BirdNET 서버로 만들어, 피코가 모은 소리를 다시 판정하고 실시간으로 새 이름을 알려 줘요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>라즈베리파이 5에서 BirdNET 판정 서버를 켜고 PC 브라우저로 접속한다</li><li>피코가 저장한 물까치 후보 WAV를 BirdNET으로 다시 판정해 피코의 판단과 비교한다</li><li>피코가 소리를 Wi-Fi로 보내 실시간으로 판정받고 새 이름을 말하게 한다</li><li>피코만, BirdNET만, 둘을 이은 방식의 재현율과 오판을 비교해 관측 방식을 고른다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>앞 장에서 피코 2 WH로 만든 탐지기는 1차 판정이라서 틀릴 수 있었어요. 그래서 그때 찾은 물까치는 '물까치 후보'라고 불렀어요. BirdNET은 코넬 조류학 연구소와 켐니츠 공과대학이 만든 새소리 인식 AI예요. 이 AI는 6,000종이 넘는 새를 알아봐요. 그런데 BirdNET은 피코에서 돌리기에는 너무 무거워서 <b>라즈베리파이 5</b>에서 돌려요. 이 장에서는 <b>라즈베리파이 5</b>를 새소리 판정 서버로 만들고 두 가지 방법으로 써요. 하나는 피코가 저장한 WAV를 모아서 다시 판정하는 2차 판정이고, 다른 하나는 피코가 소리를 Wi-Fi로 보내 바로 판정받는 실시간 판정이에요.</p></div><section class="sec" id="chpi-0"><h3 class="sec-title">시작하기 전에 — 흐름과 기대치</h3><p class="prose">진행 순서는 라즈베리파이 세팅(부록), 서버 켜기, 2차 판정, 실시간 판정, 세 방식 비교예요. 피코, 라즈베리파이, PC를 모두 교실의 <b>같은 공유기</b>(Wi-Fi)에 연결해요. 모둠마다 라즈베리파이 한 대를 쓰고, 모둠의 피코는 자기 모둠 라즈베리파이의 주소로 소리를 보내요. 라즈베리파이에는 모니터를 연결하지 않고 PC에서 원격으로 접속해 명령을 입력해요.</p><div class='ecofig'><svg viewBox="0 0 1000 470" role="img" aria-label="그림 1. 실시간 판정과 2차 판정의 흐름. 피코는 3초 WAV를 교실 공유기를 거쳐 라즈베리파이 5의 bird_server.py에 보내고, 판정 · 가장 높은 새 · 신뢰도 세 칸의 답을 받아 MP3로 말한다. PC 브라우저는 같은 주소의 판정 페이지에서 WAV를 올리고 결과 표를 본다. 피코의 녹음용 microSD는 카드 리더로 PC에 옮긴다."><defs><marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16201c"/></marker><marker id="pb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b91c4a"/></marker></defs><rect class="mod" x="20" y="60" width="230" height="150" rx="12"/><text class="tb" x="135" y="90" text-anchor="middle">피코 관측기 (ML2)</text><text class="ts" x="135" y="114" text-anchor="middle">마이크 · microSD · MP3 · 버튼</text><text class="t" x="135" y="142" text-anchor="middle">3초 듣기 → k-NN 표 세기</text><text class="tm" x="135" y="168" text-anchor="middle">eco_4_server.py</text><text class="ts" x="135" y="192" text-anchor="middle">LED 보라 = Pi에게 묻는 중</text><rect class="mod" x="385" y="80" width="200" height="110" rx="12"/><text class="tb" x="485" y="112" text-anchor="middle">교실 공유기 (Wi-Fi)</text><text class="ts" x="485" y="136" text-anchor="middle">세 기기가 같은 네트워크</text><text class="ts" x="485" y="158" text-anchor="middle">AP 격리는 꺼 둬요</text><rect x="720" y="50" width="260" height="170" rx="12" fill="#fdecef" stroke="#b91c4a" stroke-width="1.6"/><text class="tb" x="850" y="82" text-anchor="middle">라즈베리파이 5</text><text class="tm" x="850" y="108" text-anchor="middle">bird_server.py</text><text class="t" x="850" y="136" text-anchor="middle">BirdNET · 7종 목록</text><text class="ts" x="850" y="160" text-anchor="middle">judged.csv · received/</text><text class="tm" x="850" y="186" text-anchor="middle">http://Pi주소:8000</text><text class="ts" x="850" y="208" text-anchor="middle">모니터 없이 PC에서 SSH</text><line x1="252" y1="112" x2="382" y2="112" stroke="#16201c" stroke-width="2.2" marker-end="url(#pa)"/><line x1="588" y1="112" x2="717" y2="112" stroke="#16201c" stroke-width="2.2" marker-end="url(#pa)"/><text class="t" x="317" y="100" text-anchor="middle">① 3초 WAV</text><text class="ts" x="652" y="100" text-anchor="middle">POST /judge</text><line x1="717" y1="160" x2="588" y2="160" stroke="#b91c4a" stroke-width="2.2" marker-end="url(#pb)"/><line x1="382" y1="160" x2="252" y2="160" stroke="#b91c4a" stroke-width="2.2" marker-end="url(#pb)"/><text class="t" x="317" y="182" text-anchor="middle" fill="#b91c4a">② 답 세 칸</text><text class="tm" x="652" y="182" text-anchor="middle">물까치 물까치 0.83</text><rect class="mod" x="385" y="300" width="200" height="120" rx="12"/><text class="tb" x="485" y="330" text-anchor="middle">PC (브라우저 · SSH)</text><text class="ts" x="485" y="354" text-anchor="middle">판정 페이지 열기</text><text class="ts" x="485" y="376" text-anchor="middle">WAV 올리기 · 표 · 듣기</text><text class="ts" x="485" y="398" text-anchor="middle">judged.csv 내려받기</text><line x1="485" y1="297" x2="485" y2="193" stroke="#16201c" stroke-width="2.2" marker-start="url(#pa)" marker-end="url(#pa)"/><text class="ts" x="495" y="250">③ 2차 판정·결과 보기</text><path d="M135,212 L135,360 L382,360" class="c-jump"/><text class="t" x="145" y="300">녹음용 microSD</text><text class="ts" x="145" y="320">카드 리더로 PC에 옮기기</text><text class="ts" x="145" y="340">(2차 판정할 WAV)</text><line x1="620" y1="330" x2="660" y2="330" stroke="#16201c" stroke-width="2.2" marker-end="url(#pa)"/><text class="ts" x="668" y="334">보내는 것</text><line x1="620" y1="360" x2="660" y2="360" stroke="#b91c4a" stroke-width="2.2" marker-end="url(#pb)"/><text class="ts" x="668" y="364">돌려받는 것</text><line x1="620" y1="390" x2="660" y2="390" class="c-jump"/><text class="ts" x="668" y="394">손으로 옮기는 카드</text></svg></div><p class='ecofig-cap'>그림 1. 실시간 판정(①②)과 2차 판정(③). 세 기기는 교실의 같은 공유기에 연결해요.</p><p class="step-head">얼마나 잘 맞힐까?</p><div style='overflow-x:auto'><table class='plan-table'><tr><th>방식</th><th>물까치 재현율</th><th>다른 새를 물까치로</th><th>새 아닌 소리를 물까치로</th></tr><tr><td>피코만 (3표 이상)</td><td>0.73</td><td>0.24</td><td>0.20</td></tr><tr><td><b>BirdNET만</b> (신뢰도 0.25 이상)</td><td>0.46</td><td>0.01</td><td>0.00</td></tr><tr><td>BirdNET만 (신뢰도 0.10 이상)</td><td>0.62</td><td>0.01</td><td>0.00</td></tr><tr><td>피코 2표 이상 → BirdNET 0.25</td><td>0.35</td><td>0.01</td><td>0.00</td></tr></table></div><p class='ecofig-cap'>교재를 만들 때 공개 녹음(물까치 26개, 다른 새 119개, 새 아닌 소리 46개)을 피코와 같은 3초·16kHz 소리로 바꿔 시험한 결과예요. 피코 예시는 시험과 다른 녹음으로 만들었어요. 녹음마다 3초 조각 두 개까지 판단하고, 하나라도 물까치라고 하면 그 녹음을 물까치라고 한 것으로 셌어요. 실물 라즈베리파이·피코에서 잰 값은 아니에요.</p><div class="callout info"><div class="callout-head">ℹ️ 표를 읽는 법</div><div class="callout-body">인터넷에 공개된 물까치와 다른 새 녹음, 그리고 생활 소리를 피코와 같은 3초·16kHz 소리로 바꿔 미리 시험했어요. 피코만 판단하면 물까치를 많이 찾지만 다른 새와 생활 소리도 물까치라고 자주 해요. BirdNET만 판단하면 찾는 물까치는 줄지만 다른 소리를 물까치라고 하는 일이 거의 없어요. 새가 아닌 소리는 한 번도 물까치로 판단하지 않았어요. 피코가 먼저 거른 뒤 BirdNET에 물으면 오판은 BirdNET만큼 적지만 놓치는 물까치가 더 많아요. 피코와 BirdNET이 놓치는 물까치가 서로 다르기 때문이에요. 그래서 이 장의 기본 설정은 소리가 나면 <b>모두 BirdNET에 묻는</b> 거예요. BirdNET은 15kHz까지 듣는데 피코의 녹음은 8kHz까지만 담겨 있어, 원래 품질의 녹음보다 잘 못 맞혀요.</div></div></section><section class="sec" id="chpi-1"><h3 class="sec-title">준비물</h3><div style='overflow-x:auto'><table class='plan-table'><tr><th>부품</th><th>역할</th><th>수량</th><th>구입</th><th>비고</th></tr><tr><td>라즈베리파이 5 (8GB) + 가이드북</td><td>BirdNET 서버</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15215449" target="_blank" rel="noopener">디바이스마트</a></td><td>4GB(15215450)는 조회 당시 재고 확보 중</td></tr><tr><td>공식 라즈베리파이 27W USB-C 어댑터</td><td>전원 5.1V 5A</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15502416" target="_blank" rel="noopener">디바이스마트</a></td><td>KC 인증. 다른 충전기는 전원 부족 경고가 나요</td></tr><tr><td>라즈베리파이 5 공식 케이스 (팬 포함)</td><td>보호·냉각</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15276234" target="_blank" rel="noopener">디바이스마트</a></td><td>팬 대신 Active Cooler(15276241)를 쓸 수도 있지만 둘을 함께 달지는 않아요</td></tr><tr><td>SanDisk Extreme microSDXC 64GB (SDSQXAH-064G-GN6MN)</td><td>운영체제 카드</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=14825254" target="_blank" rel="noopener">디바이스마트</a></td><td>A2 규격. 공식 A2 64GB(15549242)는 조회 당시 품절</td></tr><tr><td>USB 3.0 카드 리더 (넥시 NX-U30CR)</td><td>PC에서 Pi 카드 굽기</td><td style='text-align:center'>모둠당 1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15227464" target="_blank" rel="noopener">디바이스마트</a></td><td>ML2장의 카드 리더가 있으면 그대로 사용</td></tr><tr><td colspan='5' style='background:var(--card);font-weight:700'>이미 있는 것</td></tr><tr><td>ML2장 물까치 관측기 한 벌</td><td>피코 1차 판정·녹음</td><td style='text-align:center'>1</td><td></td><td>Wi-Fi 연결을 위해 wifi_config.py 필요(본 교재 1장)</td></tr><tr><td>PC(Windows 10/11 또는 macOS)</td><td>Imager·SSH·브라우저</td><td style='text-align:center'>1</td><td></td><td>Pi와 같은 공유기에 연결</td></tr><tr><td>교실 공유기(Wi-Fi)</td><td>피코·Pi·PC를 한 네트워크로</td><td style='text-align:center'>학급 1</td><td></td><td>'AP 격리'가 꺼져 있어야 해요(부록 참고)</td></tr></table></div><p class="prose">표의 링크는 디바이스마트 상품이에요. 가격과 재고는 주문할 때 다시 확인해야 해요. 라즈베리파이 5는 전원이 부족하면 경고를 내고 느려지므로 공식 27W 어댑터를 써요. 팬이 달린 공식 케이스를 쓰면 판정을 오래 해도 뜨거워지지 않아요. 라즈베리파이용 microSD는 운영체제를 담는 카드예요. 피코의 녹음용 카드나 MP3용 카드와 다른 카드예요. 라즈베리파이를 처음 쓴다면 이 장을 시작하기 전에 <b>부록</b>의 세팅을 먼저 끝내요.</p><a class='linkbtn' href='#apxpi'>🔗 부록 · 라즈베리파이 5 세팅 A to Z</a></section><section class="sec" id="chpi-2"><h3 class="sec-title">서버 켜기</h3><p class="prose">서버 프로그램 <code>bird_server.py</code>는 BirdNET을 한 번 불러 두고 판정 요청을 기다려요. 판정하는 새는 물까치, 까치, 직박구리, 참새, 멧비둘기, 박새, 큰부리까마귀 일곱 종으로 좁혀 둬요. 목록을 좁히면 우리 학교에 없는 새로 잘못 판단하는 일이 줄어요. 첫 실행 때 BirdNET 모델을 내려받으므로 인터넷이 필요해요. 서버가 켜지면 화면에 주소가 나오고, 같은 공유기에 연결된 PC의 브라우저에서 그 주소를 열면 판정 페이지가 나와요. 원격 접속 창을 닫으면 서버도 꺼져요. 창을 닫아도 계속 켜 두려면 <b>부록</b>의 자동 실행을 설정해요.</p><ol class="steps"><li><b>부록 끝내기</b><span>부록 K까지 끝내면 <code>~/bird</code> 폴더에 가상환경, BirdNET, <code>bird_server.py</code>가 준비되어 있어요.</span></li><li><b>자동 실행을 했다면</b><span>부록 L을 설정했다면 서버는 이미 켜져 있어요. 아래 명령은 건너뛰고 브라우저로 주소만 열어요.</span></li><li><b>손으로 켜기</b><span>PC에서 <code>ssh 사용자이름@호스트이름.local</code>로 접속한 뒤 아래 명령 세 줄을 한 줄씩 붙여 넣어요. 첫 실행은 모델을 내려받느라 1~2분 걸려요.</span></li><li><b>주소 확인</b><span>화면에 나온 <code>http://192.168.…:8000</code> 주소를 적어 두고, PC 브라우저에서 열어요.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">라즈베리파이 SSH 창에서 (한 줄씩)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">cd ~/bird
+source venv/bin/activate
+python bird_server.py</code></pre></div><div class="callout info"><div class="callout-head">ℹ️ 서버 파일을 교재의 새 버전으로 바꿀 때</div><div class="callout-body"><code>~/bird</code>에서 아래 한 줄을 실행해요. 내려받기에 실패하면 기존 파일은 그대로 남아요. 바이브코딩으로 고친 파일이 있다면 덮어써지니 먼저 다른 이름으로 복사해 둬요.<pre style='white-space:pre-wrap;margin:8px 0 0'>wget -O bird_server.py.new https://greatsong.github.io/2026-vibe-pico/snippets/bird_server.py && mv bird_server.py.new bird_server.py</pre></div></div><p class="step-head">예상 화면</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>판정할 새 7종: 물까치, 까치, 직박구리, 참새, 멧비둘기, 박새, 큰부리까마귀
+브라우저에서 여세요 →  http://192.168.0.23:8000   (피코 코드의 SERVER에도 이 주소)
+ * Serving Flask app 'bird_server'
+ * Running on http://192.168.0.23:8000</pre><div class="callout tip"><div class="callout-head">💡 경고 문구는 괜찮아요</div><div class="callout-body">실행할 때 Flask의 개발용 서버라는 경고(WARNING: This is a development server)가 나올 수 있어요. 교실 공유기 안에서 쓰는 수업용이라 그대로 써도 돼요. 멈출 때는 <b>Ctrl+C</b>를 눌러요.</div></div><details class="codefold"><summary>bird_server.py (라즈베리파이에서 실행 · 위 wget으로 받는 파일과 같아요) <span class="fold-hint">· 217줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">bird_server.py (라즈베리파이에서 실행 · 위 wget으로 받는 파일과 같아요)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># bird_server.py — 라즈베리파이 5에서 실행하는 새소리 판정 서버 (BirdNET)
+# 부록 R의 설치를 마친 뒤, 가상환경을 켠 상태에서:  python bird_server.py
+# 하는 일
+#  1) 브라우저 페이지(http://Pi주소:8000)에서 WAV 파일을 올리면 BirdNET으로 다시 판정해요 (2차 판정)
+#  2) 피코가 3초 WAV를 보내면(/judge) 판정해서 &quot;판정 가장높은새 신뢰도&quot;를 돌려줘요 (실시간 판정)
+#     예) &quot;물까치 물까치 0.83&quot;, &quot;모르겠음 까치 0.12&quot;(기준보다 낮음), &quot;모르겠음 없음 0.00&quot;
+#  3) 모든 결과를 judged.csv에 쌓고, 페이지에서 표로 보고 소리를 다시 들을 수 있어요
+# BirdNET V2.4 모델·라벨: BirdNET 프로젝트가 CC BY-NC-SA 4.0으로 안내 (코넬 조류학 연구소 · 켐니츠 공과대학). 수업·연구 같은 비상업 용도로만 사용해요.
+import csv, datetime, html, os, socket, subprocess, threading
+from urllib.parse import quote
+from flask import Flask, Response, redirect, request, send_from_directory
+import birdnet
+
+PORT = 8000
+MIN_CONF = 0.25          # 이 신뢰도보다 낮으면 &quot;모르겠음&quot;으로 답해요 (올리면 오판↓ 놓침↑)
+BIRDS = {                # 한국어 이름: BirdNET 학명 후보 (목록에 있는 것만 판정해요)
+    &quot;물까치&quot;: [&quot;Cyanopica cyanus&quot;],
+    &quot;까치&quot;: [&quot;Pica serica&quot;, &quot;Pica pica&quot;],
+    &quot;직박구리&quot;: [&quot;Hypsipetes amaurotis&quot;],
+    &quot;참새&quot;: [&quot;Passer montanus&quot;],
+    &quot;멧비둘기&quot;: [&quot;Streptopelia orientalis&quot;],
+    &quot;박새&quot;: [&quot;Parus minor&quot;],
+    &quot;큰부리까마귀&quot;: [&quot;Corvus macrorhynchos&quot;],
+}
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+AUDIO_DIR = os.path.join(HERE, &quot;received&quot;)          # 받은 소리 파일
+CSV_PATH = os.path.join(HERE, &quot;judged.csv&quot;)         # 판정 기록
+HEADER = [&quot;time&quot;, &quot;source&quot;, &quot;file&quot;, &quot;species&quot;, &quot;best&quot;, &quot;confidence&quot;]
+os.makedirs(AUDIO_DIR, exist_ok=True)
+
+app = Flask(__name__)
+model = None
+session = None           # 판정 준비를 한 번만 해 두는 세션 (서버가 켜져 있는 동안 계속 사용)
+labels = {}              # BirdNET 라벨 → 한국어 이름
+lock = threading.Lock()     # 판정은 한 번에 하나씩
+io_lock = threading.Lock()  # 파일 이름 고르기·저장, 기록 쓰기·읽기도 한 번에 하나씩
+
+
+def load_model():
+    global model
+    model = birdnet.load(&quot;acoustic&quot;, &quot;2.4&quot;, &quot;tf&quot;, library=&quot;litert&quot;)   # 첫 실행 때 모델을 내려받아요(인터넷 필요)
+    names = list(model.species_list)
+    for ko, candidates in BIRDS.items():
+        for sci in candidates:
+            hit = [n for n in names if n.startswith(sci + &quot;_&quot;)]
+            if hit:
+                labels[hit[0]] = ko
+                break
+        else:
+            print(&quot;주의: BirdNET 목록에서 찾지 못한 새 →&quot;, ko)
+    print(&quot;판정할 새 %d종: %s&quot; % (len(labels), &quot;, &quot;.join(labels.values())))
+
+
+def judge(path):
+    &quot;&quot;&quot;WAV 하나를 판정해 (판정, 가장 높은 새, 신뢰도)를 돌려줘요. 신뢰도가 MIN_CONF보다 낮으면 판정은 &#x27;모르겠음&#x27;.&quot;&quot;&quot;
+    with lock:
+        result = session.run([path]).to_dataframe()
+    best, conf = &quot;없음&quot;, 0.0
+    for _, row in result.iterrows():
+        c = float(row[&quot;confidence&quot;])
+        if row[&quot;species_name&quot;] in labels and c &gt; conf:
+            best, conf = labels[row[&quot;species_name&quot;]], c
+    return (best if conf &gt;= MIN_CONF else &quot;모르겠음&quot;), best, conf
+
+
+def record(source, fname, name, best, conf):
+    with io_lock:
+        new = not os.path.exists(CSV_PATH)
+        with open(CSV_PATH, &quot;a&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+            w = csv.writer(f)
+            if new:
+                w.writerow(HEADER)
+            w.writerow([datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;), source, fname, name, best, &quot;%.2f&quot; % conf])
+
+
+def safe_name(name):     # 경로 문자를 없애고, 같은 이름이 있으면 번호를 붙여요 (io_lock 안에서 불러요)
+    base = os.path.basename(name.replace(&quot;\\&quot;, &quot;/&quot;)).strip() or &quot;sound.wav&quot;
+    if not base.lower().endswith(&quot;.wav&quot;):
+        base += &quot;.wav&quot;
+    stem, n, out = base[:-4], 1, base
+    while os.path.exists(os.path.join(AUDIO_DIR, out)):
+        n += 1
+        out = &quot;%s_%d.wav&quot; % (stem, n)
+    return out
+
+
+def read_rows():
+    with io_lock:
+        if not os.path.exists(CSV_PATH):
+            return []
+        with open(CSV_PATH, encoding=&quot;utf-8&quot;) as f:
+            return list(csv.DictReader(f))
+
+
+@app.get(&quot;/ping&quot;)       # 피코가 시작할 때 서버가 켜져 있는지 확인하는 곳
+def ping():
+    return Response(&quot;ok&quot;, mimetype=&quot;text/plain&quot;)
+
+
+@app.post(&quot;/judge&quot;)      # 피코가 3초 WAV를 보내는 곳
+def judge_from_pico():
+    if request.content_length is None or request.content_length &gt; 256 * 1024:   # 3초 WAV는 약 192KB
+        return Response(&quot;오류 없음 0.00&quot;, status=413, mimetype=&quot;text/plain; charset=utf-8&quot;)
+    data = request.get_data()
+    if len(data) &lt; 44 or data[:4] != b&quot;RIFF&quot;:
+        return Response(&quot;오류 없음 0.00&quot;, status=400, mimetype=&quot;text/plain; charset=utf-8&quot;)
+    with io_lock:
+        fname = safe_name(request.headers.get(&quot;X-File&quot;, datetime.datetime.now().strftime(&quot;%Y%m%d_%H%M%S&quot;) + &quot;_pico.wav&quot;))
+        path = os.path.join(AUDIO_DIR, fname)
+        with open(path, &quot;wb&quot;) as f:
+            f.write(data)
+    name, best, conf = judge(path)
+    if name == &quot;모르겠음&quot;:               # 새가 아니면 소리는 남기지 않아요(사람 목소리일 수 있어요)
+        os.remove(path)
+        fname += &quot; (지움)&quot;
+    record(&quot;pico&quot;, fname, name, best, conf)
+    print(&quot;피코 → %s  %s (%s %.2f)&quot; % (fname, name, best, conf))
+    return Response(&quot;%s %s %.2f&quot; % (name, best, conf), mimetype=&quot;text/plain; charset=utf-8&quot;)
+
+
+@app.post(&quot;/upload&quot;)     # 브라우저에서 여러 WAV를 한꺼번에 올리는 곳
+def upload():
+    for item in request.files.getlist(&quot;wavs&quot;):
+        if not item.filename.lower().endswith(&quot;.wav&quot;):
+            continue
+        with io_lock:
+            fname = safe_name(item.filename)
+            path = os.path.join(AUDIO_DIR, fname)
+            item.save(path)
+        try:
+            name, best, conf = judge(path)
+        except Exception as e:                          # 망가진 파일은 건너뛰고 기록에 남겨요
+            name, best, conf = &quot;읽기실패&quot;, &quot;없음&quot;, 0.0
+            print(&quot;판정 실패:&quot;, fname, e)
+        record(&quot;upload&quot;, fname, name, best, conf)
+    return redirect(&quot;/&quot;)
+
+
+@app.get(&quot;/audio/&lt;path:fname&gt;&quot;)
+def audio(fname):
+    return send_from_directory(AUDIO_DIR, fname)
+
+
+@app.get(&quot;/judged.csv&quot;)
+def download_csv():
+    if not os.path.exists(CSV_PATH):
+        return Response(&quot;,&quot;.join(HEADER) + &quot;\n&quot;, mimetype=&quot;text/csv&quot;)
+    return send_from_directory(HERE, &quot;judged.csv&quot;, as_attachment=True)
+
+
+@app.get(&quot;/table&quot;)       # 결과 표만 (페이지가 5초마다 새로 불러요)
+def table():
+    rows = read_rows()
+    counts = {}
+    for r in rows:
+        counts[r[&quot;species&quot;]] = counts.get(r[&quot;species&quot;], 0) + 1
+    out = [&quot;&lt;p&gt;모두 %d개 · %s&lt;/p&gt;&quot; % (len(rows), &quot; · &quot;.join(&quot;%s %d&quot; % (html.escape(k), v) for k, v in sorted(counts.items(), key=lambda t: -t[1])))]
+    out.append(&quot;&lt;div class=&#x27;wrap&#x27;&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;시각&lt;/th&gt;&lt;th&gt;판정&lt;/th&gt;&lt;th&gt;가장 높은 새 · 신뢰도&lt;/th&gt;&lt;th&gt;듣기&lt;/th&gt;&lt;th&gt;보낸 곳&lt;/th&gt;&lt;th&gt;파일&lt;/th&gt;&lt;/tr&gt;&quot;)
+    for r in reversed(rows[-100:]):
+        f = html.escape(r[&quot;file&quot;])
+        play = &quot;&quot; if r[&quot;file&quot;].endswith(&quot;(지움)&quot;) else (
+            &quot;&lt;audio controls preload=&#x27;none&#x27; src=&#x27;/audio/%s&#x27;&gt;&lt;/audio&gt;&quot; % html.escape(quote(r[&quot;file&quot;], safe=&quot;&quot;), quote=True))
+        out.append(&quot;&lt;tr&gt;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;&lt;b&gt;%s&lt;/b&gt;&lt;/td&gt;&lt;td&gt;%s %s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&lt;/tr&gt;&quot;
+                   % (html.escape(r[&quot;time&quot;][5:]), html.escape(r[&quot;species&quot;]), html.escape(r.get(&quot;best&quot;, &quot;&quot;)),
+                      html.escape(r[&quot;confidence&quot;]), play, html.escape(r[&quot;source&quot;]), f))
+    out.append(&quot;&lt;/table&gt;&lt;/div&gt;&quot;)
+    return &quot;&quot;.join(out)
+
+
+PAGE = &quot;&quot;&quot;&lt;!doctype html&gt;&lt;html lang=&quot;ko&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;새소리 판정 서버&lt;/title&gt;
+&lt;style&gt;body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:16px}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{border-bottom:1px solid #ddd;padding:4px 6px;text-align:left;white-space:nowrap}
+audio{height:28px}form{padding:12px;background:#f3f7f6;border-radius:10px;margin:12px 0}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h2&gt;새소리 판정 서버 (BirdNET)&lt;/h2&gt;
+&lt;p&gt;판정하는 새: {BIRDS} · 기준 신뢰도 {MIN_CONF}&lt;/p&gt;
+&lt;form action=&quot;/upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+&lt;b&gt;2차 판정&lt;/b&gt;: 피코 SD 카드의 WAV 파일을 골라 올리세요(여러 개 가능)&lt;br&gt;
+&lt;input type=&quot;file&quot; name=&quot;wavs&quot; accept=&quot;.wav&quot; multiple&gt; &lt;button&gt;올리고 판정하기&lt;/button&gt;&lt;/form&gt;
+&lt;p&gt;&lt;a href=&quot;/judged.csv&quot;&gt;판정 기록 CSV 내려받기&lt;/a&gt;&lt;/p&gt;
+&lt;div id=&quot;t&quot;&gt;불러오는 중…&lt;/div&gt;
+&lt;script&gt;
+function load(){fetch(&#x27;/table&#x27;).then(r=&gt;r.text()).then(h=&gt;{document.getElementById(&#x27;t&#x27;).innerHTML=h});}
+load(); setInterval(load, 5000);
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;&quot;&quot;
+
+
+@app.get(&quot;/&quot;)
+def index():
+    # PAGE 안의 CSS에 %가 있어서 % 서식 대신 자리 표시를 바꿔 넣어요
+    return PAGE.replace(&quot;{BIRDS}&quot;, &quot;, &quot;.join(html.escape(v) for v in labels.values())).replace(&quot;{MIN_CONF}&quot;, &quot;%.2f&quot; % MIN_CONF)
+
+
+def my_addresses():      # 이 Pi의 IP 주소(피코와 브라우저에 적을 주소)
+    try:
+        return subprocess.check_output([&quot;hostname&quot;, &quot;-I&quot;], text=True, stderr=subprocess.DEVNULL).split()
+    except Exception:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect((&quot;10.255.255.255&quot;, 1))
+            ip = s.getsockname()[0]
+            s.close()
+            return [ip]
+        except Exception:
+            return [&quot;127.0.0.1&quot;]
+
+
+if __name__ == &quot;__main__&quot;:
+    load_model()
+    with model.predict_session(top_k=3, n_workers=1, default_confidence_threshold=0.05,
+                               custom_species_list=list(labels)) as session:
+        for ip in my_addresses():
+            if &quot;:&quot; not in ip:                           # IPv6 주소는 건너뛰어요
+                print(&quot;브라우저에서 여세요 →  http://%s:%d   (피코 코드의 SERVER에도 이 주소)&quot; % (ip, PORT))
+        app.run(host=&quot;0.0.0.0&quot;, port=PORT, threaded=True)</code></pre></div></details></section><section class="sec" id="chpi-3"><h3 class="sec-title">① 2차 판정 — 모아 둔 소리 다시 판정하기</h3><p class="prose">앞 장의 탐지기가 microSD에 남긴 물까치 후보 WAV를 카드 리더로 PC에 옮긴 뒤, 판정 페이지에서 여러 개를 한꺼번에 올려요. 표에는 파일마다 BirdNET의 판정, 가장 높은 점수를 받은 새, 신뢰도가 나오고 소리를 다시 들을 수 있어요. 피코가 물까치 후보라고 한 파일 가운데 BirdNET도 물까치라고 한 비율을 세면 피코 판단이 BirdNET과 얼마나 일치하는지 알 수 있어요. BirdNET도 틀릴 수 있으므로, 두 판정이 다른 파일은 직접 들어 보고 결정해요.</p><ol class="steps"><li><b>카드 옮기기</b><span>피코 관측기에서 버튼을 눌러 끝내고, 녹음용 microSD를 카드 리더로 PC에 연결해 <code>eco</code> 폴더를 복사해요.</span></li><li><b>올리기</b><span>판정 페이지에서 <b>파일 선택</b> → <code>_mulkkachi.wav</code>로 끝나는 파일을 여러 개 고르고 <b>올리고 판정하기</b>를 눌러요.</span></li><li><b>표 보기</b><span>판정 · 가장 높은 새 · 신뢰도를 보고, 두 판정이 다른 파일은 ▶로 들어 봐요.</span></li><li><b>세기</b><span>피코 후보 가운데 BirdNET도 물까치라고 한 파일 수를 세어 비율을 구해요. <b>판정 기록 CSV 내려받기</b>로 표를 저장해요.</span></li></ol></section><section class="sec" id="chpi-4"><h3 class="sec-title">② 실시간 판정 — 피코가 묻고 라즈베리파이가 답하기</h3><p class="prose">피코는 소리가 나면 3초를 듣고 k-NN 표 수를 센 뒤, 그 WAV를 Wi-Fi로 라즈베리파이에 보내요. BirdNET이 새 이름을 답하면 피코가 그 새의 MP3를 틀고, 답은 피코 표 수와 함께 <code>server.csv</code>에 남아요. BirdNET이 '모르겠음'이라고 답한 소리는 피코와 라즈베리파이 양쪽에서 지워요. 사람 목소리일 수 있기 때문이에요. 서버가 꺼져 있거나 응답이 없으면 피코는 멈추지 않고 앞 장처럼 피코 판단만으로 관측을 이어가요.</p><p class="step-head">MP3 카드에 새 이름 4개 더 넣기</p><div style='display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px'><a class='linkbtn' href='../pi_lesson/audio/0004.mp3' download>🔊 0004.mp3 · 참새인가 봐요</a><a class='linkbtn' href='../pi_lesson/audio/0005.mp3' download>🔊 0005.mp3 · 멧비둘기인가 봐요</a><a class='linkbtn' href='../pi_lesson/audio/0006.mp3' download>🔊 0006.mp3 · 박새인가 봐요</a><a class='linkbtn' href='../pi_lesson/audio/0007.mp3' download>🔊 0007.mp3 · 큰부리까마귀인가 봐요</a></div><div class="callout key"><div class="callout-head">🔑 0003 다음에 차례로</div><div class="callout-body">MP3용 microSD에 이미 있는 0001~0003 뒤에 <code>0004.mp3</code> → <code>0005.mp3</code> → <code>0006.mp3</code> → <code>0007.mp3</code> 순서로 한 개씩 복사해요. Mac이라면 복사한 뒤 <code>dot_clean /Volumes/카드이름</code>을 실행해요. 번호가 섞였으면 카드를 포맷하고 0001부터 다시 복사해요.</div></div><ol class="steps"><li><b>Wi-Fi 파일</b><span>피코에 <code>wifi_config.py</code>(본 교재 1장)가 있는지 확인해요. 교실 공유기의 이름과 비밀번호가 들어 있어야 해요.</span></li><li><b>주소 적기</b><span>코드 ④의 <code>SERVER</code>에 우리 모둠 라즈베리파이 주소를 적어요. <code>http://</code>와 <code>:8000</code>까지 그대로 적어요.</span></li><li><b>실행</b><span>라즈베리파이 서버가 켜진 상태에서 Thonny로 코드 ④를 실행해요. 판정 페이지 표에 피코가 보낸 줄이 생기는지 봐요.</span></li><li><b>끝내기</b><span>버튼을 누르면 하던 판정을 마치고 안전하게 끝나요.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">코드 ④ · 라즈베리파이에게 물어보는 탐지기 (피코에서 실행)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 물까치 찾기 ④ — 라즈베리파이에게 물어보기 (피코 k-NN + BirdNET)
+# 소리가 나면 피코가 3초를 듣고 k-NN 표를 센 뒤, 그 WAV를 Wi-Fi로 라즈베리파이 5의 서버(bird_server.py)에 보내요.
+# BirdNET이 새 이름과 신뢰도를 돌려주면, 그 새의 MP3를 틀고 server.csv에 피코 표 수와 함께 기록해요.
+# server.csv로 &#x27;피코만 / BirdNET만 / 피코가 거른 뒤 BirdNET&#x27; 세 방식을 나중에 비교할 수 있어요.
+# 서버가 응답하지 않으면 피코 판단만으로 계속 관측해요. 버튼(D18)을 누르면 안전하게 끝나요.
+# 준비: Pi 5에서 bird_server.py 실행 → 화면에 나온 주소를 아래 SERVER에 적기, 피코에 wifi_config.py 저장
+import eco_lib as E
+import os, socket, time
+
+SERVER = &quot;http://192.168.0.23:8000&quot;   # ← bird_server.py가 알려 준 주소로 바꾸세요
+TARGET = &quot;물까치&quot;
+K_NN = 9
+MIN_VOTES = 3       # 피코 혼자 판단할 때의 기준(서버가 없을 때, SEND_ALL=False일 때 사용)
+SEND_ALL = True     # True: 소리가 나면 모두 BirdNET에게 물어요. False: 피코가 MIN_VOTES 이상일 때만 물어요(보내는 횟수↓ 놓침↑)
+K = 2.0
+COOLDOWN = 2
+TIMEOUT = 10        # 서버 응답을 기다리는 최대 시간(초)
+TRACKS = {&quot;물까치&quot;: 1, &quot;까치&quot;: 2, &quot;직박구리&quot;: 3, &quot;참새&quot;: 4, &quot;멧비둘기&quot;: 5, &quot;박새&quot;: 6, &quot;큰부리까마귀&quot;: 7}   # MP3 번호
+
+def _send_all(s, data):             # 보낼 데이터를 끝까지 보내요
+    mv = memoryview(data)
+    while mv:
+        n = s.send(mv)
+        mv = mv[n:]
+
+def _parse(server):                 # &quot;http://192.168.0.23:8000&quot; → (&quot;192.168.0.23&quot;, 8000)
+    if not server.startswith(&quot;http://&quot;): raise ValueError(&quot;SERVER는 http://로 시작해야 해요&quot;)
+    host, _, port = server[7:].rstrip(&quot;/&quot;).partition(&quot;:&quot;)
+    return host, int(port or 80)
+
+def _request(head, path=None):      # HTTP 요청을 보내고 (상태 코드, 본문 글자)를 돌려줘요
+    host, port = _parse(SERVER)
+    s = socket.socket()
+    try:
+        s.settimeout(TIMEOUT)
+        s.connect(socket.getaddrinfo(host, port)[0][-1])
+        _send_all(s, head.encode())
+        if path:
+            buf = bytearray(2048)
+            with open(path, &quot;rb&quot;) as f:
+                while True:
+                    n = f.readinto(buf)
+                    if not n: break
+                    _send_all(s, memoryview(buf)[:n])
+        resp = b&quot;&quot;
+        while True:
+            c = s.recv(512)
+            if not c: break
+            resp += c
+    finally:
+        s.close()
+    first, _, rest = resp.partition(b&quot;\r\n&quot;)
+    body = rest.partition(b&quot;\r\n\r\n&quot;)[2]
+    code = int(first.split()[1]) if len(first.split()) &gt; 1 else 0
+    return code, body.decode().strip()
+
+def server_ok():                    # 시작할 때 서버에 닿는지 확인
+    host, port = _parse(SERVER)
+    try:
+        code, text = _request(&quot;GET /ping HTTP/1.0\r\nHost: %s\r\n\r\n&quot; % host)
+        return code == 200 and text == &quot;ok&quot;
+    except Exception as e:
+        print(&quot;서버 확인 실패:&quot;, e)
+        return False
+
+def ask(path, name):                # WAV를 보내고 (판정, 가장 높은 새, 신뢰도)를 받아요. 실패하면 None
+    host, port = _parse(SERVER)
+    size = os.stat(path)[6]
+    head = (&quot;POST /judge HTTP/1.0\r\nHost: %s\r\nContent-Type: audio/wav\r\nX-File: %s\r\n&quot;
+            &quot;Content-Length: %d\r\n\r\n&quot; % (host, name, size))
+    try:
+        code, text = _request(head, path)
+        if code != 200: raise OSError(&quot;서버가 %d로 답했어요&quot; % code)
+        decision, best, conf = text.split(&quot; &quot;)
+        return decision, best, float(conf)
+    except Exception as e:
+        print(&quot;  서버에 묻지 못했어요:&quot;, e)
+        return None
+
+def check(audio, tmp, t, n, online):   # 후보를 저장하고, 서버에 묻고, 답에 따라 말해요
+    name = E.stamp() + (&quot;_cand.wav&quot; if n &gt;= MIN_VOTES else &quot;_check.wav&quot;)
+    path = &quot;/sd/eco/&quot; + name
+    os.rename(tmp, path)
+    bird, best, conf = &quot;서버 없음&quot;, &quot;없음&quot;, 0.0
+    if online:
+        E.led((20, 0, 30))                                         # 보라 = 라즈베리파이에게 묻는 중
+        r = ask(path, name)
+        if r: bird, best, conf = r
+        else: bird = &quot;서버 오류&quot;
+    E.log(&quot;server.csv&quot;, &quot;time,pico_votes,birdnet,best,confidence,file&quot;, &quot;%s,%d,%s,%s,%.2f,%s&quot; % (t, n, bird, best, conf, name))
+    if bird in TRACKS:                                             # BirdNET이 아는 새라고 답했어요
+        print(&quot;%s  %s인가 봐요! (피코 %d표 · BirdNET %.2f) → %s&quot; % (t, bird, n, conf, name))
+        E.led((0, 40, 20) if bird == TARGET else (30, 30, 30))
+        E.say(audio, TRACKS[bird])
+    elif bird in (&quot;서버 없음&quot;, &quot;서버 오류&quot;) and n &gt;= MIN_VOTES:       # 서버가 없으면 피코 판단으로
+        print(&quot;%s  물까치 후보 (피코 %d표 · %s) → %s&quot; % (t, n, bird, name))
+        E.led((0, 40, 20), n)
+        E.say(audio, TRACKS[TARGET])
+    else:
+        print(&quot;%s  BirdNET: %s (가장 높은 새 %s %.2f) · 피코 %d표&quot; % (t, bird, best, conf, n))
+        E.remove_quiet(path)                                       # 새가 아니면 소리는 남기지 않아요
+
+def main():
+    if not (isinstance(MIN_VOTES, int) and 1 &lt;= MIN_VOTES &lt;= K_NN):
+        raise ValueError(&quot;MIN_VOTES는 1 이상 K_NN 이하의 정수여야 해요&quot;)
+    E.stop_reset(); mounted = False; audio = None
+    try:
+        mounted = E.sd_open()
+        votes, cnt = E.knn_load(K_NN)
+        if TARGET not in cnt: raise ValueError(&quot;예시에 &#x27;%s&#x27;가 없어요. ① 예시 모으기를 먼저 하세요&quot; % TARGET)
+        print(&quot;예시를 불러왔어요:&quot;, cnt)
+        online = E.wifi_connect() and server_ok()
+        print(&quot;라즈베리파이 서버&quot;, &quot;연결됨&quot; if online else &quot;연결 안 됨 → 피코 판단만 해요 (SERVER 주소와 Wi-Fi를 확인하세요)&quot;)
+        E.mp3_open()
+        audio = E.mic_open()
+        quiet = E.baseline(audio); thresh = quiet * K + 20
+        print(&quot;듣기 시작! (조용할 때 %.0f → 기준 %.0f) 끝내려면 버튼.&quot; % (quiet, thresh))
+        tmp = &quot;/sd/eco/tmp.wav&quot;; E.remove_quiet(tmp)
+        E.led((0, 0, 3))
+        while not E.want_stop():
+            if E.level(audio) &lt;= thresh: continue
+            E.led((30, 20, 0))                                     # 노랑 = 듣는 중
+            try:
+                pieces, active = E.listen3(audio, thresh, tmp, E.small)
+                E.led((0, 0, 20))                                  # 파랑 = 피코가 생각 중
+                v = votes(E.features3(pieces, active)); n = v.get(TARGET, 0); t = E.when()
+                if n &gt;= MIN_VOTES or SEND_ALL:
+                    check(audio, tmp, t, n, online)
+                else:
+                    print(&quot;%s  아니에요 (물까치 %d표)&quot; % (t, n))
+            finally:
+                E.remove_quiet(tmp)
+            E.drain(audio, COOLDOWN); E.led((0, 0, 3))
+    finally:
+        E.finish(audio, mounted)
+
+try:
+    main()
+except Exception as e:
+    print(&quot;문제가 생겼어요:&quot;, e)
+    E.error_blink(); E.led((40, 0, 0))</code></pre></div><div class="concept-grid"><div class="concept"><div class="concept-t">노랑</div><div class="concept-d">3초 듣는 중</div></div><div class="concept"><div class="concept-t">파랑</div><div class="concept-d">피코가 표를 세는 중</div></div><div class="concept"><div class="concept-t">보라</div><div class="concept-d">라즈베리파이에게 묻는 중</div></div><div class="concept"><div class="concept-t">청록</div><div class="concept-d">BirdNET이 물까치라고 답함</div></div><div class="concept"><div class="concept-t">흰색</div><div class="concept-d">BirdNET이 다른 새라고 답함</div></div></div><p class="step-head">예상 화면 (피코)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>예시를 불러왔어요: {'물까치': 15, '다른 새': 12, '말소리': 10, '배경': 10, '기타': 10}
+라즈베리파이 서버 연결됨
+듣기 시작! (조용할 때 31 → 기준 82) 끝내려면 버튼.
+2026-10-01 07:21:40  BirdNET: 모르겠음 (가장 높은 새 없음 0.00) · 피코 1표
+2026-10-01 07:22:15  물까치인가 봐요! (피코 5표 · BirdNET 0.83) → 20261001_072215_cand.wav
+안전하게 끝났어요. 이제 전원을 뽑아도 됩니다.</pre><p class="step-head">예상 화면 (라즈베리파이)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>피코 → 20261001_072140_check.wav (지움)  모르겠음 (없음 0.00)
+피코 → 20261001_072215_cand.wav  물까치 (물까치 0.83)</pre><div class="callout info"><div class="callout-head">ℹ️ SEND_ALL — 모두 물을까, 골라서 물을까</div><div class="callout-body"><code>SEND_ALL</code>이 True이면 소리가 날 때마다 모두 보내고, False이면 피코가 물까치 표를 MIN_VOTES 이상 줬을 때만 보내요. False로 하면 보내는 횟수가 줄어 피코가 다시 듣기까지 기다리는 시간이 짧아지지만, 미리 한 시험처럼 놓치는 물까치가 늘어나요. 모둠의 목적(물까치를 하나라도 더 찾기, 잘못 기록하지 않기)에 따라 고르면 돼요.</div></div></section><section class="sec" id="chpi-5"><h3 class="sec-title">③ 세 방식 비교하기</h3><p class="prose">휴대폰으로 물까치 녹음과 다른 소리를 하나씩 틀어 주고, 무엇을 틀었는지 순서대로 적어 둬요. 관측이 끝나면 <code>server.csv</code>를 스프레드시트로 열어 <code>truth</code> 열을 만들고, 물까치를 튼 줄에는 1, 나머지에는 0을 적어요. PC 비교 도구가 피코만, BirdNET만, 피코가 거른 뒤 BirdNET 세 방식의 재현율과 오판을 기준별로 보여 줘요. 결과를 보고 우리 모둠의 관측 목적에 맞는 방식과 기준을 고르고, 그 이유를 적어요.</p><ol class="steps"><li><b>틀어 주기</b><span>코드 ④를 켜 둔 채 휴대폰으로 물까치 녹음 5개 이상, 다른 새와 생활 소리 5개 이상을 하나씩 틀어요. 소리 사이에는 10초쯤 쉬어요.</span></li><li><b>적어 두기</b><span>튼 순서와 시각을 종이에 적어요. 예) 07:31 물까치, 07:32 까치 …</span></li><li><b>정답 열 만들기</b><span>피코 SD의 <code>eco/server.csv</code>를 PC로 옮겨 스프레드시트로 열고, 맨 오른쪽에 <code>truth</code> 열을 만들어 물까치면 1, 아니면 0을 적은 뒤 CSV로 저장해요.</span></li><li><b>비교 도구 실행</b><span>코드 ⑦을 <code>server.csv</code>와 같은 폴더에 저장하고, Thonny의 '이 컴퓨터의 Python'으로 실행해요. 설치할 것은 없어요.</span></li></ol><details class="codefold"><summary>코드 ⑦ · 세 방식 비교 도구 (PC에서 실행) <span class="fold-hint">· 32줄 · 펼쳐서 복사</span></summary><div class="block code-block"><div class="block-head"><span class="block-label">코드 ⑦ · 세 방식 비교 도구 (PC에서 실행)</span><span class="lang-tag">PYTHON</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-python"># 물까치 찾기 ⑦ — 세 가지 판정 방식 비교하기 (PC에서 실행 · 설치할 것 없음)
+# ④ 실시간 판정(SEND_ALL = True)이 피코 SD에 남긴 server.csv에 &#x27;truth&#x27; 열을 더해, 틀어 준 소리가 물까치였으면 1, 아니면 0을 적으세요.
+# 사용: server.csv를 이 파일과 같은 폴더에 두고 실행 (명령 창이라면 python eco_pc_compare.py server.csv)
+# 보여 주는 것: ① 피코만 ② BirdNET만 ③ 피코가 거른 뒤 BirdNET — 기준을 바꿔 가며 재현율과 오판
+import csv, sys
+
+path = sys.argv[1] if len(sys.argv) &gt; 1 else &quot;server.csv&quot;
+rows = []
+with open(path, encoding=&quot;utf-8-sig&quot;) as f:
+    for r in csv.DictReader(f):
+        t = (r.get(&quot;truth&quot;) or &quot;&quot;).strip()
+        if t not in (&quot;0&quot;, &quot;1&quot;) or r.get(&quot;birdnet&quot;) in (&quot;서버 없음&quot;, &quot;서버 오류&quot;):
+            continue                                          # 정답을 안 적었거나 서버에 묻지 못한 줄은 빼요
+        rows.append((t == &quot;1&quot;, int(r[&quot;pico_votes&quot;]), r[&quot;best&quot;], float(r[&quot;confidence&quot;])))
+P = sum(1 for t, *_ in rows if t); N = len(rows) - P
+print(&quot;비교에 쓴 판정 %d개 (물까치 %d · 다른 소리 %d)&quot; % (len(rows), P, N))
+if P == 0 or N == 0:
+    sys.exit(&quot;물까치(1)와 다른 소리(0)가 모두 있어야 비교할 수 있어요&quot;)
+
+def score(rule):                                              # (재현율, 오판)
+    hit = sum(1 for t, v, b, c in rows if t and rule(v, b, c))
+    fp = sum(1 for t, v, b, c in rows if not t and rule(v, b, c))
+    return hit / P, fp / N
+
+print(&quot;\n방식                       | 재현율 | 오판&quot;)
+for m in (2, 3, 4, 5):
+    print(&quot;피코만 MIN_VOTES %d          |  %.2f  | %.2f&quot; % ((m,) + score(lambda v, b, c, m=m: v &gt;= m)))
+for th in (0.10, 0.25, 0.50):
+    print(&quot;BirdNET만 신뢰도 %.2f       |  %.2f  | %.2f&quot; % ((th,) + score(lambda v, b, c, th=th: b == &quot;물까치&quot; and c &gt;= th)))
+    for m in (2, 3):
+        print(&quot;피코 %d표 → BirdNET %.2f    |  %.2f  | %.2f&quot; % ((m, th) + score(lambda v, b, c, m=m, th=th: v &gt;= m and b == &quot;물까치&quot; and c &gt;= th)))
+print(&quot;\n재현율 = 물까치 소리 가운데 물까치라고 한 비율 · 오판 = 다른 소리를 물까치라고 한 비율&quot;)</code></pre></div></details><p class="step-head">예상 화면 (일부)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>비교에 쓴 판정 18개 (물까치 6 · 다른 소리 12)
+
+방식                       | 재현율 | 오판
+피코만 MIN_VOTES 3          |  0.83  | 0.33
+BirdNET만 신뢰도 0.25       |  0.33  | 0.00
+피코 3표 → BirdNET 0.25    |  0.33  | 0.00
+(교재 제작 때 모의 시험의 18개 판정. 여러분의 기록으로 다시 계산하세요)</pre><div class="callout mini"><div class="callout-head">🎯 탐구 과제</div><div class="callout-body">탐구 1은 서버의 신뢰도 기준(MIN_CONF)을 0.25에서 0.10으로 낮추면 찾는 물까치와 오판이 어떻게 바뀌는지 보는 거예요. 탐구 2는 휴대폰과 마이크 사이 거리를 바꾸며 피코와 BirdNET 가운데 어느 쪽 판정이 더 먼저 흔들리는지 보는 거예요. 탐구 3은 소리를 보내고 답을 받기까지 걸리는 시간을 재고, 그동안 피코가 놓치는 소리가 있는지 확인하는 거예요. 결과는 표로 정리하고 왜 그런지 설명을 붙여요.</div></div><div class="block prompt-block"><div class="block-head"><span class="prompt-ico">🤖</span><span class="block-label">바이브코딩 — 판정 페이지에 새별 막대그래프 (그대로 복사)</span><button class="copy-btn" aria-label="복사">복사</button></div><div class="prompt-body">라즈베리파이의 Flask 서버 bird_server.py를 고쳐줘.
+- 첫 페이지(/)의 결과 표 위에, judged.csv에서 새 이름(species 열)별 판정 횟수를 막대그래프로 보여 줘.
+- 외부 라이브러리 없이 HTML과 CSS 막대(div 너비)로만 그려 줘.
+- &#x27;모르겠음&#x27;과 &#x27;읽기실패&#x27;는 그래프에서 빼 줘.
+- 기존의 /judge, /upload, /table 동작과 MIN_CONF, BIRDS 설정은 바꾸지 마.</div></div></section><section class="sec" id="chpi-6"><h3 class="sec-title">현장에서 쓸 때</h3><p class="prose">실시간 판정은 피코가 교실 공유기의 Wi-Fi가 닿는 곳에 있을 때만 돼요. Wi-Fi가 닿지 않는 곳에서는 앞 장처럼 기록만 하고 나중에 2차 판정을 해요. 라즈베리파이는 전원 어댑터에 연결해 교실에 두고, <b>부록</b>의 자동 실행을 설정하면 전원만 켜도 서버가 시작돼요. 소리는 학교 공유기 안에서만 오가고 인터넷으로 나가지 않아요. 그래도 사람이 대화하는 곳에는 설치하지 않아요. 소리가 날 때마다 3초가 라즈베리파이로 보내지기 때문이에요.</p><a class='linkbtn' href='#apxpi-10'>🔗 부록 L · 서버 자동 실행 설정</a></section><section class="sec" id="chpi-7"><h3 class="sec-title">문제 해결과 확인</h3><div class="mistakes"><div class="mistake"><div class="m-sym">❌ 피코가 &#x27;연결 안 됨&#x27;이라고 해요</div><div class="m-row"><span class="m-tag">원인</span>SERVER 주소 오타, 다른 모둠의 주소, 서버가 꺼짐, 피코 Wi-Fi 실패</div><div class="m-row"><span class="m-tag fix">해결</span>먼저 PC 브라우저로 같은 주소가 열리는지 봐요. 열리면 피코의 <code>SERVER</code>와 <code>wifi_config.py</code>를, 안 열리면 라즈베리파이 서버를 확인해요. 고친 뒤에는 코드 ④를 다시 실행해요. 시작할 때 연결되지 않으면 끝날 때까지 BirdNET에 묻지 않아요.</div></div><div class="mistake"><div class="m-sym">❌ PC 브라우저에서도 페이지가 안 열려요</div><div class="m-row"><span class="m-tag">원인</span>주소에 <code>:8000</code>이 빠짐, https로 입력, PC가 다른 Wi-Fi에 연결됨, 공유기의 AP 격리</div><div class="m-row"><span class="m-tag fix">해결</span><code>http://주소:8000</code>으로 다시 입력하고, PC가 같은 공유기에 있는지 확인해요. 그래도 안 되면 부록의 'AP 격리' 항목을 봐요.</div></div><div class="mistake"><div class="m-sym">❌ error: externally-managed-environment</div><div class="m-row"><span class="m-tag">원인</span>가상환경을 켜지 않고 pip를 실행함</div><div class="m-row"><span class="m-tag fix">해결</span><code>cd ~/bird</code> 뒤 <code>source venv/bin/activate</code>를 먼저 실행해요. 줄 앞에 <code>(venv)</code>가 보여야 해요.</div></div><div class="mistake"><div class="m-sym">❌ 첫 실행에서 모델을 받다 멈춰요</div><div class="m-row"><span class="m-tag">원인</span>라즈베리파이가 인터넷에 연결되지 않음</div><div class="m-row"><span class="m-tag fix">해결</span><code>ping -c 3 pypi.org</code>로 인터넷을 확인하고, 연결된 뒤 다시 실행해요. 한 번 받은 뒤에는 다시 받지 않아요.</div></div><div class="mistake"><div class="m-sym">❌ 엉뚱한 새 이름이 들려요</div><div class="m-row"><span class="m-tag">원인</span>MP3 카드의 복사 순서가 섞임</div><div class="m-row"><span class="m-tag fix">해결</span>카드를 포맷하고 0001부터 0007까지 한 개씩 차례로 복사해요.</div></div><div class="mistake"><div class="m-sym">❌ 거의 모두 &#x27;모르겠음&#x27;이에요</div><div class="m-row"><span class="m-tag">원인</span>소리가 작거나 멀어요. 피코 녹음은 8kHz까지만 담겨요</div><div class="m-row"><span class="m-tag fix">해결</span>휴대폰을 마이크에 더 가까이 두고 다시 틀어요. 탐구 1처럼 MIN_CONF를 낮춰 비교해 봐요.</div></div><div class="mistake"><div class="m-sym">❌ SSH 창을 닫으면 서버가 꺼져요</div><div class="m-row"><span class="m-tag">원인</span>서버가 SSH 창 안에서 돌고 있음</div><div class="m-row"><span class="m-tag fix">해결</span>부록의 자동 실행(systemd)을 설정하면 창을 닫아도, 전원을 다시 켜도 서버가 돌아요.</div></div></div><div class="checks"><details class="qa"><summary>피코가 먼저 거른 뒤 BirdNET에 물으면 왜 놓치는 물까치가 늘어날까요?</summary><div class="qa-a">피코가 물까치가 아니라고 걸러 낸 소리 가운데 BirdNET이라면 맞혔을 물까치가 있기 때문이에요. 두 판정이 놓치는 물까치가 서로 달라요.</div></details><details class="qa"><summary>BirdNET이 '모르겠음'이라고 한 소리는 왜 지우나요?</summary><div class="qa-a">새소리가 아닐 가능성이 높고, 사람 목소리가 들어 있을 수 있기 때문이에요.</div></details><details class="qa"><summary>서버가 꺼지면 피코는 어떻게 하나요?</summary><div class="qa-a">멈추지 않고 피코 판단만으로 관측을 이어 가요. server.csv에는 '서버 오류'로 남아요.</div></details><details class="qa"><summary>재현율과 오판 가운데 무엇을 우선할지는 무엇으로 정하나요?</summary><div class="qa-a">관측 목적으로 정해요. 물까치가 오는지 하나라도 알고 싶으면 재현율, 기록을 믿을 수 있어야 하면 오판을 먼저 봐요.</div></details></div></section><section class="sec" id="chpi-8"><h3 class="sec-title">정리</h3><p class="prose">피코는 늘 켜 두고 듣는 역할이고, 라즈베리파이는 무거운 AI로 판정하는 역할을 나눠 맡아요. 두 판정의 장단점을 같은 데이터로 비교해 보고 관측 방식을 정하는 것이 이 장의 핵심이에요. BirdNET의 판정도 확률이므로 중요한 기록은 사람이 소리를 듣고 확인해요. 더 나아가려면 녹음 품질을 높이거나(더 높은 샘플링 주파수), 우리 지역과 계절에 맞게 BirdNET의 종 목록을 조정할 수 있어요.</p><div class="callout info"><div class="callout-head">ℹ️ BirdNET 출처</div><div class="callout-body">BirdNET 모델과 라벨은 코넬 조류학 연구소(K. Lisa Yang Center for Conservation Bioacoustics)와 켐니츠 공과대학이 만들었어요. BirdNET 프로젝트는 모델 라이선스를 CC BY-NC-SA 4.0으로 안내해요. 수업과 연구 같은 비상업 용도로만 사용하고, 결과를 발표할 때는 BirdNET V2.4 모델과 만든 곳, 라이선스를 함께 밝혀요.</div></div></section></div><div class="chapter" id="apxpi"><div class="ch-head"><span class="ch-num">CHAPTER 부록</span><h2 class="ch-title"><span class="ch-bar"></span>라즈베리파이 5 세팅 A to Z — 모니터 없이 PC에서</h2><p class="ch-sub">부품 준비부터 운영체제 설치, SSH 접속, BirdNET 설치, 전원만 켜면 서버가 시작되는 설정까지 차례로 따라가요.</p></div><div class="goals"><div class="goals-t">🎯 이 장을 마치면</div><ul><li>Raspberry Pi Imager로 microSD에 운영체제를 굽고 사용자·Wi-Fi·SSH를 미리 설정한다</li><li>PC에서 SSH로 라즈베리파이에 접속해 명령을 실행한다</li><li>가상환경에 BirdNET과 Flask를 설치하고 판정 서버를 실행한다</li><li>서버가 부팅할 때 저절로 시작되게 하고, 주소 고정·안전한 종료를 익힌다</li></ul></div><div class="why"><div class="why-t">💡 왜 배우나요?</div><p>라즈베리파이 5는 손바닥만 한 컴퓨터이고 리눅스 운영체제(Raspberry Pi OS)로 동작해요. 이 부록에서는 모니터와 키보드를 연결하지 않고 PC에서 원격으로 접속해 모든 설정을 해요. 부품 준비부터 운영체제 설치, 원격 접속, BirdNET 설치, 전원을 켜면 서버가 저절로 시작하게 하는 설정까지 차례로 다뤄요. 명령어는 <b>한 줄씩</b> 복사해 붙여 넣고 결과가 예상 화면과 같은지 확인한 뒤 다음으로 넘어가요.</p></div><section class="sec" id="apxpi-0"><h3 class="sec-title">A. 준비물</h3><p class="prose">라즈베리파이 5, 공식 27W 전원 어댑터, 팬이 달린 공식 케이스, 64GB microSD, 카드 리더가 필요해요. PC는 Windows 10 이상 또는 macOS 13 이상이어야 운영체제 설치 프로그램(Raspberry Pi Imager)을 쓸 수 있어요. 교실 공유기의 Wi-Fi 이름과 비밀번호를 미리 알아 두세요. 아이디를 입력해 로그인하는 학교 Wi-Fi는 이 방법으로 연결할 수 없어요.</p><div style='overflow-x:auto'><table class='plan-table'><tr><th>부품</th><th>역할</th><th>수량</th><th>구입</th><th>비고</th></tr><tr><td>라즈베리파이 5 (8GB) + 가이드북</td><td>BirdNET 서버</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15215449" target="_blank" rel="noopener">디바이스마트</a></td><td>4GB(15215450)는 조회 당시 재고 확보 중</td></tr><tr><td>공식 라즈베리파이 27W USB-C 어댑터</td><td>전원 5.1V 5A</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15502416" target="_blank" rel="noopener">디바이스마트</a></td><td>KC 인증. 다른 충전기는 전원 부족 경고가 나요</td></tr><tr><td>라즈베리파이 5 공식 케이스 (팬 포함)</td><td>보호·냉각</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15276234" target="_blank" rel="noopener">디바이스마트</a></td><td>팬 대신 Active Cooler(15276241)를 쓸 수도 있지만 둘을 함께 달지는 않아요</td></tr><tr><td>SanDisk Extreme microSDXC 64GB (SDSQXAH-064G-GN6MN)</td><td>운영체제 카드</td><td style='text-align:center'>1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=14825254" target="_blank" rel="noopener">디바이스마트</a></td><td>A2 규격. 공식 A2 64GB(15549242)는 조회 당시 품절</td></tr><tr><td>USB 3.0 카드 리더 (넥시 NX-U30CR)</td><td>PC에서 Pi 카드 굽기</td><td style='text-align:center'>모둠당 1</td><td><a href="https://www.devicemart.co.kr/goods/view?no=15227464" target="_blank" rel="noopener">디바이스마트</a></td><td>ML2장의 카드 리더가 있으면 그대로 사용</td></tr><tr><td colspan='5' style='background:var(--card);font-weight:700'>이미 있는 것</td></tr><tr><td>ML2장 물까치 관측기 한 벌</td><td>피코 1차 판정·녹음</td><td style='text-align:center'>1</td><td></td><td>Wi-Fi 연결을 위해 wifi_config.py 필요(본 교재 1장)</td></tr><tr><td>PC(Windows 10/11 또는 macOS)</td><td>Imager·SSH·브라우저</td><td style='text-align:center'>1</td><td></td><td>Pi와 같은 공유기에 연결</td></tr><tr><td>교실 공유기(Wi-Fi)</td><td>피코·Pi·PC를 한 네트워크로</td><td style='text-align:center'>학급 1</td><td></td><td>'AP 격리'가 꺼져 있어야 해요(부록 참고)</td></tr></table></div><ul class="check-list"><li>PC가 Windows 10 이상 또는 macOS 13 이상이다</li><li>교실 공유기의 Wi-Fi 이름과 비밀번호를 안다 (아이디 로그인 방식이 아니다)</li><li>모둠 번호를 정했다 (호스트 이름에 써요. 예: bird-3)</li><li>교실 공유기의 AP 격리(무선 격리)가 꺼져 있는지 관리자에게 확인했다 (켜져 있으면 PC에서 라즈베리파이에 접속할 수 없어요)</li></ul></section><section class="sec" id="apxpi-1"><h3 class="sec-title">B. 조립</h3><p class="prose">케이스의 팬 선을 보드의 팬 연결 단자에 꽂고 뚜껑을 닫아요. 라즈베리파이 5는 전원을 꽂으면 버튼을 누르지 않아도 바로 켜지므로 전원은 microSD를 넣은 뒤 <b>가장 마지막</b>에 연결해요. 전원 어댑터는 반드시 공식 27W를 써야 해요. 휴대폰 충전기는 전압이 모자라 느려지거나 microSD가 망가질 수 있어요.</p><ol class="steps"><li><b>팬 연결</b><span>케이스의 팬 선을 보드의 <b>FAN</b> 단자(4핀)에 꽂아요.</span></li><li><b>케이스 닫기</b><span>보드를 케이스에 넣고 뚜껑을 닫아요.</span></li><li><b>전원은 아직</b><span>microSD를 굽고 넣은 뒤(E 단계) 마지막에 전원을 연결해요.</span></li></ol></section><section class="sec" id="apxpi-2"><h3 class="sec-title">C. PC에 Raspberry Pi Imager 설치</h3><a class="linkbtn" href="https://www.raspberrypi.com/software/" target="_blank" rel="noopener">🔗 Raspberry Pi Imager 내려받기 (공식)</a><ol class="steps"><li><b>Windows</b><span><code>.exe</code> 설치 파일을 받아 실행해요.</span></li><li><b>macOS</b><span><code>.dmg</code> 파일을 열고 Imager를 응용 프로그램 폴더로 끌어 넣어요.</span></li></ol></section><section class="sec" id="apxpi-3"><h3 class="sec-title">D. microSD에 운영체제 굽기</h3><p class="prose">모니터가 없으므로 첫 부팅 때 바로 Wi-Fi에 접속하고 원격 접속을 받을 수 있도록 굽기 전에 사용자 이름, 비밀번호, Wi-Fi, SSH를 모두 정해 둬요. 이 설정을 건너뛰면 첫 부팅 때 화면으로만 설정을 물어서 모니터 없이는 접속할 수 없어요. 예전의 기본 계정(pi)도 없어졌어요. 지역은 서울을 골라요. 지역이 Wi-Fi 사용 규칙(국가)과 시간대를 정하고 목록에서 바로 옆에 있는 다른 도시를 잘못 고르기 쉬우니 확인해요. 호스트 이름은 <b>모둠마다 다르게</b> 정해요. 예를 들어 bird-1, bird-2처럼 정해요. 모두 같은 이름이면 어느 라즈베리파이에 접속하는지 알 수 없어요. 운영체제는 화면이 없는 Lite 판을 골라요. 서버로만 쓰므로 가볍고 빨라요.</p><ol class="steps"><li><b>장치(Device)</b><span><b>Raspberry Pi 5</b>를 골라요.</span></li><li><b>운영체제(OS)</b><span><b>Raspberry Pi OS (other)</b> → <b>Raspberry Pi OS Lite (64-bit)</b>를 골라요.</span></li><li><b>저장장치(Storage)</b><span>카드 리더에 꽂은 microSD를 골라요. <b>시스템 드라이브 제외(Exclude system drives)</b>는 켜 둬요. PC의 하드디스크를 고르면 지워져요.</span></li><li><b>호스트 이름</b><span><code>bird-모둠번호</code> (예: <code>bird-3</code>). 영문 소문자·숫자·하이픈만 써요.</span></li><li><b>지역(Localisation)</b><span>수도를 <b>Seoul</b>로 골라요. 시간대 Asia/Seoul, 키보드 kr이 함께 채워져요.</span></li><li><b>사용자(User)</b><span>사용자 이름(영문 소문자)과 비밀번호를 정하고 <b>종이에 적어 둬요</b>. sudo를 쓸 때도 이 비밀번호를 입력해요.</span></li><li><b>Wi-Fi</b><span>교실 공유기의 Wi-Fi 이름(SSID)과 비밀번호를 입력해요.</span></li><li><b>원격 접속(Remote Access)</b><span><b>Enable SSH</b>를 켜고 <b>Use password authentication</b>을 골라요.</span></li><li><b>쓰기(Write)</b><span>쓰기와 검증(verify)이 끝날 때까지 기다린 뒤 카드를 꺼내요.</span></li></ol><div class="callout warn"><div class="callout-head">⚠️ 사용자 지정을 건너뛰지 마세요</div><div class="callout-body">사용자 지정(Customisation)을 건너뛰면 첫 부팅 때 모니터 화면으로만 설정을 물어요. 모니터 없이는 접속할 수 없으니 호스트 이름, 사용자, Wi-Fi, SSH를 모두 넣어요.</div></div></section><section class="sec" id="apxpi-4"><h3 class="sec-title">E·F. 첫 부팅과 주소 찾기</h3><p class="prose">첫 부팅은 카드 공간을 늘리고 설정을 적용하느라 몇 분 걸리므로 기다려요. PC에서 '호스트이름.local'로 응답이 오면 라즈베리파이가 공유기에 연결된 거예요. 응답이 없으면 공유기 관리 페이지의 연결 기기 목록이나 휴대폰 네트워크 검색 앱으로 IP 주소를 찾아요.</p><ol class="steps"><li><b>켜기</b><span>microSD를 라즈베리파이에 넣고 27W 전원을 연결해요. 초록 LED가 깜빡이면 부팅 중이에요.</span></li><li><b>기다리기</b><span>첫 부팅은 몇 분 걸려요. 3분쯤 기다려요.</span></li><li><b>응답 확인</b><span>PC의 명령 창(Windows는 PowerShell, macOS는 터미널)에서 아래 명령으로 응답을 확인해요.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">PC에서 (bird-3은 우리 모둠 호스트 이름으로)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">ping bird-3.local</code></pre></div><p class="step-head">예상 화면 (Windows는 4번, macOS는 멈출 때까지 반복돼요. macOS는 Ctrl+C로 멈춰요)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>Reply from 192.168.0.23: bytes=32 time=6ms TTL=64
+(macOS) 64 bytes from 192.168.0.23: icmp_seq=0 ttl=64 time=6.1 ms</pre><div class="callout tip"><div class="callout-head">💡 응답이 없으면</div><div class="callout-body">공유기 관리 페이지(보통 공유기 아래 라벨에 주소가 있어요)의 연결 기기 목록에서 <code>bird-3</code>을 찾거나, 휴대폰 네트워크 검색 앱(예: Fing)에서 제조사가 Raspberry Pi인 기기를 찾아 IP 주소를 적어요. 그다음부터는 <code>bird-3.local</code> 대신 그 IP 주소를 써요.</div></div></section><section class="sec" id="apxpi-5"><h3 class="sec-title">G. PC에서 SSH로 접속하기</h3><p class="prose">SSH는 PC의 명령 창에서 다른 컴퓨터에 명령을 입력하게 해 주는 방법이에요. 처음 접속할 때 이 컴퓨터를 믿겠냐는 질문이 나오면 <b>yes</b>라고 입력해요. 비밀번호는 입력해도 화면에 아무것도 표시되지 않아요. 그대로 입력하고 Enter를 누르면 돼요. 줄 앞에 '사용자이름@호스트이름'이 보이면 이제부터 입력하는 명령은 라즈베리파이에서 실행돼요.</p><div class="block code-block"><div class="block-head"><span class="block-label">PC에서 (사용자이름과 bird-3을 바꿔서)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">ssh 사용자이름@bird-3.local</code></pre></div><p class="step-head">처음 접속할 때</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>The authenticity of host 'bird-3.local (192.168.0.23)' can't be established.
+ED25519 key fingerprint is SHA256:…
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+사용자이름@bird-3.local's password:        ← 입력해도 보이지 않아요
+사용자이름@bird-3:~ $</pre><div class="callout tip"><div class="callout-head">💡 Windows에서 ssh를 찾을 수 없다고 나오면</div><div class="callout-body">PowerShell에서 <code>ssh -V</code>를 입력해 버전이 나오는지 봐요. 안 나오면 <b>설정 → 시스템 → 선택적 기능 → 기능 추가</b>에서 <b>OpenSSH 클라이언트</b>를 설치하고 PowerShell을 다시 열어요.</div></div></section><section class="sec" id="apxpi-6"><h3 class="sec-title">H. 업데이트</h3><p class="prose">설치 직후에는 보안 업데이트와 고친 부분을 받기 위해 업데이트를 먼저 해요. <code>sudo</code>가 붙은 명령은 관리자 권한으로 실행되고, 비밀번호를 물으면 D 단계에서 정한 비밀번호를 입력해요. 조금 전에 입력했다면 다시 묻지 않을 수 있어요. 업데이트는 인터넷 속도에 따라 몇 분 이상 걸릴 수 있어요.</p><div class="block code-block"><div class="block-head"><span class="block-label">라즈베리파이 SSH 창에서 (한 줄씩)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">sudo apt update
+sudo apt full-upgrade -y
+sudo reboot</code></pre></div><div class="callout info"><div class="callout-head">ℹ️ 다시 접속하기</div><div class="callout-body"><code>sudo reboot</code>를 하면 SSH 연결이 끊겨요. 1분쯤 뒤 G 단계의 <code>ssh</code> 명령으로 다시 접속해요.</div></div></section><section class="sec" id="apxpi-7"><h3 class="sec-title">I. 작업 폴더와 가상환경</h3><p class="prose">최신 라즈베리파이 운영체제는 시스템 전체에 파이썬 패키지를 설치하지 못하게 막아 두고 시도하면 externally-managed-environment 오류가 나요. 그래서 bird 폴더 안에 이 프로젝트만 쓰는 가상환경(venv)을 만들고 그 안에 설치해요. 가상환경을 켜면 줄 앞에 <code>(venv)</code>가 보이고 SSH로 새로 접속할 때마다 다시 켜야 해요.</p><div class="block code-block"><div class="block-head"><span class="block-label">라즈베리파이 SSH 창에서 (한 줄씩)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">mkdir -p ~/bird
+cd ~/bird
+python3 -m venv venv
+source venv/bin/activate</code></pre></div><p class="step-head">예상 화면</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>(venv) 사용자이름@bird-3:~/bird $</pre><div class="callout key"><div class="callout-head">🔑 새로 접속할 때마다</div><div class="callout-body">SSH로 다시 접속하면 <code>cd ~/bird</code>와 <code>source venv/bin/activate</code>를 먼저 입력해요. 줄 앞에 <code>(venv)</code>가 없으면 설치한 패키지를 찾지 못해요.</div></div></section><section class="sec" id="apxpi-8"><h3 class="sec-title">J. BirdNET과 Flask 설치</h3><p class="prose">BirdNET은 새소리 판정 AI 패키지이고 Flask는 브라우저와 피코의 요청을 받는 웹 서버 패키지예요. 설치는 몇 분 걸리고 끝나면 두 패키지를 불러오는 한 줄 명령으로 설치가 잘 되었는지 확인해요.</p><div class="block code-block"><div class="block-head"><span class="block-label">(venv)가 보이는 상태에서</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">pip install &quot;birdnet==1.1.1&quot; flask
+python -c &quot;import birdnet, flask; print(&#x27;설치 완료&#x27;)&quot;</code></pre></div><p class="step-head">예상 화면 (마지막 줄)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>설치 완료</pre></section><section class="sec" id="apxpi-9"><h3 class="sec-title">K. 서버 받고 첫 실행</h3><p class="prose">교재 사이트에서 서버 파일을 그대로 내려받으므로 코드를 직접 입력하지 않아도 돼요. 첫 실행 때 BirdNET 모델을 내려받으므로 인터넷이 필요하고 한 번 받은 뒤에는 다시 받지 않아요. 화면에 나온 주소를 PC 브라우저에서 열어 판정 페이지가 보이면 서버가 동작하는 거예요.</p><div class="block code-block"><div class="block-head"><span class="block-label">(venv)가 보이는 상태에서, ~/bird 폴더에서</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">wget -O bird_server.py.new https://greatsong.github.io/2026-vibe-pico/snippets/bird_server.py &amp;&amp; mv bird_server.py.new bird_server.py
+python bird_server.py</code></pre></div><p class="step-head">예상 화면</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>판정할 새 7종: 물까치, 까치, 직박구리, 참새, 멧비둘기, 박새, 큰부리까마귀
+브라우저에서 여세요 →  http://192.168.0.23:8000   (피코 코드의 SERVER에도 이 주소)
+ * Running on http://192.168.0.23:8000</pre><div class="callout tip"><div class="callout-head">💡 확인</div><div class="callout-body">PC 브라우저에서 <code>http://192.168.0.23:8000</code>(화면에 나온 주소)을 열어 '새소리 판정 서버' 페이지가 보이면 성공이에요. 서버를 멈출 때는 SSH 창에서 <b>Ctrl+C</b>를 눌러요.</div></div></section><section class="sec" id="apxpi-10"><h3 class="sec-title">L. 전원만 켜면 서버가 시작되게 (자동 실행)</h3><p class="prose">지금은 SSH 창을 닫으면 서버도 꺼져요. <code>systemd</code>에 서비스로 등록하면 라즈베리파이가 켜질 때 서버가 저절로 시작되고 오류로 멈추면 다시 시작돼요. 등록하기 전에 손으로 켠 서버는 Ctrl+C로 먼저 꺼요. 두 서버가 같은 번호(8000)를 쓰려고 하면 하나가 시작하지 못해요. 서버가 화면에 쓰던 글은 로그 명령으로 볼 수 있어요.</p><ol class="steps"><li><b>손으로 켠 서버 끄기</b><span>K 단계의 서버가 돌고 있으면 <b>Ctrl+C</b>로 멈춰요.</span></li><li><b>서비스 파일 만들기</b><span>아래 명령을 <b>통째로</b> 붙여 넣어요. <code>$USER</code>와 <code>$HOME</code>은 내 사용자 이름과 폴더로 저절로 바뀌어요.</span></li><li><b>등록하고 시작</b><span>그다음 명령 세 줄을 한 줄씩 입력해요. 상태에 <b>active (running)</b>이 보이면 <code>journalctl -u bird -f</code>로 '브라우저에서 여세요' 줄이 나올 때까지 기다린 뒤 Ctrl+C로 나와요. PC 브라우저에서 그 주소가 열리면 성공이에요.</span></li></ol><div class="block code-block"><div class="block-head"><span class="block-label">① 서비스 파일 만들기 (통째로 붙여 넣기)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">sudo tee /etc/systemd/system/bird.service &gt; /dev/null &lt;&lt;EOF
+[Unit]
+Description=BirdNET bird sound server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=exec
+User=$USER
+WorkingDirectory=$HOME/bird
+ExecStart=$HOME/bird/venv/bin/python -u $HOME/bird/bird_server.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF</code></pre></div><div class="block code-block"><div class="block-head"><span class="block-label">② 등록·시작·확인 (한 줄씩)</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">sudo systemctl daemon-reload
+sudo systemctl enable --now bird
+systemctl status bird --no-pager</code></pre></div><p class="step-head">예상 화면 (일부)</p><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>● bird.service - BirdNET bird sound server
+     Loaded: loaded (/etc/systemd/system/bird.service; enabled; preset: enabled)
+     Active: active (running) since …</pre><div class="block code-block"><div class="block-head"><span class="block-label">자주 쓰는 명령</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">journalctl -u bird -f          # 서버가 쓰는 글 보기 (Ctrl+C로 나와도 서버는 계속 돌아요)
+sudo systemctl restart bird    # bird_server.py를 고친 뒤 다시 시작
+sudo systemctl stop bird       # 멈추기
+sudo systemctl disable bird    # 자동 실행 없애기</code></pre></div><div class="callout warn"><div class="callout-head">⚠️ active (running)이 아니면</div><div class="callout-body"><code>cat /etc/systemd/system/bird.service</code>로 파일을 열어 <code>User=</code>와 경로에 내 사용자 이름이 들어갔는지 봐요. <code>journalctl -u bird -n 30</code>으로 오류 메시지를 확인해요.</div></div></section><section class="sec" id="apxpi-11"><h3 class="sec-title">M. 주소 고정과 AP 격리</h3><p class="prose">공유기는 기기가 다시 켜질 때 다른 주소를 줄 수 있고 그러면 피코 코드의 SERVER 주소가 맞지 않게 돼요. 공유기 관리 페이지에서 라즈베리파이의 MAC 주소에 항상 같은 IP를 주도록 예약하는 방법을 라즈베리파이 공식 문서가 권해요. 공유기에 <b>AP 격리</b>(무선 격리)가 켜져 있으면 같은 Wi-Fi에 연결된 기기끼리 서로 통신할 수 없어요. 공유기 목록에는 라즈베리파이가 보이는데 PC에서 응답이 없으면 AP 격리를 의심하고 공유기 관리자에게 끄도록 요청하거나 수업용 공유기를 따로 써요.</p><div class="block code-block"><div class="block-head"><span class="block-label">라즈베리파이에서: 내 IP와 Wi-Fi MAC 주소 보기</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">hostname -I
+nmcli device show wlan0 | grep -E &#x27;HWADDR|IP4.ADDRESS&#x27;</code></pre></div><ol class="steps"><li><b>주소 예약</b><span>공유기 관리 페이지의 DHCP 설정에서 '주소 예약', '고정 할당' 같은 메뉴를 찾아, 위의 MAC 주소(HWADDR)에 지금 IP를 등록해요. 메뉴 이름은 공유기마다 달라요.</span></li><li><b>AP 격리 확인</b><span>PC에서 <code>ping 라즈베리파이IP</code>를 했을 때 응답이 없는데 공유기 목록에는 보이면, 공유기의 AP 격리(무선 격리)를 꺼 달라고 관리자에게 요청하거나 수업용 공유기를 따로 써요.</span></li></ol></section><section class="sec" id="apxpi-12"><h3 class="sec-title">N. 온도·전원 확인과 안전하게 끄기</h3><p class="prose">종료하지 않고 전원을 바로 뽑으면 microSD의 파일이 망가질 수 있으므로 종료 명령으로 끈 뒤 LED가 빨간색이 되면 전원을 뽑아요. Lite 판에서는 보드의 전원 버튼을 한 번 눌러도 안전하게 종료가 시작돼요. 온도와 전원 상태를 확인하는 명령으로 전원 부족이나 과열 기록이 있는지 볼 수 있어요.</p><div class="block code-block"><div class="block-head"><span class="block-label">라즈베리파이에서</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">vcgencmd measure_temp
+vcgencmd get_throttled
+sudo poweroff</code></pre></div><pre style='background:var(--code-bg);color:var(--code-text);border-radius:12px;padding:12px 14px;font-size:12.5px;overflow-x:auto'>temp=48.3'C
+throttled=0x0          ← 0x0이면 전원 부족·과열 기록이 없어요</pre><div class="callout info"><div class="callout-head">ℹ️ 다시 켜기</div><div class="callout-body">LED가 빨간색이 된 뒤 전원을 뽑아요. 전원을 다시 꽂으면 켜지고, 전원이 꽂힌 채 꺼져 있을 때는 보드의 전원 버튼을 눌러 켜요. 자동 실행(L)을 설정했다면 서버도 저절로 시작돼요.</div></div></section><section class="sec" id="apxpi-13"><h3 class="sec-title">O·P. 이럴 때는</h3><p class="prose">아이디와 비밀번호를 함께 입력하는 학교 Wi-Fi(WPA2-Enterprise)는 운영체제 굽기 단계에서 설정할 수 없으므로 수업용 공유기를 따로 두는 것이 가장 간단해요. microSD에 운영체제를 다시 구우면 라즈베리파이의 신분 정보가 바뀌어 같은 이름으로 접속할 때 PC가 경고를 내고 접속을 막아요. 이때는 PC에 저장된 옛 정보를 지우는 명령을 한 번 실행한 뒤 다시 접속해요.</p><div class="block code-block"><div class="block-head"><span class="block-label">PC에서: 운영체제를 다시 구운 뒤 접속 경고가 나올 때</span><span class="lang-tag">BASH</span><button class="copy-btn" aria-label="복사">복사</button></div><pre><code class="language-bash">ssh-keygen -R bird-3.local</code></pre></div><div class="mistakes"><div class="mistake"><div class="m-sym">❌ ping bird-3.local에 응답이 없어요</div><div class="m-row"><span class="m-tag">원인</span>첫 부팅 중, Wi-Fi 이름·비밀번호 오타, 지역 설정 잘못, AP 격리</div><div class="m-row"><span class="m-tag fix">해결</span>3분 더 기다린 뒤 다시 해요. 공유기 목록에도 없으면 D 단계부터 다시 구워요. 목록에는 있는데 응답이 없으면 M 단계의 AP 격리를 봐요.</div></div><div class="mistake"><div class="m-sym">❌ Permission denied (password)</div><div class="m-row"><span class="m-tag">원인</span>사용자 이름이나 비밀번호가 D 단계와 다름</div><div class="m-row"><span class="m-tag fix">해결</span>적어 둔 사용자 이름을 확인하고, 비밀번호는 보이지 않아도 그대로 입력해요.</div></div><div class="mistake"><div class="m-sym">❌ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED</div><div class="m-row"><span class="m-tag">원인</span>microSD를 다시 구워 라즈베리파이의 신분 정보가 바뀜</div><div class="m-row"><span class="m-tag fix">해결</span>PC에서 <code>ssh-keygen -R bird-3.local</code>을 실행하고 다시 접속해요.</div></div><div class="mistake"><div class="m-sym">❌ error: externally-managed-environment</div><div class="m-row"><span class="m-tag">원인</span>가상환경을 켜지 않고 pip를 실행함</div><div class="m-row"><span class="m-tag fix">해결</span><code>cd ~/bird</code>, <code>source venv/bin/activate</code> 뒤 다시 설치해요.</div></div><div class="mistake"><div class="m-sym">❌ Address already in use</div><div class="m-row"><span class="m-tag">원인</span>자동 실행 서버가 이미 8000번을 쓰는데 손으로 또 켬</div><div class="m-row"><span class="m-tag fix">해결</span>손으로 켤 필요가 없어요. 고친 뒤에는 <code>sudo systemctl restart bird</code>를 써요.</div></div><div class="mistake"><div class="m-sym">❌ 번개 표시·느려짐, throttled가 0x0이 아님</div><div class="m-row"><span class="m-tag">원인</span>전원 부족이나 과열</div><div class="m-row"><span class="m-tag fix">해결</span>공식 27W 어댑터와 팬 케이스를 쓰고, 팬 선이 꽂혔는지 봐요.</div></div></div></section></div>
     <footer>
       라즈베리파이 피코 2 WH · MicroPython · Thonny &nbsp;·&nbsp; 손 코딩 → 바이브 코딩<br>
       LED → 그로브 D16(GP16) · MQ-2 → 그로브 A0(GP26) &nbsp;·&nbsp; 이 자료의 코드와 프롬프트는 수업과 개인 학습에 자유롭게 활용할 수 있습니다.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """별도 'ML 확장 사이트' 빌더 — 메인 build_site.py를 '수정 없이' 재사용해
-   소리 분류(CHAPTER_SOUND) + MP3 출력(CHAPTER_MP3) + 물까치 관측기(CHAPTER_ECO)
-   세 챕터를 한 사이트로 묶어 ml_site/index.html 로 렌더한다. (동작 인식 CHAPTER_IMU는 보류)
+   소리 분류(CHAPTER_SOUND) + MP3 출력(CHAPTER_MP3) + 물까치 관측기(CHAPTER_ECO) + 라즈베리파이 판정(CHAPTER_PI)
+   + 부록 Pi 5 세팅(CHAPTER_APXPI)을 한 사이트로 묶어 ml_site/index.html 로 렌더한다. (동작 인식 CHAPTER_IMU는 보류)
    메인 index.html·build_site.py는 전혀 건드리지 않는다.
    챕터가 바뀌면 이 파일만 다시 실행하면 됩니다.
 """
@@ -21,14 +21,17 @@ sys.path.insert(0, os.path.join(ROOT, "sound_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "mp3_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "imu_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "eco_lesson"))
+sys.path.insert(0, os.path.join(ROOT, "pi_lesson"))
 from chapter_sound import CHAPTER_SOUND
 from chapter_mp3 import CHAPTER_MP3
 from chapter_eco import CHAPTER_ECO
+from chapter_pi import CHAPTER_PI
+from appendix_pi import CHAPTER_APXPI
 
 # MP3(말하기) 챕터: 7/19 SD 카드 준비 전까지 보류 → 9/29 물까치 장(SD 카드 포함 키트)과 함께 복귀
 # 동작 인식(IMU) 챕터: 2026-09-29 사용자 요청으로 제외(imu_lesson은 보관).
 # 재개하려면: from chapter_imu import CHAPTER_IMU 후 CHS에 끼우면 됩니다.
-CHS = [CHAPTER_SOUND, CHAPTER_MP3, CHAPTER_ECO]  # 소리 → 말하기 → 물까치 관측기
+CHS = [CHAPTER_SOUND, CHAPTER_MP3, CHAPTER_ECO, CHAPTER_PI, CHAPTER_APXPI]  # 소리 → 말하기 → 물까치 → 라즈베리파이 판정 → 부록(Pi 5 세팅)
 
 nav_all, main_all = [], []
 for c in CHS:
@@ -70,7 +73,7 @@ out = (out.replace("/*NCODE*/", str(ncode)).replace("/*NPROMPT*/", str(nprompt))
 # ── ML 확장판 브랜딩 (메인 책 표지/제목을 별도 사이트용으로 교체) ──
 BRAND = [
   ("라즈베리파이 피코 2 WH로 배우는 피지컬 컴퓨팅 학습 자료 — 설치부터 와이파이·LED·가스센서·날씨 API 대시보드까지, 복사해서 바로 쓰는 MicroPython 코드 모음.",
-   "라즈베리파이 피코 2 WH로 마이크 소리를 모아 k-NN으로 분류하고 LED 빛과 MP3 음성으로 표현하며, 학교 주변의 물까치 소리를 찾는 관측기까지 만드는 머신러닝 확장판 — 복붙 MicroPython 코드 모음."),
+   "라즈베리파이 피코 2 WH로 마이크 소리를 모아 k-NN으로 분류하고 LED 빛과 MP3 음성으로 표현하며, 학교 주변의 물까치 소리를 찾고 라즈베리파이 5의 BirdNET으로 확인하는 관측기까지 만드는 머신러닝 확장판 — 복붙 코드 모음."),
   ("<title>데이터로 탐구하는 피코 바이브 피지컬 코딩</title>",
    "<title>소리를 배우는 피코 · 바이브 피지컬 코딩 ML 확장판</title>"),
   # 드로어 브랜드 (TEMPLATE의 .drawer 안)
@@ -98,7 +101,7 @@ BRAND = [
   ('<h1>데이터로 탐구하는<br>바이브 <span class="pk">피</span>지컬 <span class="pk">코</span>딩 🐣</h1>',
    '<h1>소리를 배우는 <span class="pk">피</span><span class="pk">코</span> 🔊🐦<br>머신러닝 확장판</h1>'),
   ('<p>센서로 모은 데이터와 인터넷의 공개 데이터(API)를, <b><span class="pico-accent">피코</span></b>와 LED·웹으로 ‘보이게’ 만드는 <b>데이터 기반 탐구 프로젝트</b> 안내서예요. 준비(설치·조립)부터 와이파이·LED·날씨 API·가스센서, 그리고 과목별 오픈 API 부록까지 — 모든 코드를 <b>복사해 바로 실행</b>할 수 있습니다. 🌈</p>',
-   '<p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(INMP441 마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → <b>LED 빛과 MP3 음성으로 표현하고</b> → 학교 주변의 <b>물까치</b> 소리를 찾는 관측기까지 만드는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤 <b>AI의 듣기·생각·표현</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠💡🐦</p>'),
+   '<p><b><span class="pico-accent">피코</span></b>로 소리를 <b>듣고</b>(INMP441 마이크) → 무슨 소리인지 <b>배우고</b>(k-NN 분류) → <b>LED 빛과 MP3 음성으로 표현하고</b> → 학교 주변의 <b>물까치</b> 소리를 찾고 <b>라즈베리파이 5</b>의 BirdNET으로 확인하는 관측기까지 만드는 <b>머신러닝 확장판</b>이에요. <code>2026-vibe-pico</code> 본편을 끝낸 뒤 <b>AI의 듣기·생각·표현</b>을 완성합니다. 모든 코드는 <b>복사해 바로 실행</b>. 🔊🧠💡🐦</p>'),
 ]
 for _a, _b in BRAND:
     out = out.replace(_a, _b)
