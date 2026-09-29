@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# ML 확장판 3장 「물까치를 찾는 피코」 — build_site.py의 CHAPTERS 포맷
+# ML 확장판 ML2장 「물까치를 찾는 피코」 — build_site.py의 CHAPTERS 포맷
 # 본문 문단(P)은 솔라 프로4 집필본(solar/solar_final.md). 코드·표·배선도·짧은 안내는 클로드 작성
 import os, re
 from figs import FIG_STYLE, FIG_ALL, FIG_MIC, FIG_SD
@@ -67,7 +67,7 @@ _APPS = '''function doGet(e) {
 }'''
 
 CHAPTER_ECO = {
-  "id": "chbird", "num": "ML3", "title": "물까치를 찾는 피코 — 소리로 새를 알아보는 관측기",
+  "id": "chbird", "num": "ML2", "title": "물까치를 찾는 피코 — 소리로 새를 알아보는 관측기",
   "accent": "#0F766E",
   "subtitle": "3초 동안 소리를 듣고 직접 모은 예시와 비교해 물까치 후보를 찾는 관측기. 찾으면 말하고, 녹음하고, 시각을 남겨요.",
   "goals": [
