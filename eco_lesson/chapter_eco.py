@@ -18,20 +18,20 @@ _BUY = ("<div style='overflow-x:auto'><table class='plan-table'>"
         "<tr><th>부품</th><th>역할</th><th>수량</th><th>구입</th><th>비고</th></tr>"
         + _row("라즈베리파이 피코 2 WH", "두뇌", 1, "15774532", note="앞 장 것 사용 가능")
         + _row("Grove Shield for Pi Pico v1.0", "부품 연결판", 1, "13960283", note="앞 장 것 사용 가능")
-        + _row("INMP441 전방향 마이크 모듈(납땜)", "소리 듣기", 1, "15366646", note="앞 장 것 사용 가능")
+        + _row("INMP441 전방향 마이크 모듈(납땜)", "소리 듣기", 1, "15366646", note="핀헤더가 납땜되어 나오는 제품. 앞 장 것 사용 가능")
         + _row("Grove 4핀 암 점퍼 변환 케이블(5개입)", "마이크 연결", 1, "1153481", note="2개 사용")
         + _row("Digilent Pmod MicroSD", "녹음·기록 저장", 1, "15707182", note="학교구매전용 상품. 3.3V 전용")
         + _row("암-암 점퍼 케이블 10cm", "SD 모듈 연결", "6가닥", "1328410")
-        + _row("microSDHC 32GB", "녹음용 1장 · MP3용 1장", 2, "14051370", note="둘 다 FAT32")
+        + _row("microSDHC 32GB", "녹음용 카드", 1, "14051370", note="FAT32")
         + _row("Adafruit DS3231 RTC (STEMMA QT)", "시계", 1, "14440939")
         + _row("Grove to STEMMA QT 케이블", "시계 연결", 1, "14600579")
         + _row("CR1220 동전 전지", "시계 전원 유지", 1, "2930")
-        + _row("Grove MP3 v4.0 (WT2605CX)", "말하기", 1, "15784279", note="스피커 포함(받으면 구성품 확인). 해외 재고라 준비 1주일")
         + _row("Grove Button(P)", "관측 끝내기", 1, "1066473", note="누르면 HIGH")
         + _row("USB-A to Micro-B 데이터 케이블", "PC 연결·전원", 1, "15601492", note="PC가 USB-C면 15601504")
         + _row("microSD 카드 리더", "PC에서 카드 읽고 쓰기", "모둠당 1", "1384235", note="포맷·MP3 복사·녹음 회수")
         + "<tr><td colspan='5' style='background:var(--card);font-weight:700'>앞 장에서 쓰던 것</td></tr>"
         + _row("WS2813 LED 바 10칸 · Grove 케이블", "상태 표시", "각 1", note="본 교재 기본 부품")
+        + _row("Grove MP3 v4.0 + 스피커 + MP3용 microSD", "말하기", "각 1", "15784279", note="말하기 장(ML+)에서 쓰던 것. 없으면 링크에서 구입(스피커 포함, 해외 재고 1주일)")
         + "<tr><td colspan='5' style='background:var(--card);font-weight:700'>현장 설치 (참고 추천)</td></tr>"
         + _row("Always On 보조배터리 (예: Voltaic V25)", "밖에서 전원", 1, ext="https://voltaicsystems.com/v25/", note="저전류에서 꺼지지 않는 제품")
         + _row("방수 케이스 (예: Coms BD983, IP65)", "비·먼지 막기", 1, "15813675", note="구멍을 내면 방수 등급이 유지되지 않아요")
@@ -108,16 +108,17 @@ CHAPTER_ECO = {
       {"type": "callout", "kind": "warn", "title": "카드는 FAT32로", "html": "녹음용 microSD는 PC에서 <b>FAT32</b>로 포맷해요. 64GB 이상 카드는 보통 exFAT로 나와서 다시 포맷해야 해요."},
     ]},
     {"title": "조립 ② 마이크", "items": [
+      {"type": "callout", "kind": "warn", "title": "소리·말하기 장의 마이크 점퍼는 먼저 빼요", "html": "앞 장에서는 마이크를 피코 헤더(GP18·GP19·GP20, 36번 3V3)에 점퍼로 꽂았어요. 이 장은 D20·A2 포트로 다시 연결하고, 버튼을 D18(GP18)에 꽂아요. USB를 뽑은 상태에서 헤더에 꽂힌 마이크 점퍼 6가닥을 모두 뺀 뒤 아래대로 연결해요."},
       {"type": "text", "html": P[6]},
       _fig(FIG_MIC, "그림 3. D20·A2 → INMP441 신호 연결. 모듈의 핀 순서는 제품마다 다를 수 있으니 모듈에 인쇄된 이름을 보고 꽂아요. 케이블 A의 빨강, 케이블 B의 흰색은 절연하고 어디에도 꽂지 않아요."),
     ]},
     {"title": "조립 ③ 시계·MP3·LED·버튼", "items": [
       {"type": "text", "html": P[7]},
       {"type": "raw", "html": _AUDIO},
-      {"type": "callout", "kind": "key", "title": "MP3용 microSD 준비", "html": "① 카드를 <b>FAT32</b>로 포맷해요. Windows는 카드 우클릭 → 포맷 → FAT32, Mac은 디스크 유틸리티 → 지우기 → MS-DOS(FAT)예요. 32GB 이하 카드가 편해요.<br>② 위 세 파일을 카드 <b>맨 위 폴더</b>에 <code>0001.mp3</code> → <code>0002.mp3</code> → <code>0003.mp3</code> 순서로 <b>한 개씩</b> 복사해요. 이 모듈은 파일 이름이 아니라 복사한 순서로 번호를 매기는 경우가 많아요.<br>③ Mac에서 복사했다면 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행해 숨김 파일을 지워요. 숨김 파일이 있으면 번호가 한 칸씩 밀려요.<br>④ 엉뚱한 음성이 나오면 카드를 다시 포맷하고 ②부터 다시 해요."},
+      {"type": "callout", "kind": "key", "title": "MP3용 microSD 준비", "html": "말하기 장에서 쓰던 카드에는 휘파람·박수 음성이 들어 있어요. 그대로 두면 번호가 섞이니 <b>포맷부터</b> 해요.<br>① 카드를 <b>FAT32</b>로 포맷해요. Windows는 카드 우클릭 → 포맷 → FAT32, Mac은 디스크 유틸리티 → 지우기 → MS-DOS(FAT)예요. 32GB 이하 카드가 편해요.<br>② 위 세 파일을 카드 <b>맨 위 폴더</b>에 <code>0001.mp3</code> → <code>0002.mp3</code> → <code>0003.mp3</code> 순서로 <b>한 개씩</b> 복사해요. 이 모듈은 파일 이름이 아니라 복사한 순서로 번호를 매기는 경우가 많아요.<br>③ Mac에서 복사했다면 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행해 숨김 파일을 지워요. 숨김 파일이 있으면 번호가 한 칸씩 밀려요.<br>④ 엉뚱한 음성이 나오면 카드를 다시 포맷하고 ②부터 다시 해요."},
       {"type": "steps", "items": [
         {"t": "시계", "d": "DS3231 → <b>I2C0</b> (Grove–STEMMA QT 케이블), 뒷면에 CR1220"},
-        {"t": "MP3", "d": "Grove MP3 v4.0 → <b>UART0</b>(UART1이 아니에요). 스피커는 모듈의 스피커 단자에 꽂고, 위에서 준비한 microSD를 넣어요. 녹음용 카드와 다른 카드예요."},
+        {"t": "MP3", "d": "Grove MP3 v4.0 → <b>UART0</b>(말하기 장과 같아요). 스피커는 모듈의 스피커 단자에 꽂고, 위에서 준비한 microSD를 넣어요. 녹음용 카드와 다른 카드예요."},
         {"t": "LED", "d": "WS2813 → <b>D16</b>"},
         {"t": "버튼", "d": "Grove 버튼 → <b>D18</b>"},
       ]},

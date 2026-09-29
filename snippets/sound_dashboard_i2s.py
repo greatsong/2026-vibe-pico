@@ -71,6 +71,9 @@ wlan.connect(WIFI_SSID, WIFI_PASSWORD)
 for _ in range(30):
     if wlan.isconnected(): break
     time.sleep(0.5)
+if not wlan.isconnected():
+    audio.deinit(); wlan.active(False)
+    raise OSError("와이파이에 연결하지 못했어요. wifi_config.py의 이름·비밀번호와 공유망을 확인하세요.")
 print("브라우저에서 여세요 →  http://%s" % wlan.ifconfig()[0])
 
 PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">

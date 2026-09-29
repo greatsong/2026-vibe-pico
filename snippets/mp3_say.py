@@ -69,26 +69,38 @@ for _ in range(8): level()                              # I2S는 켜진 직후 �
 bg = sorted(level() for _ in range(25)); base = bg[len(bg) // 2]   # 중앙값(튀는 값에 안 휘둘림)
 THRESH = base * 2 + 20   # 반응이 없으면 2→1.5로↓, 너무 잦으면 ↑
 
-# ── ★ '말하기' — 자기 소리 되먹임 방지(말하는 동안 + 잔향까지 귀 닫기) ──
+# ── ★ '말하기' — 자기 소리 되먹임 방지 ──
+# 말하는 동안 들어온 소리는 계속 읽어서 버리고, 잔향이 0.3초 조용해질 때까지(최대 2초) 기다려요.
+# (읽지 않고 쉬기만 하면 마이크 버퍼에 자기 목소리가 남아 다음 판단에 섞여요)
 SPEAK_SEC = 2.5      # 멘트 길이만큼. 음성이 잘리면 늘리세요.
 def say(track):
     at("AT+PLAY=sd0,%d" % track)         # ← 그 소리의 '이름'을 목소리로!
-    time.sleep(SPEAK_SEC)
     t0 = time.ticks_ms()
-    while level() > THRESH and time.ticks_diff(time.ticks_ms(), t0) < 2000:
-        time.sleep(0.05)
+    while time.ticks_diff(time.ticks_ms(), t0) < int(SPEAK_SEC * 1000):
+        level()                          # 재생 중 들어온 소리는 읽어서 버려요
+    t0 = quiet = time.ticks_ms()
+    while time.ticks_diff(time.ticks_ms(), t0) < 2000:
+        if level() > THRESH: quiet = time.ticks_ms()
+        elif time.ticks_diff(time.ticks_ms(), quiet) >= 300: break
 
 CONF_MIN = 0.6       # 확신이 이보다 낮으면 '모르겠어요' → 침묵
-print("준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C)")
-while True:
-    if level() > THRESH:
-        feat = features(grab()); name, conf = predict(feat)
-        if conf >= CONF_MIN and name in TRACK:
-            print("이건… %s!  (확신 %d%%)" % (name, conf * 100))
-            paint(PALETTE[cidx[name] % len(PALETTE)], max(1, int(conf * NUM)))
-            say(TRACK[name])
-        else:
-            print("음… 잘 모르겠어요 (확신 %d%%) — 조용히 있을게요" % (conf * 100))
-            paint((8, 8, 8), NUM); time.sleep(0.8)
-        paint((0, 0, 0), 0)
-    time.sleep(0.005)
+print("준비! 소리를 내면 누구인지 말해줄게요. (멈추려면 Ctrl+C 또는 Thonny 정지)")
+try:
+    while True:
+        if level() > THRESH:
+            feat = features(grab()); name, conf = predict(feat)
+            if conf >= CONF_MIN and name in TRACK:
+                print("이건… %s!  (확신 %d%%)" % (name, conf * 100))
+                paint(PALETTE[cidx[name] % len(PALETTE)], max(1, int(conf * NUM)))
+                say(TRACK[name])
+            else:
+                print("음… 잘 모르겠어요 (확신 %d%%) — 조용히 있을게요" % (conf * 100))
+                paint((8, 8, 8), NUM); time.sleep(0.8)
+            paint((0, 0, 0), 0)
+        time.sleep(0.005)
+except KeyboardInterrupt:
+    print("멈췄어요.")
+finally:                                 # 재생 멈춤 → 마이크 정리 → LED 끄기. 하나가 실패해도 나머지는 해요
+    for job in (lambda: uart.write(b"AT+STOP\r\n"), audio.deinit, lambda: paint((0, 0, 0), 0)):
+        try: job()
+        except Exception as e: print("정리 중 오류:", e)

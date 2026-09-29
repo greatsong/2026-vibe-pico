@@ -22,12 +22,12 @@ sys.path.insert(0, os.path.join(ROOT, "mp3_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "imu_lesson"))
 sys.path.insert(0, os.path.join(ROOT, "eco_lesson"))
 from chapter_sound import CHAPTER_SOUND
+from chapter_mp3 import CHAPTER_MP3
 from chapter_imu import CHAPTER_IMU
 from chapter_eco import CHAPTER_ECO
 
-# MP3(말하기) 챕터는 SD 카드 준비 전까지 보류 — 소리는 LED로 표현하는 구성.
-# 재개하려면: from chapter_mp3 import CHAPTER_MP3 후 CHS 가운데에 끼우면 됩니다.
-CHS = [CHAPTER_SOUND, CHAPTER_IMU, CHAPTER_ECO]  # 소리 → 동작 → 물까치 관측기
+# MP3(말하기) 챕터: 7/19 SD 카드 준비 전까지 보류 → 9/29 물까치 장(SD 카드 포함 키트)과 함께 복귀
+CHS = [CHAPTER_SOUND, CHAPTER_MP3, CHAPTER_IMU, CHAPTER_ECO]  # 소리 → 말하기 → 동작 → 물까치 관측기
 
 nav_all, main_all = [], []
 for c in CHS:
