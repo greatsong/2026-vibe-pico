@@ -2,7 +2,8 @@
 # ML 확장판 ML2장 「물까치를 찾는 피코」 — build_site.py의 CHAPTERS 포맷
 # 본문 문단(P)은 솔라 프로4 집필본(solar/solar_final.md). 코드·표·배선도·짧은 안내는 클로드 작성
 import os, re
-from figs import FIG_STYLE, FIG_ALL, FIG_MIC, FIG_SD
+from figs import FIG_STYLE, FIG_ALL, FIG_SD
+from fig_shield import FIG_MIC
 import sys as _sys
 _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "parts_img"))
 from thumbs import thumb, credits
@@ -115,7 +116,11 @@ CHAPTER_ECO = {
     {"title": "조립 ② 마이크", "items": [
       {"type": "callout", "kind": "warn", "title": "소리·말하기 장의 마이크 점퍼는 먼저 빼요", "html": "앞 장에서는 마이크를 피코 헤더(GP18·GP19·GP20, 36번 3V3)에 점퍼로 꽂았어요. 이 장은 D20·A2 포트로 다시 연결하고, 버튼을 D18(GP18)에 꽂아요. USB를 뽑은 상태에서 헤더에 꽂힌 마이크 점퍼 6가닥을 모두 뺀 뒤 아래대로 연결해요."},
       {"type": "text", "html": P[6]},
-      _fig(FIG_MIC, "그림 3. D20·A2 → INMP441 신호 연결. 모듈의 핀 순서는 제품마다 다를 수 있으니 모듈에 인쇄된 이름을 보고 꽂아요. 케이블 A의 빨강, 케이블 B의 흰색은 절연하고 어디에도 꽂지 않아요."),
+      _fig(FIG_MIC, "그림 3. 마이크 연결. 마이크 핀의 한 줄은 케이블 B(A2), 다른 한 줄은 케이블 A(D20)가 맡아요. VDD에는 A2 케이블의 빨강을 꽂아요. 모듈마다 핀 배열이 다를 수 있으니 모듈에 인쇄된 이름을 기준으로 꽂아요."),
+      {"type": "steps", "items": [
+        {"t": "케이블 A → D20", "d": "노랑 → <b>SCK</b> · 흰색 → <b>WS</b> · 검정 → <b>L/R</b> · 빨강은 꽂지 않아요(5V가 흐를 수 있어요)"},
+        {"t": "케이블 B → A2", "d": "노랑 → <b>SD</b> · 빨강 → <b>VDD</b> · 검정 → <b>GND</b> · 흰색은 꽂지 않아요"},
+      ]},
     ]},
     {"title": "조립 ③ 시계·MP3·LED·버튼", "items": [
       {"type": "text", "html": P[7]},
@@ -133,7 +138,7 @@ CHAPTER_ECO = {
       {"type": "check_list", "items": [
         "쉴드 스위치가 5V에 있다",
         "SPI0 헤더 6가닥이 SD 모듈 1~6번 핀과 이름대로 맞다",
-        "마이크 케이블 A는 D20, B는 A2에 꽂혀 있고, 쓰지 않는 두 선이 절연되어 있다",
+        "마이크 케이블 A는 D20, B는 A2에 꽂혀 있고, D20 케이블의 빨강과 A2 케이블의 흰색은 어디에도 꽂혀 있지 않다",
         "시계 I2C0, MP3 UART0, LED D16, 버튼 D18",
         "녹음용 SD와 MP3용 SD가 각각 꽂혀 있다",
         "모두 확인한 뒤 마지막에 PC USB를 연결했다",

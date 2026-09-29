@@ -2,6 +2,8 @@
 # 신규 챕터(별도 보관) — build_site.py의 CHAPTERS 포맷 그대로.
 # 실기검증 후 이 dict를 CHAPTERS 리스트에 끼워 넣으면 합쳐집니다.
 
+from fig_header import FIG_HDR
+
 CHAPTER_SOUND = {
   "id": "chml", "num": "ML", "title": "소리를 배우는 피코 — 머신러닝 첫걸음",
   "accent": "#0891B2",
@@ -60,62 +62,21 @@ CHAPTER_SOUND = {
       {"type": "raw", "html": "<div class=\"wire\" data-ac=\"#0891B2\" data-parts=\"inmp441,led\"></div>"},
       {"type": "step_head", "html": "🎙️ <b>INMP441 연결</b> — 점퍼 6선 · 거의 나란히"},
       {"type": "callout", "kind": "warn", "title": "먼저! VDD는 반드시 3.3V — 5V 금지",
-       "html": "INMP441은 3.3V 소자라 <b>VDD를 5V에 꽂으면 망가집니다.</b> 쉴드가 피코 40핀을 모두 헤더로 뽑아주니, 그 헤더에 점퍼선(암-수)을 꽂으면 돼요. <b>요령</b>: 신호선 바로 양옆의 GND(<b>23·28번</b>)를 쓰면 <b>23~28번 한 군데</b>에 거의 다 모입니다. 7색 리본선이면 <b>가장자리 ‘흰’선은 안 꽂은 채로</b> 두고(자를 필요 없어요 — 재사용해요) 나머지를 순서대로 꽂으세요. 정작 중요한 건 색이 아니라 <b>신호↔핀</b> 짝이에요 — 다른 선이면 색이 달라도 됩니다.<br><br><b>⚠ 특히 — 리본선을 ‘통째로’ 연속 삽입하지 마세요.</b> 센서 보드는 한 줄이 아니라 <b>2열 6핀</b>이라, 핀 순서가 쉴드 23~28번과 1:1로 맞지 않아요. <b>VDD 한 선만 23~28 묶음과 떨어진 위쪽 36번(3V3)으로 따로</b> 올려야 합니다. 색 순서를 믿지 말고, 아래 핀맵처럼 <b>센서 글자(실크) → 피코 핀 번호</b>를 한 선씩 확인하세요."},
+       "html": "INMP441은 3.3V 소자라 <b>VDD를 5V에 꽂으면 망가집니다.</b> 쉴드가 피코 40핀을 모두 헤더로 뽑아주니, 그 헤더에 점퍼선(암-수)을 꽂으면 돼요. <b>요령</b>: 신호선 바로 양옆의 GND(<b>23·28번</b>)를 쓰면 <b>23~28번 한 군데</b>에 거의 다 모입니다. 7색 리본선이면 <b>가장자리 ‘흰’선은 안 꽂은 채로</b> 두고(자를 필요 없어요 — 재사용해요) 나머지를 순서대로 꽂으세요. 정작 중요한 건 색이 아니라 <b>신호↔핀</b> 짝이에요 — 다른 선이면 색이 달라도 됩니다.<br><br><b>⚠ 특히 — 리본선을 ‘통째로’ 연속 삽입하지 마세요.</b> 센서 보드는 한 줄이 아니라 <b>2열 6핀</b>이라, 핀 순서가 쉴드 23~28번과 1:1로 맞지 않아요. <b>VDD 한 선만 23~28 묶음에서 왼쪽으로 떨어진 36번(3V3)에 따로</b> 꽂아야 합니다. 색 순서를 믿지 말고, 아래 핀맵처럼 <b>센서 글자(실크) → 피코 핀 번호</b>를 한 선씩 확인하세요."},
       {"type": "raw", "html": (
         '<div style="margin:10px 0 6px">'
-        '<div style="font-weight:800;font-size:13.5px;color:#0f172a;margin-bottom:6px">🔌 회로 구성도 — <span style="color:#b91c1c">VDD만</span> 멀리 36번(3V3)으로!</div>'
-        '<svg viewBox="0 0 700 360" width="100%" style="max-width:660px;height:auto;background:#fbfcff;border:1px solid #e6e8f5;border-radius:14px">'
-        '<text x="115" y="92" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">INMP441 핀</text>'
-        '<text x="560" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">피코 헤더(쉴드) 물리핀</text>'
-        '<rect x="455" y="100" width="205" height="232" rx="12" fill="#eff6ff" stroke="#bfdbfe"/>'
-        '<text x="557" y="324" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8">23~28번 한 묶음 (신호 + GND)</text>'
-        '<path d="M175 120 L470 120" stroke="#ef4444" stroke-width="3.5" fill="none"/>'
-        '<path d="M175 160 L470 160" stroke="#f59e0b" stroke-width="3.5" fill="none"/>'
-        '<path d="M175 200 L470 200" stroke="#22c55e" stroke-width="3.5" fill="none"/>'
-        '<path d="M175 240 L470 240" stroke="#3b82f6" stroke-width="3.5" fill="none"/>'
-        '<path d="M175 280 L470 280" stroke="#8b5cf6" stroke-width="3.5" fill="none"/>'
-        '<path d="M175 331 C 335 331, 320 60, 470 60" stroke="#64748b" stroke-width="5" fill="none"/>'
-        '<text x="332" y="150" font-size="13" font-weight="800" fill="#b91c1c">⚠ VDD만 위로 따로</text>'
-        '<rect x="55" y="105" width="120" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><circle cx="70" cy="120" r="5" fill="#ef4444"/><text x="122" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">GND</text>'
-        '<rect x="55" y="145" width="120" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><circle cx="70" cy="160" r="5" fill="#f59e0b"/><text x="122" y="164" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">SCK</text>'
-        '<rect x="55" y="185" width="120" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><circle cx="70" cy="200" r="5" fill="#22c55e"/><text x="122" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">WS</text>'
-        '<rect x="55" y="225" width="120" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><circle cx="70" cy="240" r="5" fill="#3b82f6"/><text x="122" y="244" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">SD</text>'
-        '<rect x="55" y="265" width="120" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><circle cx="70" cy="280" r="5" fill="#8b5cf6"/><text x="122" y="284" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">L/R</text>'
-        '<rect x="55" y="316" width="120" height="32" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/><circle cx="70" cy="332" r="5" fill="#64748b"/><text x="122" y="336" text-anchor="middle" font-size="13" font-weight="800" fill="#b91c1c">VDD</text>'
-        '<rect x="470" y="45" width="180" height="30" rx="8" fill="#fef2f2" stroke="#f87171" stroke-width="2"/><text x="480" y="64" font-size="11" font-weight="800" fill="#b91c1c">물리 36 · 3V3 — VDD 전용(따로!)</text>'
-        '<rect x="470" y="105" width="180" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="480" y="124" font-size="11.5" font-weight="600" fill="#0f172a">물리 23 · GND</text>'
-        '<rect x="470" y="145" width="180" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="480" y="164" font-size="11.5" font-weight="600" fill="#0f172a">물리 24 · GP18 (SCK)</text>'
-        '<rect x="470" y="185" width="180" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="480" y="204" font-size="11.5" font-weight="600" fill="#0f172a">물리 25 · GP19 (WS)</text>'
-        '<rect x="470" y="225" width="180" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="480" y="244" font-size="11.5" font-weight="600" fill="#0f172a">물리 26 · GP20 (SD)</text>'
-        '<rect x="470" y="265" width="180" height="30" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="480" y="284" font-size="11.5" font-weight="600" fill="#0f172a">물리 28 · GND (L/R)</text>'
-        '</svg>'
-        '<div style="font-size:11.5px;color:#475569;margin-top:6px">가로선 5개(GND·SCK·WS·SD·L/R)는 <b>23~28번에 거의 나란히</b>, <b style="color:#b91c1c">회색 VDD만</b> 위쪽 <b>36번(3V3)</b>으로 따로 가요 — <b>5V에 꽂으면 손상!</b> 점퍼 색은 예시일 뿐, <b>센서 글자 → 핀</b>이 핵심이에요.</div>'
-        '</div>'
-      )},
-      {"type": "raw", "html": (
-        '<div style="margin:8px 0 2px">'
-        '<div style="font-weight:800;font-size:13.5px;color:#0f172a;margin-bottom:8px">📋 표로도 확인 — 센서 보드는 <span style="color:#b91c1c">2열 6핀</span> <span style="font-weight:600;color:#64748b">(보드 글자를 읽는 방향 기준)</span></div>'
-        '<table style="border-collapse:separate;border-spacing:7px;width:100%;max-width:560px;font-size:12.5px;line-height:1.35">'
-        '<tr>'
-        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">SCK</b><br><span style="color:#475569">→ GP18 · 24번</span></td>'
-        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">WS</b><br><span style="color:#475569">→ GP19 · 25번</span></td>'
-        '<td style="background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">L/R</b><br><span style="color:#475569">→ <b>GND</b> · 28번</span></td>'
-        '</tr><tr>'
-        '<td style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">SD</b><br><span style="color:#475569">→ GP20 · 26번</span></td>'
-        '<td style="background:#fef2f2;border:2px solid #fca5a5;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px;color:#b91c1c">VDD ⚠</b><br><span style="color:#b91c1c"><b>→ 3V3 · 36번</b> (5V 아님!)</span></td>'
-        '<td style="background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:9px 8px;text-align:center"><b style="font-size:15px">GND</b><br><span style="color:#475569">→ <b>GND</b> · 23번</span></td>'
-        '</tr></table>'
-        '<div style="font-size:12px;color:#475569;margin-top:7px">위쪽 줄 <b>SCK · WS · L/R</b> / 아래쪽 줄 <b>SD · VDD · GND</b> — 서로 <b>다른 줄</b>이에요. '
-        '<b style="color:#b91c1c">VDD만</b> 23~28 묶음에서 떨어진 <b>36번(3V3)</b>으로, <b>L/R은 신호가 아니라 GND</b>로 갑니다.</div>'
+        '<div style="font-weight:800;font-size:13.5px;color:#0f172a;margin-bottom:6px">🔌 회로 구성도 · 쉴드 윗줄 헤더에서 인쇄된 글자로 찾기</div>'
+        '<div style="overflow-x:auto">' + FIG_HDR + '</div>'
+        '<div style="font-size:12px;color:#475569;margin-top:6px">피코 USB를 왼쪽에 두고 봐요. 점퍼 다섯 가닥은 GP18 오른쪽 GND부터 GP21 왼쪽 GND 사이에 모이고(GP21은 비워요), <b style="color:#b91c1c">VDD만</b> 왼쪽에서 다섯째 칸 <b>3V3</b>으로 따로 가요. 바로 왼쪽의 3V3 EN과 맨 왼쪽 5V에는 꽂지 않아요. 점퍼 색은 예시이고, <b>마이크 글자와 보드 글자</b>를 맞추는 것이 기준이에요.</div>'
         '</div>'
       )},
       {"type": "steps", "items": [
-        {"t": "GND → GND(23번)", "d": "<b>주</b> 점퍼 — SCK 바로 옆 GND"},
+        {"t": "GND → GND(23번)", "d": "<b>주</b> 점퍼 · GP18 바로 오른쪽 GND"},
         {"t": "SCK → GP18(24번)", "d": "<b>노</b> 점퍼 — 클록"},
         {"t": "WS → GP19(25번)", "d": "<b>초</b> 점퍼 — <b>반드시 SCK 바로 다음 핀</b>"},
         {"t": "SD → GP20(26번)", "d": "<b>파</b> 점퍼 — 데이터"},
-        {"t": "L/R → GND(28번)", "d": "<b>보</b> 점퍼 — SD 옆 GND(왼쪽 채널)"},
-        {"t": "VDD → 3V3(36번)", "d": "<b>회</b> 점퍼 — <b>⚠ 5V 아님!</b> 23~28 묶음과 떨어진 <b>위쪽 36번</b>으로 따로"},
+        {"t": "L/R → GND(28번)", "d": "<b>보</b> 점퍼 · GP21 왼쪽 GND(왼쪽 채널). GP21은 비워요"},
+        {"t": "VDD → 3V3(36번)", "d": "<b>회</b> 점퍼 · <b>⚠ 5V 아님!</b> 왼쪽에서 다섯째 칸 <b>3V3</b>으로 따로. 바로 왼쪽 3V3 EN과 헷갈리지 않게"},
       ]},
       {"type": "callout", "kind": "warn", "title": "전원(USB) 켜기 전 — 이 3가지부터 확인",
        "html": "<b>① VDD → 3V3(36번)</b> 인가요? (5V면 즉시 손상) &nbsp; <b>② GND → GND</b> 인가요? &nbsp; <b>③ L/R → GND</b> 인가요? (신호 핀 아님!)<br>이 세 개만 맞으면 나머지 SCK·WS·SD는 GP18·19·20에 순서대로 꽂혀 있으면 됩니다. <b>리본 색이 아니라 센서 글자 라벨</b> 기준으로 한 선씩 짚어 보세요."},
