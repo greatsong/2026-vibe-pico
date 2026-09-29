@@ -1,0 +1,83 @@
+{
+ "pico2wh": {
+  "title": "Raspberry_Pi_Pico_WH_top_and_bottom_with_soldered_pins.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_Pico_WH_top_and_bottom_with_soldered_pins.jpg",
+  "author": "Spageektti",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "사진은 Pico WH예요. 피코 2 WH와 생김새가 거의 같아요",
+  "credit": "Raspberry_Pi_Pico_WH_top_and_bottom_with_soldered_pins.jpg · Spageektti · CC BY-SA 4.0"
+ },
+ "ff_jumper": {
+  "title": "Female-Female_Jumper_Wire.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Female-Female_Jumper_Wire.jpg",
+  "author": "oomlout",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+  "note": "예시 사진",
+  "credit": "Female-Female_Jumper_Wire.jpg · oomlout · CC BY-SA 2.0"
+ },
+ "microsd": {
+  "title": "Micro_SD_Card_32_GB.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Micro_SD_Card_32_GB.jpg",
+  "author": "Ypsilon from Finland",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "note": "예시 사진",
+  "credit": "Micro_SD_Card_32_GB.jpg · Ypsilon from Finland · CC0 1.0"
+ },
+ "cr1220": {
+  "title": "KTS_CR1220_Lithium_coin_cell_battery-9622.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:KTS_CR1220_Lithium_coin_cell_battery-9622.jpg",
+  "author": "Raimond Spekking",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "",
+  "credit": "KTS_CR1220_Lithium_coin_cell_battery-9622.jpg · Raimond Spekking · CC BY-SA 4.0"
+ },
+ "card_reader": {
+  "title": "SD_card_reader.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:SD_card_reader.jpg",
+  "author": "Dineshkumar Nallaveerappan",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "예시 사진",
+  "credit": "SD_card_reader.jpg · Dineshkumar Nallaveerappan · CC BY-SA 4.0"
+ },
+ "powerbank": {
+  "title": "Power_Bank_20kmAh.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Power_Bank_20kmAh.jpg",
+  "author": "Zamryoung",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "note": "예시 사진. Always On 기능은 제품 설명에서 확인해요",
+  "credit": "Power_Bank_20kmAh.jpg · Zamryoung · CC BY 4.0"
+ },
+ "ip65_box": {
+  "title": "IP65_junction_box.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:IP65_junction_box.JPG",
+  "author": "Dmitry G",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "note": "예시 사진",
+  "credit": "IP65_junction_box.JPG · Dmitry G · CC BY-SA 3.0"
+ },
+ "rpi5": {
+  "title": "Raspberry_Pi_5_Board.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_5_Board.jpg",
+  "author": "SimonWaldherr",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "",
+  "credit": "Raspberry_Pi_5_Board.jpg · SimonWaldherr · CC BY-SA 4.0"
+ },
+ "sandisk_extreme": {
+  "title": "SanDisk_Extreme_microSDHC_Card,_32GB.png",
+  "page": "https://commons.wikimedia.org/wiki/File:SanDisk_Extreme_microSDHC_Card%2C_32GB.png",
+  "author": "Paowee",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "사진은 32GB예요",
+  "credit": "SanDisk_Extreme_microSDHC_Card,_32GB.png · Paowee · CC BY-SA 4.0"
+ }
+}

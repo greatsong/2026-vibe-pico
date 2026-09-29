@@ -3,39 +3,44 @@
 # 본문 문단(P)은 솔라 프로4 집필본(solar/solar_final.md). 코드·표·배선도·짧은 안내는 클로드 작성
 import os, re
 from figs import FIG_STYLE, FIG_ALL, FIG_MIC, FIG_SD
+import sys as _sys
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "parts_img"))
+from thumbs import thumb, credits
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _txt = open(os.path.join(_HERE, "solar", "solar_final.md"), encoding="utf-8").read()
 P = {int(m.group(1)): m.group(2).strip() for m in re.finditer(r"### 블록 (\d+)\n(.*?)(?=\n### 블록 |\Z)", _txt, re.S)}
 
 DM = "https://www.devicemart.co.kr/goods/view?no="
-def _row(name, role, qty, no=None, ext=None, note=""):
+_KEYS = []
+def _row(name, role, qty, no=None, ext=None, note="", img=None):
     link = f'<a href="{DM}{no}" target="_blank" rel="noopener">디바이스마트</a>' if no else (
         f'<a href="{ext}" target="_blank" rel="noopener">제조사</a>' if ext else "")
-    return f"<tr><td>{name}</td><td>{role}</td><td style='text-align:center'>{qty}</td><td>{link}</td><td>{note}</td></tr>"
+    if img: _KEYS.append(img)
+    return f"<tr><td>{thumb(img, name)}</td><td>{name}</td><td>{role}</td><td style='text-align:center'>{qty}</td><td>{link}</td><td>{note}</td></tr>"
 
 _BUY = ("<div style='overflow-x:auto'><table class='plan-table'>"
-        "<tr><th>부품</th><th>역할</th><th>수량</th><th>구입</th><th>비고</th></tr>"
-        + _row("라즈베리파이 피코 2 WH", "두뇌", 1, "15774532", note="앞 장 것 사용 가능")
-        + _row("Grove Shield for Pi Pico v1.0", "부품 연결판", 1, "13960283", note="앞 장 것 사용 가능")
-        + _row("INMP441 전방향 마이크 모듈(납땜)", "소리 듣기", 1, "15366646", note="핀헤더가 납땜되어 나오는 제품. 앞 장 것 사용 가능")
-        + _row("Grove 4핀 암 점퍼 변환 케이블(5개입)", "마이크 연결", 1, "1153481", note="2개 사용")
-        + _row("Digilent Pmod MicroSD", "녹음·기록 저장", 1, "15707182", note="학교구매전용 상품. 3.3V 전용")
-        + _row("암-암 점퍼 케이블 10cm", "SD 모듈 연결", "6가닥", "1328410")
-        + _row("microSDHC 32GB", "녹음용 카드", 1, "14051370", note="FAT32")
-        + _row("Adafruit DS3231 RTC (STEMMA QT)", "시계", 1, "14440939")
-        + _row("Grove to STEMMA QT 케이블", "시계 연결", 1, "14600579")
-        + _row("CR1220 동전 전지", "시계 전원 유지", 1, "2930")
-        + _row("Grove Button(P)", "관측 끝내기", 1, "1066473", note="누르면 HIGH")
-        + _row("USB-A to Micro-B 데이터 케이블", "PC 연결·전원", 1, "15601492", note="PC가 USB-C면 15601504")
-        + _row("microSD 카드 리더", "PC에서 카드 읽고 쓰기", "모둠당 1", "1384235", note="포맷·MP3 복사·녹음 회수")
-        + "<tr><td colspan='5' style='background:var(--card);font-weight:700'>앞 장에서 쓰던 것</td></tr>"
-        + _row("WS2813 LED 바 10칸 · Grove 케이블", "상태 표시", "각 1", note="본 교재 기본 부품")
-        + _row("Grove MP3 v4.0 + 스피커 + MP3용 microSD", "말하기", "각 1", "15784279", note="말하기 장(ML+)에서 쓰던 것. 없으면 링크에서 구입(스피커 포함, 해외 재고 1주일)")
-        + "<tr><td colspan='5' style='background:var(--card);font-weight:700'>현장 설치 (참고 추천)</td></tr>"
-        + _row("Always On 보조배터리 (예: Voltaic V25)", "밖에서 전원", 1, ext="https://voltaicsystems.com/v25/", note="저전류에서 꺼지지 않는 제품")
-        + _row("방수 케이스 (예: Coms BD983, IP65)", "비·먼지 막기", 1, "15813675", note="구멍을 내면 방수 등급이 유지되지 않아요")
-        + "</table></div>")
+        "<tr><th>사진</th><th>부품</th><th>역할</th><th>수량</th><th>구입</th><th>비고</th></tr>"
+        + _row("라즈베리파이 피코 2 WH", "두뇌", 1, "15774532", note="앞 장 것 사용 가능", img="pico2wh")
+        + _row("Grove Shield for Pi Pico v1.0", "부품 연결판", 1, "13960283", note="앞 장 것 사용 가능", img="grove_shield")
+        + _row("INMP441 전방향 마이크 모듈(납땜)", "소리 듣기", 1, "15366646", note="핀헤더가 납땜되어 나오는 제품. 앞 장 것 사용 가능", img="inmp441")
+        + _row("Grove 4핀 암 점퍼 변환 케이블(5개입)", "마이크 연결", 1, "1153481", note="2개 사용", img="grove_f_cable")
+        + _row("Digilent Pmod MicroSD", "녹음·기록 저장", 1, "15707182", note="학교구매전용 상품. 3.3V 전용", img="pmod_microsd")
+        + _row("암-암 점퍼 케이블 10cm", "SD 모듈 연결", "6가닥", "1328410", img="ff_jumper")
+        + _row("microSDHC 32GB", "녹음용 카드", 1, "14051370", note="FAT32", img="microsd")
+        + _row("Adafruit DS3231 RTC (STEMMA QT)", "시계", 1, "14440939", img="ds3231")
+        + _row("Grove to STEMMA QT 케이블", "시계 연결", 1, "14600579", img="stemma_cable")
+        + _row("CR1220 동전 전지", "시계 전원 유지", 1, "2930", img="cr1220")
+        + _row("Grove Button(P)", "관측 끝내기", 1, "1066473", note="누르면 HIGH", img="grove_button")
+        + _row("USB-A to Micro-B 데이터 케이블", "PC 연결·전원", 1, "15601492", note="PC가 USB-C면 15601504", img="usb_microb")
+        + _row("microSD 카드 리더", "PC에서 카드 읽고 쓰기", "모둠당 1", "1384235", note="포맷·MP3 복사·녹음 회수", img="card_reader")
+        + "<tr><td colspan='6' style='background:var(--card);font-weight:700'>앞 장에서 쓰던 것</td></tr>"
+        + _row("WS2813 LED 바 10칸 · Grove 케이블", "상태 표시", "각 1", note="본 교재 기본 부품", img="ws2813_bar")
+        + _row("Grove MP3 v4.0 + 스피커 + MP3용 microSD", "말하기", "각 1", "15784279", note="말하기 장(ML+)에서 쓰던 것. 없으면 링크에서 구입(스피커 포함, 해외 재고 1주일)", img="grove_mp3")
+        + "<tr><td colspan='6' style='background:var(--card);font-weight:700'>현장 설치 (참고 추천)</td></tr>"
+        + _row("Always On 보조배터리 (예: Voltaic V25)", "밖에서 전원", 1, ext="https://voltaicsystems.com/v25/", note="저전류에서 꺼지지 않는 제품", img="powerbank")
+        + _row("방수 케이스 (예: Coms BD983, IP65)", "비·먼지 막기", 1, "15813675", note="구멍을 내면 방수 등급이 유지되지 않아요", img="ip65_box")
+        + "</table></div>") + credits(_KEYS)
 
 _FLOW = ("<div style='margin:14px 0 6px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--code-bg)'>"
          "<div style='font-size:14px;font-weight:800;margin-bottom:10px;color:#f0e8d6'>이 챕터 한눈에</div>"
