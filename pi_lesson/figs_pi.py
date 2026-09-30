@@ -12,7 +12,7 @@ FIG_NET = ('<svg viewBox="0 0 1000 470" role="img" aria-label="그림 1. 실시�
            # 피코 관측기
            '<rect class="mod" x="20" y="60" width="230" height="150" rx="12"/>'
            '<text class="tb" x="135" y="90" text-anchor="middle">피코 관측기 (ML2)</text>'
-           '<text class="ts" x="135" y="114" text-anchor="middle">마이크 · microSD · MP3 · 버튼</text>'
+           '<text class="ts" x="135" y="114" text-anchor="middle">마이크 · microSD · MP3 · LED</text>'
            '<text class="t" x="135" y="142" text-anchor="middle">3초 듣기 → k-NN 표 세기</text>'
            '<text class="tm" x="135" y="168" text-anchor="middle">eco_5_server.py</text>'
            '<text class="ts" x="135" y="192" text-anchor="middle">LED 보라 = Pi에게 묻는 중</text>'

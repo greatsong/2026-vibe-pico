@@ -46,4 +46,7 @@ def main():
     finally:
         E.finish(audio, mounted)
 
-main()
+try:
+    main()
+except KeyboardInterrupt:                   # Thonny의 정지 버튼으로 끝내도 오류 없이 끝나요
+    pass

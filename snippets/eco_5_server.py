@@ -2,7 +2,7 @@
 # 소리가 나면 피코가 3초를 듣고 k-NN 표를 센 뒤, 그 WAV를 Wi-Fi로 라즈베리파이 5의 서버(bird_server.py)에 보내요.
 # BirdNET이 새 이름과 신뢰도를 돌려주면, 그 새의 MP3를 틀고 server.csv에 피코 표 수와 함께 기록해요.
 # server.csv로 '피코만 / BirdNET만 / 피코가 거른 뒤 BirdNET' 세 방식을 나중에 비교할 수 있어요.
-# 서버가 응답하지 않으면 피코 판단만으로 계속 관측해요. 버튼(D18)을 누르면 안전하게 끝나요.
+# 서버가 응답하지 않으면 피코 판단만으로 계속 관측해요. Thonny의 정지 버튼을 누르면 안전하게 끝나요(USE_BUTTON = True면 버튼 D18로도 끝나요).
 # 준비: Pi 5에서 bird_server.py 실행 → 화면에 나온 주소를 아래 SERVER에 적기, 피코에 wifi_config.py 저장
 import eco_lib as E
 import os, socket, time
@@ -106,6 +106,7 @@ def main():
     E.stop_reset(); mounted = False; audio = None
     try:
         mounted = E.sd_open()
+        E.when()                                                   # 시각을 알 수 없으면 듣기 전에 바로 알려요
         votes, cnt = E.knn_load(K_NN)
         if TARGET not in cnt: raise ValueError("예시에 '%s'가 없어요. ① 예시 모으기를 먼저 하세요" % TARGET)
         print("예시를 불러왔어요:", cnt)
@@ -114,7 +115,7 @@ def main():
         E.mp3_open()
         audio = E.mic_open()
         quiet = E.baseline(audio); thresh = quiet * K + 20
-        print("듣기 시작! (조용할 때 %.0f → 기준 %.0f) 끝내려면 버튼." % (quiet, thresh))
+        print("듣기 시작! (조용할 때 %.0f → 기준 %.0f) 끝내려면 %s." % (quiet, thresh, "버튼" if E.USE_BUTTON else "Thonny의 정지 버튼"))
         tmp = "/sd/eco/tmp.wav"; E.remove_quiet(tmp)
         E.led((0, 0, 3))
         while not E.want_stop():
@@ -136,6 +137,8 @@ def main():
 
 try:
     main()
+except KeyboardInterrupt:                                          # Thonny의 정지 버튼으로 끝내도 오류 없이 끝나요
+    pass
 except Exception as e:
     print("문제가 생겼어요:", e)
     E.error_blink(); E.led((40, 0, 0))

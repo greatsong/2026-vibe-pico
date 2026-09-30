@@ -1,7 +1,8 @@
 # eco_lib.py — 물까치 찾는 피코 공통 도구
 # 피코에 이 이름(eco_lib.py) 그대로 한 번 저장해 두면, 이 챕터의 모든 코드가 이 파일을 불러 씁니다.
-# 핀 배치: 마이크 D20(GP20·GP21) + A2(GP28) · microSD SPI0 헤더(GP2~GP5) · 시계 I2C0(GP9·GP8)
-#          MP3 UART0(GP0·GP1) · LED D16 · 버튼 D18
+# 핀 배치: 마이크 D20(GP20·GP21) + A2(GP28) · microSD SPI0 헤더(GP2~GP5) · MP3 UART0(GP0·GP1) · LED D16
+#          시계 I2C0(GP9·GP8) · 버튼 D18은 전원만 연결해 현장에 둘 때 필요해요. PC에 연결한 수업에서는 없어도 돼요
+#          시계는 꽂으면 저절로 찾아요. 버튼은 꽂은 뒤 아래 USE_BUTTON을 True로 바꿔야 사용해요
 from machine import I2S, SPI, I2C, UART, Pin
 from neopixel import NeoPixel
 from array import array
@@ -9,10 +10,15 @@ import sdcard, os, vfs, errno, struct, time, math, gc
 
 RATE = 16000        # 1초에 16000번 소리를 재요. 특징 계산이 이 값에 맞춰져 있으니 바꾸지 않아요
 IBUF = 64000        # 마이크 내부 버퍼. 16kHz에서 약 0.5초 분량이에요
+USE_BUTTON = False  # 현장에 설치할 때 D18에 버튼을 꽂고 True로 바꿔요. False면 Thonny의 정지 버튼으로 끝내요
 
 np = NeoPixel(Pin(16), 10, timing=(280, 515, 515, 745))
 btn = Pin(18, Pin.IN)
 i2c = I2C(0, scl=Pin(9), sda=Pin(8), freq=100_000)
+try:
+    HAS_CLOCK = 0x68 in i2c.scan()  # 시계(DS3231)가 있는지 확인해요. 없으면 Thonny가 맞춰 둔 피코 시각을 사용해요
+except Exception:
+    HAS_CLOCK = False
 
 
 # ---------- LED · 버튼 ----------
@@ -27,12 +33,12 @@ def error_blink(times=6):           # 전원만 연결해 실행할 때 문제�
 _stop = [False]
 def _pressed(pin):                  # 3초 듣기나 계산 중에 짧게 눌러도 놓치지 않게 기억해 둬요
     _stop[0] = True
-btn.irq(trigger=Pin.IRQ_RISING, handler=_pressed)
+if USE_BUTTON: btn.irq(trigger=Pin.IRQ_RISING, handler=_pressed)
 
 def stop_reset():
     _stop[0] = False
 def want_stop():                    # 버튼을 한 번이라도 누르면 '멈춤'을 계속 기억해요. 하던 기록은 마치고 끝나요
-    if btn.value() == 1: _stop[0] = True
+    if USE_BUTTON and btn.value() == 1: _stop[0] = True
     return _stop[0]
 
 
@@ -58,7 +64,7 @@ def sd_open():                      # SD 카드를 /sd에 연결하고 /sd/eco �
         if new: vfs.umount("/sd")
         raise
 
-def remove_quiet(path):             # 파일이 있으면 지우고, 없으면 그냥 넘어가요
+def remove_quiet(path):             # 파일이 있으면 지우고, 없으면 그대로 넘어가요
     try:
         os.remove(path)
     except OSError as e:
@@ -80,15 +86,22 @@ def _b2d(v):
 def _d2b(v):
     return ((v // 10) << 4) | (v % 10)
 
-def clock_set_from_pico():          # Thonny가 맞춰 둔 피코 시각을 DS3231에 옮겨 적어요
+def clock_set_from_pico():          # Thonny가 맞춰 둔 피코 시각을 DS3231에 옮겨 적어요. 시계가 없으면 False
+    if not HAS_CLOCK: return False
     y, mo, d, h, mi, s, wd, _ = time.localtime()
     if not 2025 <= y <= 2099:
         raise ValueError("피코 시각이 맞춰져 있지 않아요. Thonny로 연결한 상태에서 실행하세요")
     i2c.writeto_mem(0x68, 0x00, bytes([_d2b(s), _d2b(mi), _d2b(h), _d2b(wd + 1), _d2b(d), _d2b(mo), _d2b(y - 2000)]))
     st = i2c.readfrom_mem(0x68, 0x0F, 1)[0]
     i2c.writeto_mem(0x68, 0x0F, bytes([st & 0x7F]))     # '시계가 멈춘 적 있음' 표시 지우기
+    return True
 
 def clock_now():                    # (년, 월, 일, 시, 분, 초)
+    if not HAS_CLOCK:                                     # 시계가 없으면 피코 시각을 사용해요
+        t = time.localtime()
+        if t[0] < 2025:
+            raise ValueError("피코 시각이 맞춰져 있지 않아요. Thonny로 PC에 연결한 상태에서 실행하거나, 전원만 연결해 실행할 때는 시계(DS3231)를 연결하세요")
+        return t[:6]
     if i2c.readfrom_mem(0x68, 0x0F, 1)[0] & 0x80:
         raise ValueError("시계가 멈춘 적이 있어요. ⓪ 부품 확인으로 시계를 다시 맞추세요")
     r = i2c.readfrom_mem(0x68, 0x00, 7)

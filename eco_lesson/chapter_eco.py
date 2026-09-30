@@ -28,17 +28,17 @@ _BUY = ("<div style='overflow-x:auto'><table class='plan-table'>"
         + _row("Grove 4핀 암 점퍼 변환 케이블(5개입)", "마이크 연결", 1, "1153481", note="2개 사용", img="grove_f_cable")
         + _row("Digilent Pmod MicroSD", "녹음·기록 저장", 1, "15707182", note="학교구매전용 상품. 3.3V 전용", img="pmod_microsd")
         + _row("암-암 점퍼 케이블 10cm", "SD 모듈 연결", "6가닥", "1328410", img="ff_jumper")
-        + _row("microSDHC 32GB", "녹음용 카드", 1, "14051370", note="FAT32", img="microsd")
-        + _row("Adafruit DS3231 RTC (STEMMA QT)", "시계", 1, "14440939", img="ds3231")
-        + _row("Grove to STEMMA QT 케이블", "시계 연결", 1, "14600579", img="stemma_cable")
-        + _row("CR1220 동전 전지", "시계 전원 유지", 1, "2930", img="cr1220")
-        + _row("Grove Button(P)", "관측 끝내기", 1, "1066473", note="누르면 HIGH", img="grove_button")
+        + _row("microSDHC 32GB (SanDisk ULTRA)", "녹음용 카드", 1, "13018081", note="FAT32", img="microsd")
         + _row("USB-A to Micro-B 데이터 케이블", "PC 연결·전원", 1, "15601492", note="PC가 USB-C면 15601504", img="usb_microb")
         + _row("microSD 카드 리더", "PC에서 카드 읽고 쓰기", "모둠당 1", "1384235", note="포맷·MP3 복사·녹음 회수", img="card_reader")
         + "<tr><td colspan='6' style='background:var(--card);font-weight:700'>앞 장에서 쓰던 것</td></tr>"
         + _row("WS2813 LED 바 10칸 · Grove 케이블", "상태 표시", "각 1", note="본 교재 기본 부품", img="ws2813_bar")
         + _row("Grove MP3 v4.0 + 스피커 + MP3용 microSD", "말하기", "각 1", "15784279", note="말하기 장(ML+)에서 쓰던 것. 없으면 링크에서 구입(스피커 포함, 해외 재고 1주일)", img="grove_mp3")
-        + "<tr><td colspan='6' style='background:var(--card);font-weight:700'>현장 설치 (참고 추천)</td></tr>"
+        + "<tr><td colspan='6' style='background:var(--card);font-weight:700'>현장 설치 (PC 없이 배터리로 둘 때)</td></tr>"
+        + _row("Adafruit DS3231 RTC (STEMMA QT)", "시각 기록", 1, "14440939", note="PC 없이 전원만 연결할 때 필요", img="ds3231")
+        + _row("Grove to STEMMA QT 케이블", "시계 연결", 1, "14600579", img="stemma_cable")
+        + _row("CR1220 동전 전지", "시계 전원 유지", 1, "2930", img="cr1220")
+        + _row("Grove Button(P)", "현장에서 관측 끝내기", 1, "1066473", note="eco_lib.py의 USE_BUTTON을 True로", img="grove_button")
         + _row("Always On 보조배터리 (예: Voltaic V25)", "밖에서 전원", 1, ext="https://voltaicsystems.com/v25/", note="저전류에서 꺼지지 않는 제품", img="powerbank")
         + _row("방수 케이스 (예: Coms BD983, IP65)", "비·먼지 막기", 1, "15813675", note="구멍을 내면 방수 등급이 유지되지 않아요", img="ip65_box")
         + "</table></div>") + credits(_KEYS)
@@ -77,7 +77,7 @@ CHAPTER_ECO = {
   "accent": "#0F766E",
   "subtitle": "3초 동안 소리를 듣고 직접 모은 예시와 비교해 물까치 후보를 찾는 관측기. 찾으면 말하고, 녹음하고, 시각을 남겨요.",
   "goals": [
-    "마이크·microSD·시계·MP3를 쉴드에 꽂아 관측기를 조립한다",
+    "마이크·microSD·MP3를 쉴드에 꽂아 관측기를 조립한다",
     "3초 동안 들은 소리를 숫자 25개(특징)로 바꾼다",
     "물까치와 헷갈릴 만한 소리의 예시를 모아 k-NN으로 물까치 후보를 찾는다",
     "예시로 쓰지 않은 소리를 탐지기에 들려주고 재현율과 오판을 세어 기준을 정한다",
@@ -95,7 +95,7 @@ CHAPTER_ECO = {
       {"type": "text", "html": P[4]},
     ]},
     {"title": "조립 전에 전체 모습 보기", "items": [
-      _fig(FIG_ALL, "그림 1. 전체 연결. I2C1·A0·A1·UART1은 비워 두어요. UART1은 SPI0 헤더와 핀을 함께 써요."),
+      _fig(FIG_ALL, "그림 1. 전체 연결. 시계(I2C0)와 버튼(D18)은 현장에 설치할 때만 꽂아요. I2C1·A0·A1·UART1은 비워 두어요. UART1은 SPI0 헤더와 핀을 함께 써요."),
       {"type": "callout", "kind": "warn", "title": "USB를 뽑고 조립해요", "html": "PC와 보조배터리의 USB 케이블을 모두 뽑은 상태에서 선을 꽂아요. 조립과 확인이 모두 끝난 뒤 마지막에 PC USB를 연결해요."},
     ]},
     {"title": "조립 ① 쉴드 스위치와 microSD", "items": [
@@ -114,7 +114,7 @@ CHAPTER_ECO = {
       {"type": "callout", "kind": "warn", "title": "카드는 FAT32로", "html": "녹음용 microSD는 PC에서 <b>FAT32</b>로 포맷해요. 64GB 이상 카드는 보통 exFAT로 나와서 다시 포맷해야 해요."},
     ]},
     {"title": "조립 ② 마이크", "items": [
-      {"type": "callout", "kind": "warn", "title": "소리·말하기 장의 마이크 점퍼는 먼저 빼요", "html": "앞 장에서는 마이크를 피코 헤더(GP18·GP19·GP20, 36번 3V3)에 점퍼로 꽂았어요. 이 장은 D20·A2 포트로 다시 연결하고, 버튼을 D18(GP18)에 꽂아요. USB를 뽑은 상태에서 헤더에 꽂힌 마이크 점퍼 6가닥을 모두 뺀 뒤 아래대로 연결해요."},
+      {"type": "callout", "kind": "warn", "title": "소리·말하기 장의 마이크 점퍼는 먼저 빼요", "html": "앞 장에서는 마이크를 피코 헤더(GP18·GP19·GP20, 36번 3V3)에 점퍼로 꽂았어요. 이 장은 D20·A2 포트로 다시 연결해요. USB를 뽑은 상태에서 헤더에 꽂힌 마이크 점퍼 6가닥을 모두 뺀 뒤 아래대로 연결해요."},
       {"type": "text", "html": P[6]},
       _fig(FIG_MIC, "그림 3. 마이크 연결. 마이크 핀의 한 줄은 케이블 B(A2), 다른 한 줄은 케이블 A(D20)가 맡아요. VDD에는 A2 케이블의 빨강을 꽂아요. 모듈마다 핀 배열이 다를 수 있으니 모듈에 인쇄된 이름을 기준으로 꽂아요."),
       {"type": "steps", "items": [
@@ -122,16 +122,15 @@ CHAPTER_ECO = {
         {"t": "케이블 B → A2", "d": "노랑 → <b>SD</b> · 빨강 → <b>VDD</b> · 검정 → <b>GND</b> · 흰색은 꽂지 않아요"},
       ]},
     ]},
-    {"title": "조립 ③ 시계·MP3·LED·버튼", "items": [
+    {"title": "조립 ③ MP3·LED", "items": [
       {"type": "text", "html": P[7]},
       {"type": "raw", "html": _AUDIO},
       {"type": "callout", "kind": "key", "title": "MP3용 microSD 준비", "html": "말하기 장에서 쓰던 카드에는 휘파람·박수 음성이 들어 있어요. 그대로 두면 번호가 섞이니 <b>포맷부터</b> 해요.<br>① 카드를 <b>FAT32</b>로 포맷해요. Windows는 카드 우클릭 → 포맷 → FAT32, Mac은 디스크 유틸리티 → 지우기 → MS-DOS(FAT)예요. 32GB 이하 카드가 편해요.<br>② 위 파일 <code>0001.mp3</code>를 카드 <b>맨 위 폴더</b>에 복사해요. 다른 새 이름은 ML3장에서 이어서 넣어요.<br>③ Mac에서 복사했다면 터미널에서 <code>dot_clean /Volumes/카드이름</code>을 실행해 숨김 파일을 지워요. 숨김 파일이 있으면 번호가 한 칸씩 밀려요.<br>④ 엉뚱한 음성이 나오면 카드를 다시 포맷하고 ②부터 다시 해요."},
       {"type": "steps", "items": [
-        {"t": "시계", "d": "DS3231 → <b>I2C0</b> (Grove–STEMMA QT 케이블), 뒷면에 CR1220"},
         {"t": "MP3", "d": "Grove MP3 v4.0 → <b>UART0</b>(말하기 장과 같아요). 스피커는 모듈의 스피커 단자에 꽂고, 위에서 준비한 microSD를 넣어요. 녹음용 카드와 다른 카드예요."},
         {"t": "LED", "d": "WS2813 → <b>D16</b>"},
-        {"t": "버튼", "d": "Grove 버튼 → <b>D18</b>"},
       ]},
+      {"type": "callout", "kind": "info", "title": "시계와 버튼은 현장에 설치할 때 꽂아요", "html": "PC에 연결해 실험할 때는 시계와 버튼이 없어도 돼요. 시계가 없으면 Thonny가 맞춰 준 피코 시각을 사용하고, 끝낼 때는 Thonny의 <b>정지</b> 버튼을 눌러요. PC 없이 배터리로 둘 때 필요한 두 부품은 ④에서 꽂아요."},
     ]},
     {"title": "전체 연결 확인", "items": [
       {"type": "step_head", "html": "그림 1과 비교하며 확인해요"},
@@ -139,7 +138,7 @@ CHAPTER_ECO = {
         "쉴드 스위치가 5V에 있다",
         "SPI0 헤더 6가닥이 SD 모듈 1~6번 핀과 이름대로 맞다",
         "마이크 케이블 A는 D20, B는 A2에 꽂혀 있고, D20 케이블의 빨강과 A2 케이블의 흰색은 어디에도 꽂혀 있지 않다",
-        "시계 I2C0, MP3 UART0, LED D16, 버튼 D18",
+        "MP3 UART0, LED D16 (시계 I2C0과 버튼 D18은 현장 설치 때 꽂는다)",
         "녹음용 SD와 MP3용 SD가 각각 꽂혀 있다",
         "모두 확인한 뒤 마지막에 PC USB를 연결했다",
       ]},
@@ -153,9 +152,10 @@ CHAPTER_ECO = {
     ]},
     {"title": "⓪ 부품 확인", "items": [
       {"type": "text", "html": P[9]},
-      {"type": "code", "label": "코드 ⓪ · 부품 확인과 시계 맞추기", "lang": "python", "file": "snippets/eco_0_check.py"},
+      {"type": "code", "label": "코드 ⓪ · 부품 확인 (시계가 있으면 시각 맞추기)", "lang": "python", "file": "snippets/eco_0_check.py"},
       {"type": "step_head", "html": "예상 화면"},
-      _out("① SD 카드   OK  남은 공간 29810 MB\n② 시계      OK  2026-10-01 07:15:03  ← 지금 시각과 같은지 확인하세요\n③ 마이크    조용할 때 크기 31. 이제 3초 동안 박수를 쳐 보세요\n③ 마이크    OK  박수 크기 2140\n④ MP3       1번 파일을 틀어요. '물까치인가 봐요'가 들리면 OK\n⑤ 버튼      5초 안에 버튼을 한 번 누르세요\n⑤ 버튼      OK\n⑥ LED       빨강 → 초록 → 파랑으로 켜졌다면 OK\n⑦ 판단 속도 3초 동안 아무 소리나 들려주세요\n⑦ 판단 속도 특징 계산 ○○○ ms · 남은 메모리 ○○○ KB · 조각 8개\n안전하게 끝났어요. 이제 전원을 뽑아도 됩니다."),
+      _out("① SD 카드   OK  남은 공간 29810 MB\n② 시계      OK  2026-10-01 07:15:03  ← 시계(DS3231) 없이 피코 시각을 사용해요\n            시계는 현장 설치에만 필요해요. 꽂았다면 I2C0 포트와 Grove–STEMMA QT 케이블을 확인하세요\n③ 마이크    조용할 때 크기 31. 이제 3초 동안 박수를 쳐 보세요\n③ 마이크    OK  박수 크기 2140\n④ MP3       1번 파일을 틀어요. '물까치인가 봐요'가 들리면 OK\n⑤ 버튼      건너뛰어요 (USE_BUTTON = False). 끝낼 때는 Thonny의 정지 버튼을 눌러요\n⑥ LED       빨강 → 초록 → 파랑으로 켜졌다면 OK\n⑦ 판단 속도 3초 동안 아무 소리나 들려주세요\n⑦ 판단 속도 특징 계산 ○○○ ms · 남은 메모리 ○○○ KB · 조각 8개\n안전하게 끝났어요. 이제 전원을 뽑아도 됩니다."),
+      {"type": "callout", "kind": "info", "title": "현장 설치용으로 시계와 버튼을 꽂았다면", "html": "②는 <b>← 지금 시각과 같은지 확인하세요</b>로 표시되고 시계가 컴퓨터 시각으로 맞춰져요. <code>USE_BUTTON</code>을 <code>True</code>로 바꿨다면 ⑤에서 5초 안에 버튼을 한 번 눌러 <b>OK</b>를 확인해요."},
       {"type": "callout", "kind": "tip", "title": "⑦의 두 숫자를 적어 두세요", "html": "특징 계산 시간은 3초 녹음이 끝난 뒤 숫자 25개를 계산하는 데 걸린 시간이에요. SD 저장, 예시 비교, MP3 재생 시간은 들어 있지 않아요. 남은 메모리는 예시를 불러오기 전에 측정한 값이라, 탐지기에서는 예시가 차지하는 만큼 더 줄어요. 교재를 만들 때는 실물 피코에서 측정하지 못한 값이에요."},
     ]},
     {"title": "① 물까치 예시 모으기", "items": [
@@ -183,15 +183,15 @@ CHAPTER_ECO = {
         {"t": "빨강 깜빡임", "d": "문제가 생김 (Thonny로 연결해 메시지 확인)"},
       ]},
       {"type": "step_head", "html": "예상 화면"},
-      _out("예시를 불러왔어요: {'물까치': 15, '다른 새': 12, '말소리': 10, '배경': 10, '기타': 10}\n듣기 시작! (조용할 때 31 → 기준 82) 끝내려면 버튼.\n2026-10-01 07:21:40  아니에요 (물까치 1표, 가장 많은 표: 말소리)\n2026-10-01 07:22:15  물까치인가 봐요! (5/9표) → 20261001_072215_mulkkachi.wav\n물까치 후보 1번 찾았어요.\n안전하게 끝났어요. 이제 전원을 뽑아도 됩니다."),
-      {"type": "prompt", "label": "① 바이브코딩 — 오늘 찾은 횟수를 LED로 (그대로 복사)", "text": "라즈베리파이 피코 2 WH MicroPython 코드 eco_2_finder.py를 고쳐줘.\n- 물까치 후보를 찾을 때마다 그날 찾은 횟수를 세어, 기다리는 동안 LED 10칸에 그 횟수만큼 희미한 청록을 켜 줘(10번 넘으면 10칸).\n- eco_lib.py의 함수(E.led 등)는 그대로 쓰고, 판단 방식(K_NN, MIN_VOTES)은 바꾸지 마.\n- 버튼을 누르면 안전하게 끝나는 흐름은 유지해."},
+      _out("예시를 불러왔어요: {'물까치': 15, '다른 새': 12, '말소리': 10, '배경': 10, '기타': 10}\n듣기 시작! (조용할 때 31 → 기준 82) 끝내려면 Thonny의 정지 버튼.\n2026-10-01 07:21:40  아니에요 (물까치 1표, 가장 많은 표: 말소리)\n2026-10-01 07:22:15  물까치인가 봐요! (5/9표) → 20261001_072215_mulkkachi.wav\n물까치 후보 1번 찾았어요.\n안전하게 끝났어요. 이제 전원을 뽑아도 됩니다."),
+      {"type": "prompt", "label": "① 바이브코딩 — 오늘 찾은 횟수를 LED로 (그대로 복사)", "text": "라즈베리파이 피코 2 WH MicroPython 코드 eco_2_finder.py를 고쳐줘.\n- 물까치 후보를 찾을 때마다 그날 찾은 횟수를 세어, 기다리는 동안 LED 10칸에 그 횟수만큼 희미한 청록을 켜 줘(10번 넘으면 10칸).\n- eco_lib.py의 함수(E.led 등)는 그대로 쓰고, 판단 방식(K_NN, MIN_VOTES)은 바꾸지 마.\n- 끝낼 때 SD를 안전하게 분리하는 흐름은 유지해."},
     ]},
     {"title": "③ 채점하고 기준 정하기", "items": [
       {"type": "text", "html": P[13]},
       {"type": "steps", "items": [
         {"t": "소리 준비", "d": "예시로 쓰지 않은 물까치 녹음 5개 이상, 다른 새와 생활 소리 5개 이상을 휴대폰에 준비해요. 3초쯤 되는 짧은 소리가 좋아요."},
         {"t": "들려주기", "d": "코드 ②를 켜 둔 채 하나씩 틀고, 소리 사이에는 10초쯤 쉬어요. 틀 때마다 <b>시각</b>과 무엇을 틀었는지 종이에 적어요."},
-        {"t": "정답 적기", "d": "버튼으로 끝낸 뒤 녹음용 SD의 <code>eco/decisions.csv</code>를 PC로 옮겨 스프레드시트로 열어요. 맨 오른쪽에 <code>truth</code> 열을 만들고, 적어 둔 시각과 <code>time</code> 열을 맞춰 물까치면 1, 아니면 0을 적어 CSV로 저장해요. 소리 하나에 줄이 두 개 생기면 둘 다 같은 값을 적고, 줄이 없는 소리는 감지되지 않은 거예요."},
+        {"t": "정답 적기", "d": "Thonny의 정지 버튼으로 끝낸 뒤 녹음용 SD의 <code>eco/decisions.csv</code>를 PC로 옮겨 스프레드시트로 열어요. 맨 오른쪽에 <code>truth</code> 열을 만들고, 적어 둔 시각과 <code>time</code> 열을 맞춰 물까치면 1, 아니면 0을 적어 CSV로 저장해요. 소리 하나에 줄이 두 개 생기면 둘 다 같은 값을 적고, 줄이 없는 소리는 감지되지 않은 거예요."},
         {"t": "채점 도구 실행", "d": "코드 ③을 <code>decisions.csv</code>와 같은 폴더에 저장하고, <code>MAGPIE_PLAYED</code>와 <code>OTHER_PLAYED</code>에 틀어 준 물까치 수와 다른 소리 수를 적은 뒤 Thonny의 '이 컴퓨터의 Python'으로 실행해요. 설치할 것은 없어요."},
         {"t": "기준 정하기", "d": "표를 보고 MIN_VOTES를 고른 뒤 코드 ②에 적어요."},
       ]},
@@ -203,6 +203,8 @@ CHAPTER_ECO = {
     {"title": "④ 현장으로 — 배터리와 자동 시작", "items": [
       {"type": "text", "html": P[16]},
       {"type": "steps", "items": [
+        {"t": "시계 달기", "d": "DS3231 → <b>I2C0</b> (Grove–STEMMA QT 케이블), 뒷면에 CR1220. PC에 연결한 채 코드 ⓪을 실행하면 시계가 컴퓨터 시각으로 맞춰져요."},
+        {"t": "버튼 달기", "d": "Grove 버튼 → <b>D18</b>. <code>eco_lib.py</code>의 <code>USE_BUTTON</code>을 <code>True</code>로 바꿔 피코에 다시 저장해요."},
         {"t": "main.py로 저장", "d": "코드 ②를 Thonny에서 <code>main.py</code>라는 이름으로 피코에 저장"},
         {"t": "PC에서 한 번 확인", "d": "USB를 뽑았다 꽂아 LED가 희미한 파랑으로 켜지는지 봐요"},
         {"t": "배터리로 바꾸기", "d": "USB 케이블을 보조배터리에 연결"},
@@ -215,7 +217,7 @@ CHAPTER_ECO = {
     {"title": "⑤ 물까치는 언제 나타났을까", "items": [
       {"type": "text", "html": P[17]},
       {"type": "steps", "items": [
-        {"t": "안전하게 끝내기", "d": "버튼을 눌러 LED가 꺼지면 USB 전원을 뽑아요."},
+        {"t": "안전하게 끝내기", "d": "현장에서는 버튼을 눌러 LED가 꺼지면 전원을 뽑아요. PC에 연결해 실험했다면 Thonny의 정지 버튼을 눌러요."},
         {"t": "카드 옮기기", "d": "Pmod에서 녹음용 microSD를 빼 카드 리더로 PC에 연결하고, 카드의 <code>eco</code> 폴더를 PC에 복사해요."},
         {"t": "그래프 그리기", "d": "코드 ④를 복사한 <code>eco</code> 폴더 옆에 <code>eco_pc_timeline.py</code>로 저장하고, Thonny의 '이 컴퓨터의 Python'으로 실행해요. <code>matplotlib</code>는 도구 → 패키지 관리에서 설치해요. 그래프는 <code>eco/timeline_hour.png</code>에 저장돼요."},
       ]},
@@ -228,7 +230,9 @@ CHAPTER_ECO = {
         {"sym": "① SD 카드 실패", "cause": "SPI0 헤더 선이 바뀌었거나, 카드가 exFAT", "fix": "그림 2를 보고 양 끝 이름을 다시 맞추고, 카드를 <b>FAT32</b>로 포맷해요."},
         {"sym": "③ 마이크 소리가 작음", "cause": "D20·A2 케이블이 바뀌었거나 L/R 선이 빠짐", "fix": "그림 3대로 다시 꽂고 L/R이 GND에 연결됐는지 확인해요."},
         {"sym": "MP3가 조용함", "cause": "쉴드 스위치가 3.3V, 또는 MP3용 SD에 파일이 없음", "fix": "스위치를 <b>5V</b>로, 모듈용 SD에 0001.mp3를 넣어요."},
+        {"sym": "피코 시각이 맞춰져 있지 않아요", "cause": "시계 없이 전원만 연결해 실행함", "fix": "PC의 Thonny에 연결해 실행해요. 배터리로 현장에 둘 때는 시계를 꽂고 코드 ⓪으로 시각을 맞춰요."},
         {"sym": "시계가 멈춘 적이 있어요", "cause": "CR1220 전지가 없거나 시계를 맞춘 적이 없음", "fix": "전지를 넣고 Thonny로 연결해 코드 ⓪을 다시 실행해요."},
+        {"sym": "탐지기가 시작하자마자 끝나요", "cause": "USE_BUTTON이 True인데 D18에 버튼이 없음", "fix": "버튼을 D18에 꽂거나 <code>eco_lib.py</code>의 USE_BUTTON을 False로 바꿔요."},
         {"sym": "예시가 부족해요", "cause": "이름표가 하나뿐이거나 이름표마다 3개 미만", "fix": "코드 ①로 이름표마다 10개 이상 모아요."},
         {"sym": "아무 소리에나 물까치라고 함", "cause": "물까치 예시만 많고 헷갈릴 만한 소리 예시가 적음", "fix": "다른 새·배경·기타 예시를 늘리고, 채점해서 MIN_VOTES를 올려요."},
         {"sym": "배터리로 돌리다 저절로 꺼짐", "cause": "보조배터리가 전기를 적게 쓰는 기기를 끊음", "fix": "Always On 기능이 있는 배터리를 써요."},
